@@ -1,0 +1,8 @@
+CoNetServ (Complex Network Services)
+====================================
+- Mozilla Firefox (v3+) add-on
+- Google Chrome / Chromium extension
+- OS: Unix-like systems (Linux etc.), Windows
+- Arch: x86, x86-64
+- Features: PING (client to host), TRACEROUTE (client to host),
+WHOIS (host), NSLOOKUP (host), SHOW PUBLIC IP (client)
