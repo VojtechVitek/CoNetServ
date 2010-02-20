@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Aplix Foo Plugin Test</title>
+	</head>
+	<body>
+	<script type="text/javascript">
+		function scriptSimple() {
+			try {
+				alert(document.getElementById("pluginobj").scriptSimple());
+			}
+			catch(e) {
+				alert(e);
+			}
+		}
+      function callback() {
+         try {
+            alert(document.getElementById("pluginobj").callback());
+         }
+         catch(e) {
+            alert(e);
+         }
+      }
+		function foo() {
+			try {
+				alert(document.getElementById("pluginobj").foo());
+			}
+			catch(e) {
+				alert(e);
+			}
+		}
+	</script>
+	<p>
+		<button onclick='scriptSimple()'>Call scriptSimple()</button>
+      <button onclick='callback()'>Call callback()</button>
+		<button onclick='foo()'>Call foo()</button>
+      <object id="pluginobj" type="application/x-conetserv">Plugin FAILED to load</object>
+	</p>
+
+	</body>
+</html>
