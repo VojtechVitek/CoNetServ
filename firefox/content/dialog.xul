@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<?xml-stylesheet href="chrome://global/skin/"?>  
+<!DOCTYPE dialog SYSTEM "chrome://conetserv/locale/conetserv.dtd">
+<dialog id="conetservDialog" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"  
+    title="&dialog.title;" 
+    buttons="accept" 
+    width="300" 
+    height="400"
+    defaultButton="null"
+    onkeypress="filter(key);"
+    ondialogaccept="window.close();">    
+  
+  <vbox>
+  <!--TODO edit for getting address from page-->
+    
+    <hbox>
+      <textbox id="conetservUrl" 
+		type="autocomplete" 
+		autocompletepopup="PopupAutoCompleteRichResult"
+		autocompletesearch="history"
+		maxrows="6" 
+		tabScrolling="true" 
+		flex="1" 
+		ontextentered="start();"
+		onfocus="document.getElementById('conetservDialog').style.MozUserFocus= 'ignore'"
+		value="http://www.seznam.cz/">
+	<hbox>
+	  <image id="conetservStart" 
+		  onclick="start();" tooltip="&dialog.goButtonTip;" src="chrome://browser/skin/Go-arrow.png"
+		  style="cursor:pointer;padding-top:5px;padding-bottom:4px;padding-right:2px;;padding-left:2px;" hidden="true"/>
+<!--      <dropmarker allowevents="true" /> -->
+	</hbox>
+      </textbox>
+      <button id="conetservStartButton" 
+	      tooltip="&dialog.goButtonTip;" 
+	      default="true"
+	      onclick="start();" 
+	      width="30" 
+	      image="chrome://browser/skin/Go-arrow.png" 
+	      style="min-width: 30px; max-width:30px;"/>
+    </hbox>
+    <tabbox>  
+      <tabs>  
+	<tab id="conetservPing" label="ping" selected="true"/>  
+	<tab id="conetservTrace" label="traceroute"/>  
+        <tab id="conetservWhois" label="whois"/>  
+      </tabs>  
+      <tabpanels id="conetservTabs">  
+	<tabpanel id="pingTab" orient="vertical">  
+	  <textbox id="pingConsole" multiline="true" disabled="true" rows="15" flex="1" value="aaa"/>
+	</tabpanel>  
+	<tabpanel id="traceTab" orient="vertical">  
+	  <textbox id="traceConsole" multiline="true" disabled="true" flex="1"/>
+	</tabpanel>  
+     	<tabpanel id="whoisTab" orient="vertical">  
+          <textbox id="whoisConsole" multiline="true" disabled="true" flex="1"/>
+	</tabpanel>  
+      </tabpanels>  
+    </tabbox> 
+  </vbox>
+  
+  <script type="application/javascript" src="dialog.js"/>
+</dialog>	
+<!--
+<menubar>  
+  <menu label="Menu 1">  
+    <menupopup>  
+      <menuitem label="Item 1"/>  
+      <menuitem label="Item 2"/>  
+      <menuseparator/>  
+      <menuitem label="Item 3" type="checkbox"/>  
+      <menu label="Submenu">  
+        <menupopup>  
+          <menuitem label="A" type="radio"/>  
+          <menuitem label="B" type="radio"/>  
+        </menupopup>  
+      </menu>  
+    </menupopup>  
+  </menu>  
+</menubar>  
+
+  <vbox>
+     <label id="nadpis" value="Nadpis" flex="1"/>
+     <hbox width="200" >
+         <button id="tlacitko" label="zkus pravym" icon="find" flex="1" context="tlacitko_cont" />
+         <menupopup id="tlacitko_cont">
+              <menuitem label="To je ale neco" oncommand="getElementById('anone').checked=!getElementById('anone').checked;"/>
+         </menupopup>
+         <button id="tlacic" label="tlacic" flex="2" oncommand="getElementById('progres').value=getElementById('progres').value*1+5"/>
+     </hbox>
+     <checkbox id="anone" label="Ano?"/>  
+     <textbox multiline="true" rows="5" cols="15"/>
+     <stack>  
+        <progressmeter id="progres" mode="normal" value="20"/>  
+        <hbox align="center">  
+        <label value="In progress…"/>  
+        </hbox>  
+     </stack> 
+     <textbox id="debug" multiline="true" rows="3" cols="10" disabled="true"/>
+  
+  </vbox>
+
+</dialog>  
+-->
