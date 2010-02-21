@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <signal.h>
 
-#include <pthread.h>
+#include <sys/types.h>
 #include <unistd.h>
+#include <signal.h>
+#include <pthread.h>
 
-#define DEBUG 0
+#define DEBUG 1
 #define PROGCOUNT 3
 #define BLOCKSIZE 80
 
@@ -57,15 +58,24 @@ int stopPlugin(unsigned ident);
 
 int main()
 {
+  int i;
+  printf("Main thread pid: %d\n", getpid());
   startPing("www.seznam.cz");
   
-  stopPing();
+  usleep(100000);
+  
   while(1)
   {
     char* tmp;
     usleep(500000);
-    if((tmp = getDataPing()))
-      printf("%s",tmp);
+    
+    for(i = 0; i < PROGCOUNT; i++)
+    {
+      if(running[i]&&(tmp = getData(i)))
+      {
+	printf("%s",tmp);
+      }
+    }
   }
   
   pthread_join(threads[PING], NULL);
@@ -75,10 +85,11 @@ int main()
 
 void *runExternalProg(void* args)
 {
+  
   threadData_t* data= (threadData_t*) args;
   
   if(DEBUG)
-    fprintf(stderr,"Created thread id: %d\n",data->id);
+    fprintf(stderr,"Created thread id: %d pid: %d ppid: %d\n",data->id, getpid(), getppid());
   
   //freopen( data->fName, "w", stdout );	//redirect stdout to a file
   
@@ -184,8 +195,8 @@ char* getData(unsigned ident)
 	buffer = (char*) realloc(buffer, ++blockCount*BLOCKSIZE);
       ok = fgets(buffer+length, BLOCKSIZE, input);
       length += (ok? strlen(ok) : 0);			
-      if(DEBUG)
-	fprintf(stderr, "Read: %d bytes\n", (ok? strlen(ok) : 0));
+      //if(DEBUG)
+//	fprintf(stderr, "Read: %d bytes\n", (ok? strlen(ok) : 0));
       
     }while(ok!=NULL);
     //move position to current location
@@ -210,6 +221,30 @@ int stopWhois(void){
 
 int stopPlugin(unsigned ident)
 {
+  FILE* shpid;
+  char com[200];
+  int tokill;
+  pid_t pid;
+ 
+  pid = getpid();
+  //use ps, grep and awk for getting to know, which process has this program as a parent
+  //first get id of sh
+  sprintf(com, "ps -ef | grep -e '%s' | grep -v -e grep | awk '{if ( $3 == %d ) print $2 }' > shpid",commandNames[ident], pid);
+  system(com);
+  
+  if(!(shpid = fopen("shpid", "r")))
+    return 0;
+  
+  fscanf(shpid, "%d\n", &tokill);
+  //then of program and kill him
+  sprintf(com, "ps -ef | grep -e '%s' | grep -v -e grep | awk '{if ( $3 == %d ) print $2 }' | xargs kill -9 ", commandNames[ident], tokill); 
+  system(com);
+  
+  fclose(shpid);  
+  
+  running[ident] = 0;
+  //stop the thread  
   pthread_kill(threads[ident], SIGKILL);
+  return 1;
 }
 
