@@ -1,41 +1,52 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>Aplix Foo Plugin Test</title>
+   <title>CoNetServ Test</title>
 	</head>
 	<body>
+   <object id="conetserv" type="application/x-conetserv">Plugin FAILED to load</object>
+   <textarea id="result" rows="20" cols="100"></textarea>
 	<script type="text/javascript">
-		function scriptSimple() {
+      var conetserv = document.getElementById("conetserv");
+      var result = document.getElementById("result");
+      var interval;
+
+      function start() {
 			try {
-				alert(document.getElementById("pluginobj").scriptSimple());
+            conetserv.startPing("127.0.0.1");
+            interval = window.setInterval("read()", 1000);
 			}
 			catch(e) {
 				alert(e);
 			}
+         result.value = "ping 127.0.0.1\n";
 		}
-      function callback() {
+
+      function read() {
          try {
-            alert(document.getElementById("pluginobj").callback());
+            result.value = result.value + "\n" + conetserv.readPing();
          }
          catch(e) {
             alert(e);
          }
       }
-		function foo() {
-			try {
-				alert(document.getElementById("pluginobj").foo());
-			}
-			catch(e) {
-				alert(e);
-			}
-		}
+
+      function stop()
+      {
+         try {
+             conetserv.stopPing();
+         }
+         catch(e) {
+            alert(e);
+         }
+         window.clearInterval(interval);
+      }
+
 	</script>
 	<p>
-		<button onclick='scriptSimple()'>Call scriptSimple()</button>
-      <button onclick='callback()'>Call callback()</button>
-		<button onclick='foo()'>Call foo()</button>
-      <object id="pluginobj" type="application/x-conetserv">Plugin FAILED to load</object>
-	</p>
+      <button onclick='start()'>start()</button>
+      <button onclick='stop()'>stop()</button>
+   </p>
 
 	</body>
 </html>
