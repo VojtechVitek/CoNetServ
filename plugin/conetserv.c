@@ -17,16 +17,11 @@
 #include <string.h>
 
 #if defined(XULRUNNER_SDK)
+
 #include <npapi.h>
-
-/* Conforming to 0001-Mozilla-SDK-libxul-1.9.1-support.patch by kwizart*/
-#if (((NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR) < 20)
-#include "npupp.h"
-#else
-#include "npfunctions.h"
-#endif
-
+#include <npfunctions.h>
 #include <npruntime.h>
+
 #elif defined(ANDROID)
 
 #undef HAVE_LONG_LONG
@@ -59,6 +54,8 @@ extern JNIEnv *pluginJniEnv;
 
 #endif
 
+#include "conetserv.h"
+
 static NPObject        *so       = NULL;
 static NPNetscapeFuncs *npnfuncs = NULL;
 static NPP              inst     = NULL;
@@ -85,7 +82,7 @@ static void logmsg(const char *msg) {
 
 static bool
 hasMethod(NPObject* obj, NPIdentifier methodName) {
-   logmsg("npsimple: hasMethod ");
+   logmsg("conetserv: hasMethod ");
    logmsg(methodName);
    logmsg("()\n");
 	return true;
@@ -93,61 +90,82 @@ hasMethod(NPObject* obj, NPIdentifier methodName) {
 
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-	logmsg("npsimple: invokeDefault\n");
-	result->type = NPVariantType_Int32;
-	result->value.intValue = 42;
+   logmsg("conetserv: invokeDefault\n");
+   result->type = NPVariantType_Bool;
+   result->value.boolValue = true;
+   return true;
+}
+
+static bool
+startPing(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
+   logmsg("conetserv: startPing\n");
+   result->type = NPVariantType_Bool;
+   result->value.boolValue = true;
 	return true;
 }
 
 static bool
+stopPing(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
+   logmsg("conetserv: stopPing\n");
+   result->type = NPVariantType_Bool;
+   result->value.boolValue = true;
+   return true;
+}
+
+static bool
+readPing(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
+   logmsg("conetserv: readPing\n");
+
+   const char msg[] = "84.2 ms\n";
+   char *txt = (char *)npnfuncs->memalloc(strlen(msg));
+   memcpy(txt, msg, strlen(msg));
+   NPString str = { txt, strlen(msg) };
+   result->type = NPVariantType_String;
+   result->value.stringValue = str;
+
+   return true;
+}
+
+
+static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-	logmsg("npsimple: invoke\n");
+   logmsg("conetserv: invoke\n");
 	int error = 1;
 	char *name = npnfuncs->utf8fromidentifier(methodName);
 	if(name) {
-		if(!strcmp(name, "foo")) {
-			logmsg("npsimple: invoke foo\n");
-			return invokeDefault(obj, args, argCount, result);
-		}
-		else if(!strcmp(name, "callback")) {
-			if(argCount == 1 && args[0].type == NPVariantType_Object) {
-				static NPVariant v, r;
-				const char kHello[] = "Hello";
-				char *txt = (char *)npnfuncs->memalloc(strlen(kHello));
-
-				logmsg("npsimple: invoke callback function\n");
-				memcpy(txt, kHello, strlen(kHello));
-				STRINGN_TO_NPVARIANT(txt, strlen(kHello), v);
-				/* INT32_TO_NPVARIANT(42, v); */
-				if(npnfuncs->invokeDefault(inst, NPVARIANT_TO_OBJECT(args[0]), &v, 1, &r))
-					return invokeDefault(obj, args, argCount, result);
-			}
-         else {
-            logmsg("v-teq: prvni string\n");
-            const char msg[] = "TEST ;-)";
-            NPString str;
-            str.utf8characters = NPN_UTF8FromIdentifier(NPN_GetStringIdentifier(msg));
-            str.utf8length = strlen(msg);
-            result->type = NPVariantType_String;
-            result->value.stringValue = str;
-            return true;
+      if(!strcmp(name, "startPing")) {
+         if(argCount == 1 && args[0].type == NPVariantType_String) {
+           logmsg("conetserv: startPing(\"string\")\n");
+           return startPing(obj, args, argCount, result);
          }
-		}
+      }
+      else if(!strcmp(name, "stopPing")) {
+         if(argCount == 0) {
+           logmsg("conetserv: stopPing()\n");
+           return stopPing(obj, args, argCount, result);
+         }
+      }
+      else if(!strcmp(name, "readPing")) {
+         if(argCount == 0) {
+           logmsg("conetserv: readPing()\n");
+           return readPing(obj, args, argCount, result);
+         }
+      }
 	}
 	// aim exception handling
-	npnfuncs->setexception(obj, "exception during invocation");
+   npnfuncs->setexception(obj, "no such method");
 	return false;
 }
 
 static bool
 hasProperty(NPObject *obj, NPIdentifier propertyName) {
-	logmsg("npsimple: hasProperty\n");
+   logmsg("conetserv: hasProperty\n");
 	return false;
 }
 
 static bool
 getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result) {
-	logmsg("npsimple: getProperty\n");
+   logmsg("conetserv: getProperty\n");
 	return false;
 }
 
@@ -170,7 +188,7 @@ static NPClass npcRefObject = {
 static NPError
 nevv(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved) {
 	inst = instance;
-	logmsg("npsimple: new\n");
+   logmsg("conetserv: new\n");
 	return NPERR_NO_ERROR;
 }
 
@@ -179,7 +197,7 @@ destroy(NPP instance, NPSavedData **save) {
 	if(so)
 		npnfuncs->releaseobject(so);
 	so = NULL;
-	logmsg("npsimple: destroy\n");
+   logmsg("conetserv: destroy\n");
 	return NPERR_NO_ERROR;
 }
 
@@ -188,18 +206,18 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 	inst = instance;
 	switch(variable) {
 	default:
-		logmsg("npsimple: getvalue - default\n");
+      logmsg("conetserv: getvalue - default\n");
 		return NPERR_GENERIC_ERROR;
 	case NPPVpluginNameString:
-		logmsg("npsimple: getvalue - name string\n");
-      *((char **)value) = "CoNetServ";
+      logmsg("conetserv: getvalue - name string\n");
+      *((char **)value) = PLUGIN_NAME;
 		break;
 	case NPPVpluginDescriptionString:
-		logmsg("npsimple: getvalue - description string\n");
-      *((char **)value) = "<a href=\"http://www.fres-solutions.com/conetserv/\">CoNetServ</a> - Complex Network Services plugin.";
+      logmsg("conetserv: getvalue - description string\n");
+      *((char **)value) = PLUGIN_DESC;
 		break;
 	case NPPVpluginScriptableNPObject:
-      logmsg("npsimple: getvalue - scriptable object");
+      logmsg("conetserv: getvalue - scriptable object\n");
 		if(!so)
 			so = npnfuncs->createobject(instance, &npcRefObject);
 		npnfuncs->retainobject(so);
@@ -207,7 +225,7 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 		break;
 #if defined(XULRUNNER_SDK)
 	case NPPVpluginNeedsXEmbed:
-		logmsg("npsimple: getvalue - xembed\n");
+      logmsg("conetserv: getvalue - xembed\n");
       *((bool *)value) = false;
 		break;
 #endif
@@ -218,14 +236,14 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 static NPError /* expected by Safari on Darwin */
 handleEvent(NPP instance, void *ev) {
 	inst = instance;
-	logmsg("npsimple: handleEvent\n");
+   logmsg("conetserv: handleEvent\n");
 	return NPERR_NO_ERROR;
 }
 
 static NPError /* expected by Opera */
 setWindow(NPP instance, NPWindow* pNPWindow) {
 	inst = instance;
-	logmsg("npsimple: setWindow\n");
+   logmsg("conetserv: setWindow\n");
 	return NPERR_NO_ERROR;
 }
 
@@ -236,7 +254,7 @@ extern "C" {
 
 NPError OSCALL
 NP_GetEntryPoints(NPPluginFuncs *nppfuncs) {
-	logmsg("npsimple: NP_GetEntryPoints\n");
+   logmsg("conetserv: NP_GetEntryPoints\n");
 	nppfuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
 	nppfuncs->newp          = nevv;
 	nppfuncs->destroy       = destroy;
@@ -260,7 +278,7 @@ NP_Initialize(NPNetscapeFuncs *npnf
 #endif
 			)
 {
-	logmsg("npsimple: NP_Initialize\n");
+   logmsg("conetserv: NP_Initialize\n");
 	if(npnf == NULL)
 		return NPERR_INVALID_FUNCTABLE_ERROR;
 
@@ -276,14 +294,14 @@ NP_Initialize(NPNetscapeFuncs *npnf
 
 NPError
 OSCALL NP_Shutdown() {
-	logmsg("npsimple: NP_Shutdown\n");
+   logmsg("conetserv: NP_Shutdown\n");
 	return NPERR_NO_ERROR;
 }
 
 char *
 NP_GetMIMEDescription(void) {
-	logmsg("npsimple: NP_GetMIMEDescription\n");
-   return "application/x-conetserv::Complex Network Services";
+   logmsg("conetserv: NP_GetMIMEDescription\n");
+   return PLUGIN_MIME;
 }
 
 NPError OSCALL /* needs to be present for WebKit based browsers */
