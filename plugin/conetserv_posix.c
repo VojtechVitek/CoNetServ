@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,21 +8,7 @@
 #include <signal.h>
 #include <pthread.h>
 
-#define DEBUG 1
-#define PROGCOUNT 3
-#define BLOCKSIZE 80
-
-typedef struct{		//structure for data passed to a thread
-  int id;
-  char *command;
-}threadData_t;
-
-enum
-{
-  PING 		= 0,
-  TRACE 	= 1,
-  WHOIS 	= 2
-};
+#include "conetserv_posix.h"
 
 //SETTINGS
 //FILES
@@ -37,51 +24,6 @@ unsigned position[PROGCOUNT] = {0};
 pthread_t threads[PROGCOUNT];		//field for saving thread
 threadData_t threadData[PROGCOUNT];	//field for thread data
 int running[PROGCOUNT] = {0};			//defines, if thread is running
-
-//function for running new thread
-void *runExternalProg(void* args);
-
-int startPing(char* address);
-int startTrace(char* address);
-int startWhois(char* address);
-int startPlugin(unsigned ident, char* address);
-
-char* getDataPing();
-char* getDataTrace();
-char* getDataWhois();
-char* getData(unsigned ident);
-
-int stopPing(void);
-int stopTrace(void);
-int stopWhois(void);
-int stopPlugin(unsigned ident);
-
-int main()
-{
-  int i;
-  printf("Main thread pid: %d\n", getpid());
-  startPing("www.seznam.cz");
-  
-  usleep(100000);
-  
-  while(1)
-  {
-    char* tmp;
-    usleep(500000);
-    
-    for(i = 0; i < PROGCOUNT; i++)
-    {
-      if(running[i]&&(tmp = getData(i)))
-      {
-	printf("%s",tmp);
-      }
-    }
-  }
-  
-  pthread_join(threads[PING], NULL);
-  
-  pthread_exit(NULL);
-}
 
 void *runExternalProg(void* args)
 {
@@ -107,22 +49,22 @@ void *runExternalProg(void* args)
   pthread_exit(NULL);
 }
 
-int startPing(char* address){
+bool startPing(char* address){
   return startPlugin(PING, address);
 }
 
-int startTrace(char* address){
+bool startTrace(char* address){
   return startPlugin(TRACE, address);
 }
 
-int startWhois(char* address){
+bool startWhois(char* address){
   return startPlugin(WHOIS, address);
 }
 
-int startPlugin(unsigned ident, char* address)
+bool startPlugin(unsigned ident, char* address)
 {
   if(running[ident])	//check if operation is alerady running
-    return 0;
+    return false;
   running[ident] = 1;
   int i;
   int rc;
@@ -149,27 +91,27 @@ int startPlugin(unsigned ident, char* address)
   if(rc)
   {
     perror("Failed to create thread");
-    return 0;
+    return false;
   }
   
   pthread_attr_destroy(&attr);
 
-  return 1;
+  return true;
 }  
 
-char* getDataPing(){
-  return getData(PING);
+char* readPing(){
+  return readPlugin(PING);
 }
 
-char* getDataTrace(){
-  return getData(TRACE);
+char* readTrace(){
+  return readPlugin(TRACE);
 }
 
-char* getDataWhois(){
-  return getData(WHOIS);
+char* readWhois(){
+  return readPlugin(WHOIS);
 }
 
-char* getData(unsigned ident)
+char* readPlugin(unsigned ident)
 { 
   unsigned blockCount = 0;		//number of allocated blocks
   unsigned length = 0;			//length of string
@@ -196,7 +138,7 @@ char* getData(unsigned ident)
       ok = fgets(buffer+length, BLOCKSIZE, input);
       length += (ok? strlen(ok) : 0);			
       //if(DEBUG)
-//	fprintf(stderr, "Read: %d bytes\n", (ok? strlen(ok) : 0));
+//	logmsg("Read: %d bytes\n", (ok? strlen(ok) : 0));
       
     }while(ok!=NULL);
     //move position to current location
@@ -207,19 +149,19 @@ char* getData(unsigned ident)
   
 }
 
-int stopPing(void){
+bool stopPing(void){
   stopPlugin(PING);
 }
 
-int stopTrace(void){
+bool stopTrace(void){
   stopPlugin(TRACE);
 }
 
-int stopWhois(void){
+bool stopWhois(void){
   stopPlugin(WHOIS); 
 }
 
-int stopPlugin(unsigned ident)
+bool stopPlugin(unsigned ident)
 {
   FILE* shpid;
   char com[200];
@@ -233,7 +175,7 @@ int stopPlugin(unsigned ident)
   system(com);
   
   if(!(shpid = fopen("shpid", "r")))
-    return 0;
+    return false;
   
   fscanf(shpid, "%d\n", &tokill);
   //then of program and kill him
@@ -245,6 +187,6 @@ int stopPlugin(unsigned ident)
   running[ident] = 0;
   //stop the thread  
   pthread_kill(threads[ident], SIGKILL);
-  return 1;
+  return true;
 }
 

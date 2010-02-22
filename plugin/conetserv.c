@@ -14,6 +14,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 
 #if defined(XULRUNNER_SDK)
@@ -56,6 +57,12 @@ extern JNIEnv *pluginJniEnv;
 
 #include "conetserv.h"
 
+#if !defined(_WINDOWS)
+#include "conetserv_posix.h"
+#else
+#include "conetserv_win.h"
+#endif
+
 static NPObject        *so       = NULL;
 static NPNetscapeFuncs *npnfuncs = NULL;
 static NPP              inst     = NULL;
@@ -97,37 +104,6 @@ invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant
 }
 
 static bool
-startPing(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("conetserv: startPing\n");
-   result->type = NPVariantType_Bool;
-   result->value.boolValue = true;
-	return true;
-}
-
-static bool
-stopPing(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("conetserv: stopPing\n");
-   result->type = NPVariantType_Bool;
-   result->value.boolValue = true;
-   return true;
-}
-
-static bool
-readPing(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("conetserv: readPing\n");
-
-   const char msg[] = "84.2 ms\n";
-   char *txt = (char *)npnfuncs->memalloc(strlen(msg));
-   memcpy(txt, msg, strlen(msg));
-   NPString str = { txt, strlen(msg) };
-   result->type = NPVariantType_String;
-   result->value.stringValue = str;
-
-   return true;
-}
-
-
-static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result) {
    logmsg("conetserv: invoke\n");
 	int error = 1;
@@ -136,19 +112,30 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
       if(!strcmp(name, "startPing")) {
          if(argCount == 1 && args[0].type == NPVariantType_String) {
            logmsg("conetserv: startPing(\"string\")\n");
-           return startPing(obj, args, argCount, result);
+           result->type = NPVariantType_Bool;
+           result->value.boolValue = startPing((char*)args[0].value.stringValue.utf8characters);
+           return true;
          }
       }
       else if(!strcmp(name, "stopPing")) {
          if(argCount == 0) {
-           logmsg("conetserv: stopPing()\n");
-           return stopPing(obj, args, argCount, result);
+            logmsg("conetserv: stopPing()\n");
+            result->type = NPVariantType_Bool;
+            result->value.boolValue = stopPing();
+            return true;
          }
       }
       else if(!strcmp(name, "readPing")) {
          if(argCount == 0) {
-           logmsg("conetserv: readPing()\n");
-           return readPing(obj, args, argCount, result);
+            logmsg("conetserv: readPing()\n");
+            char *msg = readPing();
+
+            char *txt = (char *)npnfuncs->memalloc(strlen(msg));
+            memcpy(txt, msg, strlen(msg));
+            NPString str = { txt, strlen(msg) };
+            result->type = NPVariantType_String;
+            result->value.stringValue = str;
+            return true;
          }
       }
 	}

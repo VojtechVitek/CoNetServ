@@ -4,7 +4,7 @@
 include config.mk
 
 TEST = test.html
-SRC = conetserv.c
+SRC = conetserv.c conetserv_posix.c
 OBJ = ${SRC:.c=.o}
 
 all: options npconetserv.so ${shell uname}
