@@ -25,6 +25,12 @@ npconetserv.so: ${OBJ}
 	@echo LD $@
 	@${CC} -v -shared -o $@ ${OBJ} ${LDFLAGS}
 
+debug: ${OBJ}
+	@echo CC debug.c
+	@${CC} -c ${CFLAGS} -o debug.o debug.c
+	@echo LD debug
+	@${CC} -o debug debug.o ${OBJ}
+
 clean:
 	@echo cleaning
 	@rm -f npconetserv.so ${OBJ} Localized.rsrc
@@ -47,4 +53,4 @@ Darwin:
 	@echo Test: /Applications/Firefox.app/Contents/MacOS/firefox ${TEST}
 	@echo Test: /Applications/Opera.app/Contents/MacOS/Opera file://`pwd`/${TEST}
 
-.PHONY: all options clean Darwin Linux
+.PHONY: all options clean Darwin Linux debug
