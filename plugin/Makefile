@@ -33,6 +33,7 @@ debug: ${OBJ}
 
 clean:
 	@echo cleaning
+	@rm -f debug.o debug
 	@rm -f npconetserv.so ${OBJ} Localized.rsrc
 	@rm -rf npconetserv.plugin
 
@@ -53,4 +54,4 @@ Darwin:
 	@echo Test: /Applications/Firefox.app/Contents/MacOS/firefox ${TEST}
 	@echo Test: /Applications/Opera.app/Contents/MacOS/Opera file://`pwd`/${TEST}
 
-.PHONY: all options clean Darwin Linux debug
+.PHONY: all clean debug options Darwin Linux

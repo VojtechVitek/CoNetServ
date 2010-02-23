@@ -13,13 +13,13 @@
 
       function start() {
 			try {
-            conetserv.startPing("127.0.0.1");
+            conetserv.startPing("fres-solutions.com");
             interval = window.setInterval("read()", 1000);
 			}
 			catch(e) {
 				alert(e);
 			}
-         result.value = "ping 127.0.0.1\n";
+         result.value = "";
 		}
 
       function read() {

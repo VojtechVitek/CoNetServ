@@ -17,43 +17,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#if defined(XULRUNNER_SDK)
-
-#include <npapi.h>
-#include <npfunctions.h>
-#include <npruntime.h>
-
-#elif defined(ANDROID)
-
-#undef HAVE_LONG_LONG
-#include <jni.h>
-#include <npapi.h>
-#include <npfunctions.h>
-#include <npruntime.h>
-#define OSCALL
-#define NPP_WRITE_TYPE (NPP_WriteProcPtr)
-#define NPStringText UTF8Characters
-#define NPStringLen  UTF8Length
-extern JNIEnv *pluginJniEnv;
-
-#elif defined(WEBKIT_DARWIN_SDK)
-
-#include <Webkit/npapi.h>
-#include <WebKit/npfunctions.h>
-#include <WebKit/npruntime.h>
-#define OSCALL
-
-#elif defined(WEBKIT_WINMOBILE_SDK) /* WebKit SDK on Windows */
-
-#ifndef PLATFORM
-#define PLATFORM(x) defined(x)
-#endif
-#include <npfunctions.h>
-#ifndef OSCALL
-#define OSCALL WINAPI
-#endif
-
-#endif
 
 #include "conetserv.h"
 
@@ -63,33 +26,33 @@ extern JNIEnv *pluginJniEnv;
 #include "conetserv_win.h"
 #endif
 
-static NPObject        *so       = NULL;
-static NPNetscapeFuncs *npnfuncs = NULL;
-static NPP              inst     = NULL;
+NPObject        *so       = NULL;
+NPNetscapeFuncs *npnfuncs = NULL;
+NPP              inst     = NULL;
 
-/* NPN */
+char buffer[BUFFER_LENGTH];
 
-static void logmsg(const char *msg) {
+void logmsg(const char *msg) {
 #if defined(ANDROID)
    FILE *out = fopen("/tmp/conetserv.log", "a");
-	if(out) {
-		fputs(msg, out);
-		fclose(out);
-	}
+   if(out) {
+      fputs(msg, out);
+      fclose(out);
+   }
 #elif !defined(_WINDOWS)
-	fputs(msg, stderr);
+   fputs(msg, stderr);
 #else
    FILE *out = fopen("\\conetserv.log", "a");
-	if(out) {
-		fputs(msg, out);
-		fclose(out);
-	}
+   if(out) {
+      fputs(msg, out);
+      fclose(out);
+   }
 #endif
 }
 
 static bool
 hasMethod(NPObject* obj, NPIdentifier methodName) {
-   logmsg("conetserv: hasMethod ");
+   logmsg("CoNetServ: hasMethod ");
    logmsg(methodName);
    logmsg("()\n");
 	return true;
@@ -97,7 +60,7 @@ hasMethod(NPObject* obj, NPIdentifier methodName) {
 
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("conetserv: invokeDefault\n");
+   logmsg("CoNetServ: invokeDefault\n");
    result->type = NPVariantType_Bool;
    result->value.boolValue = true;
    return true;
@@ -105,54 +68,60 @@ invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant
 
 static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("conetserv: invoke\n");
-	int error = 1;
+   logmsg("CoNetServ: invoke\n");
 	char *name = npnfuncs->utf8fromidentifier(methodName);
 	if(name) {
       if(!strcmp(name, "startPing")) {
          if(argCount == 1 && args[0].type == NPVariantType_String) {
-           logmsg("conetserv: startPing(\"string\")\n");
+           logmsg("CoNetServ: invoke startPing(\"string\")\n");
            result->type = NPVariantType_Bool;
-           result->value.boolValue = startPing((char*)args[0].value.stringValue.utf8characters);
+           result->value.boolValue = startCommand(PING, (char*)args[0].value.stringValue.utf8characters);
            return true;
+         } else {
+            npnfuncs->setexception(obj, "startPing(string addr) has one argument");
+            return false;
          }
       }
       else if(!strcmp(name, "stopPing")) {
          if(argCount == 0) {
-            logmsg("conetserv: stopPing()\n");
+            logmsg("CoNetServ: invoke stopPing()\n");
             result->type = NPVariantType_Bool;
-            result->value.boolValue = stopPing();
+            result->value.boolValue = stopCommand(PING);
             return true;
+         } else {
+            npnfuncs->setexception(obj, "stopPing() has no arguments");
+            return false;
          }
       }
       else if(!strcmp(name, "readPing")) {
          if(argCount == 0) {
-            logmsg("conetserv: readPing()\n");
-            char *msg = readPing();
-
-            char *txt = (char *)npnfuncs->memalloc(strlen(msg));
-            memcpy(txt, msg, strlen(msg));
-            NPString str = { txt, strlen(msg) };
+            logmsg("CoNetServ: invoke readPing()\n");
+            int len = readCommand(PING, buffer);
+            char *txt = (char *)npnfuncs->memalloc(len);
+            memcpy(txt, buffer, len);
+            NPString str = { txt, len };
             result->type = NPVariantType_String;
             result->value.stringValue = str;
             return true;
+         } else {
+            npnfuncs->setexception(obj, "readPing() has no arguments");
+            return false;
          }
       }
 	}
-	// aim exception handling
    npnfuncs->setexception(obj, "no such method");
 	return false;
 }
 
 static bool
 hasProperty(NPObject *obj, NPIdentifier propertyName) {
-   logmsg("conetserv: hasProperty\n");
+   logmsg("CoNetServ: hasProperty\n");
 	return false;
 }
 
 static bool
 getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result) {
-   logmsg("conetserv: getProperty\n");
+   logmsg("CoNetServ: getProperty\n");
 	return false;
 }
 
@@ -175,7 +144,7 @@ static NPClass npcRefObject = {
 static NPError
 nevv(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved) {
 	inst = instance;
-   logmsg("conetserv: new\n");
+   logmsg("CoNetServ: new\n");
 	return NPERR_NO_ERROR;
 }
 
@@ -184,7 +153,7 @@ destroy(NPP instance, NPSavedData **save) {
 	if(so)
 		npnfuncs->releaseobject(so);
 	so = NULL;
-   logmsg("conetserv: destroy\n");
+   logmsg("CoNetServ: destroy\n");
 	return NPERR_NO_ERROR;
 }
 
@@ -193,18 +162,18 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 	inst = instance;
 	switch(variable) {
 	default:
-      logmsg("conetserv: getvalue - default\n");
+      logmsg("CoNetServ: getvalue - default\n");
 		return NPERR_GENERIC_ERROR;
 	case NPPVpluginNameString:
-      logmsg("conetserv: getvalue - name string\n");
+      logmsg("CoNetServ: getvalue - name string\n");
       *((char **)value) = PLUGIN_NAME;
 		break;
 	case NPPVpluginDescriptionString:
-      logmsg("conetserv: getvalue - description string\n");
+      logmsg("CoNetServ: getvalue - description string\n");
       *((char **)value) = PLUGIN_DESC;
 		break;
 	case NPPVpluginScriptableNPObject:
-      logmsg("conetserv: getvalue - scriptable object\n");
+      logmsg("CoNetServ: getvalue - scriptable object\n");
 		if(!so)
 			so = npnfuncs->createobject(instance, &npcRefObject);
 		npnfuncs->retainobject(so);
@@ -212,7 +181,7 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 		break;
 #if defined(XULRUNNER_SDK)
 	case NPPVpluginNeedsXEmbed:
-      logmsg("conetserv: getvalue - xembed\n");
+      logmsg("CoNetServ: getvalue - xembed\n");
       *((bool *)value) = false;
 		break;
 #endif
@@ -223,14 +192,14 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 static NPError /* expected by Safari on Darwin */
 handleEvent(NPP instance, void *ev) {
 	inst = instance;
-   logmsg("conetserv: handleEvent\n");
+   logmsg("CoNetServ: handleEvent\n");
 	return NPERR_NO_ERROR;
 }
 
 static NPError /* expected by Opera */
 setWindow(NPP instance, NPWindow* pNPWindow) {
 	inst = instance;
-   logmsg("conetserv: setWindow\n");
+   logmsg("CoNetServ: setWindow\n");
 	return NPERR_NO_ERROR;
 }
 
@@ -241,7 +210,7 @@ extern "C" {
 
 NPError OSCALL
 NP_GetEntryPoints(NPPluginFuncs *nppfuncs) {
-   logmsg("conetserv: NP_GetEntryPoints\n");
+   logmsg("CoNetServ: NP_GetEntryPoints\n");
 	nppfuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
 	nppfuncs->newp          = nevv;
 	nppfuncs->destroy       = destroy;
@@ -265,7 +234,7 @@ NP_Initialize(NPNetscapeFuncs *npnf
 #endif
 			)
 {
-   logmsg("conetserv: NP_Initialize\n");
+   logmsg("CoNetServ: NP_Initialize\n");
 	if(npnf == NULL)
 		return NPERR_INVALID_FUNCTABLE_ERROR;
 
@@ -281,13 +250,13 @@ NP_Initialize(NPNetscapeFuncs *npnf
 
 NPError
 OSCALL NP_Shutdown() {
-   logmsg("conetserv: NP_Shutdown\n");
+   logmsg("CoNetServ: NP_Shutdown\n");
 	return NPERR_NO_ERROR;
 }
 
 char *
 NP_GetMIMEDescription(void) {
-   logmsg("conetserv: NP_GetMIMEDescription\n");
+   logmsg("CoNetServ: NP_GetMIMEDescription\n");
    return PLUGIN_MIME;
 }
 
