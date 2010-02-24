@@ -1,1 +1,0 @@
-base.c 		Source file containing use of fork and pipes to be able to send data from plugin to extensions.

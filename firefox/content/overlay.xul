@@ -11,7 +11,7 @@
   </toolbarpalette>  
   
   <menupopup id="menu_ToolsPopup">  
-    <menuitem id="conetservMenuitem" label="CoNetServ" insertbefore="sanitizeSeparator"  
+    <menuitem id="conetservMenuitem" label="CoNetServ" insertbefore="sanitizeSeparator"
        image="chrome://conetserv/skin/icon-small.png" command="conetservStart"/>  
   </menupopup> 
 </overlay> 

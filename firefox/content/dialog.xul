@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <?xml-stylesheet href="chrome://global/skin/"?>  
 <!DOCTYPE dialog SYSTEM "chrome://conetserv/locale/conetserv.dtd">
-<dialog id="conetservDialog" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"  
+
+<dialog id="conetservDialog"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    xmlns:html="http://www.w3.org/1999/xhtml"
     title="&dialog.title;" 
     buttons="accept" 
-    width="300" 
-    height="400"
+    width="640"
+    height="500"
     defaultButton="null"
     onkeypress="filter(key);"
     ondialogaccept="window.close();">    
-  
+
+  <html:object id="conetserv" type="application/x-conetserv">Plugin FAILED to load</html:object>
+
   <vbox>
   <!--TODO edit for getting address from page-->
     
@@ -23,7 +28,7 @@
 		flex="1" 
 		ontextentered="start();"
 		onfocus="document.getElementById('conetservDialog').style.MozUserFocus= 'ignore'"
-		value="http://www.seznam.cz/">
+      value="http://www.fres-solutions.com/">
 	<hbox>
 	  <image id="conetservStart" 
 		  onclick="start();" tooltip="&dialog.goButtonTip;" src="chrome://browser/skin/Go-arrow.png"
@@ -41,26 +46,28 @@
     </hbox>
     <tabbox>  
       <tabs>  
-	<tab id="conetservPing" label="ping" selected="true"/>  
-	<tab id="conetservTrace" label="traceroute"/>  
+        <tab id="conetservPing" label="ping" selected="true"/>
+        <tab id="conetservTrace" label="traceroute"/>
         <tab id="conetservWhois" label="whois"/>  
       </tabs>  
       <tabpanels id="conetservTabs">  
 	<tabpanel id="pingTab" orient="vertical">  
-	  <textbox id="pingConsole" multiline="true" disabled="true" rows="15" flex="1" value="aaa"/>
+     <textbox id="pingConsole" multiline="true" disabled="true" rows="15" flex="1" value="" />
 	</tabpanel>  
 	<tabpanel id="traceTab" orient="vertical">  
-	  <textbox id="traceConsole" multiline="true" disabled="true" flex="1"/>
+     <textbox id="traceConsole" multiline="true" disabled="true" flex="1" value="" />
 	</tabpanel>  
      	<tabpanel id="whoisTab" orient="vertical">  
-          <textbox id="whoisConsole" multiline="true" disabled="true" flex="1"/>
+          <textbox id="whoisConsole" multiline="true" disabled="true" flex="1" value="" />
 	</tabpanel>  
       </tabpanels>  
     </tabbox> 
   </vbox>
-  
-  <script type="application/javascript" src="dialog.js"/>
-</dialog>	
+
+  <script type="application/javascript" src="dialog.js"></script>
+
+</dialog>
+
 <!--
 <menubar>  
   <menu label="Menu 1">  
