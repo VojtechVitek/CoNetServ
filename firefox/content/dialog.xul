@@ -8,15 +8,15 @@
     title="&dialog.title;" 
     buttons="accept" 
     width="640"
-    height="500"
+    height="520"
     defaultButton="null"
     onkeypress="filter(key);"
     ondialogaccept="window.close();">    
 
-  <html:object id="conetserv" type="application/x-conetserv">Plugin FAILED to load</html:object>
+  <html:object id="conetserv" type="application/x-conetserv" style="visibility: hidden;">Plugin FAILED to load</html:object>
 
   <vbox>
-  <!--TODO edit for getting address from page-->
+  <!-- TODO get the address from the current tab -->
     
     <hbox>
       <textbox id="conetservUrl" 
@@ -27,12 +27,12 @@
 		tabScrolling="true" 
 		flex="1" 
 		ontextentered="start();"
-		onfocus="document.getElementById('conetservDialog').style.MozUserFocus= 'ignore'"
-      value="http://www.fres-solutions.com/">
+      onfocus="document.getElementById('conetservDialog').style.MozUserFocus='ignore'"
+      value="www.fres-solutions.com">
 	<hbox>
 	  <image id="conetservStart" 
 		  onclick="start();" tooltip="&dialog.goButtonTip;" src="chrome://browser/skin/Go-arrow.png"
-		  style="cursor:pointer;padding-top:5px;padding-bottom:4px;padding-right:2px;;padding-left:2px;" hidden="true"/>
+        style="cursor:pointer;padding-top:5px;padding-bottom:4px;padding-right:2px;padding-left:2px;" hidden="true" />
 <!--      <dropmarker allowevents="true" /> -->
 	</hbox>
       </textbox>
@@ -45,21 +45,21 @@
 	      style="min-width: 30px; max-width:30px;"/>
     </hbox>
     <tabbox>  
-      <tabs>  
+      <tabs>
         <tab id="conetservPing" label="ping" selected="true"/>
         <tab id="conetservTrace" label="traceroute"/>
         <tab id="conetservWhois" label="whois"/>  
       </tabs>  
       <tabpanels id="conetservTabs">  
-	<tabpanel id="pingTab" orient="vertical">  
-     <textbox id="pingConsole" multiline="true" disabled="true" rows="15" flex="1" value="" />
-	</tabpanel>  
-	<tabpanel id="traceTab" orient="vertical">  
-     <textbox id="traceConsole" multiline="true" disabled="true" flex="1" value="" />
-	</tabpanel>  
-     	<tabpanel id="whoisTab" orient="vertical">  
-          <textbox id="whoisConsole" multiline="true" disabled="true" flex="1" value="" />
-	</tabpanel>  
+         <tabpanel id="pingTab" orient="vertical">
+           <textbox id="pingConsole" multiline="true" disabled="true" rows="20" flex="1" value="" />
+         </tabpanel>
+         <tabpanel id="tracerouteTab" orient="vertical">
+           <textbox id="tracerouteConsole" multiline="true" disabled="true" rows="20" flex="1" value="" />
+         </tabpanel>
+         <tabpanel id="whoisTab" orient="vertical">
+           <textbox id="whoisConsole" multiline="true" disabled="true" rows="20" flex="1" value="" />
+         </tabpanel>
       </tabpanels>  
     </tabbox> 
   </vbox>
