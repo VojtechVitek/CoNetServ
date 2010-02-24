@@ -1,4 +1,4 @@
-VERSION = 1.0
+include ../config.mk
 
 ifeq (${shell uname}, Darwin)
 CPPFLAGS = -DVERSION=\"${VERSION}\" -DWEBKIT_DARWIN_SDK

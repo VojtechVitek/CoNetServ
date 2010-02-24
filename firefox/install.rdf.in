@@ -4,8 +4,8 @@
     <em:id>conetserv@fres-solutions.com</em:id>
     <em:type>2</em:type>
     <em:name>CoNetServ</em:name>
-    <em:version>1.0</em:version>
-    <em:targetPlatform>Linux_x86_64-gcc3</em:targetPlatform>
+    <em:version>@VERSION@</em:version>
+    <em:targetPlatform>@PLATFORM@</em:targetPlatform>
     <em:description>Complex Network Services</em:description>
     <em:creator>FRES-Solutions</em:creator>
     <em:homepageURL>http://www.fres-solutions.com/conetserv/firefox/</em:homepageURL>
