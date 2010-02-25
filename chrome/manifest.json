@@ -1,0 +1,18 @@
+{
+  "name": "CoNetServ",
+  "version": "1.0",
+  "description": "Complex Network Services",
+  "icons": { "48": "icon.png",
+            "128": "icon.png" },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "CoNetServ",
+    "popup": "dialog.xul"
+  },
+  "permissions": [
+    "http://api.flickr.com/"
+  ],
+  "plugins": [
+      { "path": "npconetserv.so", "public": true }
+  ]
+}
