@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link type="text/css" href="jquery/css/cupertino/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+  <script type="text/javascript" src="jquery/js/jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" src="jquery/js/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript">
+  $(document).ready(function(){
+    $("#tabs").tabs({ fx: { opacity: 'toggle' } });
+  });
+  </script>
+</head>
+<body style="font-size:62.5%;">
+<div id="tabs" style="width: 680px; height: 560px;">
+    <form action="" onsubmit="stopCommands();startCommands();return false;">
+      <input id="url" type="text" value="www.fres-solutions.com" size="40" class="aui-corner-all" />
+      <input type="submit" value="Submit" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
+    </form>
+    <br />
+    <ul>
+        <li><a href="#tab1"><span>Ping</span></a></li>
+        <li><a href="#tab2"><span>Traceroute</span></a></li>
+        <li><a href="#tab3"><span>Whois</span></a></li>
+    </ul>
+    <div id="tab1">
+        <textarea id="pingConsole" rows="30" cols="80" style="width: 640px; height: 480px;" disabled="true"></textarea>
+    </div>
+    <div id="tab2">
+      <textarea id="tracerouteConsole" rows="30" cols="80" style="width: 640px; height: 480px;" disabled="true"></textarea>
+    </div>
+    <div id="tab3">
+      <textarea id="whoisConsole" rows="30" cols="80" style="width: 640px; height: 480px;" disabled="true"></textarea>
+    </div>
+</div>
+<object id="conetserv" type="application/x-conetserv" style="width: 0px; height: 0px; margin: 0px; padding: 0px;">Plugin FAILED to load</object>
+<script type="text/javascript" src="popup.js"></script>
+</body>
+</html>
