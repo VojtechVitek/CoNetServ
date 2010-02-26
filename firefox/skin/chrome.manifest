@@ -1,7 +1,0 @@
-content conetserv content/
-overlay chrome://browser/content/browser.xul chrome://conetserv/content/overlay.xul
-locale conetserv en-US locale/en-US/
-locale conetserv cs-CZ locale/cs-CZ/
-skin conetserv classic/1.0 skin/
-style chrome://browser/content/browser.xul chrome://conetserv/skin/overlay.css
-style chrome://global/content/customizeToolbar.xul chrome://conetserv/skin/overlay.css

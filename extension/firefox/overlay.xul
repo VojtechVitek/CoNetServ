@@ -1,9 +1,9 @@
 <?xml version="1.0"?>  
-<?xml-stylesheet href="chrome://conetserv/skin/overlay.css" type="text/css"?>
+<?xml-stylesheet href="chrome://conetserv/content/firefox/overlay.css" type="text/css"?>
 <overlay id="conetservOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
   <commandset id="mainCommandSet">
     <command id="conetservStart" oncommand="window.openDialog(
-    'chrome://conetserv/content/dialog.xul',
+    'chrome://conetserv/content/popup.html',
     'CoNetServ','chrome,centerscreen,modal')"/>
   </commandset>
   <toolbarpalette id="BrowserToolbarPalette">
@@ -12,6 +12,6 @@
   
   <menupopup id="menu_ToolsPopup">  
     <menuitem id="conetservMenuitem" label="CoNetServ" insertbefore="sanitizeSeparator"
-       image="chrome://conetserv/skin/icon-small.png" command="conetservStart"/>  
+       image="chrome://conetserv/content/icon-small.png" command="conetservStart"/>
   </menupopup> 
 </overlay> 
