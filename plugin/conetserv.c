@@ -182,7 +182,7 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 #if defined(XULRUNNER_SDK)
 	case NPPVpluginNeedsXEmbed:
       logmsg("CoNetServ: getvalue - xembed\n");
-      *((bool *)value) = false;
+      *((bool *)value) = true;
 		break;
 #endif
 	}
