@@ -17,14 +17,13 @@
 <body>
 <div id="tabs">
     <form action="" onsubmit="stopCommands();startCommands();return false;">
-      <input id="url" type="text" value="www.fres-solutions.com" size="40" class="aui-corner-all" />
-      <input type="submit" value="Submit" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
+      <input id="url" type="text" value="www.fres-solutions.com" size="40" class="ui-corner-all" />
+      <input id="urlButton" type="submit" value="Submit" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
     </form>
-    <br />
     <ul>
-        <li><a href="#tab1"><span>Ping</span></a></li>
-        <li><a href="#tab2"><span>Traceroute</span></a></li>
-        <li><a href="#tab3"><span>Whois</span></a></li>
+        <li><div id="pingState" class="tabState"></div><a href="#tab1"><span>Ping</span></a></li>
+        <li><div id="traceState" class="tabState"></div><a href="#tab2"><span>Traceroute</span></a></li>
+        <li><div id="whoisState" class="tabState"></div><a href="#tab3"><span>Whois</span></a></li>
     </ul>
     <div id="tab1">
         <textarea id="pingConsole" class="consoleTextarea" rows="30" cols="80" disabled="true"></textarea>
