@@ -2,15 +2,17 @@
   "name": "CoNetServ",
   "version": "1.0",
   "description": "Complex Network Services",
-  "icons": { "48": "icon.png",
-            "128": "icon.png" },
+  "icons": { "16": "icon16.png",
+             "32": "icon32.png",
+	     "48": "icon48.png",
+            "128": "icon128.png" },
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "icon16.png",
     "default_title": "CoNetServ",
-    "popup": "popup.html"
+    "popup": "index.html"
   },
   "plugins": [
-      { "path": "platform/Linux_x86_64-gcc3/plugins/npconetserv.so", "public": true,
-        "path": "platform/WINNT_x86-MSVC/plugins/npconetserv.dll", "public": true }
+      { "path": "platform/Linux_x86_64-gcc3/plugins/npconetserv.so", "public": true }/*,
+      { "path": "platform/WINNT_x86-MSVC/plugins/npconetserv.dll", "public": true }*/
   ]
 }

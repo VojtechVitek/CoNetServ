@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<widget network="public" xmlns="http://xmlns.opera.com/2006/widget">
+  <widgetname>CoNetServ</widgetname>
+  <description>Complex Network Services</description>
+  <id>
+    <host>fres-solutions.com</host>
+    <name>conetserv</name>
+    <revised>2010-02-27</revised>
+  </id>
+  <icon>icon16.png</icon>
+  <icon>icon32.png</icon>
+  <icon>icon48.png</icon>
+  <icon>icon128.png</icon>
+  <width>680</width>
+  <height>560</height>
+  <author>
+    <name>FRES-Solutions</name>
+    <email>conetserv@fres-solutions.com</email>
+    <link>http://www.fres-solutions.com/conetserv/opera/</link>
+    <organization>FRES-Solutions</organization>
+  </author>
+  <security>
+    <content java="no" plugins="yes" />
+  </security>
+</widget>

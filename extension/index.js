@@ -54,7 +54,7 @@ function readPing() {
           pingData.push(null);
        }
      }
-     else if(BrowserDetect.OS == "Windows")
+     else if($.client.os == "Linux")
      {
      }
      else pingConsole.value += $.client.os;

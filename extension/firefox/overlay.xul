@@ -3,7 +3,7 @@
 <overlay id="conetservOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">  
   <commandset id="mainCommandSet">
     <command id="conetservStart" oncommand="window.openDialog(
-    'chrome://conetserv/content/popup.html',
+    'chrome://conetserv/content/index.html',
     'CoNetServ','chrome,centerscreen,modal')"/>
   </commandset>
   <toolbarpalette id="BrowserToolbarPalette">
@@ -12,6 +12,6 @@
   
   <menupopup id="menu_ToolsPopup">  
     <menuitem id="conetservMenuitem" label="CoNetServ" insertbefore="sanitizeSeparator"
-       image="chrome://conetserv/content/icon-small.png" command="conetservStart"/>
+       image="chrome://conetserv/content/icon16.png" command="conetservStart"/>
   </menupopup> 
 </overlay> 
