@@ -38,6 +38,16 @@ $(function () {
    $.plot(placeholder, [pingData], options);
 });
 
+function startAnim(id)
+{
+   document.getElementById(id).style.visibility = 'visible';
+}
+
+function stopAnim(id)
+{
+   document.getElementById(id).style.visibility = 'hidden';
+}
+
 function readPing() {   
    try {
       var received = document.getElementById("conetserv").readPing();
@@ -119,9 +129,12 @@ function startCommands() {
          document.getElementById("pingConsole").value = "";
          if (document.getElementById("conetserv").startPing(document.getElementById("url").value))
 	 {
+	    /* reset data and start animation */
 	    pingData = [];
 	    pingCount = 0;
 	    prevPingId = 0;
+	    startAnim("pingState");
+
             pingInterval = window.setInterval("readPing()", 500);
 	 }
          else

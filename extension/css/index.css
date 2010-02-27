@@ -2,10 +2,30 @@
 body{
    font-size:62.5%;
 }
+
 #tabs{
    width: 680px; 
    height: 560px; 
    overflow: hidden;
+}
+
+#tabs form{
+   margin: 2px 2px 5px 5px;
+}
+
+#url{
+   height: 20px;
+}
+
+.tabState{
+   margin-top: 4px;
+   margin-left: 4px;
+   float: left;
+   display: block;
+   width: 16px;
+   height: 16px;
+   background-image: url('working.gif');
+   visibility: hidden;
 }
 
 .consoleTextarea{
