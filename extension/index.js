@@ -19,13 +19,15 @@ var pingInterval = false;
 var tracerouteInterval = false;
 var whoisInterval = false;
 
+/* previous ping packet id */
+var prevPingId = 0;
+
 /* chart data */
 var options = {
       lines: { show: true },
       points: { show: true },
       xaxis: { tickDecimals: 0, tickSize: 1 },
-      yaxis: { min: 0}
-    
+      yaxis: { min: 0}    
 };
 var placeholder = $("#placeholder");
 /* ping time data */
@@ -38,26 +40,47 @@ $(function () {
 
 function readPing() {   
    try {
-     var received = document.getElementById("conetserv").readPing();
-     pingConsole.value = document.getElementById("pingConsole").value + received;
-     /*update chart data*/
-     if($.client.os == "Windows")
-     {
-       if(received.indexOf("Odpoved") != -1)
-       {
-          pingCount++;
-          pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
-          pingData.push([pingCount, pingTime]);
-       }
-       else if(received.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1)
-       {
-          pingCount++;
-          pingData.push(null);
-       }
-     }
+      var received = document.getElementById("conetserv").readPing();
+      pingConsole.value = document.getElementById("pingConsole").value + received;
+      /*update chart data*/
+      if($.client.os == "Windows")
+      {
+	 if(received.indexOf("Odpoved") != -1)
+	 {
+	    pingCount++;
+	    pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
+	    pingData.push([pingCount, pingTime]);
+	 }
+	 else if(received.indexOf("Reply") != -1)
+	 {
+	    pingCount++;
+	    pingTime= parseInt(received.substr(received.indexOf("time=")+5));
+	    pingData.push([pingCount, pingTime]);
+	    
+	 }
+	 else if(received.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 || received.indexOf("timed out") != -1)
+	 {
+	    pingCount++;
+	    pingData.push(null);
+	 }
+      }
 
-     else if($.client.OS == "Linux")
-     {
+      else if($.client.os == "Linux")
+      {
+	 if(received.indexOf("bytes from") != -1)
+	 {
+	    /* create "holes" in plot in case of lost packet */
+	    var actPingId = parseInt(received.substr(received.indexOf("icmp_seq=")+9));
+	    /* check id */
+	    while(actPingId > ++prevPingId)
+	    {
+	       pingCount++;
+	       pingData.push(null);
+	    }
+	    pingCount++;
+	    pingTime= parseInt(received.substr(received.indexOf("time=")+5,received.indexOf(" ms")-received.indexOf("time=")+5));
+	    pingData.push([pingCount, pingTime]);
+	 }
      }
      else pingConsole.value += $.client.os;
 
@@ -95,7 +118,12 @@ function startCommands() {
       try {
          document.getElementById("pingConsole").value = "";
          if (document.getElementById("conetserv").startPing(document.getElementById("url").value))
+	 {
+	    pingData = [];
+	    pingCount = 0;
+	    prevPingId = 0;
             pingInterval = window.setInterval("readPing()", 500);
+	 }
          else
             pingInterval = -1;
       }
