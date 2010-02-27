@@ -1,9 +1,6 @@
-/*
- * Copyright 2007-2008 Aplix Corporation. All rights reserved.
- */
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by nprt.rc
+// Used by conetserv.rc
 //
 #define IDD_MAIN                        101
 #define IDC_BUTTON_GO                   1002

@@ -14,17 +14,16 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
-
-
-#include "conetserv.h"
 
 #if !defined(_WINDOWS)
 #include "conetserv_posix.h"
+#include <stdbool.h>
 #else
 #include "conetserv_win.h"
 #endif
+
+#include "conetserv.h"
 
 NPObject        *so       = NULL;
 NPNetscapeFuncs *npnfuncs = NULL;
@@ -68,8 +67,9 @@ invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant
 
 static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("CoNetServ: invoke\n");
-	char *name = npnfuncs->utf8fromidentifier(methodName);
+	NPString str;
+   char *name = npnfuncs->utf8fromidentifier(methodName);
+	logmsg("CoNetServ: invoke\n");
 	if(name) {
       if(!strcmp(name, "startPing")) {
          if(argCount == 1 && args[0].type == NPVariantType_String) {
@@ -95,11 +95,12 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
       }
       else if(!strcmp(name, "readPing")) {
          if(argCount == 0) {
-            logmsg("CoNetServ: invoke readPing()\n");
             int len = readCommand(PING, buffer);
             char *txt = (char *)npnfuncs->memalloc(len);
-            memcpy(txt, buffer, len);
-            NPString str = { txt, len };
+            logmsg("CoNetServ: invoke readPing()\n");
+				memcpy(txt, buffer, len);
+            str.utf8characters = txt;
+				str.utf8length = len;
             result->type = NPVariantType_String;
             result->value.stringValue = str;
             return true;
@@ -182,7 +183,7 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 #if defined(XULRUNNER_SDK)
 	case NPPVpluginNeedsXEmbed:
       logmsg("CoNetServ: getvalue - xembed\n");
-      *((bool *)value) = true;
+      *((bool *)value) = false;
 		break;
 #endif
 	}

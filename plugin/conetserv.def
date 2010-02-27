@@ -1,4 +1,4 @@
-LIBRARY   npsimple.dll
+LIBRARY   npconetserv.dll
 
 EXPORTS
 	NP_GetEntryPoints     @1
