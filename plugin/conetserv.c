@@ -180,12 +180,10 @@ getValue(NPP instance, NPPVariable variable, void *value) {
 		npnfuncs->retainobject(so);
 		*(NPObject **)value = so;
 		break;
-#if defined(XULRUNNER_SDK)
 	case NPPVpluginNeedsXEmbed:
       logmsg("CoNetServ: getvalue - xembed\n");
-      *((bool *)value) = false;
+      *((bool *)value) = true;
 		break;
-#endif
 	}
 	return NPERR_NO_ERROR;
 }
