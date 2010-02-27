@@ -12,6 +12,6 @@
   
   <menupopup id="menu_ToolsPopup">  
     <menuitem id="conetservMenuitem" label="CoNetServ" insertbefore="sanitizeSeparator"
-       image="chrome://conetserv/content/icon16.png" command="conetservStart"/>
+       image="chrome://conetserv/content/images/icon16.png" command="conetservStart"/>
   </menupopup> 
 </overlay> 

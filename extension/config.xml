@@ -7,10 +7,10 @@
     <name>conetserv</name>
     <revised>2010-02-27</revised>
   </id>
-  <icon>icon16.png</icon>
-  <icon>icon32.png</icon>
-  <icon>icon48.png</icon>
-  <icon>icon128.png</icon>
+  <icon>images/icon16.png</icon>
+  <icon>images/icon32.png</icon>
+  <icon>images/icon48.png</icon>
+  <icon>images/icon128.png</icon>
   <width>680</width>
   <height>560</height>
   <author>
