@@ -21,9 +21,11 @@ var whoisInterval = false;
 
 /* chart data */
 var options = {
-    lines: { show: true },
-    points: { show: true },
-    xaxis: { tickDecimals: 0, tickSize: 1 }
+      lines: { show: true },
+      points: { show: true },
+      xaxis: { tickDecimals: 0, tickSize: 1 },
+      yaxis: { min: 0}
+    
 };
 var placeholder = $("#placeholder");
 /* ping time data */
@@ -34,10 +36,9 @@ $(function () {
    $.plot(placeholder, [pingData], options);
 });
 
-function readPing() {
+function readPing() {   
    try {
      var received = document.getElementById("conetserv").readPing();
-     var pingTime;
      pingConsole.value = document.getElementById("pingConsole").value + received;
      /*update chart data*/
      if($.client.os == "Windows")
@@ -48,22 +49,23 @@ function readPing() {
           pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
           pingData.push([pingCount, pingTime]);
        }
-       else if(received.indexOf("Vyprsel") != -1)
+       else if(received.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1)
        {
           pingCount++;
           pingData.push(null);
        }
      }
-     else if($.client.os == "Linux")
+
+     else if($.client.OS == "Linux")
      {
      }
      else pingConsole.value += $.client.os;
-      //
-     //pingCount++;
-     //pingData.push([pingCount, pingTime]);
-     
+
+     var startPos = pingCount > 30? pingCount - 30 : 1;
      /*update chart*/
-     $.plot(placeholder,[pingData], options);
+     $.plot(placeholder,[pingData], $.extend(true, {}, options, {
+                              xaxis: { min: startPos }
+                          }));
    }
    catch(e) {
       document.getElementById("pingConsole").value = e;
