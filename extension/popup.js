@@ -40,14 +40,24 @@ function readPing() {
      var pingTime;
      pingConsole.value = document.getElementById("pingConsole").value + received;
      /*update chart data*/
-     if(received.indexOf("Odpoved") != -1)
+     if($.client.os == "Windows")
      {
-        pingCount++;
-        pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
-        pingData.push([pingCount, pingTime]);
+       if(received.indexOf("Odpoved") != -1)
+       {
+          pingCount++;
+          pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
+          pingData.push([pingCount, pingTime]);
+       }
+       else if(received.indexOf("Vyprsel") != -1)
+       {
+          pingCount++;
+          pingData.push(null);
+       }
      }
-     else if(received.indexOf("Vyprsel") != -1)
-        pingData.push(null);
+     else if(BrowserDetect.OS == "Windows")
+     {
+     }
+     else pingConsole.value += $.client.os;
       //
      //pingCount++;
      //pingData.push([pingCount, pingTime]);
@@ -155,8 +165,4 @@ function stopCommands() {
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
    }
-}
-
-function  updatePing(){
-  
 }

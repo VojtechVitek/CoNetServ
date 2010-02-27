@@ -10,7 +10,7 @@
     "popup": "popup.html"
   },
   "plugins": [
-      { "path": "platform/Linux_x86_64-gcc3/plugins/npconetserv.so", "public": true }
-      { "path": "platform/WINNT_x86-MSVC/plugins/npconetserv.dll", "public": true }
+      { "path": "platform/Linux_x86_64-gcc3/plugins/npconetserv.so", "public": true,
+        "path": "platform/WINNT_x86-MSVC/plugins/npconetserv.dll", "public": true }
   ]
 }
