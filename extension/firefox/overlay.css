@@ -1,8 +1,8 @@
 #conetservToolButton {  
   list-style-image:  
-  url(chrome://conetserv/content/icon32.png);
+  url(chrome://conetserv/content/images/icon32.png);
 }  
   
 toolbar[iconsize="small"] #conetservToolButton {  
-  list-style-image: url(chrome://conetserv/content/icon16.png);
+  list-style-image: url(chrome://conetserv/content/images/icon16.png);
 }
