@@ -1,6 +1,10 @@
 #ifndef _CONETSERV_H_
 #define _CONETSERV_H_
 
+#if !defined(_WINDOWS)
+#include <stdbool.h>
+#endif
+
 #if defined(XULRUNNER_SDK)
 
 #include <npapi.h>
@@ -47,6 +51,20 @@ extern NPP              inst;
 
 void logmsg(const char *msg);
 
+typedef enum {
+   /* system commands: */
+   PING = 0,
+   TRACEROUTE,
+   WHOIS,
+
+   command_t_count
+
+   /* implemented commands: */
+} command_t;
+
+bool startCommand(command_t cmd, char* addr);
+int readCommand(command_t cmd, char* buf);
+bool stopCommand(command_t cmd);
 
 #define PLUGIN_NAME "CoNetServ"
 

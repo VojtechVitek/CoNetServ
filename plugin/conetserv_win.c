@@ -4,7 +4,6 @@
 #include <ctype.h>
 
 #include "conetserv.h"
-#include "conetserv_win.h"
 
 #define DEBUGCON 0
 
@@ -139,6 +138,7 @@ bool stopCommand(command_t cmd)
 	return false;
 }
 
+/* FIXME Supports only ASCII and CP1250 command lines. */
 int readCommand(command_t cmd, char *buf)
 {
 	unsigned i;
@@ -163,37 +163,37 @@ int readCommand(command_t cmd, char *buf)
 				{
 					switch((unsigned char)buf[i])
 					{
-					case 0xFD:		//¯
+					case 0xFD:		//≈ô
 						buf[i]='r';
 						break;
-					case 0xA1:		//Ì
+					case 0xA1:		//√≠
 						buf[i]='i';
 						break;
-					case 0x85:		//˘
+					case 0x85:		//≈Ø
 						buf[i]='u';
 						break;
-					case 0xD8:		//Ï
+					case 0xD8:		//ƒõ
 						buf[i]='e';
 						break;
-					case 0xD4:		//Ô
+					case 0xD4:		//ƒè
 						buf[i]='d';
 						break;
-					case 159:		//Ë
+					case 159:		//ƒç
 						buf[i]='c';
 						break;
-					case 0xE7:		//ö
+					case 0xE7:		//≈°
 						buf[i]='s';
 						break;
-					case 0xEC:		//˝
+					case 0xEC:		//√Ω
 						buf[i]='y';
 						break;
-					case 0xA7:		//û
+					case 0xA7:		//≈æ
 						buf[i]='z';
 						break;
-					case 0xA0:		//·
+					case 0xA0:		//√°
 						buf[i]='a';
 						break;
-					case 0x82:		//È
+					case 0x82:		//√©
 						buf[i]='e';
 						break;
 					default:
