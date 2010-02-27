@@ -112,5 +112,5 @@ int readCommand(command_t cmd, char *buf)
 
    fprintf(stderr, "%d\n", len + 1);
 
-   return (len + 1);
+   return len;
 }
