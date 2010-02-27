@@ -35,7 +35,7 @@ var pingData = [];
 var pingCount = 0;
 
 $(function () {
-   $.plot(placeholder, [pingData], options);
+   $.plot(placeholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], options);
 });
 
 function startAnim(id)
@@ -95,9 +95,10 @@ function readPing() {
      else pingConsole.value += $.client.os;
 
      var startPos = pingCount > 30? pingCount - 30 : 1;
+     var endPos = pingCount > 10? pingCount : 10;
      /*update chart*/
-     $.plot(placeholder,[pingData], $.extend(true, {}, options, {
-                              xaxis: { min: startPos }
+     $.plot(placeholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, options, {
+                              xaxis: { min: startPos, max: endPos}
                           }));
    }
    catch(e) {
