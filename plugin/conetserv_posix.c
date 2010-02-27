@@ -7,7 +7,6 @@
 #include <sys/wait.h>
 
 #include "conetserv.h"
-#include "conetserv_posix.h"
 
 pid_t cmd_pid[command_t_count] = {0};
 int cmd_pipe[command_t_count][2];

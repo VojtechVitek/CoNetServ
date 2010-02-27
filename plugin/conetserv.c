@@ -16,13 +16,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#if !defined(_WINDOWS)
-#include "conetserv_posix.h"
-#include <stdbool.h>
-#else
-#include "conetserv_win.h"
-#endif
-
 #include "conetserv.h"
 
 NPObject        *so       = NULL;
@@ -70,47 +63,36 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
 	NPString str;
    char *name = npnfuncs->utf8fromidentifier(methodName);
 	logmsg("CoNetServ: invoke\n");
-	if(name) {
-      if(!strcmp(name, "startPing")) {
-         if(argCount == 1 && args[0].type == NPVariantType_String) {
+   if (name) {
+      if (!strncmp(name, "read", 4) && argCount == 0) {
+         if (!strcmp(name + 4, "Ping")) {
+            logmsg("CoNetServ: invoke readPing()\n");
+            int len = readCommand(PING, buffer);
+            char *txt = (char *)npnfuncs->memalloc(len);
+            memcpy(txt, buffer, len);
+            str.utf8characters = txt;
+            str.utf8length = len;
+            result->type = NPVariantType_String;
+            result->value.stringValue = str;
+            return true;
+         }
+      } else if (!strncmp(name, "start", 5) && argCount == 1 && args[0].type == NPVariantType_String) {
+         if (!strcmp(name + 5, "Ping")) {
            logmsg("CoNetServ: invoke startPing(\"string\")\n");
            result->type = NPVariantType_Bool;
            result->value.boolValue = startCommand(PING, (char*)args[0].value.stringValue.utf8characters);
            return true;
-         } else {
-            npnfuncs->setexception(obj, "startPing(string addr) has one argument");
-            return false;
          }
-      }
-      else if(!strcmp(name, "stopPing")) {
-         if(argCount == 0) {
+      } else if (!strncmp(name, "stop", 4) && argCount == 0) {
+         if(!strcmp(name + 4, "Ping")) {
             logmsg("CoNetServ: invoke stopPing()\n");
             result->type = NPVariantType_Bool;
             result->value.boolValue = stopCommand(PING);
             return true;
-         } else {
-            npnfuncs->setexception(obj, "stopPing() has no arguments");
-            return false;
-         }
-      }
-      else if(!strcmp(name, "readPing")) {
-         if(argCount == 0) {
-            int len = readCommand(PING, buffer);
-            char *txt = (char *)npnfuncs->memalloc(len);
-            logmsg("CoNetServ: invoke readPing()\n");
-				memcpy(txt, buffer, len);
-            str.utf8characters = txt;
-				str.utf8length = len;
-            result->type = NPVariantType_String;
-            result->value.stringValue = str;
-            return true;
-         } else {
-            npnfuncs->setexception(obj, "readPing() has no arguments");
-            return false;
          }
       }
 	}
-   npnfuncs->setexception(obj, "no such method");
+   npnfuncs->setexception(obj, "No such method, see CoNetServ programmer's manual.");
 	return false;
 }
 
@@ -151,6 +133,11 @@ nevv(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *arg
 
 static NPError
 destroy(NPP instance, NPSavedData **save) {
+   /* Stop possibly running processes. */
+   stopCommand(PING);
+   stopCommand(TRACEROUTE);
+   stopCommand(WHOIS);
+
 	if(so)
 		npnfuncs->releaseobject(so);
 	so = NULL;

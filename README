@@ -1,13 +1,16 @@
 CoNetServ - Complex Network Services
 ====================================
-- Mozilla Firefox v2+ add-on
-- Google Chrome extension
+* Mozilla Firefox 2.0+ add-on
+* Google Chrome 1.0+ extension
+* Opera 9.0+ widget
+------------------------------------
+* Windows (NT, XP, Vista, Seven)
+* Unix-based systems (eg. GNU/Linux
+* Mac OS X (Darwin)
+------------------------------------
+* x86 arch
+* x86_64 arch
 ====================================
-- Using NPAPI plugin.
-  + Firefox v2+
-  + Google Chrome
-  + Opera v9.5+
-  + OS: Unix-like systems, Windows, Darwin
-  + Arch: x86, x86-64
-- Features: PING (client to host), TRACEROUTE (client to host),
-WHOIS (host), NSLOOKUP (host), SHOW PUBLIC IP (client)
+* PING (client to host)
+* TRACEROUTE (client to host)
+* WHOIS (host)
