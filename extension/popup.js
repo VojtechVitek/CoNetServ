@@ -19,10 +19,41 @@ var pingInterval = false;
 var tracerouteInterval = false;
 var whoisInterval = false;
 
+/* chart data */
+var options = {
+    lines: { show: true },
+    points: { show: true },
+    xaxis: { tickDecimals: 0, tickSize: 1 }
+};
+var placeholder = $("#placeholder");
+/* ping time data */
+var pingData = [];
+var pingCount = 0;
+
+$(function () {
+   $.plot(placeholder, [pingData], options);
+});
 
 function readPing() {
    try {
-     pingConsole.value = document.getElementById("pingConsole").value + document.getElementById("conetserv").readPing();
+     var received = document.getElementById("conetserv").readPing();
+     var pingTime;
+     pingConsole.value = document.getElementById("pingConsole").value + received;
+     /*update chart data*/
+     if(received.indexOf("Odpoved") != -1)
+     {
+        pingCount++;
+        pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
+        pingData.push([pingCount, pingTime]);
+     }
+     else if(received.indexOf("Vyprsel") != -1)
+        pingData.push(null);
+      //
+     //pingCount++;
+     //pingData.push([pingCount, pingTime]);
+     
+     /*update chart*/
+     $.plot(placeholder,[pingData], options);
    }
    catch(e) {
       document.getElementById("pingConsole").value = e;
@@ -124,4 +155,8 @@ function stopCommands() {
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
    }
+}
+
+function  updatePing(){
+  
 }

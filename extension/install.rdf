@@ -6,6 +6,7 @@
     <em:name>CoNetServ</em:name>
     <em:version>1.0</em:version>
     <em:targetPlatform>Linux_x86_64-gcc3</em:targetPlatform>
+    <em:targetPlatform>WINNT_x86-msvc</em:targetPlatform>
     <em:description>Complex Network Services</em:description>
     <em:creator>FRES-Solutions</em:creator>
     <em:homepageURL>http://www.fres-solutions.com/conetserv/firefox/</em:homepageURL>
