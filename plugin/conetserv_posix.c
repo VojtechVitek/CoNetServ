@@ -15,7 +15,9 @@ int pipes[command_t_count][2];
 
 char* args[command_t_count][5] = {
    {"/bin/ping", NULL, NULL},
+   {"/bin/ping6", NULL, NULL},
    {"/usr/sbin/traceroute", NULL, NULL},
+   {"/usr/sbin/traceroute6", NULL, NULL},
    {"/usr/bin/whois", NULL, NULL}
 };
 

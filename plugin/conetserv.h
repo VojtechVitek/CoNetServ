@@ -54,7 +54,9 @@ void logmsg(const char *msg);
 typedef enum {
    /* system commands: */
    PING = 0,
+   PING6,
    TRACEROUTE,
+   TRACEROUTE6,
    WHOIS,
 
    command_t_count

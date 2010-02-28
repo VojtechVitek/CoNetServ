@@ -8,16 +8,19 @@
 #define DEBUGCON 0
 
 /* Pipe recources 0 for read 1 for write*/
-HANDLE cmd_pipe[command_t_count][2];
+HANDLE pipes[command_t_count][2];
 /* process handles */
-HANDLE cmd_pid[command_t_count];
+HANDLE pids[command_t_count];
 /* defines if process is running */
 bool isRunning[command_t_count] = {0};
 
 char* cmd_args[command_t_count] = {
-	"ping -n 10", 
-	"traceroute", 
-	"whois"};
+   "ping -t",
+   "ping -6 -t",
+   "traceroute",
+   "traceroute -6",
+   "whois"
+};
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
 #define errorExitChild(msg) {logmsg(msg); npnfuncs->setexception(NULL, msg); ExitProcess(1);}
@@ -35,20 +38,20 @@ bool startCommand(command_t cmd, char* addr)
 	/* check for running state */
    if (isRunning[cmd])
 	{
-		GetExitCodeProcess( cmd_pid[cmd], &status );
+      GetExitCodeProcess( pids[cmd], &status );
 		if( status == STILL_ACTIVE )
 			return false;
 		else
 		{
 			//Close handles
-			CloseHandle(cmd_pipe[cmd][0]);
-			CloseHandle(cmd_pipe[cmd][1]);
+         CloseHandle(pipes[cmd][0]);
+         CloseHandle(pipes[cmd][1]);
 		}
 	}
 	
 	isRunning[cmd]=1;
 
-		/*creating command for execution*/
+   /*creating command for execution*/
 	sprintf(cmdchar, "%s %s", cmd_args[cmd], addr);	
 	
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
@@ -57,11 +60,11 @@ bool startCommand(command_t cmd, char* addr)
    saAttr.lpSecurityDescriptor = NULL; 
 
 	/* Create a pipe for the child process's STDOUT. */
-   if ( ! CreatePipe(&cmd_pipe[cmd][0], &cmd_pipe[cmd][1], &saAttr, 0) ) 
+   if ( ! CreatePipe(&pipes[cmd][0], &pipes[cmd][1], &saAttr, 0) )
       errorExitFunc("CoNetServ: startCommand(): CreatePipe() - error\n")
 
 	/* Ensure the read handle to the pipe for STDOUT is not inherited. */
-   if ( ! SetHandleInformation(cmd_pipe[cmd][0], HANDLE_FLAG_INHERIT, 0) )
+   if ( ! SetHandleInformation(pipes[cmd][0], HANDLE_FLAG_INHERIT, 0) )
       errorExitFunc("CoNetServ: startCommand(): SetHandleInformation() - error\n")
 	
 	/* Create a child process which uses stdout pipe */
@@ -74,8 +77,8 @@ bool startCommand(command_t cmd, char* addr)
 	if(!DEBUGCON){
 		startInfo.wShowWindow = SW_HIDE;
 		startInfo.dwFlags |= STARTF_USESHOWWINDOW;
-		startInfo.hStdError = cmd_pipe[cmd][1];
-		startInfo.hStdOutput = cmd_pipe[cmd][1];
+      startInfo.hStdError = pipes[cmd][1];
+      startInfo.hStdOutput = pipes[cmd][1];
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
 	/*
@@ -90,8 +93,8 @@ bool startCommand(command_t cmd, char* addr)
 	startInfo.hStdOutput = tmp;
 	startInfo.hStdError = tmp;
 	
-	startInfo.hStdError = cmd_pipe[cmd][1];
-	startInfo.hStdOutput = cmd_pipe[cmd][1];
+   startInfo.hStdError = pipes[cmd][1];
+   startInfo.hStdOutput = pipes[cmd][1];
 	startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	//startInfo.dwFlags |= STARTF_USESTDHANDLES;*/
 
@@ -100,7 +103,7 @@ bool startCommand(command_t cmd, char* addr)
       NULL,          // process security attributes 
       NULL,          // primary thread security attributes 
       TRUE,          // handles are inherited 
-      0 ,             // creation flags 
+      0,             // creation flags
       NULL,          // use parent's environment 
 		NULL,          // current directory 
       &startInfo,		// STARTUPINFO pointer 
@@ -115,7 +118,7 @@ bool startCommand(command_t cmd, char* addr)
 	{
 		logmsg("CoNetServ: startCommand(): CreateProcess() - success\n");
 		/* store process handle and close process thread handle */
-		cmd_pid[cmd] = procInfo.hProcess;
+      pids[cmd] = procInfo.hProcess;
 		CloseHandle(procInfo.hThread);
 	}
    return true;
@@ -128,9 +131,9 @@ bool stopCommand(command_t cmd)
 	/* kill the command, if running */
 	if(isRunning[cmd])
 	{
-		TerminateProcess(cmd_pid[cmd], 0);
-		CloseHandle(cmd_pipe[cmd][0]);
-		CloseHandle(cmd_pipe[cmd][1]);
+      TerminateProcess(pids[cmd], 0);
+      CloseHandle(pipes[cmd][0]);
+      CloseHandle(pipes[cmd][1]);
 		isRunning[cmd] = 0;
 		return true;
 	}
@@ -150,10 +153,10 @@ int readCommand(command_t cmd, char *buf)
    if (isRunning[cmd])
 	{
 		/* check for data on pipes */
-		PeekNamedPipe(cmd_pipe[cmd][0], NULL, 0, NULL, &status, NULL);
+      PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
 		if(status)
 		{
-			success = ReadFile( cmd_pipe[cmd][0], buf, BUFFER_LENGTH - 1, &read, NULL);
+         success = ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH - 1, &read, NULL);
 			if( ! success || read == 0 ) 
 				read = 0;
 			else	//on success
@@ -205,16 +208,16 @@ int readCommand(command_t cmd, char *buf)
 			}
 		}
 
-		GetExitCodeProcess( cmd_pid[cmd], &status );
+      GetExitCodeProcess( pids[cmd], &status );
 		if(status != STILL_ACTIVE )
 		{
 			/*check for any extra data*/
-			PeekNamedPipe(cmd_pipe[cmd][0], NULL, 0, NULL, &status, NULL);
+         PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
 			if(!status)
 			{
 				/* Close handles */
-				CloseHandle(cmd_pipe[cmd][0]);
-				CloseHandle(cmd_pipe[cmd][1]);
+            CloseHandle(pipes[cmd][0]);
+            CloseHandle(pipes[cmd][1]);
 				isRunning[cmd] = 0;
 			}
 		}

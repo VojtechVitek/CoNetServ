@@ -18,22 +18,32 @@
 <body>
 <div id="tabs">
     <form action="" onsubmit="stopCommands();startCommands();return false;">
-      <input id="url" type="text" value="www.fres-solutions.com" size="40" class="ui-corner-all" />
+      <input id="url" type="text" value="" size="40" class="ui-corner-all" />
       <input id="urlButton" type="submit" value="Submit" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
     </form>
     <ul>
-        <li><div id="pingState" class="tabState"></div><a href="#pingTab"><span>Ping</span></a></li>
-        <li><div id="traceState" class="tabState"></div><a href="#tracerouteTab"><span>Traceroute</span></a></li>
-        <li><div id="whoisState" class="tabState"></div><a href="#whoisTab"><span>Whois</span></a></li>
+        <li><span id="pingState" class="tabState"></span><a href="#pingTab"><span>Ping</span></a></li>
+        <li><span id="ping6State" class="tabState"></span><a href="#ping6Tab"><span>Ping6</span></a></li>
+        <li><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab"><span>Traceroute</span></a></li>
+        <li><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab"><span>Traceroute6</span></a></li>
+        <li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a></li>
         <li class="aboutTab"><a href="#aboutTab"><span>About</span></a></li>
     </ul>
     <div id="pingTab">
         <textarea id="pingConsole" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
         <div id="pingPlaceholder" class="placeholder"></div>
     </div>
+    <div id="ping6Tab">
+        <textarea id="ping6Console" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
+        <div id="ping6Placeholder" class="placeholder"></div>
+    </div>
     <div id="tracerouteTab">
       <textarea id="tracerouteConsole" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
       <div id="traceroutePlaceholder" class="placeholder"></div>
+    </div>
+    <div id="traceroute6Tab">
+      <textarea id="traceroute6Console" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
+      <div id="traceroute6Placeholder" class="placeholder"></div>
     </div>
     <div id="whoisTab">
       <textarea id="whoisConsole" class="consoleTextarea" rows="30" cols="80" disabled="true"></textarea>
@@ -44,14 +54,14 @@
       Extension which integrates network tools into the browser.<br />
       <br />
       <strong>Supported tools:</strong><br />
-      <ul><li>PING</li><li>TRACEROUTE</li><li>WHOIS</li></ul>
+      <ul><li>PING (IPv4)</li><li>PING6 (IPv6)</li><li>TRACEROUTE (IPv4)</li><li>TRACEROUTE6 (IPv6)</li><li>WHOIS</li></ul>
       <strong>Compatibility:</strong><br />
       <ul><li>Mozilla Firefox 2.0+</li><li>Google Chrome 1.0+</li><li>Opera 9.0+</li></ul>
       <ul><li>Microsoft Windows Seven</li><li>Microsoft Windows Vista</li><li>Microsoft Windows XP</li><li>Linux</li></ul>
       <strong>Source code:</strong><br />
       <br />
       Licence: GPLv2<br />
-      Link: <a href="http://github.com/V-Teq/CoNetServ/">github.com</a><br />
+      Development: <a href="http://github.com/V-Teq/CoNetServ/">github.com</a><br />
       <br />
       <strong>Developers:</strong><br />
       <br />

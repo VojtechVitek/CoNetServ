@@ -45,7 +45,7 @@ void logmsg(const char *msg) {
 static bool
 hasMethod(NPObject* obj, NPIdentifier methodName) {
    logmsg("CoNetServ: hasMethod ");
-   logmsg(methodName);
+   logmsg(npnfuncs->utf8fromidentifier(methodName));
    logmsg("()\n");
 	return true;
 }
@@ -68,7 +68,9 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
    if (name) {
       if (!strncmp(name, "read", 4) && argCount == 0) {
          if (((!strcmp(name + 4, "Ping") && (cmd = PING, true))) ||
+             ((!strcmp(name + 4, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 4, "Traceroute") && (cmd = TRACEROUTE, true))) ||
+             ((!strcmp(name + 4, "Traceroute6") && (cmd = TRACEROUTE6, true))) ||
              ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true)))) {
             logmsg("CoNetServ: invoke ");
             logmsg(name);
@@ -92,7 +94,9 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
          }
       } else if (!strncmp(name, "start", 5) && argCount == 1 && args[0].type == NPVariantType_String) {
          if (((!strcmp(name + 5, "Ping") && (cmd = PING, true))) ||
+             ((!strcmp(name + 5, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 5, "Traceroute") && (cmd = TRACEROUTE, true))) ||
+             ((!strcmp(name + 5, "Traceroute6") && (cmd = TRACEROUTE6, true))) ||
              ((!strcmp(name + 5, "Whois") && (cmd = WHOIS, true)))) {
             logmsg("CoNetServ: invoke ");
             logmsg(name);
@@ -103,7 +107,9 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
          }
       } else if (!strncmp(name, "stop", 4) && argCount == 0) {
          if (((!strcmp(name + 4, "Ping") && (cmd = PING, true))) ||
+             ((!strcmp(name + 4, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 4, "Traceroute") && (cmd = TRACEROUTE, true))) ||
+             ((!strcmp(name + 4, "Traceroute6") && (cmd = TRACEROUTE6, true))) ||
              ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true)))) {
             logmsg("CoNetServ: invoke ");
             logmsg(name);
@@ -158,9 +164,9 @@ nevv(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *arg
 static NPError
 destroy(NPP instance, NPSavedData **save) {
    /* Stop possibly running processes. */
-   stopCommand(PING);
-   stopCommand(TRACEROUTE);
-   stopCommand(WHOIS);
+   int i;
+   for (i = 0; i < command_t_count; ++i)
+      stopCommand(i);
 
 	if(so)
 		npnfuncs->releaseobject(so);
