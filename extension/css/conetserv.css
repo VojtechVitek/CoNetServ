@@ -35,9 +35,25 @@ body{
    color: #444;
 }
 
+#conetserv {
+   width: 0px;
+   height: 0px;
+   margin: 0px;
+   padding: 0px
+}
+
+.hidden {
+   display: none;
+   visibility: hidden;
+}
+
+.aboutTab {
+   position: absolute !important;
+   right: 0px;
+}
+
 #pingConsole{
    height: 350px;
-   
 }
 
 #tracerouteConsole{

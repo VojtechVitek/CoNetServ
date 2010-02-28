@@ -22,23 +22,50 @@
       <input id="urlButton" type="submit" value="Submit" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
     </form>
     <ul>
-        <li><div id="pingState" class="tabState"></div><a href="#tab1"><span>Ping</span></a></li>
-        <li><div id="traceState" class="tabState"></div><a href="#tab2"><span>Traceroute</span></a></li>
-        <li><div id="whoisState" class="tabState"></div><a href="#tab3"><span>Whois</span></a></li>
+        <li><div id="pingState" class="tabState"></div><a href="#pingTab"><span>Ping</span></a></li>
+        <li><div id="traceState" class="tabState"></div><a href="#tracerouteTab"><span>Traceroute</span></a></li>
+        <li><div id="whoisState" class="tabState"></div><a href="#whoisTab"><span>Whois</span></a></li>
+        <li class="aboutTab"><a href="#aboutTab"><span>About</span></a></li>
     </ul>
-    <div id="tab1">
-        <textarea id="pingConsole" class="consoleTextarea" rows="30" cols="80" disabled="true"></textarea>
+    <div id="pingTab">
+        <textarea id="pingConsole" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
         <div id="pingPlaceholder" class="placeholder"></div>
     </div>
-    <div id="tab2">
-      <textarea id="tracerouteConsole" class="consoleTextarea" rows="30" cols="80" disabled="true"></textarea>
+    <div id="tracerouteTab">
+      <textarea id="tracerouteConsole" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
       <div id="traceroutePlaceholder" class="placeholder"></div>
     </div>
-    <div id="tab3">
+    <div id="whoisTab">
       <textarea id="whoisConsole" class="consoleTextarea" rows="30" cols="80" disabled="true"></textarea>
     </div>
+    <div id="aboutTab">
+      <p>
+      <h2>CoNetServ 1.0 (Complex Network Services)</h2>
+      Extension which integrates network tools into the browser.<br />
+      <br />
+      <strong>Supported tools:</strong><br />
+      <ul><li>PING</li><li>TRACEROUTE</li><li>WHOIS</li></ul>
+      <strong>Compatibility:</strong><br />
+      <ul><li>Mozilla Firefox 2.0+</li><li>Google Chrome 1.0+</li><li>Opera 9.0+</li></ul>
+      <ul><li>Microsoft Windows Seven</li><li>Microsoft Windows Vista</li><li>Microsoft Windows XP</li><li>Linux</li></ul>
+      <strong>Source code:</strong><br />
+      <br />
+      Licence: GPLv2<br />
+      Link: <a href="http://github.com/V-Teq/CoNetServ/">github.come</a><br />
+      <br />
+      <strong>Developers:</strong><br />
+      <br />
+      Vojtech Vitek (V-Teq) &lt;vojtech.vitek@<span class="hidden">&#185;</span>gmail.com&gt;<br />
+      Marek Vantuch &lt;marek.vantuch@<span class="hidden">&#185;</span>gmail.com&gt;<br />
+      <br />
+      <strong>Supported by:</strong><br />
+      <br />
+      <a href="http://www.nic.cz/">CZ.NIC</a><br />
+      <a href="http://www.fres-solutions.com/conetserv/">FRES-Solutions</a><br />
+      </p>
+    </div>
 </div>
-<object id="conetserv" type="application/x-conetserv" style="width: 0px; height: 0px; margin: 0px; padding: 0px;">Plugin FAILED to load</object>
+<object id="conetserv" type="application/x-conetserv" width="0" height="0">Plugin FAILED to load</object>
 <script type="text/javascript" src="js/plot.js"></script>
 <script type="text/javascript" src="js/conetserv.js"></script>
 </body>
