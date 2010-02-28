@@ -31,6 +31,7 @@ function readPing()
       return;
    }
    pingConsole.value = document.getElementById("pingConsole").value + received;
+   document.getElementById("pingConsole").scrollTop = document.getElementById("pingConsole").scrollHeight;
    plotPing(received);
 }
 
@@ -50,6 +51,7 @@ function readPing6()
       return;
    }
    ping6Console.value = document.getElementById("ping6Console").value + received;
+   document.getElementById("ping6Console").scrollTop = document.getElementById("ping6Console").scrollHeight;
    //plotPing6(received);
 }
 
@@ -68,6 +70,7 @@ function readTraceroute()
       return;
    }
    document.getElementById("tracerouteConsole").value = document.getElementById("tracerouteConsole").value + received;
+   document.getElementById("tracerouteConsole").scrollTop = document.getElementById("tracerouteConsole").scrollHeight;
 }
 
 function readTraceroute6()
@@ -85,6 +88,7 @@ function readTraceroute6()
       return;
    }
    document.getElementById("traceroute6Console").value = document.getElementById("traceroute6Console").value + received;
+   document.getElementById("traceroute6Console").scrollTop = document.getElementById("traceroute6Console").scrollHeight;
 }
 
 function readWhois()
@@ -102,6 +106,7 @@ function readWhois()
       return;
    }
    document.getElementById("whoisConsole").value = document.getElementById("whoisConsole").value + received;
+   document.getElementById("whoisConsole").scrollTop = document.getElementById("whoisConsole").scrollHeight;
 }
 
 function startCommands()
