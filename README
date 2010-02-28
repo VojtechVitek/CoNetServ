@@ -1,16 +1,20 @@
 CoNetServ - Complex Network Services
 ====================================
+  Supported browsers:
 * Mozilla Firefox 2.0+ add-on
 * Google Chrome 1.0+ extension
 * Opera 9.0+ widget
 ------------------------------------
+  Supported operating systems:
 * Windows (NT, XP, Vista, Seven)
-* Unix-based systems (eg. GNU/Linux
+* Unix-based systems (eg. GNU/Linux)
 * Mac OS X (Darwin)
 ------------------------------------
-* x86 arch
-* x86_64 arch
+  Supported architectures:
+* x86 arch (32 bit)
+* x86_64 arch (64 bit)
 ====================================
+  Features:
 * PING (client to host)
 * TRACEROUTE (client to host)
 * WHOIS (host)

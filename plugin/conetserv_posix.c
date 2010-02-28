@@ -14,7 +14,7 @@ pid_t pids[command_t_count] = {0};
 int pipes[command_t_count][2];
 
 char* args[command_t_count][5] = {
-   {"/bin/ping", NULL, "-c", "10", NULL},
+   {"/bin/ping", NULL, NULL},
    {"/usr/sbin/traceroute", NULL, NULL},
    {"/usr/bin/whois", NULL, NULL}
 };
