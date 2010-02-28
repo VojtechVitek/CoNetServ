@@ -61,38 +61,62 @@ invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant
 static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result) {
 	NPString str;
+   command_t cmd;
+   int len;
+   char *txt;
    char *name = npnfuncs->utf8fromidentifier(methodName);
-	logmsg("CoNetServ: invoke\n");
    if (name) {
       if (!strncmp(name, "read", 4) && argCount == 0) {
-         if (!strcmp(name + 4, "Ping")) {
-            logmsg("CoNetServ: invoke readPing()\n");
-            int len = readCommand(PING, buffer);
-            char *txt = (char *)npnfuncs->memalloc(len);
-            memcpy(txt, buffer, len);
-            str.utf8characters = txt;
-            str.utf8length = len;
-            result->type = NPVariantType_String;
-            result->value.stringValue = str;
+         if (((!strcmp(name + 4, "Ping") && (cmd = PING, true))) ||
+             ((!strcmp(name + 4, "Traceroute") && (cmd = TRACEROUTE, true))) ||
+             ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true)))) {
+            logmsg("CoNetServ: invoke ");
+            logmsg(name);
+            logmsg("()\n");
+            if ((len = readCommand(cmd, buffer)) != -1) {
+               if (len > 0) {
+                  txt = (char *)npnfuncs->memalloc(len);
+                  memcpy(txt, buffer, len);
+               } else {
+                  txt = NULL;
+               }
+               str.utf8characters = txt;
+               str.utf8length = len;
+               result->type = NPVariantType_String;
+               result->value.stringValue = str;
+            } else {
+               result->type = NPVariantType_Bool;
+               result->value.boolValue = false;
+            }
             return true;
          }
       } else if (!strncmp(name, "start", 5) && argCount == 1 && args[0].type == NPVariantType_String) {
-         if (!strcmp(name + 5, "Ping")) {
-           logmsg("CoNetServ: invoke startPing(\"string\")\n");
+         if (((!strcmp(name + 5, "Ping") && (cmd = PING, true))) ||
+             ((!strcmp(name + 5, "Traceroute") && (cmd = TRACEROUTE, true))) ||
+             ((!strcmp(name + 5, "Whois") && (cmd = WHOIS, true)))) {
+            logmsg("CoNetServ: invoke ");
+            logmsg(name);
+            logmsg("()\n");
            result->type = NPVariantType_Bool;
-           result->value.boolValue = startCommand(PING, (char*)args[0].value.stringValue.utf8characters);
+           result->value.boolValue = startCommand(cmd, (char*)args[0].value.stringValue.utf8characters);
            return true;
          }
       } else if (!strncmp(name, "stop", 4) && argCount == 0) {
-         if(!strcmp(name + 4, "Ping")) {
-            logmsg("CoNetServ: invoke stopPing()\n");
+         if (((!strcmp(name + 4, "Ping") && (cmd = PING, true))) ||
+             ((!strcmp(name + 4, "Traceroute") && (cmd = TRACEROUTE, true))) ||
+             ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true)))) {
+            logmsg("CoNetServ: invoke ");
+            logmsg(name);
+            logmsg("()\n");
             result->type = NPVariantType_Bool;
-            result->value.boolValue = stopCommand(PING);
+            result->value.boolValue = stopCommand(cmd);
             return true;
          }
       }
 	}
    npnfuncs->setexception(obj, "No such method, see CoNetServ programmer's manual.");
+   logmsg("CoNetServ: invoke: no such method\n");
+
 	return false;
 }
 
