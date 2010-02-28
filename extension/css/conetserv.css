@@ -24,7 +24,7 @@ body{
    display: block;
    width: 16px;
    height: 16px;
-   background-image: url('working.gif');
+   background-image: url('images/working.gif');
    visibility: hidden;
 }
 
@@ -32,6 +32,7 @@ body{
    width: 640px; 
    height: 480px;
    margin-bottom: 5px;
+   color: #444;
 }
 
 #pingConsole{
@@ -39,6 +40,33 @@ body{
    
 }
 
-#placeholder{
-   width:640px;height:120px;
+#tracerouteConsole{
+   height: 220px
 }
+
+#pingPlaceholder{
+   height:120px;
+   width: 640px;
+}
+
+#traceroutePlaceholder{
+   height:250px;
+   width: 640px;
+}
+
+/* plot labels styling */
+.valueLabels {
+	font-size:70%;
+	color:black;
+}
+div.valueLabelLight {
+	opacity:0.5;
+	background-color: white;
+	border:none;
+	position:absolute;
+}
+div.valueLabel {
+	position:absolute;
+	border:none;
+}
+
