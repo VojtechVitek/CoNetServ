@@ -10,6 +10,18 @@ var options = {
       yaxis: { min: 0}
 };
 
+$(function(){
+   $('#tabs').tabs({
+      show: function(event, ui) {
+          $.plot(pingPlaceholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], options);
+              return false;
+         
+      }
+   });
+});
+
+
+
 var pingPlaceholder = $("#pingPlaceholder");
 var traceroutePlaceholder = $("#traceroutePlaceholder");
 
@@ -24,23 +36,7 @@ var pingCount = 0;
 var traceData = [];
 var traceLabels = [];
 
-var testdata1 = " 1  192.168.1.1 (192.168.1.1)  4.106 ms   5.869 ms   11.442 ms ";
-var testdata2 =	" 2  78.184.32.1 (78.184.32.1)  200.409 ms   74.395 ms   69.322 ms";
-var testdata3 =	" 3  * * *";
-var testdata4 =	" 4  gayrettepe-t2-2-gayrettepe-t3-1.turktelekom.com.tr (212.156.118.5)  71.433 ms   70.908 ms   70.728 ms";
-var testdata5 =	" 5  static.turktelekom.com.tr (212.156.103.33)  200.774 ms   200.347 ms   200.714 ms";
-
-/* struct for returning parsed data */
-function Item(id, dns, ip, timeSt, timeMid, timeEnd)
-{
-   this.id = id;
-   this.dns = dns;
-   this.ip = ip;
-   this.timeSt = timeSt;
-   this.timeMid = timeMid;
-   this.timeEnd = timeEnd;
-}
-
+var tracePrevData = "";
 
 function plotPing(received)
 {
@@ -70,40 +66,70 @@ function plotPing(received)
          pingCount++;
          pingTime= parseInt(received.substr(received.indexOf("time=")+5,received.indexOf(" ms")-received.indexOf("time=")+5));
          pingData.push([pingCount, pingTime]);
+         
       }
    } else {
       pingConsole.value += $.client.os;
    }
+   
+   
+   if(pingData.length > 30)
+      pingData.shift();   
 
-   var startPos = pingCount > 30? pingCount - 30 : 1;
-   var endPos = pingCount > 10? pingCount : 10;
    /*update chart*/
    $.plot(pingPlaceholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, options, {
-            xaxis: { min: startPos, max: endPos}
+            
          }));
 }
 
-/* draw plot */
-function drawTraceroutePlot(newdata)
+function addTPlotDataWin(row)
 {
+   var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+   var fields = nospaces.split(" ");
+   var step, time, label, first = 0, labelPos = 4;
+   
+   while(fields[first] == "" && first<fields.length-6)
+      first++;
+   
+   if(!(step = parseInt(fields[first])))
+      return;
+      
+   for( j = first; j < fields.length; j++)
+      if(fields[j] == "ms") 
+         labelPos++;
+         
+   time = (time = parseFloat(fields[first+1]))? time : (time = parseFloat(fields[first+2])) ? time : parseFloat(fields[first+3]);
+   label = fields[first + labelPos];
+   
+   traceData.push([step, time]);
+   traceLabels.push(label);
+}
+
+/* draw plot */
+function plotTraceroute(received)
+{
+   if(received == "")
+      return;
+   /* connect with previous data */
+   tracePrevData += received;
    /* prepare data */
-   var tmp = newdata.replace(/\s+/g, ' ');	/* remove multiple spaces */
-   var rows = tmp.split("\n");		/* divide into rows */
-
-   for( i = 0; i < rows.length ; i++)		/* adding row data to structures for plot */
+   
+   if($.client.os == "Windows")
    {
-      var fields = rows[i].split(" ");
-      var step, time, label;
-
-      if($.client.os == "Windows")
+      var npos;
+      /* divide input data into lines and add them as data */
+      while((npos = tracePrevData.indexOf("\n")) != -1)
       {
+         addTPlotDataWin(tracePrevData.substr(0, npos));
+         tracePrevData = (tracePrevData.substr(npos+1));
       }
-      else if($.client.os == "Linux")
+   }   
+   else if($.client.os == "Linux")
+   {
+      step = parseFloat(fields[1]);
+      /* check for not comming packets */
+      if(fields[2] == "*")
       {
-    step = parseFloat(fields[1]);
-    /* check for not comming packets */
-    if(fields[2] == "*")
-    {
        if(fields[3] != "*")
        {
           label = fields[3];
@@ -111,23 +137,21 @@ function drawTraceroutePlot(newdata)
           traceData.push([step, time]);
           traceLabels.push(label);
        }
-    }
-    else
-    {
-
-       label = fields[2];
-       time = parseInt(fields[4]);
-       //tracerouteConsole.value += fields[3];
-       traceData.push([step, time]);
-       traceLabels.push(label);
-    }
-
       }
       else
       {
+          label = fields[2];
+          time = parseInt(fields[4]);
+          //tracerouteConsole.value += fields[3];
+          traceData.push([step, time]);
+          traceLabels.push(label);
       }
 
    }
+   else
+   {
+   }
+
    $.plot(traceroutePlaceholder, [{ data: traceData, label: "Position", color: "#2779AA" }], $.extend(true, {}, options, {
             xaxis: { autoscaleMargin: 1 },
             valueLabels: { show: true },
