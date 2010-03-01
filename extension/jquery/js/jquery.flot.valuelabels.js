@@ -43,7 +43,14 @@
 					last_x = xx + val.length*8;
 					last_y = yy;
 					var head = '<div style="left:' + xx + 'px;top:' + yy + 'px;" class="valueLabel';
-					var tail = '">' + traceData.labels[i] + '</div>';
+					var tail;
+					/*Used for correct output of labels */
+               var $tabs = $('#tabs').tabs();
+               var selected = $tabs.tabs('option', 'selected');
+               if(selected == 2)
+                  tail = '">' + traceData.labels[i] + '</div>';
+               else
+                  tail = '">' + trace6Data.labels[i] + '</div>';
 					html+= head + "Light" + tail + head + tail;
 				}
 			}

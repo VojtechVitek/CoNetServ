@@ -155,9 +155,10 @@ function startCommands()
       try {
          document.getElementById("tracerouteConsole").value = "";
          if (document.getElementById("conetserv").startTraceroute(document.getElementById("url").value)) {
-            tracerouteInterval = window.setInterval("readTraceroute()", 500);
-            readTraceroute();
+            traceData = new Data();
             startAnim("tracerouteState");
+            tracerouteInterval = window.setInterval("readTraceroute()", 500);
+            readTraceroute();            
          }
          else {
             tracerouteInterval = -1;
@@ -173,9 +174,10 @@ function startCommands()
       try {
          document.getElementById("traceroute6Console").value = "";
          if (document.getElementById("conetserv").startTraceroute6(document.getElementById("url").value)) {
+            trace6Data = new Data();
+            startAnim("traceroute6State");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
-            startAnim("traceroute6State");
          }
          else {
             traceroute6Interval = -1;
