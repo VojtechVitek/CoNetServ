@@ -11,15 +11,127 @@
 #include "conetserv.h"
 
 pid_t pids[command_t_count] = {0};
+
 int pipes[command_t_count][2];
 
 char* args[command_t_count][5] = {
-   {"/bin/ping", NULL, NULL},
-   {"/bin/ping6", NULL, NULL},
-   {"/usr/sbin/traceroute", NULL, NULL},
-   {"/usr/sbin/traceroute6", NULL, NULL},
-   {"/usr/bin/whois", NULL, NULL}
+   {"ping", NULL},
+   {"ping6", NULL},
+   {"traceroute", NULL},
+   {"traceroute6", NULL},
+   {"whois", NULL}
 };
+
+/*
+
+This should work with GLibC 2.11+, where is execvpe() implemented.
+But now it's a time for this work-around (as for Feb 2010):
+$ PATH="$PATH:/usr/sbin/:/sbin/" which traceroute
+-> get char* path -> execv(path, ..
+-- V-Teq
+
+char* env[] = { "PATH=$PATH:/usr/sbin:/sbin/", NULL };
+
+args[cmd][1] = addr;
+execvpe(args[cmd][0], args[cmd], env);
+
+*/
+
+/*
+   These paths are default and will not work on all UNIX systems.
+   They will be rewritten by function execvp_workaround()
+   if possible to find better path.
+*/
+char execvp_workaround_paths[command_t_count][30] = {
+   "/bin/ping",
+   "/bin/ping6",
+   "/usr/sbin/traceroute",
+   "/usr/sbin/traceroute6",
+   "/usr/bin/whois"
+};
+#include <string.h>
+void execvp_workaround()
+{
+   /* run this function only once */
+   static bool run = false;
+   if (run)
+      return;
+   else
+      run = true;
+
+   fprintf(stderr, "CoNetServ: execvp_workaround()\n");
+
+   int pipes[2];
+   int pids;
+
+   char buffer[BUFFER_LENGTH];
+   char path[BUFFER_LENGTH];
+   char *argv[] = { "/usr/bin/which", NULL, NULL };
+   char *user_paths = getenv("PATH");
+   char *superuser_paths = ":/usr/sbin:/sbin/";
+   char *env[] = { path, NULL };
+
+   memcpy(path, "PATH=", strlen("PATH="));
+   memcpy(path + strlen("PATH="), user_paths, strlen(user_paths));
+   strncpy(path + strlen("PATH=") + strlen(user_paths), superuser_paths, strlen(superuser_paths));
+
+   for (int i = 0; i < command_t_count; ++i) {
+      /* create pipe for communication */
+      if (pipe(pipes) == -1)
+         return;
+
+      /* fork the process */
+      if ((pids = vfork()) == 0) {
+         /* child */
+
+         /* close read end of pipe */
+         close(pipes[0]);
+
+         /* stdout to write end of the pipe */
+         if (dup2(pipes[1], 1) == -1)
+            _exit(1);
+
+         argv[1] = args[i][0];
+
+         /* execute command */
+         if (execve(argv[0], argv, env) == -1)
+            _exit(1);
+
+      } else if (pids == -1) {
+         /* error - can't fork the parent process */
+
+         continue;
+
+      } else {
+         /* parent */
+
+         /* close read end of pipe */
+         close(pipes[1]);
+
+         /* read child data */
+         int len;
+         if ((len = read(pipes[0], buffer, BUFFER_LENGTH - 1)) == -1 || len == 0) {
+
+            continue;
+
+         } else {
+
+            buffer[len - 1] = '\0';
+            fprintf(stderr, "CoNetServ: execvp_workaround(): read %d bytes: \"%s\"\n", len, buffer);
+
+            /* store new command name from which command */
+            strncpy(execvp_workaround_paths[i], buffer, len);
+         }
+
+         waitpid(pids, NULL, 0);
+      }
+
+      args[i][0] = execvp_workaround_paths[i];
+
+      fprintf(stderr, "CoNetServ: execvp_workaround(): chosen: %s\n", args[i][0]);
+
+   }
+}
 
 bool startCommand(command_t cmd, char* addr)
 {
@@ -34,7 +146,7 @@ bool startCommand(command_t cmd, char* addr)
       return false;
    }
 
-   /* fork the subprocess */
+   /* fork the process */
    if ((pids[cmd] = vfork()) == 0) {
       /* child */
       logmsg("CoNetServ: startCommand(): vfork() - child\n");
@@ -51,6 +163,9 @@ bool startCommand(command_t cmd, char* addr)
 
       /* copy addr argument to array */
       args[cmd][1] = addr;
+
+      /* workaround for execvp() */
+      execvp_workaround();
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {
