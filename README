@@ -11,10 +11,12 @@ CoNetServ - Complex Network Services
 * Mac OS X (Darwin)
 ------------------------------------
   Supported architectures:
-* x86 arch (32 bit)
-* x86_64 arch (64 bit)
+* x86 (32-bit)
+* x86_64 (64-bit)
 ====================================
   Features:
-* PING (client to host)
-* TRACEROUTE (client to host)
-* WHOIS (host)
+* PING (IPv4)
+* PING6 (IPv6)
+* TRACEROUTE (IPv4)
+* TRACEROUTE6 (IPv6)
+* WHOIS
