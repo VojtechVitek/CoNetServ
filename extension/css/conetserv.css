@@ -25,7 +25,7 @@ body{
    width: 16px;
    height: 16px;
    background-image: url('../images/working.gif');
-   visibility: hidden;
+   display: none;
 }
 
 .consoleTextarea{

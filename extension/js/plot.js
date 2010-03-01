@@ -32,7 +32,7 @@ var optionsTrace = {
       lines: { show: true },
       legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
       points: { show: true },
-      xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (traceData.length + 2) > 10? (traceData.length + 2) : 10, zoomRange: [0.1, 10], panRange: [0, 30] },
+      xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (traceData.rows.length + 2) > 10? (traceData.rows.length + 2) : 10 },
       zoom: { interactive: false },
       pan: { interactive: false },
       valueLabels: { show: true },
@@ -188,10 +188,10 @@ function plotTraceroute(received, type)
 
 function startAnim(id)
 {
-   document.getElementById(id).style.visibility = 'visible';
+   document.getElementById(id).style.display = 'block';//visibility = 'visible';
 }
 
 function stopAnim(id)
 {
-   document.getElementById(id).style.visibility = 'hidden';
+   document.getElementById(id).style.display = 'none';//visibility = 'hidden';
 }
