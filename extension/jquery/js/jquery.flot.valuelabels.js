@@ -43,7 +43,7 @@
 					last_x = xx + val.length*8;
 					last_y = yy;
 					var head = '<div style="left:' + xx + 'px;top:' + yy + 'px;" class="valueLabel';
-					var tail = '">' + traceLabels[i] + '</div>';
+					var tail = '">' + traceData.labels[i] + '</div>';
 					html+= head + "Light" + tail + head + tail;
 				}
 			}

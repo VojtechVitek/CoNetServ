@@ -9,17 +9,15 @@ function Data() {
   this.rows = [];
   this.prevId = 0;
   this.count = 0;
+  this.prevData = "";
+  this.labels = [];
 }
 
 var pingData = new Data();
 var ping6Data = new Data();
 
-
-var traceData = [];
-var traceLabels = [];
-
-var tracePrevData = "";
-
+var traceData = new Data();
+var trace6Data = new Data();
 
 /* chart data */
 var optionsPing = {
@@ -41,21 +39,35 @@ var optionsTrace = {
       legend: { position: "nw" }
 };
 
-/* bind plot functions to tab changing */
-$('#tabs').bind('tabsshow', function() {
+function repaintPlots() {
    var $tabs = $('#tabs').tabs();
    var selected = $tabs.tabs('option', 'selected');
-   if(selected == "0")
+   if(selected == "0")  /* ping v4 */
       $.plot(pingPlaceholder, [{ data: pingData.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
-      xaxis: { min: 0, max: pingData.count > 10? pingData.count + 1 : 10}
+      xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: pingData.count > 10? pingData.count + 1 : 11}
       }));
-   if(selected == "2")
-      $.plot(traceroutePlaceholder, [{ data: traceData, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
+   if(selected == "1")  /* ping v6 */
+      $.plot(ping6Placeholder, [{ data: ping6Data.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
+      xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: ping6Data.count > 10? ping6Data.count + 1 : 11}
+      }));      
+   if(selected == "2")  /* traceroute v4 */
+      $.plot(traceroutePlaceholder, [{ data: traceData.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
       }));
+   if(selected == "3")  /* traceroute v6 */
+      $.plot(traceroute6Placeholder, [{ data: trace6Data.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
+      }));
+}
+
+/* bind plot functions to tab changing */
+$('#tabs').bind('tabsshow', function() {
+   repaintPlots();
 });
 
 function plotPing(received, type)
 {
+   if(received == "")
+      return;
+      
    var pingTime;
    var data = type == 4? pingData : ping6Data;
    
@@ -93,19 +105,14 @@ function plotPing(received, type)
    if(data.rows.length > 30)
       data.rows.shift();   
 
-   /*update chart*/
-   if(type == 4)
-      $.plot(pingPlaceholder, [{ data: pingData.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
-         xaxis: { min: 0, max: pingData.count > 10? pingData.count + 1 : 10}
-         }));
-   else
-      $.plot(ping6Placeholder, [{ data: ping6Data.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
-         xaxis: { min: 0, max: ping6Data.count > 10? ping6Data.count + 1 : 10}
-         }));
+   /*update plots*/
+   repaintPlots();
 }
 
-function addTPlotDataWin(row)
+function addTPlotDataWin(row, type)
 {
+   var data = type == 4? traceData : trace6Data;
+   
    var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
    var fields = nospaces.split(" ");
    var step, time, label, first = 0, labelPos = 4;
@@ -123,8 +130,8 @@ function addTPlotDataWin(row)
    time = (time = parseFloat(fields[first+1]))? time : (time = parseFloat(fields[first+2])) ? time : parseFloat(fields[first+3]);
    label = fields[first + labelPos];
    
-   traceData.push([step, time]);
-   traceLabels.push(label);
+   data.rows.push([step, time]);
+   data.labels.push(label);
 }
 
 /* draw plot */
@@ -132,18 +139,20 @@ function plotTraceroute(received, type)
 {
    if(received == "")
       return;
+      
+   var data = type == 4? traceData : trace6Data;
    /* connect with previous data */
-   tracePrevData += received;
+   data.prevData += received;
    /* prepare data */
    
    if($.client.os == "Windows")
    {
       var npos;
       /* divide input data into lines and add them as data */
-      while((npos = tracePrevData.indexOf("\n")) != -1)
+      while((npos = data.prevData.indexOf("\n")) != -1)
       {
-         addTPlotDataWin(tracePrevData.substr(0, npos));
-         tracePrevData = (tracePrevData.substr(npos+1));
+         addTPlotDataWin(data.prevData.substr(0, npos), type);
+         data.prevData = (data.prevData.substr(npos+1));
       }
    }   
    else if($.client.os == "Linux")
@@ -174,8 +183,7 @@ function plotTraceroute(received, type)
    {
    }
 
-   $.plot(traceroutePlaceholder, [{ data: traceData, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
-            }));
+   repaintPlots();
 }
 
 function startAnim(id)
