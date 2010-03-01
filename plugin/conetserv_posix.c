@@ -139,6 +139,9 @@ bool startCommand(command_t cmd, char* addr)
    if (pids[cmd] != 0)
       return false;
 
+   /* workaround for execvp() */
+   execvp_workaround();
+
    /* create pipe for communication */
    if (pipe(pipes[cmd]) == -1) {
       logmsg("CoNetServ: startCommand(): pipe() - error\n");
@@ -154,8 +157,8 @@ bool startCommand(command_t cmd, char* addr)
       /* close read end of pipe */
       close(pipes[cmd][0]);
 
-      /* stdout to write end of the pipe */
-      if (dup2(pipes[cmd][1], 1) == -1) {
+      /* stdout and stderr to write end of the pipe */
+      if (dup2(pipes[cmd][1], 1) == -1 || dup2(pipes[cmd][1], 2) == -1) {
          logmsg("CoNetServ: startCommand(): dup2() - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): dup2() - error\n");
          _exit(1);
@@ -163,9 +166,6 @@ bool startCommand(command_t cmd, char* addr)
 
       /* copy addr argument to array */
       args[cmd][1] = addr;
-
-      /* workaround for execvp() */
-      execvp_workaround();
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {
