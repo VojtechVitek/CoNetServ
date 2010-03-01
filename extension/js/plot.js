@@ -1,8 +1,28 @@
-/* previous ping packet id */
-var prevPingId = 0;
+
+var pingPlaceholder = $("#pingPlaceholder");
+var ping6Placeholder = $("#ping6Placeholder");
+var traceroutePlaceholder = $("#traceroutePlaceholder");
+var traceroute6Placeholder = $("#traceroute6Placeholder");
+
+/* ping time data */
+function Data() {
+  this.rows = [];
+  this.prevId = 0;
+  this.count = 0;
+}
+
+var pingData = new Data();
+var ping6Data = new Data();
+
+
+var traceData = [];
+var traceLabels = [];
+
+var tracePrevData = "";
+
 
 /* chart data */
-var options = {
+var optionsPing = {
       lines: { show: true },
       legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
       points: { show: true },
@@ -10,75 +30,77 @@ var options = {
       yaxis: { min: 0}
 };
 
-$(function(){
-   $('#tabs').tabs({
-      show: function(event, ui) {
-          $.plot(pingPlaceholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], options);
-              return false;
-         
-      }
-   });
+var optionsTrace = {
+      lines: { show: true },
+      legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
+      points: { show: true },
+      xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (traceData.length + 2) > 10? (traceData.length + 2) : 10, zoomRange: [0.1, 10], panRange: [0, 30] },
+      zoom: { interactive: false },
+      pan: { interactive: false },
+      valueLabels: { show: true },
+      legend: { position: "nw" }
+};
+
+/* bind plot functions to tab changing */
+$('#tabs').bind('tabsshow', function() {
+   var $tabs = $('#tabs').tabs();
+   var selected = $tabs.tabs('option', 'selected');
+   if(selected == "0")
+      $.plot(pingPlaceholder, [{ data: pingData.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
+      xaxis: { min: 0, max: pingData.count > 10? pingData.count + 1 : 10}
+      }));
+   if(selected == "2")
+      $.plot(traceroutePlaceholder, [{ data: traceData, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
+      }));
 });
 
-
-
-var pingPlaceholder = $("#pingPlaceholder");
-var traceroutePlaceholder = $("#traceroutePlaceholder");
-
-$(function () {
-   $.plot(pingPlaceholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], options);
-});
-
-/* ping time data */
-var pingData = [];
-var pingCount = 0;
-
-var traceData = [];
-var traceLabels = [];
-
-var tracePrevData = "";
-
-function plotPing(received)
+function plotPing(received, type)
 {
+   var pingTime;
+   var data = type == 4? pingData : ping6Data;
+   
    /* update chart data */
+   
    if($.client.os == "Windows") {
       if(received.indexOf("Odpoved") != -1) {
-         pingCount++;
+         data.count++;
          pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
-         pingData.push([pingCount, pingTime]);
+         data.rows.push([pingData.count, pingTime]);
       } else if(received.indexOf("Reply") != -1) {
-         pingCount++;
+         data.count++;
          pingTime= parseInt(received.substr(received.indexOf("time=")+5));
-         pingData.push([pingCount, pingTime]);
+         data.rows.push([pingData.count, pingTime]);
       } else if(received.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 || received.indexOf("timed out") != -1) {
-         pingCount++;
-         pingData.push(null);
+         data.count++;
+         data.rows.push(null);
       }
    } else if($.client.os == "Linux") {
       if(received.indexOf("bytes from") != -1) {
          /* create "holes" in plot in case of lost packet */
          var actPingId = parseInt(received.substr(received.indexOf("icmp_seq=")+9));
          /* check id */
-         while(actPingId > ++prevPingId) {
-            pingCount++;
-            pingData.push(null);
+         while(actPingId > ++data.prevId) {
+            data.count++;
+            data.rows.push(null);
          }
-         pingCount++;
+         data.count++;
          pingTime= parseInt(received.substr(received.indexOf("time=")+5,received.indexOf(" ms")-received.indexOf("time=")+5));
-         pingData.push([pingCount, pingTime]);
+         data.rows.push([data.count, pingTime]);
          
       }
-   } else {
-      pingConsole.value += $.client.os;
-   }
-   
-   
-   if(pingData.length > 30)
-      pingData.shift();   
+   } 
+      
+   if(data.rows.length > 30)
+      data.rows.shift();   
 
    /*update chart*/
-   $.plot(pingPlaceholder, [{ data: pingData, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, options, {
-            
+   if(type == 4)
+      $.plot(pingPlaceholder, [{ data: pingData.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
+         xaxis: { min: 0, max: pingData.count > 10? pingData.count + 1 : 10}
+         }));
+   else
+      $.plot(ping6Placeholder, [{ data: ping6Data.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
+         xaxis: { min: 0, max: ping6Data.count > 10? ping6Data.count + 1 : 10}
          }));
 }
 
@@ -106,7 +128,7 @@ function addTPlotDataWin(row)
 }
 
 /* draw plot */
-function plotTraceroute(received)
+function plotTraceroute(received, type)
 {
    if(received == "")
       return;
@@ -152,10 +174,7 @@ function plotTraceroute(received)
    {
    }
 
-   $.plot(traceroutePlaceholder, [{ data: traceData, label: "Position", color: "#2779AA" }], $.extend(true, {}, options, {
-            xaxis: { autoscaleMargin: 1 },
-            valueLabels: { show: true },
-            legend: { position: "nw" }
+   $.plot(traceroutePlaceholder, [{ data: traceData, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
             }));
 }
 

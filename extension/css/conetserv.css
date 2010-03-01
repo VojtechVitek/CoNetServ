@@ -14,7 +14,7 @@ body{
 }
 
 #url{
-   height: 20px;
+   
 }
 
 .tabState{
@@ -24,7 +24,7 @@ body{
    display: block;
    width: 16px;
    height: 16px;
-   background-image: url('images/working.gif');
+   background-image: url('../images/working.gif');
    visibility: hidden;
 }
 
@@ -60,7 +60,15 @@ body{
    height: 350px;
 }
 
+#ping6Console{
+   height: 350px;
+}
+
 #tracerouteConsole{
+   height: 220px
+}
+
+#traceroute6Console{
    height: 220px
 }
 
@@ -69,7 +77,17 @@ body{
    width: 640px;
 }
 
+#ping6Placeholder{
+   height:120px;
+   width: 640px;
+}
+
 #traceroutePlaceholder{
+   height:250px;
+   width: 640px;
+}
+
+#traceroute6Placeholder{
    height:250px;
    width: 640px;
 }
