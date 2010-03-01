@@ -43,14 +43,26 @@ extern JNIEnv *pluginJniEnv;
 
 #endif
 
+/** NPAPI NPObject variable */
 extern NPObject        *so;
+
+/** NPAPI NPNetscapeFuncs variable */
 extern NPNetscapeFuncs *npnfuncs;
+
+/** NPAPI NPP variable */
 extern NPP              inst;
 
+/** Buffer for reading from pipes */
 #define BUFFER_LENGTH 1024
 
+/** System-specific debug function */
 void logmsg(const char *msg);
 
+/**
+ * Commands callable in NPAPI plugin
+ * System called commands
+ * Library implemented commands
+ */
 typedef enum {
    /* system commands: */
    PING = 0,
@@ -64,8 +76,27 @@ typedef enum {
    /* implemented commands: */
 } command_t;
 
+/**
+ * Start command
+ * @arg cmd Command number.
+ * @arg addr URL / IPv4 / IPv6 address.
+ * @return True if successfuly started, false otherwise.
+ */
 bool startCommand(command_t cmd, char* addr);
+
+/**
+ * Read command
+ * @arg cmd Command number.
+ * @arg buf Buffer to store read data in.
+ * @return Data length, or -1 while error.
+ */
 int readCommand(command_t cmd, char* buf);
+
+/**
+ * Stop command
+ * @arg cmd Command number.
+ * @return True if successfuly stopped, false otherwise.
+ */
 bool stopCommand(command_t cmd);
 
 #define PLUGIN_NAME "CoNetServ"

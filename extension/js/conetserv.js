@@ -14,7 +14,12 @@ var ping6Console = document.getElementById("ping6Console");
 var tracerouteConsole = document.getElementById("tracerouteConsole");
 var traceroute6Console = document.getElementById("traceroute6Console");
 var whoisConsole = document.getElementById("whoisConsole");
- 
+
+/**
+ * Read output of PING6 command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
 function readPing()
 {
    var received;
@@ -34,7 +39,12 @@ function readPing()
    pingConsole.value = document.getElementById("pingConsole").value + received;
    plotPing(received, 4);
 }
- 
+
+/**
+ * Read output of PING6 command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
 function readPing6()
 {
    var received;
@@ -54,7 +64,12 @@ function readPing6()
    ping6Console.value = document.getElementById("ping6Console").value + received;
    plotPing(received, 6);
 }
- 
+
+/**
+ * Read output of TRACEROUTE command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
 function readTraceroute()
 {
    var received;
@@ -73,7 +88,12 @@ function readTraceroute()
    document.getElementById("tracerouteConsole").value = document.getElementById("tracerouteConsole").value + received;
    plotTraceroute(received, 4);
 }
- 
+
+/**
+ * Read output of TRACEROUTE6 command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
 function readTraceroute6()
 {
    var received;
@@ -92,7 +112,12 @@ function readTraceroute6()
    document.getElementById("traceroute6Console").value = document.getElementById("traceroute6Console").value + received;
    plotTraceroute(received, 6);
 }
- 
+
+/**
+ * Read output of WHOIS command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
 function readWhois()
 {
    var received;
@@ -110,8 +135,23 @@ function readWhois()
    }
    document.getElementById("whoisConsole").value = document.getElementById("whoisConsole").value + received;
 }
- 
+
+/**
+ * Start all commands available at once.
+ */
 function startCommands()
+{
+   startPing();
+   startPing6();
+   startTraceroute();
+   startTraceroute6();
+   startWhois();
+}
+
+/**
+ * Start PING command
+ */
+function startPing()
 {
    if (pingInterval == -1) {
       try {
@@ -131,7 +171,13 @@ function startCommands()
          pingInterval = -1;
       }
    }
- 
+}
+
+/**
+ * Start PING6 command
+ */
+function startPing6()
+{
    if (ping6Interval == -1) {
       try {
          document.getElementById("ping6Console").value = "";
@@ -150,7 +196,13 @@ function startCommands()
          ping6Interval = -1;
       }
    }
- 
+}
+
+/**
+ * Start TRACEROUTE command
+ */
+function startTraceroute()
+{
    if (tracerouteInterval == -1) {
       try {
          document.getElementById("tracerouteConsole").value = "";
@@ -169,7 +221,13 @@ function startCommands()
          tracerouteInterval = -1;
       }
    }
- 
+}
+
+/**
+ * Start TRACEROUTE6 command
+ */
+function startTraceroute6()
+{
    if (traceroute6Interval == -1) {
       try {
          document.getElementById("traceroute6Console").value = "";
@@ -188,7 +246,13 @@ function startCommands()
          traceroute6Interval = -1;
       }
    }
- 
+}
+
+/**
+ * Start WHOIS command
+ */
+function startWhois()
+{
    if (whoisInterval == -1) {
       try {
          document.getElementById("whoisConsole").value = "";
@@ -207,7 +271,10 @@ function startCommands()
       }
    }
 }
- 
+
+/**
+ * Stop all commands available at once.
+ */
 function stopCommands()
 {
    stopPing();
@@ -216,7 +283,10 @@ function stopCommands()
    stopTraceroute6();
    stopWhois();
 }
- 
+
+/**
+ * Stop PING command
+ */
 function stopPing()
 {
    if (pingInterval != -1) {
@@ -231,7 +301,10 @@ function stopPing()
       pingInterval = -1;
    }
 }
- 
+
+/**
+ * Stop PING6 command
+ */
 function stopPing6()
 {
    if (ping6Interval != -1) {
@@ -246,7 +319,10 @@ function stopPing6()
       ping6Interval = -1;
    }
 }
- 
+
+/**
+ * Stop TRACEROUTE command
+ */
 function stopTraceroute()
 {
    if (tracerouteInterval != -1) {
@@ -262,6 +338,9 @@ function stopTraceroute()
    }
 }
  
+/**
+ * Stop TRACEROUTE6 command
+ */
 function stopTraceroute6()
 {
    if (traceroute6Interval != -1) {
@@ -276,7 +355,10 @@ function stopTraceroute6()
       traceroute6Interval = -1;
    }
 }
- 
+
+/**
+ * Stop WHOIS command
+ */
 function stopWhois()
 {
    if (whoisInterval != -1) {
