@@ -32,7 +32,6 @@ var optionsTrace = {
       lines: { show: true },
       legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
       points: { show: true },
-      xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (traceData.rows.length + 2) > 10? (traceData.rows.length + 2) : 10 },
       zoom: { interactive: false },
       pan: { interactive: false },
       valueLabels: { show: true },
@@ -52,9 +51,11 @@ function repaintPlots() {
       }));      
    if(selected == "2")  /* traceroute v4 */
       $.plot(traceroutePlaceholder, [{ data: traceData.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
+      xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (traceData.rows.length + 2) > 10? (traceData.rows.length + 2) : 10 },
       }));
    if(selected == "3")  /* traceroute v6 */
       $.plot(traceroute6Placeholder, [{ data: trace6Data.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
+      xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (trace6Data.rows.length + 2) > 10? (trace6Data.rows.length + 2) : 10 },
       }));
 }
 
@@ -79,7 +80,8 @@ function plotPing(received, type)
          pingTime= parseInt(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
          data.rows.push([pingData.count, pingTime]);
       } else if(received.indexOf("Reply") != -1) {
-         data.count++;
+         data.count++;var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+   var fields = nospaces.split(" ");
          pingTime= parseInt(received.substr(received.indexOf("time=")+5));
          data.rows.push([pingData.count, pingTime]);
       } else if(received.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 || received.indexOf("timed out") != -1) {
@@ -134,6 +136,53 @@ function addTPlotDataWin(row, type)
    data.labels.push(label);
 }
 
+function addTPlotDataLin(row, type)
+{
+   var data = type == 4? traceData : trace6Data;
+   var step, time, label, first = 0;
+
+   var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+   var fields = nospaces.split(" ");
+   
+   /* find first column */
+   while(fields[first] == "" && first<fields.length-3)
+      first++;
+
+   var step = parseFloat(fields[first]);
+   /* check for not comming packets */
+   if(fields[first+1] == "*")
+   {
+      if(fields[first+2] != "*")
+      {
+	 label = fields[first+2];
+	 time = parseInt(fields[first+4]);
+	 data.rows.push([step, time]);
+	 data.labels.push(label);
+      }
+      else
+      {
+	 if(fields[first+3] != "*")
+	 {
+	    label = fields[first+3];
+	    time = parseInt(fields[first+4]);
+	    data.rows.push([step, time]);
+	    data.labels.push(label);
+	 }
+	 else
+	 {
+	    data.rows.push([step, data.rows[step-1][1]]);
+	 }
+      }
+   }
+   else
+   {
+	 label = fields[first+1];
+	 time = parseInt(fields[first+3]);
+	 data.rows.push([step, time]);
+	 data.labels.push(label);
+   }
+}
+
 /* draw plot */
 function plotTraceroute(received, type)
 {
@@ -157,27 +206,13 @@ function plotTraceroute(received, type)
    }   
    else if($.client.os == "Linux")
    {
-      step = parseFloat(fields[1]);
-      /* check for not comming packets */
-      if(fields[2] == "*")
+      var npos;
+      /* divide input data into lines and add them as data */
+      while((npos = data.prevData.indexOf("\n")) != -1)
       {
-       if(fields[3] != "*")
-       {
-          label = fields[3];
-          time = parseInt(fields[5]);
-          traceData.push([step, time]);
-          traceLabels.push(label);
-       }
+         addTPlotDataLin(data.prevData.substr(0, npos), type);
+         data.prevData = (data.prevData.substr(npos+1));
       }
-      else
-      {
-          label = fields[2];
-          time = parseInt(fields[4]);
-          //tracerouteConsole.value += fields[3];
-          traceData.push([step, time]);
-          traceLabels.push(label);
-      }
-
    }
    else
    {
@@ -188,10 +223,12 @@ function plotTraceroute(received, type)
 
 function startAnim(id)
 {
-   document.getElementById(id).style.display = 'block';//visibility = 'visible';
+   document.getElementById(id+"State").style.display = 'block';//visibility = 'visible';
+   document.getElementById(id+"TabClose").style.display = 'block';
 }
 
 function stopAnim(id)
 {
-   document.getElementById(id).style.display = 'none';//visibility = 'hidden';
+   document.getElementById(id+"State").style.display = 'none';//visibility = 'hidden';
+   document.getElementById(id+"TabClose").style.display = 'none';
 }

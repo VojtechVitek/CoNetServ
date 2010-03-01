@@ -23,11 +23,11 @@
       <input id="urlButton" type="submit" value="Start" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
     </form>
     <ul>
-        <li><span id="pingState" class="tabState"></span><a href="#pingTab"><span>Ping</span></a></li>
-        <li><span id="ping6State" class="tabState"></span><a href="#ping6Tab"><span>Ping6</span></a></li>
-        <li><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab"><span>Traceroute</span></a></li>
-        <li><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab"><span>Traceroute6</span></a></li>
-        <li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a></li>
+        <li><span id="pingState" class="tabState"></span><a href="#pingTab"><span>Ping</span></a><span id="pingTabClose" class="tabClose" onclick="stopPing()"></span></li>
+        <li><span id="ping6State" class="tabState"></span><a href="#ping6Tab"><span>Ping6</span></a><span id="ping6TabClose" class="tabClose" onclick="stopPing6()"></span></li>
+        <li><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab"><span>Traceroute</span></a><span id="tracerouteTabClose" class="tabClose" onclick="stopTraceroute()"></span></li>
+        <li><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab"><span>Traceroute6</span></a><span id="traceroute6TabClose" class="tabClose" onclick="stopTraceroute6()"></span></li>
+        <li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a><span id="pingTabClose" class="whoisClose" onclick="stopWhois()"></span></li>
         <li class="aboutTab"><a href="#aboutTab"><span>About</span></a></li>
     </ul>
     <div id="pingTab">

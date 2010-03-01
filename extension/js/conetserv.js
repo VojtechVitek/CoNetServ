@@ -31,7 +31,7 @@ function readPing()
       return;
    }
    if (received === false) {
-      stopAnim("pingState");
+      stopAnim("ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
       return;
@@ -56,7 +56,7 @@ function readPing6()
       return;
    }
    if (received === false) {
-      stopAnim("ping6State");
+      stopAnim("ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
       return;
@@ -80,7 +80,7 @@ function readTraceroute()
       document.getElementById("tracerouteConsole").value = e;
    }
    if (received === false) {
-      stopAnim("tracerouteState");
+      stopAnim("traceroute");
       window.clearInterval(tracerouteInterval);
       tracerouteInterval = -1;
       return;
@@ -104,7 +104,7 @@ function readTraceroute6()
       document.getElementById("traceroute6Console").value = e;
    }
    if (received === false) {
-      stopAnim("traceroute6State");
+      stopAnim("traceroute6");
       window.clearInterval(traceroute6Interval);
       traceroute6Interval = -1;
       return;
@@ -128,7 +128,7 @@ function readWhois()
       document.getElementById("whoisConsole").value = e;
    }
    if (received === false) {
-      stopAnim("whoisState");
+      stopAnim("whois");
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
       return;
@@ -159,7 +159,7 @@ function startPing()
          if (document.getElementById("conetserv").startPing(document.getElementById("url").value)) {
              /* reset data and start animation */
              pingData = new Data();
-             startAnim("pingState");
+             startAnim("ping");
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
          } else {
@@ -184,7 +184,7 @@ function startPing6()
          if (document.getElementById("conetserv").startPing6(document.getElementById("url").value)) {
              /* reset data and start animation */
              ping6Data = new Data();
-             startAnim("ping6State");
+             startAnim("ping6");
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
          } else {
@@ -208,7 +208,7 @@ function startTraceroute()
          document.getElementById("tracerouteConsole").value = "";
          if (document.getElementById("conetserv").startTraceroute(document.getElementById("url").value)) {
             traceData = new Data();
-            startAnim("tracerouteState");
+            startAnim("traceroute");
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
             readTraceroute();            
          }
@@ -233,7 +233,7 @@ function startTraceroute6()
          document.getElementById("traceroute6Console").value = "";
          if (document.getElementById("conetserv").startTraceroute6(document.getElementById("url").value)) {
             trace6Data = new Data();
-            startAnim("traceroute6State");
+            startAnim("traceroute6");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
          }
@@ -259,7 +259,7 @@ function startWhois()
          if (document.getElementById("conetserv").startWhois(document.getElementById("url").value)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             readWhois();
-            startAnim("whoisState");
+            startAnim("whois");
          }
          else {
             whoisInterval = -1;
@@ -296,7 +296,7 @@ function stopPing()
       catch(e) {
          document.getElementById("pingConsole").value = document.getElementById("pingConsole").value + e;
       }
-      stopAnim("pingState");
+      stopAnim("ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
    }
@@ -314,7 +314,7 @@ function stopPing6()
       catch(e) {
          document.getElementById("ping6Console").value = document.getElementById("ping6Console").value + e;
       }
-      stopAnim("ping6State");
+      stopAnim("ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
    }
@@ -332,7 +332,7 @@ function stopTraceroute()
       catch(e) {
          document.getElementById("tracerouteConsole").value = document.getElementById("tracerouteConsole").value + e;
       }
-      stopAnim("tracerouteState");
+      stopAnim("traceroute");
       window.clearInterval(tracerouteInterval);
       tracerouteInterval = -1;
    }
@@ -350,7 +350,7 @@ function stopTraceroute6()
       catch(e) {
          document.getElementById("traceroute6Console").value = document.getElementById("traceroute6Console").value + e;
       }
-      stopAnim("traceroute6State");
+      stopAnim("traceroute6");
       window.clearInterval(traceroute6Interval);
       traceroute6Interval = -1;
    }
@@ -368,8 +368,16 @@ function stopWhois()
       catch(e) {
          document.getElementById("whoisConsole").value = document.getElementById("whoisConsole").value + e;
       }
-      stopAnim("whoisState");
+      stopAnim("whois");
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
    }
 }
+
+/**
+ * Bind stopbuttons
+ */
+
+$('#pingTabClose').bind('onclick', function() {
+   stopPing();
+});

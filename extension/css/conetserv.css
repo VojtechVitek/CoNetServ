@@ -28,6 +28,17 @@ body{
    display: none;
 }
 
+.tabClose{
+   margin-top: 4px;
+   margin-right: 4px;
+   float: left;
+   display: block;
+   width: 16px;
+   height: 16px;
+   background-image: url('../images/stop.png');
+   display: none;
+}
+
 .consoleTextarea{
    width: 640px; 
    height: 480px;
