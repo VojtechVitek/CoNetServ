@@ -14,15 +14,15 @@ common:
 	@echo " * Need pre-built libraries for all supported archs and platforms."
 	@echo "===================================================================="
 	@mkdir -p build/
+	@test -f build/npconetserv64.so || { echo "Missing build/npconetserv64.so"; exit 1; }
+	@test -f build/npconetserv.so || { echo "Missing build/npconetserv.so"; exit 1; }
+	@test -f build/npconetserv.dll || { echo "Missing build/npconetserv.dll"; exit 1; }
 	@mkdir -p extension/platform/Linux_x86_64-gcc3/plugins/
 	@mkdir -p extension/platform/Linux_x86-gcc3/plugins/
 	@mkdir -p extension/platform/WINNT_x86-MSVC/plugins/
-	@test -f extension/platform/Linux_x86_64-gcc3/plugins/npconetserv.so \
-	|| { echo "Missing extension/platform/Linux_x86_64-gcc3/plugins/npconetserv.so"; exit 1; }
-	@test -f extension/platform/Linux_x86-gcc3/plugins/npconetserv.so \
-	|| { echo "Missing extension/platform/Linux_x86-gcc3/plugins/npconetserv.so"; exit 1; }
-	@test -f extension/platform/WINNT_x86-MSVC/plugins/npconetserv.dll \
-	|| { echo "Missing extension/platform/WINNT_x86-MSVC/plugins/npconetserv.dll"; exit 1; }
+	@cp build/npconetserv64.so extension/platform/Linux_x86_64-gcc3/plugins/
+	@cp build/npconetserv.so extension/platform/Linux_x86-gcc3/plugins/
+	@cp build/npconetserv.dll extension/platform/WINNT_x86-MSVC/plugins/
 
 firefox:
 	@echo "Building Mozilla Firefox add-on... build/conetserv.xpi"
@@ -46,9 +46,4 @@ opera:
 	@cd extension && zip -q ../build/conetserv-no-plugin.wgt \
 	  config.xml \
 	  `find js` `find images` `find css` index.html `find jquery`
-	@echo "Copying libraries for Opera... build/npconetserv{|64}.{so|dll}"
-	@cp extension/platform/Linux_x86_64-gcc3/plugins/npconetserv.so build/npconetserv64.so
-	@cp extension/platform/Linux_x86-gcc3/plugins/npconetserv.so build/npconetserv.so
-	@cp extension/platform/WINNT_x86-MSVC/plugins/npconetserv.dll build/npconetserv.dll
-
 
