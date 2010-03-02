@@ -53,14 +53,12 @@ hasMethod(NPObject* obj, NPIdentifier methodName) {
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
    logmsg("CoNetServ: invokeDefault\n");
-   result->type = NPVariantType_Bool;
-   result->value.boolValue = true;
+   BOOLEAN_TO_NPVARIANT(true, *result);
    return true;
 }
 
 static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-	NPString str;
    command_t cmd;
    int len;
    char *txt;
@@ -82,17 +80,13 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
                } else {
                   txt = NULL;
                }
-               str.utf8characters = txt;
-               str.utf8length = len;
-               result->type = NPVariantType_String;
-               result->value.stringValue = str;
+               STRINGN_TO_NPVARIANT(txt, len, *result);
             } else {
-               result->type = NPVariantType_Bool;
-               result->value.boolValue = false;
+               BOOLEAN_TO_NPVARIANT(false, *result);
             }
             return true;
          }
-      } else if (!strncmp(name, "start", 5) && argCount == 1 && args[0].type == NPVariantType_String) {
+      } else if (!strncmp(name, "start", 5) && argCount == 1 && NPVARIANT_IS_STRING(args[0])) {
          if (((!strcmp(name + 5, "Ping") && (cmd = PING, true))) ||
              ((!strcmp(name + 5, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 5, "Traceroute") && (cmd = TRACEROUTE, true))) ||
@@ -101,9 +95,8 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             logmsg("CoNetServ: invoke ");
             logmsg(name);
             logmsg("()\n");
-           result->type = NPVariantType_Bool;
-           result->value.boolValue = startCommand(cmd, (char*)args[0].value.stringValue.utf8characters);
-           return true;
+            BOOLEAN_TO_NPVARIANT(startCommand(cmd, NPVARIANT_TO_STRING(args[0])), *result);
+            return true;
          }
       } else if (!strncmp(name, "stop", 4) && argCount == 0) {
          if (((!strcmp(name + 4, "Ping") && (cmd = PING, true))) ||
@@ -114,8 +107,7 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             logmsg("CoNetServ: invoke ");
             logmsg(name);
             logmsg("()\n");
-            result->type = NPVariantType_Bool;
-            result->value.boolValue = stopCommand(cmd);
+            BOOLEAN_TO_NPVARIANT(stopCommand(cmd), *result);
             return true;
          }
       }
@@ -285,4 +277,3 @@ NP_GetValue(void *npp, NPPVariable variable, void *value) {
 #ifdef __cplusplus
 }
 #endif
-

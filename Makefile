@@ -20,9 +20,9 @@ common:
 	@mkdir -p extension/platform/Linux_x86_64-gcc3/plugins/
 	@mkdir -p extension/platform/Linux_x86-gcc3/plugins/
 	@mkdir -p extension/platform/WINNT_x86-MSVC/plugins/
-	@cp build/npconetserv64.so extension/platform/Linux_x86_64-gcc3/plugins/
-	@cp build/npconetserv.so extension/platform/Linux_x86-gcc3/plugins/
-	@cp build/npconetserv.dll extension/platform/WINNT_x86-MSVC/plugins/
+	@cp build/npconetserv64.so extension/platform/Linux_x86_64-gcc3/plugins/npconetserv.so
+	@cp build/npconetserv.so extension/platform/Linux_x86-gcc3/plugins/npconetserv.so
+	@cp build/npconetserv.dll extension/platform/WINNT_x86-MSVC/plugins/npconetserv.dll
 
 firefox:
 	@echo "Building Mozilla Firefox add-on... build/conetserv.xpi"

@@ -1,15 +1,12 @@
 #ifndef _CONETSERV_H_
 #define _CONETSERV_H_
 
-#if !defined(_WINDOWS)
-#include <stdbool.h>
-#endif
-
 #if defined(XULRUNNER_SDK)
 
 #include <npapi.h>
 #include <npfunctions.h>
 #include <npruntime.h>
+#include <nptypes.h>
 
 #elif defined(ANDROID)
 
@@ -18,6 +15,7 @@
 #include <npapi.h>
 #include <npfunctions.h>
 #include <npruntime.h>
+#include <nptypes.h>
 #define OSCALL
 #define NPP_WRITE_TYPE (NPP_WriteProcPtr)
 #define NPStringText UTF8Characters
@@ -29,6 +27,8 @@ extern JNIEnv *pluginJniEnv;
 #include <Webkit/npapi.h>
 #include <WebKit/npfunctions.h>
 #include <WebKit/npruntime.h>
+#include <WebKit/nptypes.h>
+
 #define OSCALL
 
 #elif defined(WEBKIT_WINMOBILE_SDK) /* WebKit SDK on Windows */
@@ -41,6 +41,15 @@ extern JNIEnv *pluginJniEnv;
 #define OSCALL WINAPI
 #endif
 
+#endif
+
+/* WebKIT and XULRunner differs in struct _NPString member names */
+#if defined(WEBKIT_DARWIN_SDK)
+#define STRING_UTF8CHARACTERS(_v) ((_v).UTF8Characters)
+#define STRING_UTF8LENGTH(_v)     ((_v).UTF8Length)
+#else
+#define STRING_UTF8CHARACTERS(_v) ((_v).utf8characters)
+#define STRING_UTF8LENGTH(_v)     ((_v).utf8length)
 #endif
 
 /** NPAPI NPObject variable */
@@ -82,7 +91,7 @@ typedef enum {
  * @arg addr URL / IPv4 / IPv6 address.
  * @return True if successfuly started, false otherwise.
  */
-bool startCommand(command_t cmd, char* addr);
+bool startCommand(command_t cmd, NPString addr);
 
 /**
  * Read command

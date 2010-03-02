@@ -25,7 +25,7 @@ char* cmd_args[command_t_count] = {
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
 #define errorExitChild(msg) {logmsg(msg); npnfuncs->setexception(NULL, msg); ExitProcess(1);}
 
-bool startCommand(command_t cmd, char* addr)
+bool startCommand(command_t cmd, NPString addr)
 {
 	unsigned i;
 	char cmdchar[100];
@@ -52,7 +52,7 @@ bool startCommand(command_t cmd, char* addr)
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-	sprintf(cmdchar, "%s %s", cmd_args[cmd], addr);	
+   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)STRING_UTF8CHARACTERS(addr));
 	
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 

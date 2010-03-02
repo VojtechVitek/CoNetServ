@@ -133,7 +133,7 @@ void execvp_workaround()
    }
 }
 
-bool startCommand(command_t cmd, char* addr)
+bool startCommand(command_t cmd, NPString addr)
 {
    /* already started */
    if (pids[cmd] != 0)
@@ -165,7 +165,7 @@ bool startCommand(command_t cmd, char* addr)
       }
 
       /* copy addr argument to array */
-      args[cmd][1] = addr;
+      args[cmd][1] = (char *)STRING_UTF8CHARACTERS(addr);
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {

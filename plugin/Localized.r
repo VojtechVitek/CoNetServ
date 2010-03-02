@@ -1,17 +1,12 @@
 #include <CoreServices/CoreServices.r>
+//#include <Carbon/Carbon.r>
 
 // Plugin info
-resource 'STR#' (126) { {
-    "Tests conetserv()",
-    "CoNetServ plugin"
-} };
+resource 'STR#' (126, "Description") { { "Complex Network Services", "CoNetServ" } };
 
-// MIME Type descriptions
-resource 'STR#' (127) { {
-    "CoNetServ test"
-} };
+// MIME type descriptions
+resource 'STR#' (127, "MIME type description") { { "CoNetServ object with invokable methods" } };
 
-// MIME Types
-resource 'STR#' (128) { {
-    "application/x-conetserv"
-} };
+// MIME types
+resource 'STR#' (128, "MIME type") { { "application/x-conetserv", "" } };
+
