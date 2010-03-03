@@ -6,7 +6,6 @@
 #include <npapi.h>
 #include <npfunctions.h>
 #include <npruntime.h>
-#include <nptypes.h>
 
 #elif defined(ANDROID)
 
@@ -15,7 +14,6 @@
 #include <npapi.h>
 #include <npfunctions.h>
 #include <npruntime.h>
-#include <nptypes.h>
 #define OSCALL
 #define NPP_WRITE_TYPE (NPP_WriteProcPtr)
 #define NPStringText UTF8Characters
@@ -27,7 +25,6 @@ extern JNIEnv *pluginJniEnv;
 #include <Webkit/npapi.h>
 #include <WebKit/npfunctions.h>
 #include <WebKit/npruntime.h>
-#include <WebKit/nptypes.h>
 
 #define OSCALL
 
