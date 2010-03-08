@@ -15,6 +15,10 @@ var tracerouteConsole = document.getElementById("tracerouteConsole");
 var traceroute6Console = document.getElementById("traceroute6Console");
 var whoisConsole = document.getElementById("whoisConsole");
 
+/* init url in firefox*/
+if(window.arguments[0])
+   document.getElementById("url").value = window.arguments[0];
+
 /**
  * Read output of PING6 command
  * \return String data if successful (could be zero length),
@@ -22,7 +26,6 @@ var whoisConsole = document.getElementById("whoisConsole");
  */
 function readPing()
 {
-   pingConsole+=window.arguments[0];
    var received;
    try {
       received = document.getElementById("conetserv").readPing();
