@@ -27,27 +27,49 @@
         <li><span id="ping6State" class="tabState"></span><a href="#ping6Tab"><span>Ping6</span></a><span id="ping6TabClose" class="tabClose" onclick="stopPing6()"></span></li>
         <li><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab"><span>Traceroute</span></a><span id="tracerouteTabClose" class="tabClose" onclick="stopTraceroute()"></span></li>
         <li><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab"><span>Traceroute6</span></a><span id="traceroute6TabClose" class="tabClose" onclick="stopTraceroute6()"></span></li>
-        <li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a><span id="pingTabClose" class="whoisClose" onclick="stopWhois()"></span></li>
+        <li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>
         <li class="aboutTab"><a href="#aboutTab"><span>About</span></a></li>
     </ul>
     <div id="pingTab">
-        <textarea id="pingConsole" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
+        <textarea id="pingConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+	<div id="pingStats" class="statsArea">
+	   <div class="pingStatField">
+	      <span>Min:</span> <input id="pingMin" class="ui-corner-all" type="text" disabled="true"/>
+	   </div>
+	   <div class="pingStatField">
+	      <span>Max:</span> <input id="pingMax" class="ui-corner-all" type="text" disabled="true"/>
+	   </div>
+	   <div class="pingStatField">
+	      <span>Avrg:</span> <input id="pingAvrg" class="ui-corner-all" type="text" disabled="true"/>
+	   </div>
+	</div>
         <div id="pingPlaceholder" class="placeholder"></div>
     </div>
     <div id="ping6Tab">
-        <textarea id="ping6Console" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
+        <textarea id="ping6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+	<div id="ping6Stats" class="statsArea">
+	   <div class="pingStatField">
+	      <span>Min:</span> <input id="ping6Min" class="ui-corner-all" type="text" disabled="true"/>
+	   </div>
+	   <div class="pingStatField">
+	      <span>Max:</span> <input id="ping6Max" class="ui-corner-all" type="text" disabled="true"/>
+	   </div>
+	   <div class="pingStatField">
+	      <span>Avrg:</span> <input id="ping6Avrg" class="ui-corner-all" type="text" disabled="true"/>
+	   </div>
+	</div>
         <div id="ping6Placeholder" class="placeholder"></div>
     </div>
     <div id="tracerouteTab">
-      <textarea id="tracerouteConsole" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
+      <textarea id="tracerouteConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
       <div id="traceroutePlaceholder" class="placeholder"></div>
     </div>
     <div id="traceroute6Tab">
-      <textarea id="traceroute6Console" class="consoleTextarea" rows="22" cols="80" disabled="true"></textarea>
+      <textarea id="traceroute6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
       <div id="traceroute6Placeholder" class="placeholder"></div>
     </div>
     <div id="whoisTab">
-      <textarea id="whoisConsole" class="consoleTextarea" rows="30" cols="80" disabled="true"></textarea>
+      <textarea id="whoisConsole" class="consoleTextarea ui-corner-all" rows="30" cols="80" disabled="true"></textarea>
     </div>
     <div id="aboutTab">
       <h2>CoNetServ - Complex Network Services</h2>

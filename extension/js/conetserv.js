@@ -22,6 +22,7 @@ var whoisConsole = document.getElementById("whoisConsole");
  */
 function readPing()
 {
+   pingConsole+=window.arguments[0];
    var received;
    try {
       received = document.getElementById("conetserv").readPing();
@@ -36,7 +37,7 @@ function readPing()
       pingInterval = -1;
       return;
    }
-   pingConsole.value = document.getElementById("pingConsole").value + received;
+   pingConsole.value += received;
    plotPing(received, 4);
 }
 
@@ -61,7 +62,7 @@ function readPing6()
       ping6Interval = -1;
       return;
    }
-   ping6Console.value = document.getElementById("ping6Console").value + received;
+   ping6Console.value += received;
    plotPing(received, 6);
 }
 
@@ -85,7 +86,7 @@ function readTraceroute()
       tracerouteInterval = -1;
       return;
    }
-   document.getElementById("tracerouteConsole").value = document.getElementById("tracerouteConsole").value + received;
+   tracerouteConsole.value += received;
    plotTraceroute(received, 4);
 }
 
@@ -109,7 +110,7 @@ function readTraceroute6()
       traceroute6Interval = -1;
       return;
    }
-   document.getElementById("traceroute6Console").value = document.getElementById("traceroute6Console").value + received;
+   traceroute6Console.value += received;
    plotTraceroute(received, 6);
 }
 
@@ -133,7 +134,7 @@ function readWhois()
       whoisInterval = -1;
       return;
    }
-   document.getElementById("whoisConsole").value = document.getElementById("whoisConsole").value + received;
+   whoisConsole.value += received;
 }
 
 /**
@@ -158,7 +159,7 @@ function startPing()
          document.getElementById("pingConsole").value = "";
          if (document.getElementById("conetserv").startPing(document.getElementById("url").value)) {
              /* reset data and start animation */
-             pingData = new Data();
+             pingData = new pData();
              startAnim("ping");
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
@@ -183,7 +184,7 @@ function startPing6()
          document.getElementById("ping6Console").value = "";
          if (document.getElementById("conetserv").startPing6(document.getElementById("url").value)) {
              /* reset data and start animation */
-             ping6Data = new Data();
+             ping6Data = new pData();
              startAnim("ping6");
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
@@ -207,7 +208,7 @@ function startTraceroute()
       try {
          document.getElementById("tracerouteConsole").value = "";
          if (document.getElementById("conetserv").startTraceroute(document.getElementById("url").value)) {
-            traceData = new Data();
+            traceData = new tData();
             startAnim("traceroute");
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
             readTraceroute();            
@@ -232,7 +233,7 @@ function startTraceroute6()
       try {
          document.getElementById("traceroute6Console").value = "";
          if (document.getElementById("conetserv").startTraceroute6(document.getElementById("url").value)) {
-            trace6Data = new Data();
+            trace6Data = new tData();
             startAnim("traceroute6");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
@@ -258,8 +259,9 @@ function startWhois()
          document.getElementById("whoisConsole").value = "";
          if (document.getElementById("conetserv").startWhois(document.getElementById("url").value)) {
             whoisInterval = window.setInterval("readWhois()", 500);
-            readWhois();
             startAnim("whois");
+	    readWhois();
+            
          }
          else {
             whoisInterval = -1;

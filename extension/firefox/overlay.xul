@@ -4,7 +4,7 @@
   <commandset id="mainCommandSet">
     <command id="conetservStart" oncommand="window.openDialog(
     'chrome://conetserv/content/index.html',
-    'CoNetServ - Complex Network Services','chrome,centerscreen')"/>
+    'CoNetServ - Complex Network Services','chrome,centerscreen',document.getElementByName('urlbar').value"/>
   </commandset>
   <toolbarpalette id="BrowserToolbarPalette">
      <toolbarbutton id="conetservToolButton" label="CoNetServ" class="toolbarbutton-1" command="conetservStart" />
