@@ -16,9 +16,30 @@ var traceroute6Console = document.getElementById("traceroute6Console");
 var whoisConsole = document.getElementById("whoisConsole");
 
 /* init url in firefox*/
-if(window.arguments[0])
-   document.getElementById("url").value = window.arguments[0];
+if($.client.browser == "Firefox")
+{
+   if(window.arguments[0] && checkAddress(window.arguments[0]))
+      document.getElementById("url").value = window.arguments[0];
+}
+/* init url in Chrome */
+else if($.client.browser == "Chrome")
+{
+   chrome.tabs.getSelected(null, function(tab) {
+      if(checkAddress(tab.url))
+	 document.getElementById("url").value = tab.url;
+   });
+}
 
+/** 
+ * Checks address for validity to ping, traceroute,...
+ *
+ */
+function checkAddress(addr)
+{
+   var IPv4regxp = /^(f|ht)tp[s]{0,1}:[/]{2}\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ig;
+   var http = /(http|https|ftp)([^ ]+)/ig
+   return IPv4regxp.exec(addr) || http.exec(addr);
+}
 /**
  * Read output of PING6 command
  * \return String data if successful (could be zero length),

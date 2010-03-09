@@ -99,9 +99,18 @@ function repaintPlots() {
       document.getElementById("pingAvrg").value = (pingData.count == 0 ? 0 : pingData.avrgs[pingData.avrgs.length-1][1]) + " ms";
    }
    if(selected == "1")  /* ping v6 */
-      $.plot(ping6Placeholder, [{ data: ping6Data.rows, label: "Latency [ms]", color: "#2779AA" }], $.extend(true, {}, optionsPing, {
-      xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: ping6Data.count > 10? ping6Data.count + 1 : 11}
-      }));      
+   {
+      $.plot(ping6Placeholder, 
+	    [  { data: ping6Data.avrgs, label: "Average [ms]", color: "#67AAEE", points: {show: false} },
+	       { data: ping6Data.rows, label: "Latency [ms]", color: "#2779AA" }], 
+	    $.extend(true, {}, optionsPing, {
+	       xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: ping6Data.count > 10? ping6Data.count + 1 : 11}
+	       }));      
+      /* set values for stats */
+      document.getElementById("ping6Min").value = ping6Data.min + " ms";
+      document.getElementById("ping6Max").value = ping6Data.max + " ms";
+      document.getElementById("ping6Avrg").value = (ping6Data.count == 0 ? 0 : ping6Data.avrgs[ping6Data.avrgs.length-1][1]) + " ms";
+   }
    if(selected == "2")  /* traceroute v4 */
       $.plot(traceroutePlaceholder, [{ data: traceData.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
       xaxis: { tickDecimals: 0, tickSize: 1, min: 0, max: (traceData.rows.length + 2) > 10? (traceData.rows.length + 2) : 10 },
