@@ -68,11 +68,11 @@ body{
 }
 
 #pingConsole{
-   height: 350px;
+   height: 290px;
 }
 
 #ping6Console{
-   height: 350px;
+   height: 290px;
 }
 
 #tracerouteConsole{
@@ -84,12 +84,12 @@ body{
 }
 
 #pingPlaceholder{
-   height:120px;
+   height:150px;
    width: 640px;
 }
 
 #ping6Placeholder{
-   height:120px;
+   height:150px;
    width: 640px;
 }
 
@@ -101,6 +101,36 @@ body{
 #traceroute6Placeholder{
    height:250px;
    width: 640px;
+}
+
+.statsArea{
+   height: 30px;
+   margin-top: 5px;
+}
+
+.statsArea input{
+   border: 1px solid gray;
+}
+
+.pingStatField{
+   float: left;
+   margin-right: 40px;
+   width: 170px;
+}
+
+.pingStatField span{
+   font-weight: bold;
+   display: block;
+   float: left;
+   width: 40px;
+   margin: 0 2px 0 0;
+   padding: 0;
+}
+
+.pingStatField input{
+   width: 120px;
+   margin: 0px;
+   padding: 0px;
 }
 
 #aboutTab{
