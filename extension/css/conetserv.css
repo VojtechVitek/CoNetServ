@@ -68,28 +68,32 @@ body{
 }
 
 #pingConsole{
-   height: 290px;
+   height: 220px;
 }
 
 #ping6Console{
-   height: 290px;
+   height: 260px;
 }
 
 #tracerouteConsole{
-   height: 220px
+   height: 260px
 }
 
 #traceroute6Console{
    height: 220px
 }
 
+.placeholder{
+   margin-top: 10px;
+}
+
 #pingPlaceholder{
-   height:150px;
+   height:220px;
    width: 640px;
 }
 
 #ping6Placeholder{
-   height:150px;
+   height:220px;
    width: 640px;
 }
 
@@ -106,6 +110,7 @@ body{
 .statsArea{
    height: 30px;
    margin-top: 5px;
+   display: none;
 }
 
 .statsArea input{
