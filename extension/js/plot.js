@@ -12,30 +12,53 @@ function pData() {
    this.maxValues = 30;		//maximum number of shown values in plot
    this.rows = [];		//array for storing data
    this.count = 0;		//amount of data in array
+   this.prevId = 0;		//id of previous ping packet
 
    this.sum = 0;		//sum of all values in fields
-   this.min = 0;		//initiate min value
-   this.max = 0;		//initiate max value
+   this.minVal = 0;		//initiate min value
+   this.maxVal = 0;		//initiate max value
+   this.avrgVal = 0;		//initiate average value
+   this.actVal = 0;		//actual value
+
+   this.lost = 0;
    this.avrgs = [];		//array for storing average values
+   this.min = [];
+   this.max = [];
    //functions
    this.add = function (val) { 
       this.count++;
-      this.rows.push(val == null ? null : [this.count, val]);
-
-      if( val != null)
+      
+      
+      if( val == null)
       {
-	 this.sum += val;
-	 this.min = (this.min == 0 ? val : ( val < this.min ? val : this.min));
-	 this.max = (this.max == 0 ? val : ( val > this.max ? val : this.max));
+	 this.actVal = 0;
+	 this.rows.push(null);
+	 this.lost++;
       }
+      else
+      {
+	 this.actVal = val;
+	 this.rows.push([this.count, val]);
+	 this.sum += val;
+      
+	 this.avrgVal = this.sum/this.count;
+	 this.minVal = (this.minVal == 0 ? val : ( val < this.minVal ? val : this.minVal));
+	 this.maxVal = (this.maxVal == 0 ? val : ( val > this.maxVal ? val : this.maxVal));
 
-      this.avrgs.push([this.count, this.sum/this.count]);
-
+	 this.min.push([this.count, this.minVal]);
+	 this.max.push([this.count, this.maxVal]);
+	 this.avrgs.push([this.count, this.avrgVal]);
+      }
       //limit maximum data count in field
       if(this.rows.length > this.maxValues)
       {
 	 this.rows.shift();  
-	 this.avrgs.shift();  
+      }
+      if(this.avrgs.length > this.maxValues)
+      {
+	 this.avrgs.shift();
+	 this.min.shift();  
+	 this.max.shift();  
       }
    };
 }
@@ -65,7 +88,7 @@ var trace6Data = new tData();
 
 /* chart data */
 var optionsPing = {
-      lines: { show: true },
+      lines: { show: true},
       legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
       points: { show: true },
       xaxis: { tickDecimals: 0, tickSize: 1 },
@@ -88,15 +111,13 @@ function repaintPlots() {
    if(selected == "0")  /* ping v4 */
    {
       $.plot(pingPlaceholder, 
-	    [ {	data: pingData.avrgs, label: "Average [ms]", color: "#67AAEE", points: {show: false} },
-	      { data: pingData.rows, label: "Latency [ms]", color: "#2779AA" }], 
+	    [ { data: pingData.max, label: "Max ["+ pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+	      {	data: pingData.avrgs, label: "Avg ["+ pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+	      { data: pingData.min, label: "Min ["+ pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+	      { data: pingData.rows, label: "Curr ["+ pingData.actVal.toFixed(2) +"ms]", color: "#2779AA" }],
 	    $.extend(true, {}, optionsPing, {
 	       xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: pingData.count > 10? pingData.count + 1 : 11}
 	       }));
-      /* set values for stats */
-      document.getElementById("pingMin").value = pingData.min + " ms";
-      document.getElementById("pingMax").value = pingData.max + " ms";
-      document.getElementById("pingAvrg").value = (pingData.count == 0 ? 0 : pingData.avrgs[pingData.avrgs.length-1][1]) + " ms";
    }
    if(selected == "1")  /* ping v6 */
    {
@@ -160,15 +181,15 @@ function plotPing(received, type)
          data.add(null);
       }
    } else if($.client.os == "Linux") {
-      if(received.indexOf("bytes from") != -1) {
-         /* create "holes" in plot in case of lost packet */
-         var actPingId = parseFloat(received.substr(received.indexOf("icmp_seq=")+9));
-         /* check id */
-         while(actPingId > ++data.prevId) {
-            data.add(null);
-         }
-         pingTime= parseFloat(received.substr(received.indexOf("time=")+5,received.indexOf(" ms")-received.indexOf("time=")+5));
-         data.add(pingTime);
+      var pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(received));
+      if(pingTime)
+      {
+	 /* check for lost packets */
+	 var actPingId = parseInt((/icmp_seq=\d+/i.exec(received))[0].substr(9)); 
+	 while(actPingId > ++data.prevId) 
+	    data.add(null);
+
+	 data.add(pingTime);
       }
    } 
    /*update plots*/
