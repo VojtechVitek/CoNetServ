@@ -53,6 +53,9 @@ function pData() {
       if(this.rows.length > this.maxValues)
       {
 	 this.rows.shift();  
+      }
+      if(this.avrgs.length > this.maxValues)
+      {
 	 this.avrgs.shift();
 	 this.min.shift();  
 	 this.max.shift();  
@@ -108,10 +111,10 @@ function repaintPlots() {
    if(selected == "0")  /* ping v4 */
    {
       $.plot(pingPlaceholder, 
-	    [ { data: pingData.max, label: "Maximum ["+ pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-	      {	data: pingData.avrgs, label: "Average ["+ pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
-	      { data: pingData.min, label: "Minimum ["+ pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-	      { data: pingData.rows, label: "Latency ["+ pingData.actVal.toFixed(2) +"ms]", color: "#2779AA" }],
+	    [ { data: pingData.max, label: "Max ["+ pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+	      {	data: pingData.avrgs, label: "Avg ["+ pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+	      { data: pingData.min, label: "Min ["+ pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+	      { data: pingData.rows, label: "Curr ["+ pingData.actVal.toFixed(2) +"ms]", color: "#2779AA" }],
 	    $.extend(true, {}, optionsPing, {
 	       xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: pingData.count > 10? pingData.count + 1 : 11}
 	       }));
