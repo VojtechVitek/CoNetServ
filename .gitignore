@@ -1,6 +1,12 @@
-*.o
-*.so
-*.dll
-*.exe
+# Ignore plugin binaries
+plugin/*.o
+plugin/*.so
+plugin/*.dll
+plugin/*.exe
+
+# Ignore Chrome private key for building extension
 *.pem
+
+# Ignore platform-specific directories and extension builds
+extension/platform/
 build/
