@@ -4,7 +4,7 @@
 include config.mk
 
 TEST = test.html
-SRC = conetserv.c conetserv_posix.c
+SRC = conetserv.c conetserv_posix.c idna.c punycode.c convert_utf.c stringprep.c nfkc.c profiles.c
 OBJ = ${SRC:.c=.o}
 
 all: options npconetserv.so ${shell uname}
@@ -29,7 +29,7 @@ debug: ${OBJ}
 	@echo CC debug.c
 	@${CC} -c ${CFLAGS} -o debug.o debug.c
 	@echo LD debug
-	@${CC} -o debug debug.o ${OBJ}
+	${CC} -o debug debug.o ${OBJ}
 
 clean:
 	@echo cleaning

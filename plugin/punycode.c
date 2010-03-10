@@ -1,3 +1,8 @@
+/*
+ * punycode.c - Implementation of punycode encoding functions.
+ *              Derived from GNU IDN Library v1.9.
+ */
+
 /* punycode.c --- Implementation of punycode used to ASCII encode IDN's.
  * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Simon Josefsson
  *

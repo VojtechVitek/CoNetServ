@@ -25,7 +25,7 @@ char* cmd_args[command_t_count] = {
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
 #define errorExitChild(msg) {logmsg(msg); npnfuncs->setexception(NULL, msg); ExitProcess(1);}
 
-bool startCommand(command_t cmd, NPString addr)
+bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
 	unsigned i;
 	char cmdchar[100];
@@ -52,7 +52,7 @@ bool startCommand(command_t cmd, NPString addr)
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)STRING_UTF8CHARACTERS(addr));
+   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)arg_host);
 	
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
@@ -142,8 +142,9 @@ bool stopCommand(command_t cmd)
 }
 
 /* FIXME Supports only ASCII and CP1250 command lines. */
-int readCommand(command_t cmd, char *buf)
+int readCommand(command_t cmd, NPUTF8 *_buf)
 {
+   char* buf = (char *)_buf;
 	unsigned i;
 	DWORD read = 0;
    WCHAR wbuf[BUFFER_LENGTH]; 

@@ -1,3 +1,8 @@
+/*
+ * punycode.h - Declarations for punycode encoding functions.
+ *              Derived from GNU IDN Library v1.9.
+ */
+
 /* punycode.h --- Declarations for punycode functions.
  * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Simon Josefsson
  *
@@ -59,13 +64,8 @@
  * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-#ifndef _PUNYCODE_H
-#define _PUNYCODE_H
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+#ifndef _PUNYCODE_H_
+#define _PUNYCODE_H_
 
 #include <stddef.h>		/* size_t */
 #include <idn-int.h>		/* uint32_t */
@@ -212,7 +212,4 @@ extern "C"
         might contain garbage.
 */
 
-#ifdef __cplusplus
-}
-#endif
-#endif				/* _PUNYCODE_H */
+#endif /*_PUNYCODE_H_*/

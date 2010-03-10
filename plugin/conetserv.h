@@ -88,7 +88,7 @@ typedef enum {
  * @arg addr URL / IPv4 / IPv6 address.
  * @return True if successfuly started, false otherwise.
  */
-bool startCommand(command_t cmd, NPString addr);
+bool startCommand(command_t cmd, NPUTF8* arg_host);
 
 /**
  * Read command
@@ -96,7 +96,7 @@ bool startCommand(command_t cmd, NPString addr);
  * @arg buf Buffer to store read data in.
  * @return Data length, or -1 while error.
  */
-int readCommand(command_t cmd, char* buf);
+int readCommand(command_t cmd, NPUTF8* buf);
 
 /**
  * Stop command

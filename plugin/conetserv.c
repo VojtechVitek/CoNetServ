@@ -14,15 +14,20 @@
  * ***** END LICENSE BLOCK ***** */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "conetserv.h"
+
+#include "punycode.h"
+#include "idna.h"
+#include "convert_utf.h"
 
 NPObject        *so       = NULL;
 NPNetscapeFuncs *npnfuncs = NULL;
 NPP              inst     = NULL;
 
-char buffer[BUFFER_LENGTH];
+NPUTF8 buffer[BUFFER_LENGTH];
 
 void logmsg(const char *msg) {
 #if defined(ANDROID)
@@ -95,7 +100,15 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             logmsg("CoNetServ: invoke ");
             logmsg(name);
             logmsg("()\n");
-            BOOLEAN_TO_NPVARIANT(startCommand(cmd, NPVARIANT_TO_STRING(args[0])), *result);
+
+            /* Punycode */
+            NPUTF8* str;
+            uint32_t* unicode = utf8_to_utf32((uint8_t *)STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])),
+                                              STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0])));
+            idna_to_ascii_4z(unicode, &str, 0);
+            free(unicode);
+
+            BOOLEAN_TO_NPVARIANT(startCommand(cmd, str), *result);
             return true;
          }
       } else if (!strncmp(name, "stop", 4) && argCount == 0) {

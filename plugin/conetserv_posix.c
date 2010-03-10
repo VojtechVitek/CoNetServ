@@ -133,7 +133,7 @@ void execvp_workaround()
    }
 }
 
-bool startCommand(command_t cmd, NPString addr)
+bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
    /* already started */
    if (pids[cmd] != 0)
@@ -165,7 +165,7 @@ bool startCommand(command_t cmd, NPString addr)
       }
 
       /* copy addr argument to array */
-      args[cmd][1] = (char *)STRING_UTF8CHARACTERS(addr);
+      args[cmd][1] = arg_host;
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {
@@ -185,7 +185,7 @@ bool startCommand(command_t cmd, NPString addr)
       /* parent */
       logmsg("CoNetServ: startCommand(): vfork() - parent\n");
 
-      /* close read end of pipe */
+      /* close write end of pipe */
       close(pipes[cmd][1]);
 
       /* make read end of pipe non-blocking */
@@ -249,8 +249,11 @@ int readCommand(command_t cmd, char *buf)
 
    buf[len] = '\0';
 
-   logmsg("CoNetServ: readCommand(");
-   fprintf(stderr, "%d), len = %d\n", cmd, len);
+   if (len != 0) {
+      logmsg("CoNetServ: readCommand(");
+      fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
+      //fprintf(stderr, "%s", buf);
+   }
 
    return len;
 }

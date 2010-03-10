@@ -22,6 +22,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -39,7 +40,7 @@ static int get_length(uint8_t c)
    } else {
       c >>= 1;
       if (c == 0xe) {
-         lenen = 3;
+         len = 3;
       }
       else {
          c >>= 1;
@@ -57,10 +58,10 @@ uint32_t *utf8_to_utf32(uint8_t *utf8, int len)
 {
    uint8_t *p = utf8;
    uint32_t ch;
-   int x = 0;
-   int l;
    uint32_t *result = (uint32_t *)malloc(sizeof(uint32_t) * len);
    uint32_t *r = result;
+   int x = 0;
+   int length;
 
    if (!result) {
       logmsg("Ran out of memory!");
@@ -68,9 +69,9 @@ uint32_t *utf8_to_utf32(uint8_t *utf8, int len)
 
    while (*p) {
 
-      len = get_length(*p);
+      length = get_length(*p);
 
-      switch (len)
+      switch (length)
       {
       case 4:
          ch = (*p ^ 0xf0);
@@ -85,19 +86,19 @@ uint32_t *utf8_to_utf32(uint8_t *utf8, int len)
          ch = *p;
          break;
       default:
-         printf("Len: %i\n", len);
+         printf("length: %i\n", length);
       }
 
       ++p;
       int y;
 
-      for (y = l; y > 1; y--) {
+      for (y = length; y > 1; y--) {
          ch <<= 6;
          ch |= (*p ^ 0x80);
          ++p;
       }
 
-      x += l;
+      x += length;
       *r = ch;
       r++;
    }

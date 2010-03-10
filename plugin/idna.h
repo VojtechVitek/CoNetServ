@@ -1,3 +1,8 @@
+/*
+ * idna.h - Declarations for IDN string converting functions.
+ *          Derived from GNU IDN Library v1.9.
+ */
+
 /* idna.h --- Declarations for Internationalized Domain Name in Applications.
  * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Simon Josefsson
  *
@@ -61,8 +66,6 @@ extern "C"
 #  define IDNA_ACE_PREFIX "xn--"
 # endif
 
-  extern const char *idna_strerror (Idna_rc rc);
-
   /* Core functions */
   extern int idna_to_ascii_4i (const uint32_t * in, size_t inlen,
 			       char *out, int flags);
@@ -73,26 +76,6 @@ extern "C"
 
   extern int idna_to_ascii_4z (const uint32_t * input,
 			       char **output, int flags);
-
-  extern int idna_to_ascii_8z (const char *input, char **output, int flags);
-
-  extern int idna_to_ascii_lz (const char *input, char **output, int flags);
-
-
-  extern int idna_to_unicode_4z4z (const uint32_t * input,
-				   uint32_t ** output, int flags);
-
-  extern int idna_to_unicode_8z4z (const char *input,
-				   uint32_t ** output, int flags);
-
-  extern int idna_to_unicode_8z8z (const char *input,
-				   char **output, int flags);
-
-  extern int idna_to_unicode_8zlz (const char *input,
-				   char **output, int flags);
-
-  extern int idna_to_unicode_lzlz (const char *input,
-				   char **output, int flags);
 
 # ifdef __cplusplus
 }
