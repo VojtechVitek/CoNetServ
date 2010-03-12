@@ -29,7 +29,7 @@ debug: ${OBJ}
 	@echo CC debug.c
 	@${CC} -c ${CFLAGS} -o debug.o debug.c
 	@echo LD debug
-	${CC} -o debug debug.o ${OBJ}
+	${CC} -o debug debug.o ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
