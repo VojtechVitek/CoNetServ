@@ -56,7 +56,6 @@
 			}
 		    }
 		    html+= "</div>";
-		    document.getElementById("nslookupConsole").value+=html;
 		    plot.getPlaceholder().append(html);
 		});
         });

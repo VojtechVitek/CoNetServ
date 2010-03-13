@@ -128,7 +128,7 @@ function repaintPlots() {
 	       }));
 	       
 	 /* add label with percentage of lost packets */
-    pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Lost: '+pingData.getLostPercent()+'%</div>');
+    pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+pingData.getLostPercent()+'%</div>');
    }
    if(selected == "1")  /* ping v6 */
    {
@@ -142,7 +142,7 @@ function repaintPlots() {
                    max: pingData.count > 10? pingData.count + 1 : 11}
 	       }));
 	    /* add label with percentage of lost packets */
-    pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Lost: '+pingData.getLostPercent()+'%</div>');
+    ping6Placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+pingData.getLostPercent()+'%</div>');
    }
    if(selected == "2")  /* traceroute v4 */
       $.plot(traceroutePlaceholder, [{ data: traceData.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
