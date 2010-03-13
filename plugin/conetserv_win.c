@@ -27,7 +27,6 @@ char* cmd_args[command_t_count] = {
 
 bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
-	unsigned i;
 	char cmdchar[100];
 	SECURITY_ATTRIBUTES saAttr; 
 	PROCESS_INFORMATION procInfo; 
@@ -147,7 +146,6 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
    char* buf = (char *)_buf;
 	unsigned i;
 	DWORD read = 0;
-   WCHAR wbuf[BUFFER_LENGTH]; 
    BOOL success = FALSE;
 	DWORD status;
 	/* check for running state */

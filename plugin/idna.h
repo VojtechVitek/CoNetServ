@@ -27,6 +27,11 @@
 #ifndef _IDNA_H
 # define _IDNA_H
 
+#ifdef _WINDOWS
+	#define strcasecmp stricmp
+	#define strncasecmp strnicmp
+#endif
+
 # ifdef __cplusplus
 extern "C"
 {

@@ -1,6 +1,10 @@
 #ifndef _CONETSERV_H_
 #define _CONETSERV_H_
 
+#if defined(_WINDOWS)
+	#include <stdbool.h>
+#endif
+
 #if defined(XULRUNNER_SDK)
 
 #include <npapi.h>
