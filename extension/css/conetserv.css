@@ -198,7 +198,7 @@ div.valueLabel {
 
 div.lostPacketsLabelLight {
    position:absolute;
-   left: 550px; 
+   left: 530px; 
    top: 20px; 
    color:#E33; 
    font-size:smaller;
@@ -210,7 +210,7 @@ div.lostPacketsLabelLight {
 
 div.lostPacketsLabel{
    position:absolute;
-   left: 550px; 
+   left: 530px; 
    top: 20px; 
    color:#E33;
    font-size:smaller;
