@@ -1,0 +1,35 @@
+=========== CoNetServ CHANGELOG ============
+
+
+Version 1.1 (2010-03-14)
+============================================
+Plugin tools (OS specific commands):
+ * Punycode support .. UTF-8 (sub-)domains
+ * NSLOOKUP command
+Extension tools:
+ * PING(6) plot: min, max and avg values
+ * Initiate domain string in Firefox&Chrome
+Operating systems [arch] support:
+ * Darwin [x86, ppc]
+
+
+Version 1.0 (2010-02-28)
+============================================
+Plugin tools (OS specific commands):
+ * PING command (IPv4)
+ * PING6 command (IPv6)
+ * TRACEROUTE command (IPv4)
+ * TRACEROUTE6 command (IPv6)
+ * WHOIS command
+Extension tools:
+ * Console output of plugin tools
+ * PING(6) simple plot
+ * TRACEROUTE(6) plot
+Browser support:
+ * Mozilla Firefox 2.0+ add-on
+ * Google Chrome 1.0+ extension
+ * Opera 9.0+ widget
+Operating systems [arch] support:
+ * Windows XP [x86]
+ * GNU/Linux [x86, x86_64]
+
