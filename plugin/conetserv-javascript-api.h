@@ -48,6 +48,14 @@ function readTraceroute6();
 function readWhois();
 
 /**
+ * Read output of NSLOOKUP command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
+function readNslookup();
+
+
+/**
  * Start PING command
  */
 function startPing();
@@ -71,6 +79,11 @@ function startTraceroute6();
  * Start WHOIS command
  */
 function startWhois();
+
+/**
+ * Start NSLOOKUP command
+ */
+function startNslookup();
 
 
 /**
@@ -97,3 +110,8 @@ function stopTraceroute6();
  * Stop WHOIS command
  */
 function stopWhois();
+
+/**
+ * Stop NSLOOKUP command
+ */
+function startNslookup();

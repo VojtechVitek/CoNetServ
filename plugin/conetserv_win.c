@@ -17,9 +17,10 @@ bool isRunning[command_t_count] = {0};
 char* cmd_args[command_t_count] = {
    "ping -t",
    "ping -6 -t",
-   "traceroute",
-   "traceroute -6",
-   "whois"
+   "tracert",
+   "tracert -6",
+   "nslookup",
+	"nslookup",
 };
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
@@ -80,22 +81,6 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
       startInfo.hStdOutput = pipes[cmd][1];
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
-	/*
-	tmp = CreateFile(
-		(LPTSTR)TEXT("c:\lampalog.txt"), 
-       GENERIC_WRITE, 
-       0, 
-       NULL, 
-       CREATE_ALWAYS, 
-		 FILE_ATTRIBUTE_NORMAL, 
-       NULL); 
-	startInfo.hStdOutput = tmp;
-	startInfo.hStdError = tmp;
-	
-   startInfo.hStdError = pipes[cmd][1];
-   startInfo.hStdOutput = pipes[cmd][1];
-	startInfo.dwFlags |= STARTF_USESTDHANDLES;
-	//startInfo.dwFlags |= STARTF_USESTDHANDLES;*/
 
 	success = CreateProcessA(NULL, 
 		cmdchar,			// command line 
@@ -220,17 +205,9 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 				isRunning[cmd] = 0;
 			}
 		}
+		return read;
 	}
+	else return -1;
 
-	//logmsg(buf);
-	//memcpy(buf, "AHOJ", 4);
-	/*if(0)//read)
-	{
-		a = (char)wbuf[0*2];
-		b = (char)wbuf[0*2+1];
-		sprintf(buf, "r:%d %c %c |    ", (int)read, a, b);
-	}*/
-	//wcstombs ( buf, wbuf, BUFFER_LENGTH);
-
-	return read?read:0;
+	
 }

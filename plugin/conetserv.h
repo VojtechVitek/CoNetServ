@@ -80,6 +80,7 @@ typedef enum {
    TRACEROUTE,
    TRACEROUTE6,
    WHOIS,
+	NSLOOKUP,
 
    command_t_count
 
