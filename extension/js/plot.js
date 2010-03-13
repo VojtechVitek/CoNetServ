@@ -80,7 +80,7 @@ function tData() {
    this.labels = [];
    //functions
    this.add = function (val, label) {
-      this.rows.push( [ this.count, val == null ? this.rows[this.count-1][1] : this.count, val ] );  
+      this.rows.push( [ this.count, val == null ? this.rows[this.count-1][1] : val ] );  
       this.count++;
       this.labels.push(label);
       };
@@ -226,8 +226,10 @@ function addTPlotDataWin(row, type)
    var data = type == 4? traceData : trace6Data;
    
    var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+   var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
+      
    var fields = nospaces.split(" ");
-   var step, time, label, first = 0, labelPos = 4;
+   var step, label, first = 0, labelPos = 4;
    
    while(fields[first] == "" && first<fields.length-6)
       first++;
@@ -237,9 +239,8 @@ function addTPlotDataWin(row, type)
       
    for( j = first; j < fields.length; j++)
       if(fields[j] == "ms") 
-         labelPos++;
-         
-   time = (time = parseFloat(fields[first+1]))? time : (time = parseFloat(fields[first+2])) ? time : parseFloat(fields[first+3]);
+         labelPos++;      
+   
    label = fields[first + labelPos];
    
    data.add(time, label);
