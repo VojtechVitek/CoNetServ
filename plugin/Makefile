@@ -3,17 +3,11 @@
 
 include config.mk
 
-TEST = test.html
 SRC = conetserv.c conetserv_posix.c idna.c punycode.c convert_utf.c stringprep.c nfkc.c profiles.c
 OBJ = ${SRC:.c=.o}
 
-all: options npconetserv.so ${shell uname}
-
-options:
-	@echo conetserv build options:
-	@echo "CFLAGS   = ${CFLAGS}"
-	@echo "LDFLAGS  = ${LDFLAGS}"
-	@echo "CC       = ${CC}"
+.PHONY: all clean debug install options ${shell uname}
+all: npconetserv.so
 
 .c.o:
 	@echo CC $<
@@ -21,21 +15,29 @@ options:
 
 ${OBJ}: config.mk
 
+options:
+	@echo "CoNetServ plugin build options:"
+	@echo "CFLAGS   = ${CFLAGS}"
+	@echo "LDFLAGS  = ${LDFLAGS}"
+	@echo "CC       = ${CC}"
+
 npconetserv.so: ${OBJ}
 	@echo LD $@
-	@${CC} -v -shared -o $@ ${OBJ} ${LDFLAGS}
+	@${CC} -shared -o $@ ${OBJ} ${LDFLAGS}
 
 debug: ${OBJ}
 	@echo CC debug.c
 	@${CC} -c ${CFLAGS} -o debug.o debug.c
 	@echo LD debug
-	${CC} -o debug debug.o ${OBJ} ${LDFLAGS}
+	@${CC} -o debug debug.o ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
 	@rm -f debug.o debug
 	@rm -f npconetserv.so ${OBJ} Localized.rsrc
 	@rm -rf npconetserv.plugin
+
+install: ${shell uname}
 
 Linux:
 	@chmod 755 npconetserv.so

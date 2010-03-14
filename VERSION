@@ -1,2 +1,3 @@
 # CoNetServ version for both NPAPI-plugin and Extension
-VERSION = 1.1
+VERSION  = 1.1
+BUILDDATE=$(shell date '+%Y-%m-%d')

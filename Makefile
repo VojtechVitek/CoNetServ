@@ -3,7 +3,6 @@ LIBNAME=np$(NAME)
 ARCHS=Linux_x86-gcc3.so Linux_x86_64-gcc3.so WINNT_x86-MSVC.dll Darwin_x86-gcc3.dylib
 
 include VERSION
-BUILDDATE=$(shell date '+%Y-%m-%d')
 
 .PHONY: all pre doc
 all: pre _firefox _chrome _opera doc
