@@ -1,6 +1,10 @@
 #ifndef _CONETSERV_H_
 #define _CONETSERV_H_
 
+#if defined(_WINDOWS)
+	#include <stdbool.h>
+#endif
+
 #if defined(XULRUNNER_SDK)
 
 #include <npapi.h>
@@ -76,6 +80,7 @@ typedef enum {
    TRACEROUTE,
    TRACEROUTE6,
    WHOIS,
+	NSLOOKUP,
 
    command_t_count
 
@@ -88,7 +93,7 @@ typedef enum {
  * @arg addr URL / IPv4 / IPv6 address.
  * @return True if successfuly started, false otherwise.
  */
-bool startCommand(command_t cmd, NPString addr);
+bool startCommand(command_t cmd, NPUTF8* arg_host);
 
 /**
  * Read command
@@ -96,7 +101,7 @@ bool startCommand(command_t cmd, NPString addr);
  * @arg buf Buffer to store read data in.
  * @return Data length, or -1 while error.
  */
-int readCommand(command_t cmd, char* buf);
+int readCommand(command_t cmd, NPUTF8* buf);
 
 /**
  * Stop command
@@ -109,7 +114,11 @@ bool stopCommand(command_t cmd);
 
 #define PLUGIN_LONGNAME "Complex Network Services"
 
-#define PLUGIN_VERSION "1.0"
+#ifndef VERSION
+#error Version must be specified by -DVERSION option
+#else
+#define PLUGIN_VERSION VERSION
+#endif
 
 #define PLUGIN_COPYRIGHT "(c) 2010 FRES-Solutions"
 
@@ -120,3 +129,11 @@ bool stopCommand(command_t cmd);
 #define PLUGIN_MIME "application/x-conetserv::Complex Network Services"
 
 #endif /*_CONETSERV_H_*/
+
+/*! \mainpage CoNetServ - Complex Network Services
+ *
+ * \section about About
+ *
+ * \htmlinclude ../../extension/about.html
+ */
+

@@ -3,6 +3,11 @@
 
 #include "conetserv.h"
 
+#include "punycode.h"
+#include "idna.h"
+#include "convert_utf.h"
+
+
 char buffer[BUFFER_LENGTH];
 
 int main(int argc, char **argv)
@@ -25,11 +30,19 @@ int main(int argc, char **argv)
       return 1;
    }
 
-   startCommand(cmd, "fres-solutions.com");
+   NPUTF8 domain[] = "háčkyčárky.cz";
+
+   /* Punycode */
+   NPUTF8* str;
+   uint32_t* unicode = utf8_to_utf32((uint8_t *)domain, strlen(domain));
+   idna_to_ascii_4z(unicode, &str, 0);
+   free(unicode);
+
+   startCommand(cmd, str);
 
    for(;;) {
       if ((len = readCommand(cmd, buffer)) > 0)
-         printf("%s", buffer);
+         fprintf(stderr, "%s", buffer);
       else if (len == 0)
          continue;
       else

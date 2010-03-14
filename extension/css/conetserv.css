@@ -58,13 +58,16 @@ body{
    visibility: hidden;
 }
 
+/* FIXME Ugly css hack */
 .aboutTab {
    position: absolute !important;
+   margin-top: -28px !important;
    right: 0px;
 }
 
+/* TODO aboutTab content */
 #aboutTab {
- /* TODO */
+
 }
 
 #pingConsole{
@@ -72,15 +75,15 @@ body{
 }
 
 #ping6Console{
-   height: 260px;
+   height: 220px;
 }
 
 #tracerouteConsole{
-   height: 260px
+   height: 220px;
 }
 
 #traceroute6Console{
-   height: 220px
+   height: 220px;
 }
 
 .placeholder{
@@ -196,6 +199,27 @@ div.valueLabel {
 	border:none;
 }
 
+div.lostPacketsLabelLight {
+   position:absolute;
+   left: 530px; 
+   top: 20px; 
+   color:#E33; 
+   font-size:smaller;
+   opacity:0.5;
+	background-color: white;
+	padding: 3px;
+	border: 1px solid #E33; 
+}
+
+div.lostPacketsLabel{
+   position:absolute;
+   left: 530px; 
+   top: 20px; 
+   color:#E33;
+   font-size:smaller;
+   padding: 3px;
+   border: 1px solid #E33;   
+}
 
 #zoomin{
    position: absolute;

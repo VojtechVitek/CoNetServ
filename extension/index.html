@@ -19,7 +19,7 @@
 <body>
 <div id="tabs">
     <form action="" onsubmit="stopCommands();startCommands();return false;">
-      <input id="url" type="text" value="" size="40" class="ui-corner-all"/>
+      <input id="url" type="text" value="" size="60" class="ui-corner-all"/>
       <input id="urlButton" type="submit" value="Start" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
     </form>
     <ul>
@@ -27,38 +27,20 @@
         <li><span id="ping6State" class="tabState"></span><a href="#ping6Tab"><span>Ping6</span></a><span id="ping6TabClose" class="tabClose" onclick="stopPing6()"></span></li>
         <li><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab"><span>Traceroute</span></a><span id="tracerouteTabClose" class="tabClose" onclick="stopTraceroute()"></span></li>
         <li><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab"><span>Traceroute6</span></a><span id="traceroute6TabClose" class="tabClose" onclick="stopTraceroute6()"></span></li>
-        <li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>
+        <script type="text/javascript">
+          if($.client.os != "Windows") 
+            document.write('<li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>');
+        </script>
+        <li><span id="nslookupState" class="tabState"></span><a href="#nslookupTab"><span>NSlookup</span></a><span id="nslookupTabClose" class="tabClose" onclick="stopNslookup()"></span></li>
         <li class="aboutTab"><a href="#aboutTab"><span>About</span></a></li>
     </ul>
     <div id="pingTab">
-        <textarea id="pingConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
-	 <div id="pingStats" class="statsArea">
-	    <div class="pingStatField">
-	       <span>Min:</span> <input id="pingMin" class="ui-corner-all" type="text" disabled="true"/>
-	    </div>
-	    <div class="pingStatField">
-	       <span>Max:</span> <input id="pingMax" class="ui-corner-all" type="text" disabled="true"/>
-	    </div>
-	    <div class="pingStatField">
-	       <span>Avrg:</span> <input id="pingAvrg" class="ui-corner-all" type="text" disabled="true"/>
-	    </div>
-	 </div>
-	 <div id="pingPlaceholder" class="placeholder"></div>
+      <textarea id="pingConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+	    <div id="pingPlaceholder" class="placeholder"></div>
     </div>
     <div id="ping6Tab">
-        <textarea id="ping6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
-	<div id="ping6Stats" class="statsArea">
-	   <div class="pingStatField">
-	      <span>Min:</span> <input id="ping6Min" class="ui-corner-all" type="text" disabled="true"/>
-	   </div>
-	   <div class="pingStatField">
-	      <span>Max:</span> <input id="ping6Max" class="ui-corner-all" type="text" disabled="true"/>
-	   </div>
-	   <div class="pingStatField">
-	      <span>Avrg:</span> <input id="ping6Avrg" class="ui-corner-all" type="text" disabled="true"/>
-	   </div>
-	</div>
-        <div id="ping6Placeholder" class="placeholder"></div>
+      <textarea id="ping6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+      <div id="ping6Placeholder" class="placeholder"></div>
     </div>
     <div id="tracerouteTab">
       <textarea id="tracerouteConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
@@ -68,40 +50,19 @@
       <textarea id="traceroute6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
       <div id="traceroute6Placeholder" class="placeholder"></div>
     </div>
-    <div id="whoisTab">
-      <textarea id="whoisConsole" class="consoleTextarea ui-corner-all" rows="30" cols="80" disabled="true"></textarea>
+    <script type="text/javascript">
+      if($.client.os != "Windows")
+      {
+        document.write('<div id="whoisTab">');
+        document.write('<textarea id="whoisConsole" class="consoleTextarea ui-corner-all" rows="30" cols="80" disabled="true"></textarea>');
+        document.write('</div>');
+      }
+    </script>
+    <div id="nslookupTab">
+      <textarea id="nslookupConsole" class="consoleTextarea ui-corner-all" rows="30" cols="80" disabled="true"></textarea>
     </div>
     <div id="aboutTab">
-      <h2>CoNetServ - Complex Network Services</h2>
-      <p class="slogan">Extension which integrates network tools into the browser.</p>
-      <p>Version 1.0, 2010-02-28</p>
-      <table>
-      <tr>
-      <td>
-      <h3>Supported tools:</h3>
-      <ul><li>PING (IPv4)</li><li>PING6 (IPv6)</li><li>TRACEROUTE (IPv4)</li><li>TRACEROUTE6 (IPv6)</li><li>WHOIS</li></ul>
-      <h3>Source code:</h3>
-      <p>Licence: GPLv2<br />
-      WIKI: <a href="http://wiki.github.com/V-Teq/CoNetServ/">github.com</a><br />
-      Development: <a href="http://github.com/V-Teq/CoNetServ/">github.com</a><br />
-      JavaScript API: <a href="http://www.fres-solutions.com/conetserv/doxygen/conetserv-javascript-api_8h.html">doxygen</a><br />
-      Plugin implementation: <a href="http://www.fres-solutions.com/conetserv/doxygen/conetserv_8h.html">doxygen</a>
-      </p>
-      <h3>Developers:</h3>
-      <p>Vojtech Vitek (V-Teq) &lt;vojtech.vitek@<span class="hidden">&#185;</span>gmail.com&gt;<br />
-      Marek Vantuch &lt;marek.vantuch@<span class="hidden">&#185;</span>gmail.com&gt;</p>
-      <h3>Supported by:</h3>
-      <p><a href="http://www.nic.cz/">CZ.NIC</a><br />
-      <a href="http://www.fres-solutions.com/conetserv/">FRES-Solutions</a></p>
-      </td>
-      <td>
-      <h3>Compatibility:</h3>
-      <ul><li>Mozilla Firefox 2.0+</li><li>Google Chrome 1.0+</li><li>Opera 9.0+</li></ul>
-      <ul><li>Microsoft Windows Seven</li><li>Microsoft Windows Vista</li><li>Microsoft Windows XP</li><li>Linux</li></ul>
-      <ul><li>x86 (32-bit)</li><li>x86_64 (64-bit)</li></ul>
-      </td>
-      </tr>
-      </table>
+      @ABOUT.HTML@
     </div>
 </div>
 <object id="conetserv" type="application/x-conetserv" width="0" height="0">Plugin FAILED to load</object>

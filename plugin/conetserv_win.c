@@ -17,17 +17,17 @@ bool isRunning[command_t_count] = {0};
 char* cmd_args[command_t_count] = {
    "ping -t",
    "ping -6 -t",
-   "traceroute",
-   "traceroute -6",
-   "whois"
+   "tracert",
+   "tracert -6",
+   "nslookup",
+	"nslookup",
 };
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
 #define errorExitChild(msg) {logmsg(msg); npnfuncs->setexception(NULL, msg); ExitProcess(1);}
 
-bool startCommand(command_t cmd, NPString addr)
+bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
-	unsigned i;
 	char cmdchar[100];
 	SECURITY_ATTRIBUTES saAttr; 
 	PROCESS_INFORMATION procInfo; 
@@ -52,7 +52,7 @@ bool startCommand(command_t cmd, NPString addr)
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)STRING_UTF8CHARACTERS(addr));
+   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)arg_host);
 	
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
@@ -81,22 +81,6 @@ bool startCommand(command_t cmd, NPString addr)
       startInfo.hStdOutput = pipes[cmd][1];
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
-	/*
-	tmp = CreateFile(
-		(LPTSTR)TEXT("c:\lampalog.txt"), 
-       GENERIC_WRITE, 
-       0, 
-       NULL, 
-       CREATE_ALWAYS, 
-		 FILE_ATTRIBUTE_NORMAL, 
-       NULL); 
-	startInfo.hStdOutput = tmp;
-	startInfo.hStdError = tmp;
-	
-   startInfo.hStdError = pipes[cmd][1];
-   startInfo.hStdOutput = pipes[cmd][1];
-	startInfo.dwFlags |= STARTF_USESTDHANDLES;
-	//startInfo.dwFlags |= STARTF_USESTDHANDLES;*/
 
 	success = CreateProcessA(NULL, 
 		cmdchar,			// command line 
@@ -142,11 +126,11 @@ bool stopCommand(command_t cmd)
 }
 
 /* FIXME Supports only ASCII and CP1250 command lines. */
-int readCommand(command_t cmd, char *buf)
+int readCommand(command_t cmd, NPUTF8 *_buf)
 {
+   char* buf = (char *)_buf;
 	unsigned i;
 	DWORD read = 0;
-   WCHAR wbuf[BUFFER_LENGTH]; 
    BOOL success = FALSE;
 	DWORD status;
 	/* check for running state */
@@ -221,17 +205,9 @@ int readCommand(command_t cmd, char *buf)
 				isRunning[cmd] = 0;
 			}
 		}
+		return read;
 	}
+	else return -1;
 
-	//logmsg(buf);
-	//memcpy(buf, "AHOJ", 4);
-	/*if(0)//read)
-	{
-		a = (char)wbuf[0*2];
-		b = (char)wbuf[0*2+1];
-		sprintf(buf, "r:%d %c %c |    ", (int)read, a, b);
-	}*/
-	//wcstombs ( buf, wbuf, BUFFER_LENGTH);
-
-	return read?read:0;
+	
 }

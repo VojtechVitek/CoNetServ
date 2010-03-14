@@ -4,7 +4,7 @@
 include config.mk
 
 TEST = test.html
-SRC = conetserv.c conetserv_posix.c
+SRC = conetserv.c conetserv_posix.c idna.c punycode.c convert_utf.c stringprep.c nfkc.c profiles.c
 OBJ = ${SRC:.c=.o}
 
 all: options npconetserv.so ${shell uname}
@@ -29,7 +29,7 @@ debug: ${OBJ}
 	@echo CC debug.c
 	@${CC} -c ${CFLAGS} -o debug.o debug.c
 	@echo LD debug
-	@${CC} -o debug debug.o ${OBJ}
+	${CC} -o debug debug.o ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
@@ -40,7 +40,6 @@ clean:
 Linux:
 	@chmod 755 npconetserv.so
 	@echo Setup: sudo ln -s ${shell pwd}/npconetserv.so /usr/lib/mozilla/plugins/npconetserv.so
-	@echo Test: /usr/lib/webkit-1.0/libexec/GtkLauncher file://`pwd`/${TEST} # apt-get install libwebkit-1.0-1
 
 Darwin:
 	/Developer/Tools/Rez -o Localized.rsrc -useDF Localized.r
@@ -50,8 +49,5 @@ Darwin:
 	cp -f Info.plist npconetserv.plugin/Contents
 	cp -f npconetserv.so npconetserv.plugin/Contents/MacOS/npconetserv
 	@echo Setup: sudo ln -s `pwd`/npconetserv.so /Library/Internet\\ Plug-Ins/npconetserv.plugin
-	@echo Test: /Applications/Safari.app/Contents/MacOS/Safari ${TEST}
-	@echo Test: /Applications/Firefox.app/Contents/MacOS/firefox ${TEST}
-	@echo Test: /Applications/Opera.app/Contents/MacOS/Opera file://`pwd`/${TEST}
 
 .PHONY: all clean debug options Darwin Linux
