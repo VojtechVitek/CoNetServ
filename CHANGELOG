@@ -10,7 +10,10 @@ Extension tools:
  * PING(6) plot: min, max and avg values
  * Initiate domain string in Firefox&Chrome
 Operating systems [arch] support:
- * Darwin [x86, ppc]
+ * Windows Seven [x86, x86_64]
+ * Windows Vista [x86, x86_64]
+ * Windows XP [x86, x86_64]
+ * MacOSX Darwin [x86]
 
 
 Version 1.0 (2010-02-28)
