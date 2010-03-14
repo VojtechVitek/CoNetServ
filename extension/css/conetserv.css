@@ -58,13 +58,16 @@ body{
    visibility: hidden;
 }
 
+/* FIXME Ugly css hack */
 .aboutTab {
    position: absolute !important;
+   margin-top: -28px !important;
    right: 0px;
 }
 
+/* TODO aboutTab content */
 #aboutTab {
- /* TODO */
+
 }
 
 #pingConsole{

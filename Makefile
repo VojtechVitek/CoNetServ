@@ -70,7 +70,7 @@ _chrome:
 	@test -f conetserv.pem || { echo "Missing conetserv.pem file."; exit 1; }
 	@crxmake --pack-extension=build/extension/ --extension-output=build/$(NAME)-$(VERSION).crx \
 	  --pack-extension-key=conetserv.pem --ignore-file=chrome.manifest --ignore-file=config.xml \
-	  --ignore-file=install.rdf --ignore-dir=firefox
+	  --ignore-file=about.html --ignore-file=install.rdf --ignore-dir=firefox
 
 _opera:
 	@echo "  Build Opera widget.."
