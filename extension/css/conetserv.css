@@ -13,6 +13,10 @@ body{
    margin: 2px 2px 5px 5px;
 }
 
+.ui-tabs .ui-tabs-nav li{
+   margin: 0px;
+}
+
 #url{
    
 }
@@ -58,16 +62,13 @@ body{
    visibility: hidden;
 }
 
-/* FIXME Ugly css hack */
 .aboutTab {
    position: absolute !important;
-   margin-top: -28px !important;
    right: 0px;
 }
 
-/* TODO aboutTab content */
 #aboutTab {
-
+ /* TODO */
 }
 
 #pingConsole{
@@ -79,11 +80,11 @@ body{
 }
 
 #tracerouteConsole{
-   height: 220px;
+   height: 210px;
 }
 
 #traceroute6Console{
-   height: 220px;
+   height: 210px;
 }
 
 .placeholder{
@@ -185,7 +186,7 @@ body{
 
 /* plot labels styling */
 .valueLabels {
-	font-size:70%;
+	font-size:80%;
 	color:black;
 }
 div.valueLabelLight {
