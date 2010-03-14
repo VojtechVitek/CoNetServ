@@ -20,7 +20,7 @@ char* args[command_t_count][5] = {
    {"traceroute", NULL},
    {"traceroute6", NULL},
    {"whois", NULL},
-   {"nsloookup", NULL}
+   {"nslookup", NULL}
 };
 
 /*
