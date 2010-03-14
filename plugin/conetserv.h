@@ -109,7 +109,11 @@ bool stopCommand(command_t cmd);
 
 #define PLUGIN_LONGNAME "Complex Network Services"
 
-#define PLUGIN_VERSION "1.0"
+#ifndef VERSION
+#error Version must be specified by -DVERSION option
+#else
+#define PLUGIN_VERSION VERSION
+#endif
 
 #define PLUGIN_COPYRIGHT "(c) 2010 FRES-Solutions"
 
@@ -120,3 +124,11 @@ bool stopCommand(command_t cmd);
 #define PLUGIN_MIME "application/x-conetserv::Complex Network Services"
 
 #endif /*_CONETSERV_H_*/
+
+/*! \mainpage CoNetServ - Complex Network Services
+ *
+ * \section about About
+ *
+ * \htmlinclude ../../extension/about.html
+ */
+
