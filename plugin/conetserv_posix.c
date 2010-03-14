@@ -20,6 +20,7 @@ char* args[command_t_count][5] = {
    {"traceroute", NULL},
    {"traceroute6", NULL},
    {"whois", NULL}
+	{"nsloookup", NULL}
 };
 
 /*
@@ -47,7 +48,8 @@ char execvp_workaround_paths[command_t_count][30] = {
    "/bin/ping6",
    "/usr/sbin/traceroute",
    "/usr/sbin/traceroute6",
-   "/usr/bin/whois"
+   "/usr/bin/whois",
+	"/usr/bin/nslookup"
 };
 #include <string.h>
 void execvp_workaround()

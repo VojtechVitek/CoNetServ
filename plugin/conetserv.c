@@ -68,13 +68,18 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
    int len;
    char *txt;
    char *name = npnfuncs->utf8fromidentifier(methodName);
+	NPString npstr;
+	uint32_t* unicode;
+	NPUTF8* str;
+
    if (name) {
       if (!strncmp(name, "read", 4) && argCount == 0) {
          if (((!strcmp(name + 4, "Ping") && (cmd = PING, true))) ||
              ((!strcmp(name + 4, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 4, "Traceroute") && (cmd = TRACEROUTE, true))) ||
              ((!strcmp(name + 4, "Traceroute6") && (cmd = TRACEROUTE6, true))) ||
-             ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true)))) {
+				 ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true))) ||
+				 ((!strcmp(name + 4, "Nslookup") && (cmd = NSLOOKUP, true)))) {
             logmsg("CoNetServ: invoke ");
             logmsg(name);
             logmsg("()\n");
@@ -85,7 +90,14 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
                } else {
                   txt = NULL;
                }
+					#ifdef _WINDOWS
+						 result->type = NPVariantType_String;                                         \
+						 npstr.utf8characters = txt;
+						 npstr.utf8length = len;  
+						 result->value.stringValue = npstr;       
+					#else
                STRINGN_TO_NPVARIANT(txt, len, *result);
+					#endif
             } else {
                BOOLEAN_TO_NPVARIANT(false, *result);
             }
@@ -96,17 +108,17 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
              ((!strcmp(name + 5, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 5, "Traceroute") && (cmd = TRACEROUTE, true))) ||
              ((!strcmp(name + 5, "Traceroute6") && (cmd = TRACEROUTE6, true))) ||
-             ((!strcmp(name + 5, "Whois") && (cmd = WHOIS, true)))) {
+             ((!strcmp(name + 5, "Whois") && (cmd = WHOIS, true))) ||
+				 ((!strcmp(name + 5, "Nslookup") && (cmd = NSLOOKUP, true)))) {
             logmsg("CoNetServ: invoke ");
             logmsg(name);
             logmsg("()\n");
 
             /* Punycode */
-            NPUTF8* str;
-            uint32_t* unicode = utf8_to_utf32((uint8_t *)STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])),
+            unicode = utf8_to_utf32((uint8_t *)STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])),
                                               STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0])));
             idna_to_ascii_4z(unicode, &str, 0);
-            free(unicode);
+            //free(unicode);
 
             BOOLEAN_TO_NPVARIANT(startCommand(cmd, str), *result);
             return true;
@@ -116,7 +128,8 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
              ((!strcmp(name + 4, "Ping6") && (cmd = PING6, true))) ||
              ((!strcmp(name + 4, "Traceroute") && (cmd = TRACEROUTE, true))) ||
              ((!strcmp(name + 4, "Traceroute6") && (cmd = TRACEROUTE6, true))) ||
-             ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true)))) {
+             ((!strcmp(name + 4, "Whois") && (cmd = WHOIS, true))) ||
+				 ((!strcmp(name + 4, "Nslookup") && (cmd = NSLOOKUP, true)))) {
             logmsg("CoNetServ: invoke ");
             logmsg(name);
             logmsg("()\n");

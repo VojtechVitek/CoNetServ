@@ -60,7 +60,7 @@ uint32_t *utf8_to_utf32(uint8_t *utf8, int len)
    uint32_t ch;
    uint32_t *result = (uint32_t *)malloc(sizeof(uint32_t) * len);
    uint32_t *r = result;
-   int x = 0;
+   int y,x = 0;
    int length;
 
    if (!result) {
@@ -90,7 +90,6 @@ uint32_t *utf8_to_utf32(uint8_t *utf8, int len)
       }
 
       ++p;
-      int y;
 
       for (y = length; y > 1; y--) {
          ch <<= 6;

@@ -4,6 +4,7 @@ var ping6Interval = -1;
 var tracerouteInterval = -1;
 var traceroute6Interval = -1;
 var whoisInterval = -1;
+var nslookupInterval = -1;
  
 /* CoNetServ NPAPI plugin to interact native code with */
 var conetserv = document.getElementById("conetserv");
@@ -14,6 +15,7 @@ var ping6Console = document.getElementById("ping6Console");
 var tracerouteConsole = document.getElementById("tracerouteConsole");
 var traceroute6Console = document.getElementById("traceroute6Console");
 var whoisConsole = document.getElementById("whoisConsole");
+var nslookupConsole = document.getElementById("nslookupConsole");
 
 /* init url in firefox*/
 if($.client.browser == "Firefox")
@@ -162,6 +164,29 @@ function readWhois()
 }
 
 /**
+ * Read output of NSLOOKUP command
+ * \return String data if successful (could be zero length),
+ *         false otherwise (false indicates not yet started or stopped process)
+ */
+function readNslookup()
+{
+   var received;
+   try {
+      received = document.getElementById("conetserv").readNslookup();
+   }
+   catch(e) {
+      document.getElementById("nslookupConsole").value = e;
+   }
+   if (received === false) {
+      stopAnim("nslookup");
+      window.clearInterval(nslookupInterval);
+      nslookupInterval = -1;
+      return;
+   }
+   nslookupConsole.value += received;
+}
+
+/**
  * Start all commands available at once.
  */
 function startCommands()
@@ -170,7 +195,9 @@ function startCommands()
    startPing6();
    startTraceroute();
    startTraceroute6();
-   startWhois();
+   startNslookup();
+   if($.client.os != "Windows")
+      startWhois();
 }
 
 /**
@@ -299,6 +326,31 @@ function startWhois()
 }
 
 /**
+ * Start NSLOOKUP command
+ */
+function startNslookup()
+{
+   if (nslookupInterval == -1) {
+      try {
+         document.getElementById("nslookupConsole").value = "";
+         if (document.getElementById("conetserv").startNslookup(document.getElementById("url").value)) {
+            nslookupInterval = window.setInterval("readNslookup()", 500);
+            startAnim("nslookup");
+	    readNslookup();
+            
+         }
+         else {
+            nslookupInterval = -1;
+         }
+      }
+      catch(e) {
+         document.getElementById("nslookupConsole").value = e;
+         nslookupInterval = -1;
+      }
+   }
+}
+
+/**
  * Stop all commands available at once.
  */
 function stopCommands()
@@ -307,7 +359,9 @@ function stopCommands()
    stopPing6();
    stopTraceroute();
    stopTraceroute6();
-   stopWhois();
+   stopNslookup();
+   if($.client.os != "Windows") 
+      stopWhois();
 }
 
 /**
@@ -397,6 +451,24 @@ function stopWhois()
       stopAnim("whois");
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
+   }
+}
+
+/**
+ * Stop NSLOOKUP command
+ */
+function stopNslookup()
+{
+   if (nslookupInterval != -1) {
+      try {
+         document.getElementById("conetserv").stopNslookup();
+      }
+      catch(e) {
+         document.getElementById("nslookupConsole").value = document.getElementById("slookupConsole").value + e;
+      }
+      stopAnim("nslookup");
+      window.clearInterval(nslookupInterval);
+      nslookupInterval = -1;
    }
 }
 

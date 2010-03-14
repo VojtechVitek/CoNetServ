@@ -9,6 +9,7 @@ var tabsLoading = 0;
 
 /* ping time data object*/
 function pData() {
+   //data
    this.maxValues = 30;		//maximum number of shown values in plot
    this.rows = [];		//array for storing data
    this.count = 0;		//amount of data in array
@@ -24,42 +25,48 @@ function pData() {
    this.avrgs = [];		//array for storing average values
    this.min = [];
    this.max = [];
+   
+   this.prevData = "";  //data for storing received data from previous steps
    //functions
    this.add = function (val) { 
       this.count++;
       
-      
       if( val == null)
       {
-	 this.actVal = 0;
-	 this.rows.push(null);
-	 this.lost++;
+      	 this.actVal = 0;
+      	 this.rows.push(null);
+      	 this.lost++;
       }
       else
       {
-	 this.actVal = val;
-	 this.rows.push([this.count, val]);
-	 this.sum += val;
+      	 this.actVal = val;
+      	 this.rows.push([this.count, val]);
+      	 this.sum += val;
+            
+      	 this.minVal = (this.minVal == 0 ? val : ( val < this.minVal ? val : this.minVal));
+      	 this.maxVal = (this.maxVal == 0 ? val : ( val > this.maxVal ? val : this.maxVal));	 
+      }   
+      this.avrgVal = this.sum/this.count;
       
-	 this.avrgVal = this.sum/this.count;
-	 this.minVal = (this.minVal == 0 ? val : ( val < this.minVal ? val : this.minVal));
-	 this.maxVal = (this.maxVal == 0 ? val : ( val > this.maxVal ? val : this.maxVal));
-
-	 this.min.push([this.count, this.minVal]);
-	 this.max.push([this.count, this.maxVal]);
-	 this.avrgs.push([this.count, this.avrgVal]);
-      }
+      this.min.push([this.count, this.minVal]);
+      this.max.push([this.count, this.maxVal]);
+      this.avrgs.push([this.count, this.avrgVal]);                
       //limit maximum data count in field
       if(this.rows.length > this.maxValues)
       {
-	 this.rows.shift();  
+	        this.rows.shift();  
       }
       if(this.avrgs.length > this.maxValues)
       {
-	 this.avrgs.shift();
-	 this.min.shift();  
-	 this.max.shift();  
+      	 this.avrgs.shift();
+      	 this.min.shift();  
+      	 this.max.shift();  
       }
+   };
+   /* returns percentage of lost packets */
+   this.getLostPercent = function (){
+      var perc = this.lost > 0 ? this.lost/this.count*100 : 0;
+      return perc.toFixed(2);
    };
 }
 
@@ -73,7 +80,7 @@ function tData() {
    this.labels = [];
    //functions
    this.add = function (val, label) {
-      this.rows.push( [ this.count, val == null ? this.rows[this.count-1][1] : this.count, val ] );  
+      this.rows.push( [ this.count, val == null ? this.rows[this.count-1][1] : val ] );  
       this.count++;
       this.labels.push(label);
       };
@@ -114,23 +121,28 @@ function repaintPlots() {
 	    [ { data: pingData.max, label: "Max ["+ pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
 	      {	data: pingData.avrgs, label: "Avg ["+ pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
 	      { data: pingData.min, label: "Min ["+ pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-	      { data: pingData.rows, label: "Curr ["+ pingData.actVal.toFixed(2) +"ms]", color: "#2779AA" }],
+	      { data: pingData.rows, color: "#2779AA" }],
 	    $.extend(true, {}, optionsPing, {
-	       xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: pingData.count > 10? pingData.count + 1 : 11}
+	       xaxis: { min: pingData.count - pingData.maxValues < 0 ? 0 : pingData.count - pingData.maxValues, 
+                   max: pingData.count > 10? pingData.count + 1 : 11}
 	       }));
+	       
+	 /* add label with percentage of lost packets */
+    pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+pingData.getLostPercent()+'%</div>');
    }
    if(selected == "1")  /* ping v6 */
    {
       $.plot(ping6Placeholder, 
-	    [  { data: ping6Data.avrgs, label: "Average [ms]", color: "#67AAEE", points: {show: false} },
-	       { data: ping6Data.rows, label: "Latency [ms]", color: "#2779AA" }], 
+	    [ { data: ping6Data.max, label: "Max ["+ ping6Data.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+	      {	data: ping6Data.avrgs, label: "Avg ["+ ping6Data.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+	      { data: ping6Data.min, label: "Min ["+ ping6Data.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+	      { data: ping6Data.rows, color: "#2779AA" }],
 	    $.extend(true, {}, optionsPing, {
-	       xaxis: { min: pingData.count > 10? pingData.rows[0][0] - 1 : 0, max: ping6Data.count > 10? ping6Data.count + 1 : 11}
-	       }));      
-      /* set values for stats */
-      document.getElementById("ping6Min").value = ping6Data.min + " ms";
-      document.getElementById("ping6Max").value = ping6Data.max + " ms";
-      document.getElementById("ping6Avrg").value = (ping6Data.count == 0 ? 0 : ping6Data.avrgs[ping6Data.avrgs.length-1][1]) + " ms";
+	       xaxis: { min: pingData.count - pingData.maxValues < 0 ? 0 : pingData.count - pingData.maxValues, 
+                   max: pingData.count > 10? pingData.count + 1 : 11}
+	       }));
+	    /* add label with percentage of lost packets */
+    ping6Placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+pingData.getLostPercent()+'%</div>');
    }
    if(selected == "2")  /* traceroute v4 */
       $.plot(traceroutePlaceholder, [{ data: traceData.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
@@ -162,36 +174,49 @@ function plotPing(received, type)
 {
    if(received == "")
       return;
-      
+   
+   var data = type == 4? pingData : ping6Data;   
    var pingTime;
-   var data = type == 4? pingData : ping6Data;
+   var npos;
+      
+   /* connect with previous data */
+   data.prevData += received;
    
-   /* update chart data */
-   
-   if($.client.os == "Windows") {
-      if(received.indexOf("Odpoved") != -1) {
-         pingTime= parseFloat(received.substr(received.indexOf("cas=")+4,received.indexOf("ms")-received.indexOf("cas=")+4));
-         data.add(pingTime);
-      } else if(received.indexOf("Reply") != -1) {
-			var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
-			var fields = nospaces.split(" ");
-         pingTime = parseFloat(received.substr(received.indexOf("time=")+5));
-         data.add(pingTime);
-      } else if(received.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 || received.indexOf("timed out") != -1) {
-         data.add(null);
-      }
-   } else if($.client.os == "Linux") {
-      var pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(received));
-      if(pingTime)
+   /* divide input data into lines and add them as data */
+   while((npos = data.prevData.indexOf("\n")) != -1)
+   {
+      var currentData = data.prevData.substr(0, npos);
+      if($.client.os == "Windows") 
       {
-	 /* check for lost packets */
-	 var actPingId = parseInt((/icmp_seq=\d+/i.exec(received))[0].substr(9)); 
-	 while(actPingId > ++data.prevId) 
-	    data.add(null);
-
-	 data.add(pingTime);
+         var pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
+         if(pingTime)
+            data.add(pingTime);
+         else
+         {
+            /* control of response keywords */
+            if(currentData.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 
+               || received.indexOf("timed out") != -1 || received.indexOf("unreachable") != -1 )
+            {
+               data.add(null);
+            }
+         }
       }
-   } 
+      else if($.client.os == "Linux") 
+      {
+         var pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(currentData));
+         if(pingTime)
+         {
+      	 /* check for lost packets */
+      	 var actPingId = parseInt((/icmp_seq=\d+/i.exec(currentData))[0].substr(9)); 
+      	 while(actPingId > ++data.prevId) 
+   	    data.add(null);
+         }
+         data.add(pingTime);
+      }
+   	/* store remaining data */
+      data.prevData = (data.prevData.substr(npos+1));
+   }
+  
    /*update plots*/
    repaintPlots();
 }
@@ -201,8 +226,10 @@ function addTPlotDataWin(row, type)
    var data = type == 4? traceData : trace6Data;
    
    var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+   var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
+      
    var fields = nospaces.split(" ");
-   var step, time, label, first = 0, labelPos = 4;
+   var step, label, first = 0, labelPos = 4;
    
    while(fields[first] == "" && first<fields.length-6)
       first++;
@@ -212,9 +239,8 @@ function addTPlotDataWin(row, type)
       
    for( j = first; j < fields.length; j++)
       if(fields[j] == "ms") 
-         labelPos++;
-         
-   time = (time = parseFloat(fields[first+1]))? time : (time = parseFloat(fields[first+2])) ? time : parseFloat(fields[first+3]);
+         labelPos++;      
+   
    label = fields[first + labelPos];
    
    data.add(time, label);
@@ -244,16 +270,16 @@ function addTPlotDataLin(row, type)
       }
       else
       {
-	 if(fields[first+3] != "*")
-	 {
-	    label = fields[first+3];
-	    time = parseInt(fields[first+4]);
-	    data.add(time, label);
-	 }
-	 else
-	 {
-	    data.add(null, "");
-	 }
+      	 if(fields[first+3] != "*")
+      	 {
+      	    label = fields[first+3];
+      	    time = parseInt(fields[first+4]);
+      	    data.add(time, label);
+      	 }
+      	 else
+      	 {
+      	    data.add(null, "");
+      	 }
       }
    }
    else

@@ -36,7 +36,7 @@ extern "C"
    * (!LIBIDN_BUILDING).  It is only used for MinGW which declare
    * __DECLSPEC_SUPPORTED or MSVC (_MSC_VER && _DLL). */
 #if !defined (LIBIDN_BUILDING) && (defined(__DECLSPEC_SUPPORTED) || (defined(_MSC_VER) && defined(_DLL)))
-# define IDN_DLL_VAR __declspec (dllimport)
+# define IDN_DLL_VAR //__declspec (dllimport)
 #else
 # define IDN_DLL_VAR
 #endif
