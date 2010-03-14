@@ -64,6 +64,7 @@ body{
 
 .aboutTab {
    position: absolute !important;
+   margin-top: -29px !important;
    right: 0px;
 }
 

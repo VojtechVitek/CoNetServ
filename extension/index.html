@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
+  <title>CoNetServ - Complex Network Services</title>
   <link type="text/css" href="jquery/css/cupertino/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
   <link type="text/css" href="css/conetserv.css" rel="stylesheet" />
   <script type="text/javascript" src="jquery/js/jquery-1.3.2.min.js"></script>
@@ -23,16 +24,16 @@
       <input id="urlButton" type="submit" value="Start" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
     </form>
     <ul>
-        <li><span id="pingState" class="tabState"></span><a href="#pingTab"><span>Ping</span></a><span id="pingTabClose" class="tabClose" onclick="stopPing()"></span></li>
-        <li><span id="ping6State" class="tabState"></span><a href="#ping6Tab"><span>Ping6</span></a><span id="ping6TabClose" class="tabClose" onclick="stopPing6()"></span></li>
-        <li><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab"><span>Traceroute</span></a><span id="tracerouteTabClose" class="tabClose" onclick="stopTraceroute()"></span></li>
-        <li><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab"><span>Traceroute6</span></a><span id="traceroute6TabClose" class="tabClose" onclick="stopTraceroute6()"></span></li>
+        <li title="PING IPv4"><span id="pingState" class="tabState"></span><a href="#pingTab">ping</a><span id="pingTabClose" class="tabClose" onclick="stopPing()"></span></li>
+        <li title="PING IPv6"><span id="ping6State" class="tabState"></span><a href="#ping6Tab">ping6</a><span id="ping6TabClose" class="tabClose" onclick="stopPing6()"></span></li>
+        <li title="TRACEROUTE IPv4"><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab">traceroute</a><span id="tracerouteTabClose" class="tabClose" onclick="stopTraceroute()"></span></li>
+        <li title="TRACEROUTE IPv6"><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab">traceroute6</a><span id="traceroute6TabClose" class="tabClose" onclick="stopTraceroute6()"></span></li>
         <script type="text/javascript">
           if($.client.os != "Windows") 
-            document.write('<li><span id="whoisState" class="tabState"></span><a href="#whoisTab"><span>Whois</span></a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>');
+            document.write('<li title="WHOIS"><span id="whoisState" class="tabState"></span><a href="#whoisTab">whois</a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>');
         </script>
-        <li><span id="nslookupState" class="tabState"></span><a href="#nslookupTab"><span>NSlookup</span></a><span id="nslookupTabClose" class="tabClose" onclick="stopNslookup()"></span></li>
-        <li class="aboutTab"><a href="#aboutTab"><span>About</span></a></li>
+        <li title="NSLOOKUP"><span id="nslookupState" class="tabState"></span><a href="#nslookupTab">nslookup</a><span id="nslookupTabClose" class="tabClose" onclick="stopNslookup()"></span></li>
+        <li class="aboutTab"><a href="#aboutTab">About</a></li>
     </ul>
     <div id="pingTab">
       <textarea id="pingConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
