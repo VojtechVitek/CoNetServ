@@ -49,7 +49,7 @@ char execvp_workaround_paths[command_t_count][30] = {
    "/usr/sbin/traceroute",
    "/usr/sbin/traceroute6",
    "/usr/bin/whois",
-	"/usr/bin/nslookup"
+   "/usr/bin/nslookup"
 };
 #include <string.h>
 void execvp_workaround()
