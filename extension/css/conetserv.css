@@ -197,4 +197,14 @@ div.valueLabel {
 }
 
 
+#zoomin{
+   position: absolute;
+   left: 550px;
+   top: 20px;
+}
 
+#zoomout{
+   position: absolute;
+   left: 580px;
+   top: 20px;
+}

@@ -1,5 +1,9 @@
 include ../config.mk
 
+# ARCH-specific settings (x86: -m32; x86_64: -m64)
+ARCH = -m32 
+
+# OS-specific settings
 ifeq (${shell uname}, Darwin)
 CPPFLAGS = -DVERSION=\"${VERSION}\" -DWEBKIT_DARWIN_SDK
 LDFLAGS = -dynamiclib #-framework Carbon -framework CoreFoundation -framework WebKit
