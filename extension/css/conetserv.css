@@ -61,7 +61,7 @@ body{
 /* FIXME Ugly css hack */
 .aboutTab {
    position: absolute !important;
-   margin-top: -28px !important;
+   margin-top: -29px !important;
    right: 0px;
 }
 
