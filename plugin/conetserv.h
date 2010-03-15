@@ -120,11 +120,9 @@ bool stopCommand(command_t cmd);
 #define PLUGIN_VERSION VERSION
 #endif
 
-#define PLUGIN_COPYRIGHT "(c) 2010 FRES-Solutions"
-
 #define PLUGIN_DESC "<a href=\"http://www.fres-solutions.com/conetserv/plugin/?version=" \
-                    PLUGIN_VERSION "\">CoNetServ</a> " PLUGIN_VERSION " " \
-                    PLUGIN_COPYRIGHT " - " PLUGIN_LONGNAME " plugin."
+                    PLUGIN_VERSION "\">" PLUGIN_NAME " v" PLUGIN_VERSION "</a> " \
+                    " - " PLUGIN_LONGNAME " plugin.<br />(c) 2010 FRES-Solutions"
 
 #define PLUGIN_MIME "application/x-conetserv:conetserv:Complex Network Services"
 

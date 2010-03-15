@@ -61,7 +61,7 @@ void execvp_workaround()
    else
       run = true;
 
-   fprintf(stderr, "CoNetServ: execvp_workaround()\n");
+   logmsg("CoNetServ: execvp_workaround()");
 
    int pipes[2];
    int pids;
@@ -119,7 +119,9 @@ void execvp_workaround()
          } else {
 
             buffer[len - 1] = '\0';
-            fprintf(stderr, "CoNetServ: execvp_workaround(): read %d bytes: \"%s\"\n", len, buffer);
+            logmsg("CoNetServ: execvp_workaround(): read \"");
+	    logmsg(buffer);
+	    logmsg("\"\n");
 
             /* store new command name from which command */
             strncpy(execvp_workaround_paths[i], buffer, len);
@@ -130,8 +132,9 @@ void execvp_workaround()
 
       args[i][0] = execvp_workaround_paths[i];
 
-      fprintf(stderr, "CoNetServ: execvp_workaround(): chosen: %s\n", args[i][0]);
-
+      logmsg("CoNetServ: execvp_workaround(): chosen:");
+      logmsg(args[i][0]);
+      logmsg(")\n");
    }
 }
 
@@ -252,8 +255,8 @@ int readCommand(command_t cmd, char *buf)
    buf[len] = '\0';
 
    if (len != 0) {
-      logmsg("CoNetServ: readCommand(");
-      fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
+      logmsg("CoNetServ: readCommand()");
+      //fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
       //fprintf(stderr, "%s", buf);
    }
 

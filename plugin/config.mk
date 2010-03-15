@@ -4,7 +4,7 @@
 
 # Debug mode on/off
 DEBUG = -g # on
-#DEBUG = -o2 # off
+#DEBUG = -O2 -DNDEBUG # off
 
 
 # OS-specific settings

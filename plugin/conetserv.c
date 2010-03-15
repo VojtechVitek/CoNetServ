@@ -30,6 +30,7 @@ NPP              inst     = NULL;
 NPUTF8 buffer[BUFFER_LENGTH];
 
 void logmsg(const char *msg) {
+#if !defined(NDEBUG)
 #if defined(ANDROID)
    FILE *out = fopen("/tmp/conetserv.log", "a");
    if(out) {
@@ -44,6 +45,7 @@ void logmsg(const char *msg) {
       fputs(msg, out);
       fclose(out);
    }
+#endif
 #endif
 }
 
