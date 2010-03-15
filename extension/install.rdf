@@ -4,7 +4,7 @@
     <em:id>conetserv@fres-solutions.com</em:id>
     <em:type>2</em:type>
     <em:name>CoNetServ</em:name>
-    <em:version>1.0</em:version>
+    <em:version>@VERSION@</em:version>
     <em:targetPlatform>Linux_x86_64-gcc3</em:targetPlatform>
     <em:targetPlatform>Linux_x86-gcc3</em:targetPlatform>
     <em:targetPlatform>WINNT_x86-msvc</em:targetPlatform>

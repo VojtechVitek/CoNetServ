@@ -5,7 +5,7 @@
   <id>
     <host>fres-solutions.com</host>
     <name>conetserv</name>
-    <revised>2010-02-27</revised>
+    <revised>@BUILDDATE@</revised>
   </id>
   <icon>images/icon16.png</icon>
   <icon>images/icon32.png</icon>

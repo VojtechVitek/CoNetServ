@@ -1,6 +1,6 @@
 {
   "name": "CoNetServ",
-  "version": "1.0",
+  "version": "@VERSION@",
   "description": "Complex Network Services",
   "permissions": [
     "tabs"
