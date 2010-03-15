@@ -126,7 +126,7 @@ bool stopCommand(command_t cmd);
                     PLUGIN_VERSION "\">CoNetServ</a> " PLUGIN_VERSION " " \
                     PLUGIN_COPYRIGHT " - " PLUGIN_LONGNAME " plugin."
 
-#define PLUGIN_MIME "application/x-conetserv::Complex Network Services"
+#define PLUGIN_MIME "application/x-conetserv:conetserv:Complex Network Services"
 
 #endif /*_CONETSERV_H_*/
 

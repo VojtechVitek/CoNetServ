@@ -1,5 +1,11 @@
-# ARCH-specific settings (x86: -m32; x86_64: -m64)
-#ARCH = -m32
+# ARCH-specific settings
+#ARCH = -m32 #x86
+#ARCH = -m64 #x86_64
+
+# Debug mode on/off
+DEBUG = -g # on
+#DEBUG = -o2 # off
+
 
 # OS-specific settings
 ifeq (${shell uname}, Darwin)
@@ -13,8 +19,8 @@ endif
 
 include ../VERSION
 
-CFLAGS = -g -std=gnu99 --pedantic -Wall -fPIC \
-	 ${ARCH} ${OSINCS} ${OSCFLAGS} \
+CFLAGS = -std=gnu99 --pedantic -Wall -fPIC \
+	 ${DEBUG} ${ARCH} ${OSINCS} ${OSCFLAGS} \
          -DVERSION=\"${VERSION}\" -DBUILDDATE=\"$(BUILDDATE)\"
 
 LDFLAGS = ${ARCH} ${OSLDFLAGS}

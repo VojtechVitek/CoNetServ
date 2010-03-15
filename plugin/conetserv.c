@@ -68,9 +68,11 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
    int len;
    char *txt;
    char *name = npnfuncs->utf8fromidentifier(methodName);
-	NPString npstr;
-	uint32_t* unicode;
-	NPUTF8* str;
+   uint32_t* unicode = NULL;
+   NPUTF8* str = NULL;
+#ifdef _WINDOWS
+   NPString npstr;
+#endif
 
    if (name) {
       if (!strncmp(name, "read", 4) && argCount == 0) {
@@ -90,14 +92,14 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
                } else {
                   txt = NULL;
                }
-					#ifdef _WINDOWS
-						 result->type = NPVariantType_String;                                         \
-						 npstr.utf8characters = txt;
-						 npstr.utf8length = len;  
-						 result->value.stringValue = npstr;       
-					#else
+#ifdef _WINDOWS
+               result->type = NPVariantType_String;                                         \
+               npstr.utf8characters = txt;
+               npstr.utf8length = len;
+               result->value.stringValue = npstr;
+#else
                STRINGN_TO_NPVARIANT(txt, len, *result);
-					#endif
+#endif
             } else {
                BOOLEAN_TO_NPVARIANT(false, *result);
             }
@@ -114,13 +116,26 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             logmsg(name);
             logmsg("()\n");
 
+            /*
+             * Copy JavaScript string argument as char array.
+             * Be sure about terminating '\0' char -
+             * there is no warancy for it from PluginWrapper API.
+             */
+            memcpy(buffer, STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])), STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0])));
+            buffer[STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0]))] = NULL;
+
             /* Punycode */
-            unicode = utf8_to_utf32((uint8_t *)STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])),
-                                              STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0])));
+            unicode = NULL;
+            unicode = utf8_to_utf32((uint8_t *)buffer, STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0])));
+
             idna_to_ascii_4z(unicode, &str, 0);
-            //free(unicode);
+            if (unicode != NULL)
+               free(unicode);
 
             BOOLEAN_TO_NPVARIANT(startCommand(cmd, str), *result);
+            if (str != NULL)
+               free(str);
+
             return true;
          }
       } else if (!strncmp(name, "stop", 4) && argCount == 0) {
