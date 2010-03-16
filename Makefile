@@ -1,6 +1,6 @@
 NAME=CoNetServ
 LIBNAME=np$(NAME)
-ARCHS=Linux_x86-gcc3.so Linux_x86_64-gcc3.so WINNT_x86-MSVC.dll Darwin_x86-gcc3.dylib
+ARCHS=Linux_x86-gcc3 Linux_x86_64-gcc3 WINNT_x86-MSVC Darwin_x86-gcc3
 
 include VERSION
 
@@ -22,11 +22,9 @@ pre:
 	@rm -rf build/extension/platform
 	@echo "  Check pre-built libraries.."
 	@for i in $(ARCHS); do \
-	  echo -n "  * $(LIBNAME)_$$i .. "; \
-	  test -f build/$(LIBNAME)_$$i && echo "[OK]" || \
-	  { echo "[ERROR]"; exit 1; }; \
-	  mkdir -p build/extension/platform/$$(echo $$i | cut -d'.' -f1)/plugins/; \
-	  cp -L -t build/extension/platform/$$(echo $$i | cut -d'.' -f1)/plugins/ build/$(LIBNAME)_$$i; \
+	  find build/$$i | while read l; do echo "  * $$l"; done; \
+	  test -d build/$$i || exit 1; \
+	  cp -L -r build/$$i build/extension/platform/ ; \
 	done
 	@echo "  Substitute \"@VERSION@\" by \"$(VERSION)\" in extension files.."
 	@sed -e '/@ABOUT.HTML@/r build/extension/about.html' \

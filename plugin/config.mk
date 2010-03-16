@@ -1,14 +1,11 @@
-# ARCH-specific settings
-#ARCH = -m32 #x86
-#ARCH = -m64 #x86_64
+ARCH = x86_64
+DEBUG = on
 
-# Debug mode on/off
-DEBUG = -g # on
-#DEBUG = -O2 -DNDEBUG # off
+#############################
 
+KERNEL=${shell uname}
 
-# OS-specific settings
-ifeq (${shell uname}, Darwin)
+ifeq (${KERNEL},Darwin)
 OSCFLAGS = -DWEBKIT_DARWIN_SDK
 OSLDFLAGS = -dynamiclib #-framework Carbon -framework CoreFoundation -framework WebKit
 else
@@ -19,10 +16,26 @@ endif
 
 include ../VERSION
 
+ifeq (${ARCH},x86_64)
+ARCHFLAGS = -m64
+else
+ifeq (${ARCH},x86)
+ARCHFLAGS = -m32
+else
+${error "INVALID ARCHITECTURE"}
+endif
+endif
+
+ifeq (${DEBUG},off)
+DEBUG = -O2 -DNDEBUG
+else
+DEBUG = -g
+endif
+
 CFLAGS = -std=gnu99 --pedantic -Wall -fPIC \
-	 ${DEBUG} ${ARCH} ${OSINCS} ${OSCFLAGS} \
+	 ${DEBUGFLAGS} ${ARCHFLAGS} ${OSINCS} ${OSCFLAGS} \
          -DVERSION=\"${VERSION}\" -DBUILDDATE=\"$(BUILDDATE)\"
 
-LDFLAGS = ${ARCH} ${OSLDFLAGS}
+LDFLAGS = ${ARCHFLAGS} ${OSLDFLAGS}
 
 CC = gcc
