@@ -1,0 +1,14 @@
+Extension:
+==========
+* Get user's external IP & additional info (location, flag, reverse-domain).
+* Rewrite CoNetServ API (OOP), split NPAPI tools and JS tools.
+* URL validator (regexp).
+* Mozilla Firefox add-on updates.
+* Google Chrome extension updates.
+
+Plugin:
+=======
+* Rewrite API (each command should be object property to JS front-end).
+* Get rid of GNU LIB IDN unnecessary mess, put it's files into
+  the separate directory.
+* URL validator (after the punycode conversion).
