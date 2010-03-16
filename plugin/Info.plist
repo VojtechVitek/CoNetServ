@@ -5,21 +5,23 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>npsimple</string>
+	<string>npCoNetServ</string>
+	<key>CFBundleName</key>
+	<string>CoNetServ</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Copyright 2007-2008 Aplix Corporation</string>
+	<string>Complex Network Services</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.webvm</string>
+	<string>com.fres-solutions.conetserv</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>BRPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>@VERSION@</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>@VERSION@</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
 	<key>CFPlugInDynamicRegistration</key>

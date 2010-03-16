@@ -30,7 +30,7 @@ pre:
 	@sed -e '/@ABOUT.HTML@/r build/extension/about.html' \
 	  -e 's/@ABOUT.HTML@//' build/extension/index.html > build/extension/index.html.tmp; \
 	  mv build/extension/index.html.tmp build/extension/index.html
-	@find build/extension/ -type f -print | while read i; do \
+	@find build/extension/ build/*/*.plist -type f -print | while read i; do \
 	  sed -e 's/@VERSION@/$(VERSION)/g' -e 's/@BUILDDATE@/$(BUILDDATE)/g' \
 	  $$i > $$i.tmp && mv $$i.tmp $$i; \
 	done
