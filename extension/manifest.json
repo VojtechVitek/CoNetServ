@@ -14,10 +14,14 @@
     "default_title": "CoNetServ",
     "popup": "index.html"
   },
+  "permissions": [
+    "http://*/",
+    "https://*/"
+  ],
   "plugins": [
       { "path": "platform/Linux_x86_64-gcc3/plugins/npCoNetServ_Linux_x86_64-gcc3.so", "public": true },
       { "path": "platform/Linux_x86-gcc3/plugins/npCoNetServ_Linux_x86-gcc3.so", "public": true },
       { "path": "platform/WINNT_x86-MSVC/plugins/npCoNetServ_WINNT_x86-MSVC.dll", "public": true },
-      { "path": "platform/Darwin_x86-gcc3/plugins/npCoNetServ_Darwin_x86-gcc3.dylib", "public": true }
+      { "path": "platform/Darwin_x86-gcc3/plugins/npCoNetServ.plugin", "public": true }
   ]
 }
