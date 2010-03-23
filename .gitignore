@@ -10,3 +10,7 @@ plugin/*.exe
 # Ignore platform-specific directories and extension builds
 extension/platform/
 build/
+
+# Ignore temp/backup files
+*.backup
+*~
