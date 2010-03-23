@@ -211,10 +211,9 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 
 bool stopCommand(command_t cmd)
 {
-   logmsg("CoNetServ: stopCommand()\n");
-
    /* kill the command, if running */
    if (pids[cmd] != 0) {
+      logmsg("CoNetServ: stopCommand()\n");
       kill(pids[cmd], 9);
       waitpid(pids[cmd], NULL, 0);
       pids[cmd] = 0;

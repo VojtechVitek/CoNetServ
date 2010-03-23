@@ -22,15 +22,16 @@ pre:
 	@rm -rf build/extension/platform
 	@echo "  Check pre-built libraries.."
 	@for i in $(ARCHS); do \
-	  find build/$$i | while read l; do echo "  * $$l"; done; \
-	  test -d build/$$i || exit 1; \
-	  cp -L -r build/$$i build/extension/platform/ ; \
+	  echo "  $$i:"; \
+	  find build/$$i -type f | while read l; do echo "   * $$l"; done; \
+	  test -d build/$$i && test `find build/$$i | wc -l` -gt 0 || exit 1; \
+	  cp -L -r build/$$i build/extension/platform/; \
 	done
 	@echo "  Substitute \"@VERSION@\" by \"$(VERSION)\" in extension files.."
 	@sed -e '/@ABOUT.HTML@/r build/extension/about.html' \
 	  -e 's/@ABOUT.HTML@//' build/extension/index.html > build/extension/index.html.tmp; \
 	  mv build/extension/index.html.tmp build/extension/index.html
-	@find build/extension/ build/*/*.plist -type f -print | while read i; do \
+	@find build/extension/ -type f -print | while read i; do \
 	  sed -e 's/@VERSION@/$(VERSION)/g' -e 's/@BUILDDATE@/$(BUILDDATE)/g' \
 	  $$i > $$i.tmp && mv $$i.tmp $$i; \
 	done
@@ -52,7 +53,7 @@ doc:
 
 .PHONY:_firefox _chrome _opera
 _firefox:
-	@echo "  Build Mozilla Firefox add-on.."
+	@echo "  Build Mozilla Firefox add-on:"
 	@echo "   * build/$(NAME)-$(VERSION).xpi"
 	@$(RM) build/$(NAME)-$(VERSION).xpi
 	@cd build/extension && zip -q ../../build/$(NAME)-$(VERSION).xpi \
@@ -61,7 +62,7 @@ _firefox:
 	   `find platform` `find jquery`
 
 _chrome:
-	@echo "  Build Google Chrome extension.."
+	@echo "  Build Google Chrome extension:"
 	@echo "   * build/$(NAME)-$(VERSION).crx"
 	@$(RM) build/$(NAME)-$(VERSION).crx
 	@test -f conetserv.pem || { echo "Missing conetserv.pem file."; exit 1; }
@@ -70,7 +71,7 @@ _chrome:
 	  --ignore-file=about.html --ignore-file=install.rdf --ignore-dir=firefox
 
 _opera:
-	@echo "  Build Opera widget.."
+	@echo "  Build Opera widget:"
 	@echo "   * build/$(NAME)-$(VERSION)-no-plugin.wgt"
 	@$(RM) build/$(NAME)-$(VERSION)-no-plugin.wgt
 	@cd build/extension && zip -q ../../build/$(NAME)-$(VERSION)-no-plugin.wgt \
