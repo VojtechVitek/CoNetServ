@@ -5,32 +5,76 @@ var tracerouteInterval = -1;
 var traceroute6Interval = -1;
 var whoisInterval = -1;
 var nslookupInterval = -1;
- 
-/* CoNetServ NPAPI plugin to interact native code with */
-var conetserv = document.getElementById("conetserv");
- 
-/* console text-boxes */
-var pingConsole = document.getElementById("pingConsole");
-var ping6Console = document.getElementById("ping6Console");
-var tracerouteConsole = document.getElementById("tracerouteConsole");
-var traceroute6Console = document.getElementById("traceroute6Console");
-var whoisConsole = document.getElementById("whoisConsole");
-var nslookupConsole = document.getElementById("nslookupConsole");
 
-/* init url in firefox*/
-if($.client.browser == "Firefox")
+/* CoNetServ NPAPI plugin to interact native code with */
+var conetserv;
+
+/* console text-boxes */
+var pingConsole;
+var ping6Console;
+var tracerouteConsole;
+var traceroute6Console;
+var whoisConsole;
+var nslookupConsole;
+
+function startAnim(id)
 {
-   if(window.arguments[0] && checkAddress(window.arguments[0]))
-      document.getElementById("url").value = window.arguments[0];
+   document.getElementById(id+"State").style.display = 'block';//visibility = 'visible';
+   document.getElementById(id+"TabClose").style.display = 'block';
 }
-/* init url in Chrome */
-else if($.client.browser == "Chrome")
+
+function stopAnim(id)
 {
-   chrome.tabs.getSelected(null, function(tab) {
-      if(checkAddress(tab.url))
-	 document.getElementById("url").value = tab.url;
-   });
+   document.getElementById(id+"State").style.display = 'none';//visibility = 'hidden';
+   document.getElementById(id+"TabClose").style.display = 'none';
 }
+
+$(function init()
+{
+   conetserv = document.getElementById("conetserv");
+
+   /* console text-boxes */
+   pingConsole = document.getElementById("pingConsole");
+   ping6Console = document.getElementById("ping6Console");
+   tracerouteConsole = document.getElementById("tracerouteConsole");
+   traceroute6Console = document.getElementById("traceroute6Console");
+   whoisConsole = document.getElementById("whoisConsole");
+   nslookupConsole = document.getElementById("nslookupConsole");
+
+   /* init url in Firefox */
+   if ($.client.browser == "Firefox") {
+      if(window.arguments && window.arguments[0] && checkAddress(window.arguments[0]))
+         document.getElementById("url").value = window.arguments[0];
+   }
+   /* init url in Chrome */
+   else if ($.client.browser == "Chrome") {
+      chrome.tabs.getSelected(null, function(tab) {
+         if(checkAddress(tab.url))
+            document.getElementById("url").value = tab.url;
+      });
+   }
+
+   /* Start local info services */   
+   Services.start(
+      /* started */
+      function() {
+         startAnim("local");
+      },
+      /* result updated */
+      function(service) {
+         if (service.result.externIpv4)
+            $("#externIpv4").append('<strong title="' + service.name + '">' + service.result.externIpv4 + '</strong>');
+         if (service.result.externIpv6)
+            $("#externIpv6").append('<strong title="' + service.name + '">' + service.result.externIpv6 + '</strong>');
+         if (service.result.countryCode)
+            $("#countryCode").append('<strong title="' + service.name + '">' + service.result.countryCode + '</strong>');
+      },
+      /* stopped */
+      function() {
+         stopAnim("local");
+      }
+   );
+});
 
 /** 
  * Checks address for validity to ping, traceroute,...
@@ -475,7 +519,6 @@ function stopNslookup()
 /**
  * Bind stopbuttons
  */
-
 $('#pingTabClose').bind('onclick', function() {
    stopPing();
 });

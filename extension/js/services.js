@@ -1,47 +1,57 @@
-var externIpServices = [];
+var Services = {
 
-externIpServices.push({
+   services: [{
 
-   name: 'Check IP by DynDNS.com',
+         name: 'CGI script by Chris F.A. Johnson',
 
-   url: 'http://checkip.dyndns.com:8245/',
-   method: 'GET',
-   charset: 'UTF-8',
+         method: 'GET',
+         url: 'http://cfaj.freeshell.org/ipaddr.cgi',
+         data: {},
 
-   stableParse: '2010-03-18',
+         dataType: 'text',
+         dataCharset: 'UTF-8',
 
-   result: {
-      'ipv4': null,
-      'ipv6': null,
-   },
+         result: {
+            externIpv4: null
+         },
 
-   parse: function(html) {
+         stable: '2010-03-18',
 
-      this.result.ipv4 = html.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/gi)[0];
-      return this.result;
+         parse: function(data) {
+            this.result.externIpv4 = data.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/gi)[0];
+         }
+   }],
+
+   running: 0,
+
+   start: function(start_callback, update_callback, stop_callback) {
+
+      start_callback();
+
+      /* Run all services */
+      this.running += this.services.length;
+      for (var i = 0; i < this.services.length; ++i) {
+         var This = this;
+         var Service = this.services[i];
+         $.ajax({
+            type: Service.method,
+            url: Service.url,
+            processData: Service.data,
+            dataType: Service.dataType,
+            success: function(data) {
+               // alert(data);
+               Service.parse(data);
+               //$.extend(This.result, Service.result);
+               update_callback(Service);
+               if (--This.running == 0)
+                  stop_callback();
+            },
+            error: function() {
+               if (--This.running == 0)
+                  stop_callback();
+            }
+         });
+      }
    }
 
-});
-
-externIpServices.push({
-
-      name: 'CGI script by Chris F.A. Johnson',
-
-      url: 'http://cfaj.freeshell.org/ipaddr.cgi',
-      method: 'GET',
-      charset: 'UTF-8',
-
-      stableParse: '2010-03-18',
-
-      result: {
-         'ipv4': null,
-         'ipv6': null,
-      },
-
-      parse: function(html) {
-
-         this.result.ipv4 = html;
-         return this.result;
-      }
-});
-
+};
