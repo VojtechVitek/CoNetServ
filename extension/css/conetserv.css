@@ -72,6 +72,12 @@ body{
  /* TODO */
 }
 
+.localTab {
+   position: absolute !important;
+   margin-top: -29px !important;
+   right: 57px;
+}
+
 #pingConsole{
    height: 220px;
 }

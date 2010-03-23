@@ -118,14 +118,13 @@ var optionsPing = {
 
 var optionsTrace = {
       lines: { show: true },
-      legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
+      legend: { show: true, position: "nw", backgroundOpacity: 0.5 },
       points: { show: true },
       xaxis: {zoomRange: [1, 10], panRange: [0, 30] },
       yaxis: {zoomRange: [10, 1000] },
       zoom: { interactive: true },
       pan: { interactive: true, frameRate: 30 },
-      valueLabels: { show: true },
-      legend: { position: "nw" }
+      valueLabels: { show: true }
 };
 
 function repaintPlots() {
@@ -175,9 +174,8 @@ function repaintPlots() {
       
       
       plotCont = $.plot(placeholder, [{ data: tdata.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
-      xaxis: { tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30) },
-      yaxis: { min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null) },
-
+        xaxis: { tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30) },
+        yaxis: { min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null) }
       }));
 
       // Functions for zooming/paning plots
@@ -372,16 +370,4 @@ function plotTraceroute(received, type)
    }
 
    repaintPlots();
-}
-
-function startAnim(id)
-{
-   document.getElementById(id+"State").style.display = 'block';//visibility = 'visible';
-   document.getElementById(id+"TabClose").style.display = 'block';
-}
-
-function stopAnim(id)
-{
-   document.getElementById(id+"State").style.display = 'none';//visibility = 'hidden';
-   document.getElementById(id+"TabClose").style.display = 'none';
 }
