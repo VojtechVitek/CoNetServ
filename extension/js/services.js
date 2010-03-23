@@ -2,6 +2,36 @@ var Services = {
 
    services: [{
 
+         name: 'WIPmania.com - WorldIP API',
+
+         method: 'GET',
+         url: 'http://api.wipmania.com/',
+         data: {},
+
+         dataType: 'text',
+         dataCharset: 'UTF-8',
+
+         result: {
+            externIpv4: null,
+            countryCode: null
+         },
+
+         stable: '2010-03-23',
+
+         parse: function(data) {
+
+            var pattern = /^((?:\d{1,3}\.){3}\d{1,3})<br>([a-z]{1,3})$/gi;
+            var result = pattern.exec(data);
+
+            if (result && result[1])
+               this.result.externIpv4 = result[1];
+
+            if (result && result[2])
+               this.result.countryCode = result[2];
+         }
+
+   }, {
+
          name: 'CGI script by Chris F.A. Johnson',
 
          method: 'GET',
@@ -15,40 +45,52 @@ var Services = {
             externIpv4: null
          },
 
-         stable: '2010-03-18',
+         stable: '2010-03-23',
 
          parse: function(data) {
-            this.result.externIpv4 = data.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/gi)[0];
+
+            var pattern = /^((?:\d{1,3}\.){3}\d{1,3})/gi;
+            var result = pattern.exec(data);
+
+            if (result && result[1])
+               this.result.externIpv4 = result[1];
+
          }
    }],
 
    running: 0,
 
-   start: function(start_callback, update_callback, stop_callback) {
+   start: function(started_callback, result_callback, stopped_callback) {
 
-      start_callback();
+      if (this.running == 0)
+         this.running = this.services.length;
+      else
+         throw "Services already running..";
+
+      started_callback();
 
       /* Run all services */
-      this.running += this.services.length;
       for (var i = 0; i < this.services.length; ++i) {
          var This = this;
          var Service = this.services[i];
          $.ajax({
+            Service: Service,
             type: Service.method,
             url: Service.url,
             processData: Service.data,
             dataType: Service.dataType,
             success: function(data) {
                // alert(data);
-               Service.parse(data);
+               // alert(this.Service.name);
+               this.Service.parse(data);
                //$.extend(This.result, Service.result);
-               update_callback(Service);
+               result_callback(this.Service);
                if (--This.running == 0)
-                  stop_callback();
+                  stopped_callback();
             },
             error: function() {
                if (--This.running == 0)
-                  stop_callback();
+                  stopped_callback();
             }
          });
       }

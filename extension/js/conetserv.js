@@ -60,14 +60,14 @@ $(function init()
       function() {
          startAnim("local");
       },
-      /* result updated */
+      /* service results */
       function(service) {
          if (service.result.externIpv4)
-            $("#externIpv4").append('<strong title="' + service.name + '">' + service.result.externIpv4 + '</strong>');
+            $("#externIpv4").append('<strong title="Source: ' + service.name + '">' + service.result.externIpv4 + '</strong>');
          if (service.result.externIpv6)
-            $("#externIpv6").append('<strong title="' + service.name + '">' + service.result.externIpv6 + '</strong>');
+            $("#externIpv6").append('<strong title="Source: ' + service.name + '">' + service.result.externIpv6 + '</strong>');
          if (service.result.countryCode)
-            $("#countryCode").append('<strong title="' + service.name + '">' + service.result.countryCode + '</strong>');
+            $("#countryCode").append('<strong title="Source: ' + service.name + '">' + service.result.countryCode + '</strong>');
       },
       /* stopped */
       function() {
