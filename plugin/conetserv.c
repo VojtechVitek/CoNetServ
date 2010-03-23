@@ -124,7 +124,7 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
              * there is no warancy for it from PluginWrapper API.
              */
             memcpy(buffer, STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])), STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0])));
-            buffer[STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0]))] = NULL;
+            buffer[STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0]))] = '\0';
 
             /* Punycode */
             unicode = NULL;
