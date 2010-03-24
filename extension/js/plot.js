@@ -1,8 +1,8 @@
 /* placeholders for plots */
-var pingPlaceholder = $("#pingPlaceholder");
-var ping6Placeholder = $("#ping6Placeholder");
-var traceroutePlaceholder = $("#traceroutePlaceholder");
-var traceroute6Placeholder = $("#traceroute6Placeholder");
+var pingPlaceholder;
+var ping6Placeholder;
+var traceroutePlaceholder;
+var traceroute6Placeholder;
 
 /* variables for storing plot identifiers */
 var traceroutePlot;
@@ -74,6 +74,16 @@ function pData() {
       	 this.max.shift();  
       }
    };
+
+   /* sets data for reploting */
+   this.touch = function (){this.changed = true;};
+
+   /* resets object to initial state */
+   this.reset = function() {
+      this.count = this.prevId = this.sum = this.minVal = this.maxVal = this.avrgVal = this.actVal = this.lost = 0;
+      this.rows = [];this.min = [];this.max = [];this.prevData = "";this.changed = 1;
+   };
+
    /* returns percentage of lost packets */
    this.getLostPercent = function (){
       var perc = this.lost > 0 ? this.lost/this.count*100 : 0;
@@ -97,26 +107,70 @@ function tData() {
       this.changed = 1;
       this.rows.push( [ this.count, (val == null || val == NaN) ? this.rows[this.count-1][1] : val ]);        
       this.labels.push(label);
-      };
-//this.average = function () { return ( Math.PI * this.radius * 2 ); };
+   };
+
+   /* sets data for reploting */
+   this.touch = function (){this.changed = true;};
+   
+   /* resets object to initial state */
+   this.reset = function() {
+      this.count = this.prevId = 0;
+      this.rows = [];this.labels = [];this.prevData = "";this.changed = 1;
+   };
 }
 
-var pingData = new pData();
-var ping6Data = new pData();
+/* data objects for ping, traceroute */
+var pingData;
+var ping6Data;
 
-var traceData = new tData();
-var trace6Data = new tData();
+var traceData;
+var trace6Data;
 
 /* chart data */
-var optionsPing = {
+var optionsPing;
+var optionsTrace;
+
+/* bind plot functions to tab changing */
+$(function init()
+{
+   $("#tabs").bind('tabsshow', function() 
+   {
+      repaintPlots();
+      tabsLoading = false;
+      pingData.touch();
+      ping6Data.touch();
+      traceData.touch();
+      trace6Data.touch();
+   });
+
+   $("#tabs").bind('select', function() 
+   {
+      if(tabsLoading)
+	 return false;
+      else
+	 return (tabsLoading = true);
+   });
+
+   /* inicialize data */
+   pingPlaceholder = $("#pingPlaceholder");
+   ping6Placeholder = $("#ping6Placeholder");
+   traceroutePlaceholder = $("#traceroutePlaceholder");
+   traceroute6Placeholder = $("#traceroute6Placeholder");
+
+   pingData = new pData();
+   ping6Data = new pData();
+   traceData = new tData();
+   trace6Data = new tData();
+
+   optionsPing = {
       lines: { show: true},
       legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
       points: { show: true },
       xaxis: { tickDecimals: 0, tickSize: 1 },
       yaxis: { min: 0}
-};
+   };
 
-var optionsTrace = {
+   optionsTrace = {
       lines: { show: true },
       legend: { show: true, position: "nw", backgroundOpacity: 0.5 },
       points: { show: true },
@@ -125,7 +179,9 @@ var optionsTrace = {
       zoom: { interactive: true },
       pan: { interactive: true, frameRate: 30 },
       valueLabels: { show: true }
-};
+   };
+}
+);
 
 function repaintPlots() {
    var $tabs = $('#tabs').tabs();
@@ -206,24 +262,8 @@ function repaintPlots() {
             plotCont.zoomOut({ center: c });
       });
 
-   }
-   
+   }  
 }
-
-/* bind plot functions to tab changing */
-$('#tabs').bind('tabsshow', function() {
-   repaintPlots();
-   tabsLoading = false;
-});
-
-$('#tabs').tabs({
-   select: function() {
-      if(tabsLoading)
-	 return false;
-      else
-	 return (tabsLoading = true);
-   }
-});
 
 
 function plotPing(received, type)
