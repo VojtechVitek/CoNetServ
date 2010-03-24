@@ -2,9 +2,6 @@
   "name": "CoNetServ",
   "version": "@VERSION@",
   "description": "Complex Network Services",
-  "permissions": [
-    "tabs"
-  ],
   "icons": { "16": "images/icon16.png",
              "32": "images/icon32.png",
              "48": "images/icon48.png",
@@ -16,7 +13,8 @@
   },
   "permissions": [
     "http://*/",
-    "https://*/"
+    "https://*/",
+    "tabs"
   ],
   "plugins": [
       { "path": "platform/Linux_x86_64-gcc3/plugins/npCoNetServ_Linux_x86_64-gcc3.so", "public": true },
