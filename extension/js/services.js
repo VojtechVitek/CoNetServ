@@ -181,7 +181,7 @@ var Services = {
             parse: function(data) {
 
                var result = {};
-               var pattern = /<font class=textip2>\r\n((?:\d{1,3}\.){3}\d{1,3})\r\n <\/font>/;
+               var pattern = /<font class=textip2>[\s]*((?:\d{1,3}\.){3}\d{1,3})[\s]*<\/font>/;
                var arr = pattern.exec(data);
 
                if (arr && arr[1])
@@ -198,8 +198,39 @@ var Services = {
             parse: function(data) {
 
                var result = {};
-               var pattern = /hostname je :<BR><\/font>&nbsp;([a-z0-9.]+)<BR>/;
+               var pattern = /hostname je[\s]*:[\s]*<BR><\/font>&nbsp;([a-z0-9.]+)<BR>/;
                var arr = pattern.exec(data);
+
+               if (arr && arr[1])
+                  result.hostname = arr[1];
+
+               return result;
+            }
+         }]
+
+   }, {
+
+         name: 'IPinfo Security Portal',
+         link: 'http://ipinfo.info/',
+
+         stable: '2010-03-24',
+
+         request: [{
+            method: 'GET',
+            url: 'http://ipinfo.info/html/privacy-check.php',
+            data: {},
+            dataType: 'text',
+            dataCharset: 'UTF-8',
+            parse: function(data) {
+               var result = {};
+               var pattern = /<p class="nomargins"><span style=".*?"><B>[\s]*((?:\d{1,3}\.){3}\d{1,3})<\/B><\/span>&nbsp;<\/p>/;
+               var arr = pattern.exec(data);
+
+               if (arr && arr[1])
+                  result.externIpv4 = arr[1];
+
+               pattern = /<p class="nomargins"><span style=".*?">[\s]*([a-z0-9.]*)[\s]*<\/span>&nbsp;<\/p>/;
+               arr = pattern.exec(data);
 
                if (arr && arr[1])
                   result.hostname = arr[1];
