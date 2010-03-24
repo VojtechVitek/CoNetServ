@@ -31,6 +31,7 @@ function stopAnim(id)
 
 $(function init()
 {
+   /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
    /* console text-boxes */
@@ -64,12 +65,24 @@ $(function init()
       },
       /* service results */
       function(service) {
+         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</span></a>)</li>';
          if (service.result.externIpv4)
-            $("#externIpv4").append('<strong title="Source: ' + service.name + '">' + service.result.externIpv4 + '</strong>');
+            $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> ' + source);
          if (service.result.externIpv6)
-            $("#externIpv6").append('<strong title="Source: ' + service.name + '">' + service.result.externIpv6 + '</strong>');
-         if (service.result.countryCode)
-            $("#countryCode").append('<strong title="Source: ' + service.name + '">' + service.result.countryCode + '</strong>');
+            $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> ' + source);
+         if (service.result.countryCode) {
+            $("#location").append(
+               '<li><strong>' + 
+               (service.result.city ? service.result.city + ', ' : '') +
+               (service.result.region ? + service.result.region + ', ' : '') +
+               (service.result.country ? service.result.country : '') +
+               (service.result.countryCode ? ' [' + service.result.countryCode + ']' : '') +
+               '</strong>, ' + 
+               (service.result.longitude ? 'Longitude: ' + service.result.longitude : '') +
+               (service.result.latitude ? ', Latitude: ' + service.result.latitude : '') +
+               source
+            );
+            }
       },
       /* stopped */
       function() {
@@ -77,6 +90,17 @@ $(function init()
       }
    );
 });
+
+/** 
+ * Checks address for validity to ping, traceroute,...
+ *
+ */
+function checkAddress(addr)
+{
+   var IPv4regxp = /^(f|ht)tp[s]{0,1}:[/]{2}\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ig;
+   var http = /(http|https|ftp)([^ ]+)/ig
+   return IPv4regxp.exec(addr) || http.exec(addr);
+}
 
 /**
  * Read output of PING6 command
