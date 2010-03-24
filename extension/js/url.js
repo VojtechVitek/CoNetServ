@@ -5,9 +5,10 @@
  */
 var url = {
    //regexps for checking and parsing data
-   ipv4: /^(f|ht)tp[s]{0,1}:[/]{2}\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ig,
-   http: /((http|https|ftp):\/\/|www.)?([^/ \.]+\.)+([^/ ]+)(\/[^ ]*)*/ig,
+   ip: /(http:\/\/|https:\/\/|ftp:\/\/)?(?:(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))$/i,
+   http: /(http:\/\/|https:\/\/|ftp:\/\/)?([a-z0-9]+\.)+([a-z0-9]+)/i,
    parseDns: /(http:\/\/|https:\/\/|ftp:\/\/)?([a-z0-9]+\.)+([a-z0-9]+)/i,
+   parseIp: /(http:\/\/|https:\/\/|ftp:\/\/)?([a-z0-9\.])/i,
 
    //stores url value
    //format: http://www.nic.cz/blabla
@@ -19,20 +20,24 @@ var url = {
    //Checks address for validity to ping, traceroute,...
    checkAddress: function(addr)
    {
-      return this.ipv4.test(addr) || this.http.test(addr);
+      return this.ip.test(addr) || this.http.test(addr);
    },
    
    //sets url address of object
+   //on success returns 1, on failure 0
    set: function(addr)
    {
+      this.pre = this.past = this.value = "";
       if(!this.checkAddress(addr))
       {
-	 this.pre = this.past = this.value = "";
+	 return 0;
       }
       else
       {
 	 //erase http, ftp, ...
 	 var result = this.parseDns.exec(addr);
+	 if(!result) 
+	    result = this.parseIp.exec(addr);
 	 if(result[1])
 	 {
 	    this.pre = result[1];
@@ -40,7 +45,9 @@ var url = {
 	    this.past = addr.substr(result[0].length);
 	 }
 	 else this.value = result[0];
-	 return;
+	 if(!this.value || this.value == "")
+	    return 0;
+	 return 1;
       }
    }
 

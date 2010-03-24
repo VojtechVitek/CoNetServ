@@ -43,14 +43,16 @@ $(function init()
 
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
-      if(window.arguments && window.arguments[0] && parser.checkAddress(window.arguments[0]))
-         document.getElementById("url").value = window.arguments[0];
+      if(window.arguments && window.arguments[0] && url.set(window.arguments[0]))
+      {
+         document.getElementById("url").value = url.value;
+      }
    }
    /* init url in Chrome */
    else if ($.client.browser == "Chrome") {
       chrome.tabs.getSelected(null, function(tab) {
-         if(parser.checkAddress(tab.url))
-            document.getElementById("url").value = parser.getHostname(tab.url);
+         url.set(tab.url);
+         document.getElementById("url").value = url.value;
       });
    }
 
@@ -226,9 +228,11 @@ function readNslookup()
 function startCommands()
 {
    //set value for commands
-   url.set(document.getElementById("url").value);
-   if(!url.value || url.value == "")
+   if(!url.set(document.getElementById("url").value))
+   {
+      document.getElementById("url").style.color="red";
       return;
+   }
    
    startPing();
    startPing6();
