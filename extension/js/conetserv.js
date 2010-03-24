@@ -255,6 +255,7 @@ function startCommands()
    if(!url.set(document.getElementById("url").value))
    {
       document.getElementById("url").style.color="red";
+      document.getElementById("url").focus();
       return;
    }
    
@@ -277,7 +278,7 @@ function startPing()
          document.getElementById("pingConsole").value = "";
          if (document.getElementById("conetserv").startPing(url.value)) {
              /* reset data and start animation */
-             pingData = new pData();
+             pingData.reset(); 
              startAnim("ping");
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
@@ -302,7 +303,7 @@ function startPing6()
          document.getElementById("ping6Console").value = "";
          if (document.getElementById("conetserv").startPing6(url.value)) {
              /* reset data and start animation */
-             ping6Data = new pData();
+             ping6Data.reset();
              startAnim("ping6");
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
@@ -326,7 +327,7 @@ function startTraceroute()
       try {
          document.getElementById("tracerouteConsole").value = "";
          if (document.getElementById("conetserv").startTraceroute(url.value)) {
-            traceData = new tData();
+            traceData.reset();
             startAnim("traceroute");
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
             readTraceroute();            
@@ -351,7 +352,7 @@ function startTraceroute6()
       try {
          document.getElementById("traceroute6Console").value = "";
          if (document.getElementById("conetserv").startTraceroute6(url.value)) {
-            trace6Data = new tData();
+            trace6Data.reset();
             startAnim("traceroute6");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
