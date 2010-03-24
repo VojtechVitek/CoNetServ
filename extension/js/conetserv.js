@@ -31,6 +31,7 @@ function stopAnim(id)
 
 $(function init()
 {
+   /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
    /* console text-boxes */
@@ -63,11 +64,11 @@ $(function init()
       /* service results */
       function(service) {
          if (service.result.externIpv4)
-            $("#externIpv4").append('<strong title="Source: ' + service.name + '">' + service.result.externIpv4 + '</strong>');
+            $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> <span class="serviceSource">(' + service.name + '</span>)</li>');
          if (service.result.externIpv6)
-            $("#externIpv6").append('<strong title="Source: ' + service.name + '">' + service.result.externIpv6 + '</strong>');
+            $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> <span class="serviceSource">(' + service.name + '</span>)</li>');
          if (service.result.countryCode)
-            $("#countryCode").append('<strong title="Source: ' + service.name + '">' + service.result.countryCode + '</strong>');
+            $("#countryCode").append('<li><strong>' + service.result.countryCode + '</strong> <span class="serviceSource">(' + service.name + '</span>)</li>');
       },
       /* stopped */
       function() {
@@ -86,6 +87,7 @@ function checkAddress(addr)
    var http = /(http|https|ftp)([^ ]+)/ig
    return IPv4regxp.exec(addr) || http.exec(addr);
 }
+
 /**
  * Read output of PING6 command
  * \return String data if successful (could be zero length),

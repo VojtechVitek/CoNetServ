@@ -35,7 +35,7 @@
             document.write('<li title="WHOIS"><span id="whoisState" class="tabState"></span><a href="#whoisTab">whois</a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>');
         </script>
         <li title="NSLOOKUP"><span id="nslookupState" class="tabState"></span><a href="#nslookupTab">nslookup</a><span id="nslookupTabClose" class="tabClose" onclick="stopNslookup()"></span></li>
-        <li title="Local Info" class="localTab"><span id="localState" class="tabState"></span><a href="#localTab">local info</a><span id="localTabClose" class="tabClose" onclick=""></span></li>
+        <li title="Host info (external IP, hostname, country, location, ..)" class="localTab"><span id="localState" class="tabState"></span><a href="#localTab">host info</a><span id="localTabClose" class="tabClose" onclick=""></span></li>
         <li title="About" class="aboutTab"><a href="#aboutTab">About</a></li>
     </ul>
     <div id="pingTab">
@@ -65,9 +65,9 @@
       <textarea id="nslookupConsole" class="consoleTextarea ui-corner-all" rows="30" cols="80" disabled="true"></textarea>
     </div>
     <div id="localTab">
-      External IPv4: <span id="externIpv4"></span><br />
-      External IPv6: <span id="externIpv6"></span><br />
-      Country code: <span id="countryCode"></span><br />
+      <h2>External IPv4</h2><ul id="externIpv4"></ul><br />
+      <h2>External IPv6</h2><ul id="externIpv6"></ul><br />
+      <h2>Country</h2><ul id="countryCode"></ul><br />
     </div>
     <div id="aboutTab">
       @ABOUT.HTML@
