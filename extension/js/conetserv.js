@@ -43,14 +43,14 @@ $(function init()
 
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
-      if(window.arguments && window.arguments[0] && checkAddress(window.arguments[0]))
+      if(window.arguments && window.arguments[0] && parser.checkAddress(window.arguments[0]))
          document.getElementById("url").value = window.arguments[0];
    }
    /* init url in Chrome */
    else if ($.client.browser == "Chrome") {
       chrome.tabs.getSelected(null, function(tab) {
-         if(checkAddress(tab.url))
-            document.getElementById("url").value = tab.url;
+         if(parser.checkAddress(tab.url))
+            document.getElementById("url").value = parser.getHostname(tab.url);
       });
    }
 
@@ -76,16 +76,6 @@ $(function init()
    );
 });
 
-/** 
- * Checks address for validity to ping, traceroute,...
- *
- */
-function checkAddress(addr)
-{
-   var IPv4regxp = /^(f|ht)tp[s]{0,1}:[/]{2}\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ig;
-   var http = /(http|https|ftp)([^ ]+)/ig
-   return IPv4regxp.exec(addr) || http.exec(addr);
-}
 /**
  * Read output of PING6 command
  * \return String data if successful (could be zero length),
@@ -235,6 +225,11 @@ function readNslookup()
  */
 function startCommands()
 {
+   //set value for commands
+   url.set(document.getElementById("url").value);
+   if(!url.value || url.value == "")
+      return;
+   
    startPing();
    startPing6();
    startTraceroute();
@@ -252,7 +247,7 @@ function startPing()
    if (pingInterval == -1) {
       try {
          document.getElementById("pingConsole").value = "";
-         if (document.getElementById("conetserv").startPing(document.getElementById("url").value)) {
+         if (document.getElementById("conetserv").startPing(url.value)) {
              /* reset data and start animation */
              pingData = new pData();
              startAnim("ping");
@@ -277,7 +272,7 @@ function startPing6()
    if (ping6Interval == -1) {
       try {
          document.getElementById("ping6Console").value = "";
-         if (document.getElementById("conetserv").startPing6(document.getElementById("url").value)) {
+         if (document.getElementById("conetserv").startPing6(url.value)) {
              /* reset data and start animation */
              ping6Data = new pData();
              startAnim("ping6");
@@ -302,7 +297,7 @@ function startTraceroute()
    if (tracerouteInterval == -1) {
       try {
          document.getElementById("tracerouteConsole").value = "";
-         if (document.getElementById("conetserv").startTraceroute(document.getElementById("url").value)) {
+         if (document.getElementById("conetserv").startTraceroute(url.value)) {
             traceData = new tData();
             startAnim("traceroute");
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
@@ -327,7 +322,7 @@ function startTraceroute6()
    if (traceroute6Interval == -1) {
       try {
          document.getElementById("traceroute6Console").value = "";
-         if (document.getElementById("conetserv").startTraceroute6(document.getElementById("url").value)) {
+         if (document.getElementById("conetserv").startTraceroute6(url.value)) {
             trace6Data = new tData();
             startAnim("traceroute6");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
@@ -352,7 +347,7 @@ function startWhois()
    if (whoisInterval == -1) {
       try {
          document.getElementById("whoisConsole").value = "";
-         if (document.getElementById("conetserv").startWhois(document.getElementById("url").value)) {
+         if (document.getElementById("conetserv").startWhois(url.value)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             startAnim("whois");
 	    readWhois();
@@ -377,7 +372,7 @@ function startNslookup()
    if (nslookupInterval == -1) {
       try {
          document.getElementById("nslookupConsole").value = "";
-         if (document.getElementById("conetserv").startNslookup(document.getElementById("url").value)) {
+         if (document.getElementById("conetserv").startNslookup(url.value)) {
             nslookupInterval = window.setInterval("readNslookup()", 500);
             startAnim("nslookup");
 	    readNslookup();
