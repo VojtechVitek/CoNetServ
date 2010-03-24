@@ -63,12 +63,24 @@ $(function init()
       },
       /* service results */
       function(service) {
+         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</span></a>)</li>';
          if (service.result.externIpv4)
-            $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> <span class="serviceSource">(' + service.name + '</span>)</li>');
+            $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> ' + source);
          if (service.result.externIpv6)
-            $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> <span class="serviceSource">(' + service.name + '</span>)</li>');
-         if (service.result.countryCode)
-            $("#countryCode").append('<li><strong>' + service.result.countryCode + '</strong> <span class="serviceSource">(' + service.name + '</span>)</li>');
+            $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> ' + source);
+         if (service.result.countryCode) {
+            $("#location").append(
+               '<li><strong>' + 
+               (service.result.city ? service.result.city + ', ' : '') +
+               (service.result.region ? + service.result.region + ', ' : '') +
+               (service.result.country ? service.result.country : '') +
+               (service.result.countryCode ? ' [' + service.result.countryCode + ']' : '') +
+               '</strong>, ' + 
+               (service.result.longitude ? 'Longitude: ' + service.result.longitude : '') +
+               (service.result.latitude ? ', Latitude: ' + service.result.latitude : '') +
+               source
+            );
+            }
       },
       /* stopped */
       function() {
