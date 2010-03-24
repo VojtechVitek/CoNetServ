@@ -29,8 +29,11 @@ function stopAnim(id)
    document.getElementById(id+"TabClose").style.display = 'none';
 }
 
-$(function init()
-{
+$(document).ready(function(){
+
+   /* Toggle tabs with opacity effect */
+   $("#tabs").tabs({ fx: { opacity: 'toggle' } });
+
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
