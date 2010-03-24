@@ -68,7 +68,10 @@ $(function init()
             $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> ' + source);
          if (service.result.externIpv6)
             $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> ' + source);
-         if (service.result.countryCode) {
+         if (service.result.hostname)
+            $("#hostname").append('<li><strong>' + service.result.hostname + '</strong> ' + source);
+         if (service.result.city || service.result.region || service.result.country ||
+             service.result.countryCode || service.result.longitude || service.result.latitude) {
             $("#location").append(
                '<li><strong>' + 
                (service.result.city ? service.result.city + ', ' : '') +

@@ -65,7 +65,7 @@ var Services = {
             parse: function(data) {
 
                var result = {};
-               var pattern = /^((?:\d{1,3}\.){3}\d{1,3})<br>([a-z]{1,3})$/gi;
+               var pattern = /^((?:\d{1,3}\.){3}\d{1,3})<br>([a-z]{1,3})$/;
                var arr = pattern.exec(data);
 
                if (arr && arr[1])
@@ -129,7 +129,7 @@ var Services = {
             parse: function(data) {
 
                var result = {};
-               var pattern = /^((?:\d{1,3}\.){3}\d{1,3})/gi;
+               var pattern = /^((?:\d{1,3}\.){3}\d{1,3})/;
                var arr = pattern.exec(data);
 
                if (arr && arr[1])
@@ -155,11 +155,54 @@ var Services = {
             parse: function(data) {
 
                var result = {};
-               var pattern = /^((?:\d{1,3}\.){3}\d{1,3})/gi;
+               var pattern = /^((?:\d{1,3}\.){3}\d{1,3})/;
                var arr = pattern.exec(data);
 
                if (arr && arr[1])
                   result.externIpv4 = arr[1];
+
+               return result;
+            }
+         }]
+
+   }, {
+
+         name: 'MojeIP.cz',
+         link: 'http://www.mojeip.cz/',
+
+         stable: '2010-03-24',
+
+         request: [{
+            method: 'GET',
+            url: 'http://www.mojeip.cz/index.php',
+            data: {},
+            dataType: 'text',
+            dataCharset: 'UTF-8',
+            parse: function(data) {
+
+               var result = {};
+               var pattern = /<font class=textip2>\r\n((?:\d{1,3}\.){3}\d{1,3})\r\n <\/font>/;
+               var arr = pattern.exec(data);
+
+               if (arr && arr[1])
+                  result.externIpv4 = arr[1];
+
+               return result;
+            }
+         }, {
+            method: 'GET',
+            url: 'http://www.mojeip.cz/mojeip.php',
+            data: {},
+            dataType: 'text',
+            dataCharset: 'UTF-8',
+            parse: function(data) {
+
+               var result = {};
+               var pattern = /hostname je :<BR><\/font>&nbsp;([a-z0-9.]+)<BR>/;
+               var arr = pattern.exec(data);
+
+               if (arr && arr[1])
+                  result.hostname = arr[1];
 
                return result;
             }
