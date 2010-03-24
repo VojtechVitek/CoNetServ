@@ -29,8 +29,11 @@ function stopAnim(id)
    document.getElementById(id+"TabClose").style.display = 'none';
 }
 
-$(function init()
-{
+$(document).ready(function(){
+
+   /* Toggle tabs with opacity effect */
+   $("#tabs").tabs({ fx: { opacity: 'toggle' } });
+
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
@@ -70,7 +73,10 @@ $(function init()
             $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> ' + source);
          if (service.result.externIpv6)
             $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> ' + source);
-         if (service.result.countryCode) {
+         if (service.result.hostname)
+            $("#hostname").append('<li><strong>' + service.result.hostname + '</strong> ' + source);
+         if (service.result.city || service.result.region || service.result.country ||
+             service.result.countryCode || service.result.longitude || service.result.latitude) {
             $("#location").append(
                '<li><strong>' + 
                (service.result.city ? service.result.city + ', ' : '') +
