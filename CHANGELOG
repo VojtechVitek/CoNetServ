@@ -1,12 +1,29 @@
-=========== CoNetServ CHANGELOG ============
+Version 1.2 (2010-03-**)
+============================================
+Extension:
+ * URL validator & init parser
+ * Services parser (data from remote servers)
+ * "WIPmania.com - WorldIP API" parser
+   (externIpv4, countryCode, country, city,
+    region, latitude, longitude)
+ * "CGI script by Chris F.A. Johnson" parser
+   (externIpv4)
+ * "Check IP by DynDNS.com" parser
+   (externIpv4)
+ * "MojeIP.cz" parser
+   (externIpv4, hostname)
+ * "IPinfo Security Portal" parser
+   (externIpv4, hostname)
+ * "RADb (Merit Network Inc.)" parser
+   (route, provider)
 
 
 Version 1.1 (2010-03-14)
 ============================================
-Plugin tools (OS specific commands):
+Plugin:
  * Punycode support .. UTF-8 (sub-)domains
  * NSLOOKUP command
-Extension tools:
+Extension:
  * PING(6) plot: min, max and avg values
  * Initiate domain string in Firefox&Chrome
 Operating systems [arch] support:
@@ -18,13 +35,13 @@ Operating systems [arch] support:
 
 Version 1.0 (2010-02-28)
 ============================================
-Plugin tools (OS specific commands):
+Plugin:
  * PING command (IPv4)
  * PING6 command (IPv6)
  * TRACEROUTE command (IPv4)
  * TRACEROUTE6 command (IPv6)
  * WHOIS command
-Extension tools:
+Extension:
  * Console output of plugin tools
  * PING(6) simple plot
  * TRACEROUTE(6) plot
