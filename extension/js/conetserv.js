@@ -68,28 +68,32 @@ $(document).ready(function(){
          startAnim("local");
       },
       /* service results */
-      function(service) {
-         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</span></a>)</li>';
-         if (service.result.externIpv4)
-            $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> ' + source);
-         if (service.result.externIpv6)
-            $("#externIpv6").append('<li><strong>' + service.result.externIpv6 + '</strong> ' + source);
-         if (service.result.hostname)
-            $("#hostname").append('<li><strong>' + service.result.hostname + '</strong> ' + source);
-         if (service.result.city || service.result.region || service.result.country ||
-             service.result.countryCode || service.result.longitude || service.result.latitude) {
+      function(service, result) {
+         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</a>)</span>';
+         if (result.externIpv4)
+            $("#externIpv4").append('<li><strong>' + result.externIpv4 + '</strong> ' + source + '</li>');
+         if (result.externIpv6)
+            $("#externIpv6").append('<li><strong>' + result.externIpv6 + '</strong> ' + source + '</li>');
+         if (result.hostname)
+            $("#hostname").append('<li><strong>' + result.hostname + '</strong> ' + source + '</li>');
+         if (result.route)
+            $("#route").append('<li><strong>' + result.route + '</strong> ' + source + '</li>');
+         if (result.provider)
+            $("#provider").append('<li><strong>' + result.provider + '</strong> ' + source + '</li>');
+         if (result.city || result.region || result.country ||
+             result.countryCode || result.longitude || result.latitude) {
             $("#location").append(
                '<li><strong>' + 
-               (service.result.city ? service.result.city + ', ' : '') +
-               (service.result.region ? + service.result.region + ', ' : '') +
-               (service.result.country ? service.result.country : '') +
-               (service.result.countryCode ? ' [' + service.result.countryCode + ']' : '') +
+               (result.city ? result.city + ', ' : '') +
+               (result.region ? + result.region + ', ' : '') +
+               (result.country ? result.country : '') +
+               (result.countryCode ? ' [' + result.countryCode + ']' : '') +
                '</strong>, ' + 
-               (service.result.longitude ? 'Longitude: ' + service.result.longitude : '') +
-               (service.result.latitude ? ', Latitude: ' + service.result.latitude : '') +
-               source
+               (result.longitude ? 'Longitude: ' + result.longitude : '') +
+               (result.latitude ? ', Latitude: ' + result.latitude : '') +
+               source + '</li>'
             );
-            }
+         }
       },
       /* stopped */
       function() {

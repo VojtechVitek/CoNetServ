@@ -1,8 +1,9 @@
 var Services = {
 
+   /* services parsers */
    service: [/*{
 
-         // TEMPLATE SERVICE PARSER
+         // TEMPLATE OF SERVICE PARSER
 
          name: 'Name of parsed service',
          link: 'URL to service',
@@ -17,7 +18,7 @@ var Services = {
          request: [{
 
             // first request
-            method: 'GET', // 'POST'
+            type: 'GET', // 'POST'
             url: 'http://request-url.example.com/',
             data: {
                query: 'string',
@@ -34,18 +35,22 @@ var Services = {
 
             // optional second request
             // ! to be called after the first request succeed
-            method: 'GET',
+            type: 'GET',
             url: 'http://another-request-url.example.com/',
             data: {};
             dataType: 'text', // 'json', 'html',..
             dataCharset: 'UTF-8',
+            // Optional function to prepare request data
             prepare: function(result) {
-               // Optional function to prepare request data
+               if (!result.externIpv4)
+                  return false;
                this.data.ip = result.externIpv4;
+               return true;
             },
             parse: function(data) {
-               ...
-               ...
+               var result = {};
+               // parse data to result
+               return result;
             }
          }]
 
@@ -57,7 +62,7 @@ var Services = {
          stable: '2010-03-23',
 
          request: [{
-            method: 'GET',
+            type: 'GET',
             url: 'http://api.wipmania.com/',
             data: {},
             dataType: 'text',
@@ -77,7 +82,7 @@ var Services = {
                return result;
             }
          }, {
-            method: 'GET',
+            type: 'GET',
             url: 'http://api.wipmania.com/json',
             data: {},
             dataType: 'json',
@@ -121,7 +126,7 @@ var Services = {
          stable: '2010-03-23',
 
          request: [{
-            method: 'GET',
+            type: 'GET',
             url: 'http://cfaj.freeshell.org/ipaddr.cgi',
             data: {},
             dataType: 'text',
@@ -147,7 +152,7 @@ var Services = {
          stable: '2010-03-23',
 
          request: [{
-            method: 'GET',
+            type: 'GET',
             url: 'http://checkip.dyndns.com:8245/',
             data: {},
             dataType: 'text',
@@ -173,7 +178,7 @@ var Services = {
          stable: '2010-03-24',
 
          request: [{
-            method: 'GET',
+            type: 'GET',
             url: 'http://www.mojeip.cz/index.php',
             data: {},
             dataType: 'text',
@@ -190,7 +195,7 @@ var Services = {
                return result;
             }
          }, {
-            method: 'GET',
+            type: 'GET',
             url: 'http://www.mojeip.cz/mojeip.php',
             data: {},
             dataType: 'text',
@@ -216,7 +221,7 @@ var Services = {
          stable: '2010-03-24',
 
          request: [{
-            method: 'GET',
+            type: 'GET',
             url: 'http://ipinfo.info/html/privacy-check.php',
             data: {},
             dataType: 'text',
@@ -241,35 +246,51 @@ var Services = {
 
    }],
 
+   /* queue of services to be run */
+   queue: [],
+
+   /* number of running services */
    running: 0,
 
-   run: function(Service) {
-         if (!Service.pos)
-            Service.pos = 0;
-         if (!Service.result)
-            Service.result = {};
-         var This = this;
+   /* try to run services from the queue */
+   run: function() {
+
+      var wait_queue = [];
+
+      /* context */
+      var This = this;
+      var Request;
+      while ((Request = this.queue.shift())) {
+
+         /* Skip services, which need some data (externIpv4 etc.)
+          * to make a query, but these data are not yet available
+          */
+         if (Request.prepare && !Request.prepare(this.result)) {
+            wait_queue.push(Request);
+            continue;
+         }
+
+         ++this.running;
+
+         /* Make ajax request */
          $.ajax({
             /* context */
             This: This,
-            Service: Service,
+            Request: Request,
             /* ajax settings */
-            type: Service.request[Service.pos].method,
-            url: Service.request[Service.pos].url,
-            processData: Service.request[Service.pos].data,
-            dataType: Service.request[Service.pos].dataType,
+            type: Request.type,
+            url: Request.url,
+            data: Request.data,
+            dataType: Request.dataType,
             /* success */
             success: function(data) {
-               if (this.Service.request[this.Service.pos].prepare)
-                  this.Service.request[this.Service.pos].prepare(this.Service.result);
-               $.extend(this.Service.result, this.Service.request[this.Service.pos].parse(data));
-               if (++this.Service.pos < this.Service.request.length) {
-                  this.This.run(this.Service);
-               } else {
-                  this.This.result_callback(this.Service);
-                  if (--this.This.running == 0)
-                     this.This.stopped_callback();
-               }
+               var result = this.Request.parse(data);
+               $.extend(this.This.service[this.Request.ServiceId].result, result);
+               $.extend(this.This.result, result);
+               this.This.result_callback(this.This.service[this.Request.ServiceId], result);
+               this.This.run();
+               if (--this.This.running == 0)
+                  this.This.stopped_callback();
             },
             /* error */
             error: function() {
@@ -277,22 +298,39 @@ var Services = {
                   this.This.stopped_callback();
             }
          });
+      }
+
+      this.queue = wait_queue;
    },
 
    start: function(started_callback, result_callback, stopped_callback) {
 
-      if (this.running == 0)
-         this.running = this.service.length;
-      else
+      /* check if still running */
+      if (this.queue.length > 0 || this.running > 0) {
          throw "Services already running..";
+         return;
+      }
 
+      /* callback functions init, throw started */
       started_callback();
       this.result_callback = result_callback;
       this.stopped_callback = stopped_callback;
 
-      /* Run all services */
-      for (var i = 0; i < this.service.length; ++i)
-         this.run(this.service[i]);
+      if (!this.result)
+         this.result = {};
+
+      /* foreach services and it's requests */
+      for (var i = 0; i < this.service.length; ++i) {
+         for (var j = 0; j < this.service[i].request.length; ++j) {
+            if (!this.service[i].result)
+               this.service[i].result = {};
+            this.service[i].request[j].ServiceId = i;
+            this.queue.push(this.service[i].request[j]);
+         }
+      }
+
+      /* try to run services from the queue */
+      this.run();
    }
 
 };
