@@ -81,7 +81,7 @@ function pData() {
    /* resets object to initial state */
    this.reset = function() {
       this.count = this.prevId = this.sum = this.minVal = this.maxVal = this.avrgVal = this.actVal = this.lost = 0;
-      this.rows = [];this.min = [];this.max = [];this.prevData = "";this.changed = 1;
+      this.rows = [];this.min = [];this.max = [];this.avrgs=[];this.prevData = "";this.changed = 1;
    };
 
    /* returns percentage of lost packets */
@@ -224,7 +224,7 @@ function repaintPlots() {
       var tdata = selected == "2"? traceData : trace6Data;
       var placeholder = selected == "2"? traceroutePlaceholder : traceroute6Placeholder;
       var axes = selected == "2"? tracerouteAxes : traceroute6Axes;
-      var plotCont ;
+      var plotCont;
 
       tdata.changed = 0;
       

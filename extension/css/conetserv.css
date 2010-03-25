@@ -48,6 +48,9 @@ body{
    height: 480px;
    margin-bottom: 5px;
    color: #444;
+   background: white;
+   border: 1px solid grey;
+   overflow: auto;
 }
 
 #conetserv {
@@ -239,4 +242,17 @@ div.lostPacketsLabel{
    position: absolute;
    left: 580px;
    top: 20px;
+}
+
+/* content styling */
+.color1{
+   color: #2779aa;
+}
+
+.color2{
+   color: blue;
+}
+
+.color3{
+   color: green;
 }

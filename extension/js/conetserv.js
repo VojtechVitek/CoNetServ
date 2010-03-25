@@ -31,19 +31,19 @@ function stopAnim(id)
 
 $(document).ready(function(){
 
-   /* Toggle tabs with opacity effect */
-   $("#tabs").tabs({ fx: { opacity: 'toggle' } });
+   /* Toggle tabs with opacity effect write toggle instead of none to enable*/
+   $("#tabs").tabs({ fx: { opacity: 'none' } });
 
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
    /* console text-boxes */
-   pingConsole = document.getElementById("pingConsole");
-   ping6Console = document.getElementById("ping6Console");
-   tracerouteConsole = document.getElementById("tracerouteConsole");
-   traceroute6Console = document.getElementById("traceroute6Console");
-   whoisConsole = document.getElementById("whoisConsole");
-   nslookupConsole = document.getElementById("nslookupConsole");
+   pingConsole = new console("pingConsole");
+   ping6Console = new console("ping6Console");
+   tracerouteConsole = new console("tracerouteConsole");
+   traceroute6Console = new console("traceroute6Console");
+   whoisConsole = new console("whoisConsole");
+   nslookupConsole = new console("nslookupConsole");
 
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
@@ -120,7 +120,7 @@ function readPing()
       received = document.getElementById("conetserv").readPing();
    }
    catch(e) {
-      document.getElementById("pingConsole").value = e;
+      pingConsole.add(e);
       return;
    }
    if (received === false) {
@@ -129,7 +129,7 @@ function readPing()
       pingInterval = -1;
       return;
    }
-   pingConsole.value += received;
+   pingConsole.add(received);
    plotPing(received, 4);
 }
 
@@ -145,7 +145,7 @@ function readPing6()
       received = document.getElementById("conetserv").readPing6();
    }
    catch(e) {
-      document.getElementById("ping6Console").value = e;
+      ping6Console.add(e);
       return;
    }
    if (received === false) {
@@ -154,7 +154,7 @@ function readPing6()
       ping6Interval = -1;
       return;
    }
-   ping6Console.value += received;
+   ping6Console.add(received);
    plotPing(received, 6);
 }
 
@@ -170,7 +170,7 @@ function readTraceroute()
       received = document.getElementById("conetserv").readTraceroute();
    }
    catch(e) {
-      document.getElementById("tracerouteConsole").value = e;
+      tracerouteConsole.add(e);
    }
    if (received === false) {
       stopAnim("traceroute");
@@ -178,7 +178,7 @@ function readTraceroute()
       tracerouteInterval = -1;
       return;
    }
-   tracerouteConsole.value += received;
+   tracerouteConsole.add(received);
    plotTraceroute(received, 4);
 }
 
@@ -194,7 +194,7 @@ function readTraceroute6()
       received = document.getElementById("conetserv").readTraceroute6();
    }
    catch(e) {
-      document.getElementById("traceroute6Console").value = e;
+      traceroute6Console.add(e);
    }
    if (received === false) {
       stopAnim("traceroute6");
@@ -202,7 +202,7 @@ function readTraceroute6()
       traceroute6Interval = -1;
       return;
    }
-   traceroute6Console.value += received;
+   traceroute6Console.add(received);
    plotTraceroute(received, 6);
 }
 
@@ -218,7 +218,7 @@ function readWhois()
       received = document.getElementById("conetserv").readWhois();
    }
    catch(e) {
-      document.getElementById("whoisConsole").value = e;
+      whoisConsole.add(e);
    }
    if (received === false) {
       stopAnim("whois");
@@ -226,7 +226,7 @@ function readWhois()
       whoisInterval = -1;
       return;
    }
-   whoisConsole.value += received;
+   whoisConsole.add(received);
 }
 
 /**
@@ -241,7 +241,7 @@ function readNslookup()
       received = document.getElementById("conetserv").readNslookup();
    }
    catch(e) {
-      document.getElementById("nslookupConsole").value = e;
+      nslookupConsole.add(e);
    }
    if (received === false) {
       stopAnim("nslookup");
@@ -249,7 +249,7 @@ function readNslookup()
       nslookupInterval = -1;
       return;
    }
-   nslookupConsole.value += received;
+   nslookupConsole.add(received);
 }
 
 /**
@@ -281,7 +281,7 @@ function startPing()
 {
    if (pingInterval == -1) {
       try {
-         document.getElementById("pingConsole").value = "";
+         pingConsole.clear();
          if (document.getElementById("conetserv").startPing(url.value)) {
              /* reset data and start animation */
              pingData.reset(); 
@@ -293,7 +293,7 @@ function startPing()
          }
       }
       catch(e) {
-         document.getElementById("pingConsole").value = e;
+         pingConsole.add(e);
          pingInterval = -1;
       }
    }
@@ -306,7 +306,7 @@ function startPing6()
 {
    if (ping6Interval == -1) {
       try {
-         document.getElementById("ping6Console").value = "";
+         ping6Console.clear();
          if (document.getElementById("conetserv").startPing6(url.value)) {
              /* reset data and start animation */
              ping6Data.reset();
@@ -318,7 +318,7 @@ function startPing6()
          }
       }
       catch(e) {
-         document.getElementById("ping6Console").value = e;
+         ping6Console.add(e);
          ping6Interval = -1;
       }
    }
@@ -331,7 +331,7 @@ function startTraceroute()
 {
    if (tracerouteInterval == -1) {
       try {
-         document.getElementById("tracerouteConsole").value = "";
+         tracerouteConsole.clear();
          if (document.getElementById("conetserv").startTraceroute(url.value)) {
             traceData.reset();
             startAnim("traceroute");
@@ -343,7 +343,7 @@ function startTraceroute()
          }
       }
       catch(e) {
-         document.getElementById("tracerouteConsole").value = e;
+         tracerouteConsole.add(e);
          tracerouteInterval = -1;
       }
    }
@@ -356,7 +356,7 @@ function startTraceroute6()
 {
    if (traceroute6Interval == -1) {
       try {
-         document.getElementById("traceroute6Console").value = "";
+         traceroute6Console.clear();
          if (document.getElementById("conetserv").startTraceroute6(url.value)) {
             trace6Data.reset();
             startAnim("traceroute6");
@@ -368,7 +368,7 @@ function startTraceroute6()
          }
       }
       catch(e) {
-         document.getElementById("traceroute6Console").value = e;
+         traceroute6Console.add(e);
          traceroute6Interval = -1;
       }
    }
@@ -381,7 +381,7 @@ function startWhois()
 {
    if (whoisInterval == -1) {
       try {
-         document.getElementById("whoisConsole").value = "";
+         whoisConsole.clear();
          if (document.getElementById("conetserv").startWhois(url.value)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             startAnim("whois");
@@ -393,7 +393,7 @@ function startWhois()
          }
       }
       catch(e) {
-         document.getElementById("whoisConsole").value = e;
+         whoisConsole.add(e);
          whoisInterval = -1;
       }
    }
@@ -406,7 +406,7 @@ function startNslookup()
 {
    if (nslookupInterval == -1) {
       try {
-         document.getElementById("nslookupConsole").value = "";
+         nslookupConsole.clear();
          if (document.getElementById("conetserv").startNslookup(url.value)) {
             nslookupInterval = window.setInterval("readNslookup()", 500);
             startAnim("nslookup");
@@ -418,7 +418,7 @@ function startNslookup()
          }
       }
       catch(e) {
-         document.getElementById("nslookupConsole").value = e;
+         nslookupConsole.add(e);
          nslookupInterval = -1;
       }
    }
@@ -448,7 +448,7 @@ function stopPing()
          document.getElementById("conetserv").stopPing();
       }
       catch(e) {
-         document.getElementById("pingConsole").value = document.getElementById("pingConsole").value + e;
+         pingConsole.add(e);
       }
       stopAnim("ping");
       window.clearInterval(pingInterval);
@@ -466,7 +466,7 @@ function stopPing6()
          document.getElementById("conetserv").stopPing6();
       }
       catch(e) {
-         document.getElementById("ping6Console").value = document.getElementById("ping6Console").value + e;
+         ping6Console.add(e);
       }
       stopAnim("ping6");
       window.clearInterval(ping6Interval);
@@ -484,7 +484,7 @@ function stopTraceroute()
          document.getElementById("conetserv").stopTraceroute();
       }
       catch(e) {
-         document.getElementById("tracerouteConsole").value = document.getElementById("tracerouteConsole").value + e;
+         tracerouteConsole.add(e);
       }
       stopAnim("traceroute");
       window.clearInterval(tracerouteInterval);
@@ -502,7 +502,7 @@ function stopTraceroute6()
          document.getElementById("conetserv").stopTraceroute6();
       }
       catch(e) {
-         document.getElementById("traceroute6Console").value = document.getElementById("traceroute6Console").value + e;
+         traceroute6Console.add(e);
       }
       stopAnim("traceroute6");
       window.clearInterval(traceroute6Interval);
@@ -520,7 +520,7 @@ function stopWhois()
          document.getElementById("conetserv").stopWhois();
       }
       catch(e) {
-         document.getElementById("whoisConsole").value = document.getElementById("whoisConsole").value + e;
+         whoisConsole.add(e);
       }
       stopAnim("whois");
       window.clearInterval(whoisInterval);
@@ -538,7 +538,7 @@ function stopNslookup()
          document.getElementById("conetserv").stopNslookup();
       }
       catch(e) {
-         document.getElementById("nslookupConsole").value = document.getElementById("slookupConsole").value + e;
+         nslookupConsole.add(e);
       }
       stopAnim("nslookup");
       window.clearInterval(nslookupInterval);

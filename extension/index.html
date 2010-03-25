@@ -10,9 +10,10 @@
   <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
   <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script> 
   <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
-  <script type="text/javascript" src="js/services.js"></script>
-  <script type="text/javascript" src="js/plot.js"></script>
   <script type="text/javascript" src="js/conetserv.js"></script>
+  <script type="text/javascript" src="js/services.js"></script>
+  <script type="text/javascript" src="js/console.js"></script> 
+  <script type="text/javascript" src="js/plot.js"></script>
   <script type="text/javascript" src="js/url.js"></script>
 </head>
 <body>
@@ -35,19 +36,19 @@
         <li title="About" class="aboutTab"><a href="#aboutTab">About</a></li>
     </ul>
     <div id="pingTab">
-      <textarea id="pingConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+      <div id="pingConsole" class="consoleTextarea ui-corner-all"></div>
 	    <div id="pingPlaceholder" class="placeholder"></div>
     </div>
     <div id="ping6Tab">
-      <textarea id="ping6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+      <div id="ping6Console" class="consoleTextarea ui-corner-all"></div>
       <div id="ping6Placeholder" class="placeholder"></div>
     </div>
     <div id="tracerouteTab">
-      <textarea id="tracerouteConsole" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+      <div id="tracerouteConsole" class="consoleTextarea ui-corner-all"></div>
       <div id="traceroutePlaceholder" class="placeholder"></div>
     </div>
     <div id="traceroute6Tab">
-      <textarea id="traceroute6Console" class="consoleTextarea ui-corner-all" rows="22" cols="80" disabled="true"></textarea>
+      <div id="traceroute6Console" class="consoleTextarea ui-corner-all"></div>
       <div id="traceroute6Placeholder" class="placeholder"></div>
     </div>
     <script type="text/javascript">
@@ -58,7 +59,7 @@
       }
     </script>
     <div id="nslookupTab">
-      <textarea id="nslookupConsole" class="consoleTextarea ui-corner-all" rows="30" cols="80" disabled="true"></textarea>
+      <div id="nslookupConsole" class="consoleTextarea ui-corner-all"></div>
     </div>
     <div id="localTab">
       <h2>External IPv4</h2><ul id="externIpv4"></ul><br />
