@@ -57,7 +57,7 @@ function pData() {
       	 this.minVal = (this.minVal == 0 ? this.actVal : ( this.actVal < this.minVal ? this.actVal : this.minVal));
       	 this.maxVal = (this.maxVal == 0 ? this.actVal : ( this.actVal > this.maxVal ? this.actVal : this.maxVal));	 
       }   
-      this.avrgVal = this.sum/this.count;
+      this.avrgVal = this.sum/(this.count-this.lost);
       
       this.min.push([this.count, this.minVal]);
       this.max.push([this.count, this.maxVal]);
@@ -81,7 +81,7 @@ function pData() {
    /* resets object to initial state */
    this.reset = function() {
       this.count = this.prevId = this.sum = this.minVal = this.maxVal = this.avrgVal = this.actVal = this.lost = 0;
-      this.rows = [];this.min = [];this.max = [];this.prevData = "";this.changed = 1;
+      this.rows = [];this.min = [];this.max = [];this.avrgs=[];this.prevData = "";this.changed = 1;
    };
 
    /* returns percentage of lost packets */
@@ -131,25 +131,12 @@ var optionsPing;
 var optionsTrace;
 
 /* bind plot functions to tab changing */
-$(function init()
+$(document).ready(function()
 {
-   $("#tabs").bind('tabsshow', function() 
-   {
-      repaintPlots();
-      tabsLoading = false;
-      pingData.touch();
-      ping6Data.touch();
-      traceData.touch();
-      trace6Data.touch();
-   });
-
-   $("#tabs").bind('select', function() 
-   {
-      if(tabsLoading)
-	 return false;
-      else
-	 return (tabsLoading = true);
-   });
+   pingData = new pData();
+   ping6Data = new pData();
+   traceData = new tData();
+   trace6Data = new tData();
 
    /* inicialize data */
    pingPlaceholder = $("#pingPlaceholder");
@@ -157,10 +144,7 @@ $(function init()
    traceroutePlaceholder = $("#traceroutePlaceholder");
    traceroute6Placeholder = $("#traceroute6Placeholder");
 
-   pingData = new pData();
-   ping6Data = new pData();
-   traceData = new tData();
-   trace6Data = new tData();
+  
 
    optionsPing = {
       lines: { show: true},
@@ -180,6 +164,26 @@ $(function init()
       pan: { interactive: true, frameRate: 30 },
       valueLabels: { show: true }
    };
+
+      $("#tabs").bind('tabsshow', function() 
+   {
+      tabsLoading = false;
+      pingData.touch();
+      ping6Data.touch();
+      traceData.touch();
+      trace6Data.touch();
+      repaintPlots();
+   });
+
+   $("#tabs").bind('select', function() 
+   {
+      if(tabsLoading)
+	 return false;
+      else
+	 return (tabsLoading = true);
+   });
+
+   repaintPlots();
 }
 );
 
@@ -224,7 +228,7 @@ function repaintPlots() {
       var tdata = selected == "2"? traceData : trace6Data;
       var placeholder = selected == "2"? traceroutePlaceholder : traceroute6Placeholder;
       var axes = selected == "2"? tracerouteAxes : traceroute6Axes;
-      var plotCont ;
+      var plotCont;
 
       tdata.changed = 0;
       
