@@ -47,17 +47,18 @@ $(document).ready(function(){
 
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
-      if(window.arguments && window.arguments[0] && url.set(window.arguments[0]))
-      {
+      if (window && window.arguments && window.arguments[0] && url.set(window.arguments[0])) {
          document.getElementById("url").value = url.value;
       }
    }
    /* init url in Chrome */
    else if ($.client.browser == "Chrome") {
-      chrome.tabs.getSelected(null, function(tab) {
-         url.set(tab.url);
-         document.getElementById("url").value = url.value;
-      });
+      if (chrome && chrome.tabs && chrome.tabs.getSelected) {
+         chrome.tabs.getSelected(null, function(tab) {
+            url.set(tab.url);
+            document.getElementById("url").value = url.value;
+         });
+      }
    }
 
    /* Start local info services */   
