@@ -68,7 +68,7 @@ $(document).ready(function(){
       },
       /* service results */
       function(service) {
-         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</span></a>)</li>';
+         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</a>)</span></li>';
          if (service.result.externIpv4)
             $("#externIpv4").append('<li><strong>' + service.result.externIpv4 + '</strong> ' + source);
          if (service.result.externIpv6)

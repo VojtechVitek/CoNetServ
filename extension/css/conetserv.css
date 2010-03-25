@@ -47,6 +47,7 @@ body{
    width: 640px; 
    height: 480px;
    margin-bottom: 5px;
+   padding: 3px 5px;
    color: #444;
    background: white;
    border: 1px solid grey;
@@ -255,4 +256,31 @@ div.lostPacketsLabel{
 
 .color3{
    color: green;
+}
+
+/* local info tab */
+#localTab h2{
+   color: #2779aa;
+   clear: left;
+}
+
+#localTab ul{
+   margin: 0px;
+   padding-left: 10px;
+   list-style: none;
+}
+
+#localTab ul li strong{
+   font-size: 120%;
+   display: block;
+   float: left;
+   clear: left;
+   margin-right: 10px;
+   margin-bottom: 5px;
+}
+
+#localTab ul li span{
+   display: block;
+   float: left;
+   margin-top: 5px;
 }

@@ -20,7 +20,7 @@ var url = {
    //Checks address for validity to ping, traceroute,...
    checkAddress: function(addr)
    {
-      return this.ip.test(addr) || this.http.test(addr);
+      return this.http.test(addr) || this.ip.test(addr) ;
    },
    
    //sets url address of object

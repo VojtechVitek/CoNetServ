@@ -7,6 +7,7 @@ function console(div) {
    this.code = "";				//container for data to be shown in element
 
    this.prevData = "";				//used for making sure whole line is being written
+   this.direction = 0;				//direction of output 0 = downwards 1 = upwards
 
    /* regular expressions */
    this.linux = new Object();
@@ -47,7 +48,10 @@ function console(div) {
 
       while((npos = this.prevData.indexOf("\n")) != -1)
       {
-	 this.code = this.colourLine(this.prevData.substr(0, npos+1)) + this.code; 
+	 if(this.direction)
+	    this.code = this.colourLine(this.prevData.substr(0, npos+1)) + this.code; 
+	 else
+	    this.code += this.colourLine(this.prevData.substr(0, npos+1)); 
 	 /* store remaining data */
 	 this.prevData = (this.prevData.substr(npos+1));
       }
@@ -58,6 +62,7 @@ function console(div) {
 	 this.div.appendChild(tmp);
 	 return;
       }	
+      
       this.div.innerHTML = this.code;
    }
    
