@@ -244,6 +244,47 @@ var Services = {
             }
          }]
 
+   }, {
+
+         name: 'RADb, Merit Network Inc.',
+         link: 'http://www.radb.net/',
+
+         stable: '2010-03-25',
+
+         request: [{
+            type: 'GET',
+            url: 'http://www.radb.net/cgi-bin/radb/advanced-query.cgi',
+            data: {
+               'searchstr': false, /* prepare */
+               'submit': 'Query'
+            },
+            dataType: 'text',
+            dataCharset: 'UTF-8',
+            prepare: function(result) {
+               if (!result.externIpv4)
+                  return false;
+               this.data.searchstr = result.externIpv4;
+               return true;
+            },
+            parse: function(data) {
+
+               var result = {};
+               var pattern = /route:[\s]*((?:\d{1,3}\.){3}\d{1,3}\/[0-9]{1,2})/;
+               arr = pattern.exec(data);
+
+               if (arr && arr[1])
+                  result.route = arr[1];
+
+               pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
+               arr = pattern.exec(data);
+
+               if (arr && arr[1])
+                  result.provider = arr[1];
+
+               return result;
+            }
+         }]
+
    }],
 
    /* queue of services to be run */
