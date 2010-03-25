@@ -14,3 +14,4 @@ build/
 # Ignore temp/backup files
 *.backup
 *~
+.*.swp
