@@ -11,8 +11,8 @@ function console(div) {
 
    /* regular expressions */
    this.linux = new Object();
-   this.linux.hostname = /([\w\-]+\.)+([\w]+)/i //\(([0-9\i]*)\).*/i
-   this.linux.ip = /[\(\[](\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})[\)\]]/i
+   this.linux.hostname = /([\w\-]+\.)+([a-z]+)/ig //\(([0-9\i]*)\).*/i
+   this.linux.ip = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ig
    this.linux.time = /\d+\.?\d*\s?ms/ig
    
 
@@ -71,7 +71,7 @@ function console(div) {
       var coloured = line.replace(/\n/g,"<br>");
 
       coloured = coloured.replace(this.linux.hostname,"<span class=\"color1\">$&</span>"); 
-      coloured = coloured.replace(this.linux.ip,"(<span class=\"color2\">$1</span>)"); 
+      coloured = coloured.replace(this.linux.ip,"<span class=\"color2\">$1</span>"); 
       coloured = coloured.replace(this.linux.time, this.getColor);
       
       return coloured;
