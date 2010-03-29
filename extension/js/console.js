@@ -8,6 +8,9 @@ function console(div) {
 
    this.prevData = "";				//used for making sure whole line is being written
    this.direction = 0;				//direction of output 0 = downwards 1 = upwards
+   this.rows = [];					//variable for storing rows of code
+   this.rowCount = 0;				//defines count of rows
+   this.maxRows = 50;				//maximum count of rows
 
    /* regular expressions */
    this.linux = new Object();
@@ -48,10 +51,23 @@ function console(div) {
 
       while((npos = this.prevData.indexOf("\n")) != -1)
       {
-	 if(this.direction)
-	    this.code = this.colourLine(this.prevData.substr(0, npos+1)) + this.code; 
-	 else
-	    this.code += this.colourLine(this.prevData.substr(0, npos+1)); 
+	 this.rowCount++;
+	 var row = this.colourLine(this.prevData.substr(0, npos+1));
+	 
+	 if(this.direction)	//writing to the begining of container
+	 {
+	    this.rows.unshift(row);
+	    if(this.rowCount > this.maxRows)
+		this.rows.pop();
+	 }
+	 else			//writing to the end of container
+	 {
+	    this.rows.push(row);
+	    if(this.rowCount > this.maxRows)
+		this.rows.shift();
+	 }
+	 
+	 this.code = this.rows.join("");
 	 /* store remaining data */
 	 this.prevData = (this.prevData.substr(npos+1));
       }
@@ -68,7 +84,7 @@ function console(div) {
    
    //colours all items in line
    this.colourLine = function(line){
-      var coloured = line.replace(/\n/g,"<br>");
+      var coloured = line.replace(/\n/g,"<br />");
 
       coloured = coloured.replace(this.linux.hostname,"<span class=\"color1\">$&</span>"); 
       coloured = coloured.replace(this.linux.ip,"<span class=\"color2\">$1</span>"); 
@@ -80,7 +96,9 @@ function console(div) {
    //clears console
    this.clear = function(){
       this.code = "";
+      this.rows = [];
       this.repaint();
+
    }
    
    //repaints whole console
