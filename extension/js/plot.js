@@ -295,7 +295,7 @@ function plotPing(received, type)
          {
             /* control of response keywords */
             if(currentData.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 
-               || received.indexOf("timed out") != -1 || received.indexOf("unreachable") != -1 )
+               || received.indexOf("timed out") != -1 || received.indexOf("unreachable") != -1 || received.indexOf("expired") != -1)
             {
                data.add(null);
             }
