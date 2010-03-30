@@ -96,9 +96,11 @@ function console(div) {
    //clears console
    this.clear = function(){
       this.code = "";
+      this.prevData = "";
       this.rows = [];
+      this.rowCount = 0;
       this.repaint();
-
+      
    }
    
    //repaints whole console
