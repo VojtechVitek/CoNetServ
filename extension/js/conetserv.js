@@ -82,7 +82,7 @@ function startLocalInfo()
       },
       /* service results */
       function(service, result) {
-         var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</a>)</span>';
+         var source = ' <span class="serviceSource">(<a href="' + service.link + '" target="_blank">' + service.name + '</a>)</span>';
          if (result.externIpv4)
             $("#externIpv4").append('<li class="ui-corner-all"><strong>' + result.externIpv4 + '</strong> ' + source + '</li>');
          if (result.externIpv6)
