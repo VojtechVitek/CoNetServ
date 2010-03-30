@@ -4,17 +4,21 @@
   <title>CoNetServ - Complex Network Services</title>
   <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
   <link type="text/css" href="css/conetserv.css" rel="stylesheet" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="js/jquery/jquery-1.3.2.min.js"></script>
   <script type="text/javascript" src="js/jquery/jquery-ui-1.7.2.custom.min.js"></script>
   <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
   <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
   <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script> 
   <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
+  <script type="text/javascript" src="js/map.js"></script>
   <script type="text/javascript" src="js/conetserv.js"></script>
   <script type="text/javascript" src="js/services.js"></script>
   <script type="text/javascript" src="js/console.js"></script> 
   <script type="text/javascript" src="js/plot.js"></script>
   <script type="text/javascript" src="js/url.js"></script>
+  
 </head>
 <body>
 <div id="tabs">
@@ -32,7 +36,7 @@
             document.write('<li title="WHOIS"><span id="whoisState" class="tabState"></span><a href="#whoisTab">whois</a><span id="whoisTabClose" class="whoisClose" onclick="stopWhois()"></span></li>');
         </script>
         <li title="NSLOOKUP"><span id="nslookupState" class="tabState"></span><a href="#nslookupTab">nslookup</a><span id="nslookupTabClose" class="tabClose" onclick="stopNslookup()"></span></li>
-        <li title="Host info (external IP, hostname, country, location, ..)" class="localTab"><span id="localState" class="tabState"></span><a href="#localTab">host info</a><span id="localTabClose" class="tabClose" onclick=""></span></li>
+        <li title="Host info (external IP, hostname, country, location, ..)" class="localTab"><span id="localState" class="tabState"></span><a href="#localTab" onclick="startLocalInfo();">host info</a><span id="localTabClose" class="tabClose" onclick=""></span></li>
         <li title="About" class="aboutTab"><a href="#aboutTab">About</a></li>
     </ul>
     <div id="pingTab">
@@ -62,12 +66,15 @@
       <div id="nslookupConsole" class="consoleTextarea ui-corner-all"></div>
     </div>
     <div id="localTab">
+      <div id="mapPlaceholder"></div>
+      <h2>Location</h2><ul id="location"></ul><br />
+      <h2>Hostname</h2><ul id="hostname"></ul><br />
       <h2>External IPv4</h2><ul id="externIpv4"></ul><br />
       <h2>External IPv6</h2><ul id="externIpv6"></ul><br />
-      <h2>Hostname</h2><ul id="hostname"></ul><br />
       <h2>Route</h2><ul id="route"></ul><br />
       <h2>Provider</h2><ul id="provider"></ul><br />
-      <h2>Location</h2><ul id="location"></ul><br />
+      
+      
     </div>
     <div id="aboutTab">
       @ABOUT.HTML@

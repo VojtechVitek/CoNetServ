@@ -15,6 +15,7 @@ var traceroute6Axes;
 /* Fix bug with fast changing of tabs */
 var tabsLoading = 0;
 
+
 /* ping time data object*/
 function pData() {
    //data
@@ -173,6 +174,9 @@ $(document).ready(function()
       traceData.touch();
       trace6Data.touch();
       repaintPlots();
+
+      //try showing a map
+      Map.show();
    });
 
    $("#tabs").bind('select', function() 
@@ -266,7 +270,7 @@ function repaintPlots() {
             plotCont.zoomOut({ center: c });
       });
 
-   }  
+   }
 }
 
 

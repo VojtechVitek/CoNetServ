@@ -35,14 +35,16 @@ function stopAnim(id)
 $(document).ready(function(){
 
    /* Toggle tabs with opacity effect write toggle instead of none to enable*/
-   $("#tabs").tabs({ fx: { opacity: 'none' } });
+   //$("#tabs").tabs({ fx: { opacity: 'none' } });
 
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
    /* console text-boxes */
    pingConsole = new console("pingConsole");
+   pingConsole.maxRows = 30;
    ping6Console = new console("ping6Console");
+   ping6Console.maxRows = 30;
    tracerouteConsole = new console("tracerouteConsole");
    traceroute6Console = new console("traceroute6Console");
    whoisConsole = new console("whoisConsole");
@@ -82,15 +84,15 @@ function startLocalInfo()
       function(service, result) {
          var source = ' <span class="serviceSource">(<a href="' + service.link + '">' + service.name + '</a>)</span>';
          if (result.externIpv4)
-            $("#externIpv4").append('<li><strong>' + result.externIpv4 + '</strong> ' + source + '</li>');
+            $("#externIpv4").append('<li class="ui-corner-all"><strong>' + result.externIpv4 + '</strong> ' + source + '</li>');
          if (result.externIpv6)
-            $("#externIpv6").append('<li><strong>' + result.externIpv6 + '</strong> ' + source + '</li>');
-         if (result.hostname)
-            $("#hostname").append('<li><strong>' + result.hostname + '</strong> ' + source + '</li>');
+            $("#externIpv6").append('<li class="ui-corner-all"><strong>' + result.externIpv6 + '</strong> ' + source + '</li>');
+	 if (result.provider)
+            $("#provider").append('<li class="ui-corner-all"><strong>' + result.provider + '</strong> ' + source + '</li>');
+	 if (result.hostname)
+            $("#hostname").append('<li class="ui-corner-all"><strong>' + result.hostname + '</strong> ' + source + '</li>');
          if (result.route)
-            $("#route").append('<li><strong>' + result.route + '</strong> ' + source + '</li>');
-         if (result.provider)
-            $("#provider").append('<li><strong>' + result.provider + '</strong> ' + source + '</li>');
+            $("#route").append('<li class="ui-corner-all"><strong>' + result.route + '</strong> ' + source + '</li>');
          if (result.city || result.region || result.country ||
              result.countryCode || result.longitude || result.latitude) {
             $("#location").append(
@@ -104,7 +106,14 @@ function startLocalInfo()
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
+	    //show map
+	    if(result.longitude)
+	    {
+	       Map.inicialize(result.longitude, result.latitude);
+	       Map.show();
+	    }
          }
+         
       },
       /* stopped */
       function() {
