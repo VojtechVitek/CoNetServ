@@ -96,7 +96,7 @@ function startLocalInfo()
          if (result.city || result.region || result.country ||
              result.countryCode || result.longitude || result.latitude) {
             $("#location").append(
-               '<li><strong>' + 
+               '<li class="ui-corner-all"><strong>' + 
                (result.city ? result.city + ', ' : '') +
                (result.region ? + result.region + ', ' : '') +
                (result.country ? result.country : '') +

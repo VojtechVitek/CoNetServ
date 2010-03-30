@@ -278,13 +278,14 @@ div.lostPacketsLabel{
 #localTab li{
    border: 1px solid grey;
    background: white;
-   padding: 3px;
+   padding: 3px 1px;
    margin-right: 10px;
-   margin-bottom: 10px;
+   margin-bottom: 8px;
    width: 250px;
 }
 
-#localTab #externIpv4 li{
+#localTab #externIpv4 li,
+#localTab #externIpv6 li{
    float: left;
    width: 150px;
 }
@@ -307,6 +308,7 @@ div.lostPacketsLabel{
    width: 330px;
    height: 300px;
    padding: 5px;
+   margin-bottom: 10px;
    background: white;
    border: 1px solid grey;
 }
