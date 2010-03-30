@@ -3,12 +3,14 @@
 /*!! Object is shown from plot.js function bind tabshow */
 
 var Map = {
-   latitude:0,
-   langitute:0,
+   latitude: 0,
+   langitute: 0,
    latlng: 0,
-   enabled:0,
+   enabled: 0,
    map:0,
    options: 0,
+
+   marker: 0,
    
    inicialize: function(lat, lan) {
       if(!lat || !lan)
@@ -29,13 +31,20 @@ var Map = {
 	 this.latlng = new google.maps.LatLng(this.latitude, this.langitude);
 	 
 	 this.options = {
-	    zoom: 8,
+	    zoom: 10,
 	    center: this.latlng,
-	    mapTypeId: google.maps.MapTypeId.ROADMAP
+	    mapTypeId: google.maps.MapTypeId.SATELLITE
 	 };
 
 	 if(!this.map)
 	    this.map = new google.maps.Map(document.getElementById("mapPlaceholder"), this.options);
+	 
+	 this.marker = new google.maps.Marker({
+	    position: this.latlng, 
+	    map: this.map,
+	    title:"You are here!"
+	 });   
+	 alert(this.map.getCenter());
       }
    }
 
