@@ -17,6 +17,9 @@ var traceroute6Console;
 var whoisConsole;
 var nslookupConsole;
 
+/* local info running */
+var isLocalInfoRunning = 0;
+
 function startAnim(id)
 {
    document.getElementById(id+"State").style.display = 'block';//visibility = 'visible';
@@ -60,6 +63,14 @@ $(document).ready(function(){
          });
       }
    }
+});
+
+function startLocalInfo()
+{
+   if(isLocalInfoRunning)
+      return;
+   
+   isLocalInfoRunning = 1;
 
    /* Start local info services */   
    Services.start(
@@ -100,7 +111,7 @@ $(document).ready(function(){
          stopAnim("local");
       }
    );
-});
+};
 
 /** 
  * Checks address for validity to ping, traceroute,...

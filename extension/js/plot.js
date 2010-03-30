@@ -165,7 +165,7 @@ $(document).ready(function()
       valueLabels: { show: true }
    };
 
-      $("#tabs").bind('tabsshow', function() 
+   $("#tabs").bind('tabsshow', function() 
    {
       tabsLoading = false;
       pingData.touch();
