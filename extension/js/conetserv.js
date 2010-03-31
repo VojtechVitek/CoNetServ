@@ -100,7 +100,7 @@ function startLocalInfo()
                (result.region ? + result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
-               '</strong>, ' + 
+               '</strong> ' + 
                (result.longitude ? 'Longitude: ' + result.longitude : '') +
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
