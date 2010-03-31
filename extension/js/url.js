@@ -39,7 +39,7 @@ var utf16 = {
 var punycode = new function Punycode() {
     var initial_n = 0x80;
     var initial_bias = 72;
-        var delimiter = "\x2D";
+    var delimiter = "\x2D";
     var base = 36;
     var damp = 700;
     var tmin=1;
@@ -282,55 +282,30 @@ var punycode = new function Punycode() {
  *
  */
 var url = {
-   //regexps for checking and parsing data
-   ip: /(http:\/\/|https:\/\/|ftp:\/\/)?(?:(?:(?:(?:[\w]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))$/i,
-   http: /(http:\/\/|https:\/\/|ftp:\/\/)?([^/]+\.)+([^/]+)/i,
-   parseDns: /(http:\/\/|https:\/\/|ftp:\/\/)?([^/]+\.)+([^/]+)/i,
-   parseIp: /(http:\/\/|https:\/\/|ftp:\/\/)?([\w\-\.])/i,
+   // IP regexp, eg. https://user:passwd@127.0.0.1/dir/index.html
+   //                                    ^^^^^^^^^   
+   ip:  /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[\W]*)?@)?(?:(?:(?:(?:[\w]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))(?::\\d+)?(?:\/.*)?$/i,
 
-   //stores url value
-   //format: http://www.nic.cz/blabla
-   //	    ^ pre  ^ value   ^ past
-   pre: "",
-   value: "",
-   past: "",
+   // URL regexp, eg. https://user:passwd@server.example.com/dir/index.html
+   //                                     ^^^^^^^^^^^^^^^^^^
+   url: /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[\W]*)?@)?((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|бг|рф|укр|[a-z]{2}))(?::\\d+)?(?:\/.*)?$/i,
 
-   //Checks address for validity to ping, traceroute,...
-   checkAddress: function(addr)
-   {
-      return this.http.test(addr) || this.ip.test(addr) ;
-   },
-   
-   //sets url address of object
-   //on success returns 1, on failure 0
-   set: function(addr)
-   {
-      this.pre = this.past = this.value = "";
-      if(!this.checkAddress(addr))
-      {
-	 return 0;
-      }
+   // parsed value
+   hostname: '', // www.fres-solutions.com
+
+   // Test url/ip address and parse it's hostname
+   // @returns true on success, false otherwise
+   set: function(addr) {
+
+      var result;
+
+      if (this.ip.test(addr))
+         this.hostname = this.ip.exec(addr)[1];
+      else if (this.url.test(addr))
+         this.hostname = this.url.exec(addr)[1];
       else
-      {
-	 //erase http, ftp, ...
-	 var result = this.parseDns.exec(addr);
-	 if(!result) 
-	    result = this.parseIp.exec(addr);
-	 if(result[1])
-	 {
-	    this.pre = result[1];
-	    this.value = result[0].substr(result[1].length);
-	    this.past = addr.substr(result[0].length);
-	 }
-	 else this.value = result[0];
-	 if(!this.value || this.value == "")
-	    return 0;
-	 return 1;
-      }
+         return false;
+
+      return true;
    }
-
-}
-
-function hostnameFromUrl(url) {
-    return url.match(/:\/\/(.[^/]+)/)[1];
-}
+};

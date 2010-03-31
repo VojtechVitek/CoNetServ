@@ -3,14 +3,14 @@
  *
  */
 function console(div) {
-   this.div = document.getElementById(div);	//pointer to div which object takes care of
-   this.code = "";				//container for data to be shown in element
+   this.div = document.getElementById(div);   //pointer to div which object takes care of
+   this.code = "";            //container for data to be shown in element
 
-   this.prevData = "";				//used for making sure whole line is being written
-   this.direction = 0;				//direction of output 0 = downwards 1 = upwards
-   this.rows = [];					//variable for storing rows of code
-   this.rowCount = 0;				//defines count of rows
-   this.maxRows = 50;				//maximum count of rows
+   this.prevData = "";            //used for making sure whole line is being written
+   this.direction = 0;            //direction of output 0 = downwards 1 = upwards
+   this.rows = [];               //variable for storing rows of code
+   this.rowCount = 0;            //defines count of rows
+   this.maxRows = 50;            //maximum count of rows
 
    /* regular expressions */
    this.linux = new Object();
@@ -26,15 +26,14 @@ function console(div) {
       var color;
       // 0.2 = 100(percent)/500(maxvalue)
       var percent = parseFloat(input)*0.2;
-      if(percent<=50)
-      {
-	 color = parseInt(percent/50*255);
-	 color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "ff00";
+      if (percent <= 50) {
+         color = parseInt(percent/50*255);
+         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "ff00";
       }
       else if(percent<100)
-	 color = "#ff" + (parseInt(255-(percent-50)/50*255)).toString(16) + "00";
+         color = "#ff" + (parseInt(255-(percent-50)/50*255)).toString(16) + "00";
       else 
-	 color = "#f00";
+         color = "#f00";
 
       return "<span style=\"color:" + color + "\">" + input + "</span>";
    }
@@ -49,41 +48,36 @@ function console(div) {
       this.prevData += text;
       var npos = 0;
 
-      while((npos = this.prevData.indexOf("\n")) != -1)
-      {
-	 this.rowCount++;
-	 var row = this.colourLine(this.prevData.substr(0, npos+1));
-	 
-	 if(this.direction)	//writing to the begining of container
-	 {
-	    this.rows.unshift(row);
-	    if(this.rowCount > this.maxRows)
-		this.rows.pop();
-	 }
-	 else			//writing to the end of container
-	 {
-	    this.rows.push(row);
-	    if(this.rowCount > this.maxRows)
-		this.rows.shift();
-	 }
-	 
-	 this.code = this.rows.join("");
-	 /* store remaining data */
-	 this.prevData = (this.prevData.substr(npos+1));
+      while((npos = this.prevData.indexOf("\n")) != -1) {
+         this.rowCount++;
+         var row = this.colourLine(this.prevData.substr(0, npos+1));
+         
+         if(this.direction) { //writing to the begining of container
+            this.rows.unshift(row);
+            if(this.rowCount > this.maxRows)
+            this.rows.pop();
+         } else { //writing to the end of container
+            this.rows.push(row);
+            if(this.rowCount > this.maxRows)
+            this.rows.shift();
+         }
+         
+         this.code = this.rows.join("");
+         /* store remaining data */
+         this.prevData = (this.prevData.substr(npos+1));
       }
       
-      if(0)
-      {	
-	 var tmp = document.createTextNode(this.code);
-	 this.div.appendChild(tmp);
-	 return;
-      }	
+      /*   
+      var tmp = document.createTextNode(this.code);
+      this.div.appendChild(tmp);
+      return;
+      */  
       
       this.div.innerHTML = this.code;
    }
    
    //colours all items in line
-   this.colourLine = function(line){
+   this.colourLine = function(line) {
       var coloured = line.replace(/\n/g,"<br />");
 
       coloured = coloured.replace(this.linux.hostname,"<span class=\"color1\">$&</span>"); 
@@ -100,7 +94,6 @@ function console(div) {
       this.rows = [];
       this.rowCount = 0;
       this.repaint();
-      
    }
    
    //repaints whole console
@@ -109,4 +102,3 @@ function console(div) {
    }
 
 }
-

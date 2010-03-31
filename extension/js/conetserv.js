@@ -42,9 +42,9 @@ $(document).ready(function(){
 
    /* console text-boxes */
    pingConsole = new console("pingConsole");
-   pingConsole.maxRows = 30;
+   pingConsole.maxRows = 17;
    ping6Console = new console("ping6Console");
-   ping6Console.maxRows = 30;
+   ping6Console.maxRows = 17;
    tracerouteConsole = new console("tracerouteConsole");
    traceroute6Console = new console("traceroute6Console");
    whoisConsole = new console("whoisConsole");
@@ -53,15 +53,14 @@ $(document).ready(function(){
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
       if (window && window.arguments && window.arguments[0] && url.set(window.arguments[0])) {
-         document.getElementById("url").value = url.value;
+         document.getElementById("url").value = url.hostname;
       }
-   }
    /* init url in Chrome */
-   else if ($.client.browser == "Chrome") {
+   } else if ($.client.browser == "Chrome") {
       if (chrome && chrome.tabs && chrome.tabs.getSelected) {
          chrome.tabs.getSelected(null, function(tab) {
             url.set(tab.url);
-            document.getElementById("url").value = url.value;
+            document.getElementById("url").value = url.hostname;
          });
       }
    }
@@ -87,9 +86,9 @@ function startLocalInfo()
             $("#externIpv4").append('<li class="ui-corner-all"><strong>' + result.externIpv4 + '</strong> ' + source + '</li>');
          if (result.externIpv6)
             $("#externIpv6").append('<li class="ui-corner-all"><strong>' + result.externIpv6 + '</strong> ' + source + '</li>');
-	 if (result.provider)
+         if (result.provider)
             $("#provider").append('<li class="ui-corner-all"><strong>' + result.provider + '</strong> ' + source + '</li>');
-	 if (result.hostname)
+         if (result.hostname)
             $("#hostname").append('<li class="ui-corner-all"><strong>' + result.hostname + '</strong> ' + source + '</li>');
          if (result.route)
             $("#route").append('<li class="ui-corner-all"><strong>' + result.route + '</strong> ' + source + '</li>');
@@ -106,14 +105,12 @@ function startLocalInfo()
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-	    //show map
-	    if(result.longitude)
-	    {
-	       Map.inicialize(result.longitude, result.latitude);
-	       Map.show();
-	    }
+            //show map
+            if(result.longitude) {
+               Map.inicialize(result.longitude, result.latitude);
+               Map.show();
+            }
          }
-         
       },
       /* stopped */
       function() {
@@ -283,13 +280,12 @@ function readNslookup()
 function startCommands()
 {
    //set value for commands
-   if(!url.set(document.getElementById("url").value))
-   {
+   if(!url.set(document.getElementById("url").value)) {
       document.getElementById("url").style.color="red";
       document.getElementById("url").focus();
       return;
    }
-   
+
    startPing();
    startPing6();
    startTraceroute();
@@ -307,7 +303,7 @@ function startPing()
    if (pingInterval == -1) {
       try {
          pingConsole.clear();
-         if (document.getElementById("conetserv").startPing(url.value)) {
+         if (document.getElementById("conetserv").startPing(url.hostname)) {
              /* reset data and start animation */
              pingData.reset(); 
              startAnim("ping");
@@ -332,7 +328,7 @@ function startPing6()
    if (ping6Interval == -1) {
       try {
          ping6Console.clear();
-         if (document.getElementById("conetserv").startPing6(url.value)) {
+         if (document.getElementById("conetserv").startPing6(url.hostname)) {
              /* reset data and start animation */
              ping6Data.reset();
              startAnim("ping6");
@@ -357,7 +353,7 @@ function startTraceroute()
    if (tracerouteInterval == -1) {
       try {
          tracerouteConsole.clear();
-         if (document.getElementById("conetserv").startTraceroute(url.value)) {
+         if (document.getElementById("conetserv").startTraceroute(url.hostname)) {
             traceData.reset();
             startAnim("traceroute");
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
@@ -382,7 +378,7 @@ function startTraceroute6()
    if (traceroute6Interval == -1) {
       try {
          traceroute6Console.clear();
-         if (document.getElementById("conetserv").startTraceroute6(url.value)) {
+         if (document.getElementById("conetserv").startTraceroute6(url.hostname)) {
             trace6Data.reset();
             startAnim("traceroute6");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
@@ -407,7 +403,7 @@ function startWhois()
    if (whoisInterval == -1) {
       try {
          whoisConsole.clear();
-         if (document.getElementById("conetserv").startWhois(url.value)) {
+         if (document.getElementById("conetserv").startWhois(url.hostname)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             startAnim("whois");
 	    readWhois();
@@ -432,7 +428,7 @@ function startNslookup()
    if (nslookupInterval == -1) {
       try {
          nslookupConsole.clear();
-         if (document.getElementById("conetserv").startNslookup(url.value)) {
+         if (document.getElementById("conetserv").startNslookup(url.hostname)) {
             nslookupInterval = window.setInterval("readNslookup()", 500);
             startAnim("nslookup");
 	    readNslookup();
