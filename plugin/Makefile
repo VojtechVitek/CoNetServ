@@ -3,7 +3,7 @@
 
 include config.mk
 
-SRC = conetserv.c conetserv_posix.c idna.c punycode.c convert_utf.c stringprep.c nfkc.c profiles.c
+SRC = conetserv.c conetserv_posix.c
 OBJ = ${SRC:.c=.o}
 
 .PHONY: all clean debug options
