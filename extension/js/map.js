@@ -28,7 +28,7 @@ var Map = {
       var selected = $tabs.tabs('option', 'selected');
       if(selected == "6")
       {
-	 this.latlng = new google.maps.LatLng(41.033, 28.95);//this.latitude, this.langitude);
+	 this.latlng = new google.maps.LatLng(this.latitude, this.langitude); //41.033, 28.95);//
 	 
 	 this.options = {
 	    zoom: 10,
