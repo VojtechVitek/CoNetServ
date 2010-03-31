@@ -282,13 +282,26 @@ var punycode = new function Punycode() {
  *
  */
 var url = {
-   // IP regexp, eg. https://user:passwd@127.0.0.1/dir/index.html
-   //                                    ^^^^^^^^^   
-   ip:  /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[\W]*)?@)?(?:(?:(?:(?:[\w]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))(?::\\d+)?(?:\/.*)?$/i,
+   // proto regexp, eg. https://user:passwd@(hostname)/dir/index.html
+   //                                        ^^^^^^^^
+   proto: /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[^@]*)?@)?([^:\/]*)(?::\\d+)?(?:\/.*)?$/i,
 
-   // URL regexp, eg. https://user:passwd@server.example.com/dir/index.html
-   //                                     ^^^^^^^^^^^^^^^^^^
-   url: /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[\W]*)?@)?((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|бг|рф|укр|[a-z]{2}))(?::\\d+)?(?:\/.*)?$/i,
+   // IP hostname regexp, eg. 127.0.0.1
+   //                         ^^^^^^^^^
+   ip: /^(?:(?:(?:(?:[\w]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))$/i,
+
+   // URL hostname regexp, eg. server.example.com
+   //                          ^^^^^^^^^^^^^^^^^^
+   url: /^((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2}))$/i,
+
+   // Punycode URL regexp, eg. www.počítač.háčkyčárky.укр
+   //                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+   punycodeAscii: /^[a-z0-9](?:[-a-z0-9]*[a-z0-9])+$/i,
+   punycodeAsciiTld: /^com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2}$/i,
+   // NOTE: Unicode characters (eg. \X or \P{M}\p{M}*) NOT (YET) IMPLEMENTED IN JAVASCRIPT!?
+   punycodeUtf: /^.+$/i,
+   // FIXME: Convert to \uXXXX equivalents, it's probably not working in current JavaScript
+   punycodeUtfTld: /^бг|рф|укр$/i,
 
    // parsed value
    hostname: '', // www.fres-solutions.com
@@ -299,13 +312,51 @@ var url = {
 
       var result;
 
-      if (this.ip.test(addr))
-         this.hostname = this.ip.exec(addr)[1];
-      else if (this.url.test(addr))
-         this.hostname = this.url.exec(addr)[1];
-      else
-         return false;
+      // Parse hostname string
+      if (this.proto.test(addr)){
+         addr = this.proto.exec(addr)[1];
+      }
 
+      // Regular IPv4/IPv6?
+      if (this.ip.test(addr)) {
+         this.hostname = this.ip.exec(addr)[1];
+      }
+      // Regular ASCII url?
+      else if (this.url.test(addr)) {
+         this.hostname = this.url.exec(addr)[1];
+      }
+      // Regular Punycode url?
+      // -> try to convert to ASCII
+      else {
+         var arr = addr.split('.');
+         var ascii = '';
+         if (arr.length <= 1)
+            return false;
+         // try to convert each label of the URL
+         for (var i = 0; i < arr.length - 1; ++i) {
+            if (this.punycodeAscii.test(arr[i]))
+               ascii += arr[i] + '.';
+            else if (this.punycodeUtf.test(arr[i])) {
+               // convert from UTF8 to Punycode ASCII
+               var tmp = punycode.encode(arr[i]);
+               // check if valid ASCII
+               if (this.punycodeAscii.test(tmp))
+                  ascii += 'xn--' + tmp + '.';
+               else
+                  return false
+            }
+            else
+               return false;
+         }
+         // try to convert TLD
+         if (this.punycodeAsciiTld.test(arr[arr.length - 1]))
+            ascii += arr[arr.length - 1];
+         else if (this.punycodeUtfTld.test(arr[arr.length - 1]))
+            ascii += 'xn--' + punycode.encode(arr[i]);
+         else
+            return false;
+         this.hostname = ascii;
+      }
       return true;
    }
 };
