@@ -117,7 +117,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;C:\kanei\Development\xulrunner-sdk\sdk\include&quot;;Y:\CoNetServ\plugin\win"
-				PreprocessorDefinitions="VERSION=\&quot;1.1\&quot;;WIN32;NDEBUG;_WINDOWS;_USRDLL;NPCONETSERV_EXPORTS;MOZILLA_STRICT_API;XPCOM_GLUE;XULRUNNER_SDK;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+				PreprocessorDefinitions="VERSION=\&quot;1.1\&quot;;WIN32;_WINDOWS;XP_WIN32;MOZILLA_STRICT_API;XPCOM_GLUE;XP_WIN;_X86_;NPSIMPLE_EXPORTS;XULRUNNER_SDK;_USRDLL;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
