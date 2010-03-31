@@ -42,9 +42,9 @@ $(document).ready(function(){
 
    /* console text-boxes */
    pingConsole = new console("pingConsole");
-   pingConsole.maxRows = 17;
+   pingConsole.maxRows = 16;
    ping6Console = new console("ping6Console");
-   ping6Console.maxRows = 17;
+   ping6Console.maxRows = 16;
    tracerouteConsole = new console("tracerouteConsole");
    traceroute6Console = new console("traceroute6Console");
    whoisConsole = new console("whoisConsole");

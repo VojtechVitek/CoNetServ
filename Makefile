@@ -20,6 +20,7 @@ pre:
 	@rm -rf build/extension
 	@cp -r extension build/
 	@rm -rf build/extension/platform
+	@mkdir -p build/extension/platform
 	@echo "  Check pre-built libraries.."
 	@for i in $(ARCHS); do \
 	  echo "  $$i:"; \
