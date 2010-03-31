@@ -184,30 +184,6 @@
 				RelativePath="..\conetserv_win.c"
 				>
 			</File>
-			<File
-				RelativePath="..\convert_utf.c"
-				>
-			</File>
-			<File
-				RelativePath="..\idna.c"
-				>
-			</File>
-			<File
-				RelativePath="..\nfkc.c"
-				>
-			</File>
-			<File
-				RelativePath="..\profiles.c"
-				>
-			</File>
-			<File
-				RelativePath="..\punycode.c"
-				>
-			</File>
-			<File
-				RelativePath="..\stringprep.c"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -215,43 +191,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\conetserv-javascript-api.h"
-				>
-			</File>
-			<File
 				RelativePath="..\conetserv.h"
 				>
 			</File>
 			<File
-				RelativePath="..\convert_utf.h"
-				>
-			</File>
-			<File
-				RelativePath="..\gunicomp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\gunidecomp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\idna.h"
-				>
-			</File>
-			<File
-				RelativePath="..\punycode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\resource.h"
-				>
-			</File>
-			<File
-				RelativePath="..\stdint.h"
-				>
-			</File>
-			<File
-				RelativePath="..\stringprep.h"
 				>
 			</File>
 		</Filter>

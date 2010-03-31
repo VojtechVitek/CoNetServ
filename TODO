@@ -3,7 +3,6 @@ Extension:
 * Rewrite CoNetServ API (NPAPI->JS in OOP; split NPAPI and JS tools)
 * Mozilla Firefox add-on updates
 * Google Chrome extension updates
-* Services core: Run services with data dependencies
 
 Plugin:
 =======

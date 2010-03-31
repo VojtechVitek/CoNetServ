@@ -1,8 +1,12 @@
 Version 1.2 (2010-03-**)
 ============================================
+Plugin:
+ * Remove Punycode support and LIB IDN stuff
+ * URL parser (valid ASCII characters)
 Extension:
- * URL validator & init parser
+ * URL validator & parser (Punycode support)
  * Services parser (data from remote servers)
+ * Host info tab with data from new parsers:
  * "WIPmania.com - WorldIP API" parser
    (externIpv4, countryCode, country, city,
     region, latitude, longitude)
@@ -16,6 +20,7 @@ Extension:
    (externIpv4, hostname)
  * "RADb (Merit Network Inc.)" parser
    (route, provider)
+ * Google map (init latitude and longitude)
 
 
 Version 1.1 (2010-03-14)
