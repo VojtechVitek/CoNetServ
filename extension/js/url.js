@@ -296,12 +296,12 @@ var url = {
 
    // Punycode URL regexp, eg. www.počítač.háčkyčárky.укр
    //                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
-   punycodeAscii: /^[a-z0-9](?:[-a-z0-9]*[a-z0-9])+$/i,
-   punycodeAsciiTld: /^com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2}$/i,
+   punycodeAscii: /^(?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])+)$/i,
+   punycodeAsciiTld: /^(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2})$/i,
    // NOTE: Unicode characters (eg. \X or \P{M}\p{M}*) NOT (YET) IMPLEMENTED IN JAVASCRIPT!?
-   punycodeUtf: /^.+$/i,
+   punycodeUtf: /^(?:.+)$/i,
    // FIXME: Convert to \uXXXX equivalents, it's probably not working in current JavaScript
-   punycodeUtfTld: /^бг|рф|укр$/i,
+   punycodeUtfTld: /^(?:бг|рф|укр)$/i,
 
    // parsed value
    hostname: '', // www.fres-solutions.com
@@ -330,7 +330,7 @@ var url = {
       else {
          var arr = addr.split('.');
          var ascii = '';
-         if (arr.length <= 1)
+         if (arr.length < 2)
             return false;
          // try to convert each label of the URL
          for (var i = 0; i < arr.length - 1; ++i) {
@@ -351,8 +351,15 @@ var url = {
          // try to convert TLD
          if (this.punycodeAsciiTld.test(arr[arr.length - 1]))
             ascii += arr[arr.length - 1];
-         else if (this.punycodeUtfTld.test(arr[arr.length - 1]))
-            ascii += 'xn--' + punycode.encode(arr[i]);
+         else if (this.punycodeUtfTld.test(arr[arr.length - 1])) {
+            // convert from UTF8 to Punycode ASCII
+            var tmp = punycode.encode(arr[arr.length - 1]);
+            // check if valid ASCII
+            if (this.punycodeAscii.test(tmp))
+               ascii += 'xn--' + tmp;
+            else
+               return false
+         }
          else
             return false;
          this.hostname = ascii;
