@@ -58,8 +58,7 @@ _firefox:
 	@$(RM) build/$(NAME)-$(VERSION).xpi
 	@cd build/extension && zip -q ../../build/$(NAME)-$(VERSION).xpi \
 	   chrome.manifest install.rdf `find firefox` \
-	   `find js` `find images` `find css` index.html `find jquery` \
-	   `find platform` `find jquery`
+	   `find js` `find images` `find css` index.html `find platform`
 
 _chrome:
 	@echo "  Build Google Chrome extension:"
@@ -76,7 +75,7 @@ _opera:
 	@$(RM) build/$(NAME)-$(VERSION)-no-plugin.wgt
 	@cd build/extension && zip -q ../../build/$(NAME)-$(VERSION)-no-plugin.wgt \
 	  config.xml \
-	  `find js` `find images` `find css` index.html `find jquery`
+	  `find js` `find images` `find css` index.html
 
 .PHONY: firefox chrome
 firefox: pre _firefox
