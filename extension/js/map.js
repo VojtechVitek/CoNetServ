@@ -33,7 +33,7 @@ var Map = {
 	 this.options = {
 	    zoom: 10,
 	    center: this.latlng,
-	    mapTypeId: google.maps.MapTypeId.SATELLITE
+	    mapTypeId: google.maps.MapTypeId.HYBRID
 	 };
 
 	 if(!this.map)

@@ -66,6 +66,7 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
    int len;
    char *txt;
    char *name = npnfuncs->utf8fromidentifier(methodName);
+   int i;
 #ifdef _WINDOWS
    NPString npstr;
 #endif
@@ -122,7 +123,6 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             buffer[len] = '\0';
 
             /* Check if hostname consists only of ASCII characters [a-zA-Z0-9-.] */
-            int i;
             for (i = 0; i < len; ++i) {
                if (buffer[i] >= 'a' && buffer[i] <= 'z')
                   continue;
