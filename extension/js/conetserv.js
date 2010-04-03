@@ -34,8 +34,9 @@ function stopAnim(id)
 
 $(document).ready(function(){
 
-   /* Toggle tabs with opacity effect write toggle instead of none to enable*/
-   //$("#tabs").tabs({ fx: { opacity: 'none' } });
+   /* Toggle tabs with opacity effect */
+   //too slow and thus buggy; disable temporarily
+   //$("#tabs").tabs({ fx: { opacity: 'toggle' } });
 
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
