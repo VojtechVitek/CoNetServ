@@ -8,5 +8,9 @@ Extension:
 Plugin:
 =======
 * Rewrite CoNetServ API (NPAPI->JS in OOP; objects with properties and methods)
+  * if (CoNetServ.ping) {
+       CoNetServ.ping(..);
+       ..
+  * CoNetServ.version(); // to get current version (front-end for 3rd parties)
 * Windows: Parse locales (not win1250 only)
 
