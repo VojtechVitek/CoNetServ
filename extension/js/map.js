@@ -55,7 +55,7 @@ var Map = {
       This.show();
    },
 
-   createMarker: function(point, title) {
+   createMarker: function(point, title, location) {
       // Create a lettered icon for this point using our icon class
       var letteredIcon = new GIcon(this.baseIcon);
       letteredIcon.image = "http://www.google.com/mapfiles/marker" + title.substring(0, 1) + ".png";
@@ -65,7 +65,8 @@ var Map = {
       var marker = new GMarker(point, markerOptions);
 
       GEvent.addListener(marker, "click", function() {
-         marker.openInfoWindowHtml("Location by <b>" + title + "</b><br />Latitude: " + point.latitude + ", Longitude: " + point.longitude);
+         marker.openInfoWindowHtml("Location by<br /><b>" + title + "</b><br />" + 
+                                   "(Latitude: " + location.latitude + ", Longitude: " + location.longitude + ")");
       });
 
       return marker;
@@ -80,8 +81,11 @@ var Map = {
       var location;
       while (location = this.locations.shift()) {
          var latlng = new google.maps.LatLng(location.latitude, location.longitude);
-         this.map.setCenter(latlng, 5);
-         this.map.addOverlay(this.createMarker(latlng, location.title));
+         if (!this.setCenter) {
+            this.map.setCenter(latlng, 5);
+            this.setCenter = true;
+         }
+         this.map.addOverlay(this.createMarker(latlng, location.title, location));
       }
    }
 
