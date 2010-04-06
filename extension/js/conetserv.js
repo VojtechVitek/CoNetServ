@@ -22,14 +22,18 @@ var isLocalInfoRunning = 0;
 
 function startAnim(id)
 {
-   document.getElementById(id+"State").style.display = 'block';//visibility = 'visible';
-   document.getElementById(id+"TabClose").style.display = 'block';
+   if (document.getElementById(id + "State") && document.getElementById(id + "State").style)
+      document.getElementById(id + "State").style.display = 'block';
+   if (document.getElementById(id + "TabClose") && document.getElementById(id + "TabClose").style)
+      document.getElementById(id + "TabClose").style.display = 'block';
 }
 
 function stopAnim(id)
 {
-   document.getElementById(id+"State").style.display = 'none';//visibility = 'hidden';
-   document.getElementById(id+"TabClose").style.display = 'none';
+   if (document.getElementById(id + "State") && document.getElementById(id + "State").style)
+      document.getElementById(id + "State").style.display = 'none';
+   if (document.getElementById(id + "TabClose") && document.getElementById(id + "TabClose").style)
+      document.getElementById(id + "TabClose").style.display = 'none';
 }
 
 $(document).ready(function(){

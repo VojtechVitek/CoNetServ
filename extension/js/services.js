@@ -70,7 +70,7 @@ var Services = {
             parse: function() {
                var result = {};
 
-               if (google && google.loader && google.loader.ClientLocation) {
+               if (window.google && google.loader && google.loader.ClientLocation) {
 
                   if (google.loader.ClientLocation.address) {
                      if (google.loader.ClientLocation.address.country_code)
