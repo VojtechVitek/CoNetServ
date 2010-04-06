@@ -1,3 +1,11 @@
+Version 1.3 (2010-??-??)
+============================================
+Extension:
+ * "Google.com - JSAPI" parser
+   (countryCode, country, city, region,
+    latitude, longitude)
+
+
 Version 1.2 (2010-03-31)
 ============================================
 Plugin:
