@@ -115,7 +115,7 @@ function startLocalInfo()
             );
             // show map location
             if(result.longitude && result.latitude)
-               Map.addLocation(service.name, result.latitude, result.longitude);
+               Map.addLocation(service, result);
          }
       },
       /* stopped */

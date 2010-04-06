@@ -5,15 +5,20 @@ var Map = {
    firstRun: false,
    elementId: false, /* Must be set to valid DOM element */
    map: false,
-   loaded: false,
+   zoom: 0,
 
    setElementId: function(elementId) {
       this.elementId = elementId;
    },
 
-   addLocation: function(title, latitude, longitude) {
+   addLocation: function(service, result) {
       /* Set locations */
-      this.locations.push({title: title, latitude: latitude, longitude: longitude});
+      this.locations.push({
+         name: service.name,
+         latitude: result.latitude,
+         longitude: result.longitude,
+         zoom: result.zoom
+      });
 
       /* Show map */
       this.show();
@@ -55,18 +60,18 @@ var Map = {
       This.show();
    },
 
-   createMarker: function(point, title, location) {
+   createMarker: function(point, name, latitude, longitude) {
       // Create a lettered icon for this point using our icon class
       var letteredIcon = new GIcon(this.baseIcon);
-      letteredIcon.image = "http://www.google.com/mapfiles/marker" + title.substring(0, 1) + ".png";
+      letteredIcon.image = "http://www.google.com/mapfiles/marker" + name.substring(0, 1) + ".png";
 
       // Set up our GMarkerOptions object
       markerOptions = { icon: letteredIcon };
       var marker = new GMarker(point, markerOptions);
 
       GEvent.addListener(marker, "click", function() {
-         marker.openInfoWindowHtml("Location by<br /><b>" + title + "</b><br />" + 
-                                   "(Latitude: " + location.latitude + ", Longitude: " + location.longitude + ")");
+         marker.openInfoWindowHtml("Location by<br /><b>" + name + "</b><br />" + 
+                                   "(Latitude: " + latitude + ", Longitude: " + longitude + ")");
       });
 
       return marker;
@@ -81,11 +86,11 @@ var Map = {
       var location;
       while (location = this.locations.shift()) {
          var latlng = new google.maps.LatLng(location.latitude, location.longitude);
-         if (!this.setCenter) {
-            this.map.setCenter(latlng, 5);
-            this.setCenter = true;
+         if (location.zoom > this.zoom) {
+            this.zoom = location.zoom;
+            this.map.setCenter(latlng, location.zoom);
          }
-         this.map.addOverlay(this.createMarker(latlng, location.title, location));
+         this.map.addOverlay(this.createMarker(latlng, location.name, location.latitude, location.longitude));
       }
    }
 

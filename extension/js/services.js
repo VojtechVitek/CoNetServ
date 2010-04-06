@@ -92,6 +92,7 @@ var Services = {
                   if (google.loader.ClientLocation.latitude)
                      result.longitude = google.loader.ClientLocation.longitude;
 
+                  result.zoom = 10;
                }
 
                return result;
@@ -155,8 +156,8 @@ var Services = {
                if (data.latitude)
                   result.longitude = data.longitude;
 
-               //if (data.zoom)
-               //   result.zoom = data.zoom;
+               if (data.zoom)
+                  result.zoom = data.zoom;
 
                return result;
             }
