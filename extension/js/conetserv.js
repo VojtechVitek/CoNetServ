@@ -69,14 +69,17 @@ $(document).ready(function(){
          });
       }
    }
+
 });
 
 function startLocalInfo()
 {
    if(isLocalInfoRunning)
-      return;
-   
+      return;   
    isLocalInfoRunning = 1;
+
+   /* set element to write map into */
+   Map.setElementId("mapPlaceholder");
 
    /* Start local info services */   
    Services.start(
@@ -110,11 +113,9 @@ function startLocalInfo()
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-            //show map
-            if(result.longitude) {
-               Map.inicialize(result.longitude, result.latitude);
-               Map.show();
-            }
+            // show map location
+            if(result.longitude && result.latitude)
+               Map.addLocation(service.name, result.longitude, result.latitude);
          }
       },
       /* stopped */

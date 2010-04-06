@@ -1,49 +1,87 @@
-/* object for handling google map */
-
-/*!! Object is shown from plot.js function bind tabshow */
+/* Google Maps handler */
 
 var Map = {
-   latitude: 0,
-   langitute: 0,
-   latlng: 0,
-   enabled: 0,
-   map:0,
-   options: 0,
+   locations: [],
+   firstRun: false,
+   elementId: false, /* Must be set to valid DOM element */
+   map: false,
+   loaded: false,
 
-   marker: 0,
-   
-   inicialize: function(lat, lan) {
-      if(!lat || !lan)
-	 return;
-      this.enabled = 1;
-      this.latitude = parseFloat(lat);
-      this.langitude = parseFloat(lan);
+   setElementId: function(elementId) {
+      this.elementId = elementId;
    },
-   
-   show: function(){
-      if(!this.enabled)
-	 return;
-      //check if right tab is selected
-      var $tabs = $('#tabs').tabs();
-      var selected = $tabs.tabs('option', 'selected');
-      if(selected == "6")
-      {
-	 this.latlng = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);//this.latitude, this.langitude);
-	 
-	 this.options = {
-	    zoom: 10,
-	    center: this.latlng,
-	    mapTypeId: google.maps.MapTypeId.HYBRID
-	 };
 
-	 if(!this.map)
-	    this.map = new google.maps.Map(document.getElementById("mapPlaceholder"), this.options);
-	 
-	 this.marker = new google.maps.Marker({
-	    position: this.latlng, 
-	    map: this.map,
-	    title:"You are here!"
-	 });   
+   addLocation: function(title, latitude, longitude) {
+      /* Set locations */
+      this.locations.push({title: title, latitude: latitude, longitude: longitude});
+
+      /* Show map */
+      this.show();
+   },
+
+   loadJsapi: function() {
+      if (this.firstRun)
+         return;
+      this.firstRun = true;
+
+      /* Load latest Google JSAPI loader JavaScript */
+      var script = document.createElement("script");
+      script.src = "http://www.google.com/jsapi?callback=Map.loadMaps";
+      script.type = "text/javascript";
+      document.getElementsByTagName("head")[0].appendChild(script);
+   },
+
+   loadMaps: function() {
+      /* Load latest Google Map JavaScript */
+      google.load("maps", "2.x", {"callback" : "Map.createMap(Map)"});
+   },
+
+   createMap: function(This) {
+      /* Load map into element */
+      This.map = new google.maps.Map2(document.getElementById(This.elementId));
+      This.map.setUIToDefault();
+      This.map.addControl(new GSmallMapControl());
+      This.map.addControl(new GMapTypeControl());
+      This.map.addControl(new GOverviewMapControl());
+
+      This.baseIcon = new GIcon(G_DEFAULT_ICON);
+      This.baseIcon.shadow = "http://www.google.com/mapfiles/shadow50.png";
+      This.baseIcon.iconSize = new GSize(20, 34);
+      This.baseIcon.shadowSize = new GSize(37, 34);
+      This.baseIcon.iconAnchor = new GPoint(9, 34);
+      This.baseIcon.infoWindowAnchor = new GPoint(9, 2);
+
+      This.loaded = true;
+      This.show();
+   },
+
+   createMarker: function(point, title) {
+      // Create a lettered icon for this point using our icon class
+      var letteredIcon = new GIcon(this.baseIcon);
+      letteredIcon.image = "http://www.google.com/mapfiles/marker" + title.substring(0, 1) + ".png";
+
+      // Set up our GMarkerOptions object
+      markerOptions = { icon: letteredIcon };
+      var marker = new GMarker(point, markerOptions);
+
+      GEvent.addListener(marker, "click", function() {
+         marker.openInfoWindowHtml("Location by <b>" + title + "</b><br />Latitude: " + point.latitude + ", Longitude: " + point.longitude);
+      });
+
+      return marker;
+   },
+
+   show: function() {
+      /* Set new location(s) from buffer */
+      if (this.loaded != true) {
+         this.loadJsapi();
+         return;
+      }
+      var location;
+      while (location = this.locations.shift()) {
+         var latlng = new google.maps.LatLng(location.latitude, location.longitude);
+         this.map.setCenter(latlng, 5);
+         this.map.addOverlay(this.createMarker(latlng, location.title));
       }
    }
 
