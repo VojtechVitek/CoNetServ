@@ -4,7 +4,8 @@ Extension:
  * "Google.com - JSAPI" parser
    (countryCode, country, city, region,
     latitude, longitude)
-
+ * Asynchronous Google Map with location
+   markers
 
 Version 1.2 (2010-03-31)
 ============================================
