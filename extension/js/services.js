@@ -56,6 +56,51 @@ var Services = {
 
    },*/ {
 
+         name: 'Google.com - JSAPI',
+         link: 'http://www.google.com/',
+
+         stable: '2010-04-06',
+
+         request: [{
+            type: 'GET',
+            url: 'http://www.google.com/jsapi',
+            data: {},
+            dataType: 'script',
+            dataCharset: 'UTF-8',
+            parse: function() {
+               var result = {};
+
+               if (window.google && google.loader && google.loader.ClientLocation) {
+
+                  if (google.loader.ClientLocation.address) {
+                     if (google.loader.ClientLocation.address.country_code)
+                        result.countryCode = google.loader.ClientLocation.address.country_code;
+
+                     if (google.loader.ClientLocation.address.country)
+                        result.country = google.loader.ClientLocation.address.country;
+
+                     if (google.loader.ClientLocation.address.city && google.loader.ClientLocation.address.city != '-' && google.loader.ClientLocation.address.city != 'NaN')
+                        result.city = google.loader.ClientLocation.address.city;
+
+                     if (google.loader.ClientLocation.address.region && google.loader.ClientLocation.address.region != '-' && google.loader.ClientLocation.address.region != 'NaN')
+                        result.region = google.loader.ClientLocation.address.region;
+                  }
+
+                  if (google.loader.ClientLocation.latitude)
+                     result.latitude = google.loader.ClientLocation.latitude;
+
+                  if (google.loader.ClientLocation.latitude)
+                     result.longitude = google.loader.ClientLocation.longitude;
+
+                  result.zoom = 10;
+               }
+
+               return result;
+            }
+         }]
+
+   }, {
+
          name: 'WIPmania.com - WorldIP API',
          link: 'http://www.wipmania.com/',
 
@@ -111,8 +156,8 @@ var Services = {
                if (data.latitude)
                   result.longitude = data.longitude;
 
-               //if (data.zoom)
-               //   result.zoom = data.zoom;
+               if (data.zoom)
+                  result.zoom = data.zoom;
 
                return result;
             }

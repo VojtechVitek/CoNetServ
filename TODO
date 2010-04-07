@@ -3,9 +3,14 @@ Extension:
 * Rewrite CoNetServ API (NPAPI->JS in OOP; split NPAPI and JS tools)
 * Mozilla Firefox add-on updates
 * Google Chrome extension updates
+* Ping lost packet filtering (regexp)
 
 Plugin:
 =======
 * Rewrite CoNetServ API (NPAPI->JS in OOP; objects with properties and methods)
-* Get rid of GNU LIB IDN unnecessary mess, put it's files into separate directory
-* URL validator (after the punycode conversion)
+  * if (CoNetServ.ping) {
+       CoNetServ.ping(..);
+       ..
+  * CoNetServ.version(); // to get current version (front-end for 3rd parties)
+* Windows: Parse locales (not win1250 only)
+

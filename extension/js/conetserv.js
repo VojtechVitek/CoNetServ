@@ -22,29 +22,34 @@ var isLocalInfoRunning = 0;
 
 function startAnim(id)
 {
-   document.getElementById(id+"State").style.display = 'block';//visibility = 'visible';
-   document.getElementById(id+"TabClose").style.display = 'block';
+   if (document.getElementById(id + "State") && document.getElementById(id + "State").style)
+      document.getElementById(id + "State").style.display = 'block';
+   if (document.getElementById(id + "TabClose") && document.getElementById(id + "TabClose").style)
+      document.getElementById(id + "TabClose").style.display = 'block';
 }
 
 function stopAnim(id)
 {
-   document.getElementById(id+"State").style.display = 'none';//visibility = 'hidden';
-   document.getElementById(id+"TabClose").style.display = 'none';
+   if (document.getElementById(id + "State") && document.getElementById(id + "State").style)
+      document.getElementById(id + "State").style.display = 'none';
+   if (document.getElementById(id + "TabClose") && document.getElementById(id + "TabClose").style)
+      document.getElementById(id + "TabClose").style.display = 'none';
 }
 
 $(document).ready(function(){
 
-   /* Toggle tabs with opacity effect write toggle instead of none to enable*/
-   //$("#tabs").tabs({ fx: { opacity: 'none' } });
+   /* Toggle tabs with opacity effect */
+   //too slow and thus buggy; disable temporarily
+   //$("#tabs").tabs({ fx: { opacity: 'toggle' } });
 
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
    /* console text-boxes */
    pingConsole = new console("pingConsole");
-   pingConsole.maxRows = 17;
+   pingConsole.maxRows = 16;
    ping6Console = new console("ping6Console");
-   ping6Console.maxRows = 17;
+   ping6Console.maxRows = 16;
    tracerouteConsole = new console("tracerouteConsole");
    traceroute6Console = new console("traceroute6Console");
    whoisConsole = new console("whoisConsole");
@@ -64,14 +69,17 @@ $(document).ready(function(){
          });
       }
    }
+
 });
 
 function startLocalInfo()
 {
    if(isLocalInfoRunning)
-      return;
-   
+      return;   
    isLocalInfoRunning = 1;
+
+   /* set element to write map into */
+   Map.setElementId("mapPlaceholder");
 
    /* Start local info services */   
    Services.start(
@@ -105,11 +113,9 @@ function startLocalInfo()
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-            //show map
-            if(result.longitude) {
-               Map.inicialize(result.longitude, result.latitude);
-               Map.show();
-            }
+            // show map location
+            if(result.longitude && result.latitude)
+               Map.addLocation(service, result);
          }
       },
       /* stopped */

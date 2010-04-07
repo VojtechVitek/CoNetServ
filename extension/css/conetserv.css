@@ -122,6 +122,10 @@ body{
    width: 640px;
 }
 
+#mapPlaceholder{
+   overflow: hidden;
+}
+
 .statsArea{
    height: 30px;
    margin-top: 5px;

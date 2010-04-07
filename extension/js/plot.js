@@ -139,13 +139,11 @@ $(document).ready(function()
    traceData = new tData();
    trace6Data = new tData();
 
-   /* inicialize data */
+   /* initialize data */
    pingPlaceholder = $("#pingPlaceholder");
    ping6Placeholder = $("#ping6Placeholder");
    traceroutePlaceholder = $("#traceroutePlaceholder");
    traceroute6Placeholder = $("#traceroute6Placeholder");
-
-  
 
    optionsPing = {
       lines: { show: true},
@@ -174,17 +172,14 @@ $(document).ready(function()
       traceData.touch();
       trace6Data.touch();
       repaintPlots();
-
-      //try showing a map
-      Map.show();
    });
 
    $("#tabs").bind('select', function() 
    {
       if(tabsLoading)
-	 return false;
+         return false;
       else
-	 return (tabsLoading = true);
+         return (tabsLoading = true);
    });
 
    repaintPlots();
