@@ -22,3 +22,4 @@ Extension:
 - WHOIS: use only first and second domain names
 - Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
+- URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
