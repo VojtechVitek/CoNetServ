@@ -1,17 +1,10 @@
-# Ignore plugin binaries
-plugin/*.o
-plugin/*.so
-plugin/*.dll
-plugin/*.exe
-
-# Ignore Chrome private key for building extension
-*.pem
-
-# Ignore platform-specific directories and extension builds
-extension/platform/
+# Build directory
 build/
 
-# Ignore temp/backup files
-*.backup
+# Temporary and backup files
 *~
 .*.swp
+*.backup
+
+# Chrome private key for building extension
+*.pem
