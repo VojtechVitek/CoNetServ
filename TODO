@@ -1,6 +1,5 @@
 General:
 - Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
-- Compilation: use automatic tools (cmake or autotools)
 - Multi-platforms: guarantee support for Windows, Linux and Mac OS on both 32bit and 64bit systems
 
 Plugin:

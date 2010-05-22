@@ -6,6 +6,8 @@ Extension:
     latitude, longitude)
  * Asynchronous Google Map with location
    markers
+Project:
+ * Switch project build system to CMake
 
 Version 1.2 (2010-03-31)
 ============================================
@@ -45,6 +47,9 @@ Operating systems [arch] support:
  * Windows Vista [x86, x86_64]
  * Windows XP [x86, x86_64]
  * MacOSX Darwin [x86]
+Project:
+ * Automated generation of browser-specific
+   packages (Firefox, Chrome, Opera)
 
 
 Version 1.0 (2010-02-28)
@@ -66,4 +71,6 @@ Browser support:
 Operating systems [arch] support:
  * Windows XP [x86]
  * GNU/Linux [x86, x86_64]
-
+Documentation:
+ * Use Doxygen as the source code
+   documentation generator tool
