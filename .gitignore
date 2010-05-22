@@ -4,7 +4,14 @@ build/
 # Temporary and backup files
 *~
 .*.swp
+.*.swo
 *.backup
 
 # Chrome private key for building extension
 *.pem
+
+# CMake
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+cmake_uninstall.cmake
