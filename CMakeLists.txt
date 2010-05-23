@@ -17,13 +17,11 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	message(STATUS "Build type: Release")
 	add_definitions(-DVERSION="${VERSION}")
 	add_definitions(-DNDEBUG)
-	add_definitions(-O2)
 else()
 	# Debug build
 	message(STATUS "Build type: Debug")
 	add_definitions(-DVERSION="${VERSION}.1")
 	add_definitions(-DDEBUG)
-	add_definitions(-g)
 endif()
 
 # Plugin

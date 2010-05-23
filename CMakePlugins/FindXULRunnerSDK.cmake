@@ -15,6 +15,6 @@ if(NOT XULRunnerSDK_INCLUDE_DIR)
 
 endif()
 
-if(XULRunnerSDK_INCLUDE_DIR)
+if(XULRunnerSDK_INCLUDE_DIR AND EXISTS "${XULRunnerSDK_INCLUDE_DIR}/npapi.h")
 	set(XULRunnerSDK_FOUND "YES")
 endif()
