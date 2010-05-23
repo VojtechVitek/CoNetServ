@@ -1,9 +1,10 @@
-#include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <ctype.h>
+#include <windows.h>
 
-#include "conetserv.h"
+#include "plugin.h"
+#include "config.h"
 
 #define DEBUGCON 0
 
@@ -20,7 +21,7 @@ char* cmd_args[command_t_count] = {
    "tracert",
    "tracert -6",
    "nslookup",
-	"nslookup",
+   "nslookup"
 };
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}

@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "conetserv.h"
+#include "plugin.h"
 
 pid_t pids[command_t_count] = {0};
 
