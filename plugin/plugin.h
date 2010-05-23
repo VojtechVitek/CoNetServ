@@ -1,5 +1,6 @@
-#ifndef _CONETSERV_H_
-#define _CONETSERV_H_
+#pragma once
+#ifndef _PLUGIN_H_
+#define _PLUGIN_H_
 
 #if defined(_WINDOWS)
 	#include <stdbool.h>
@@ -113,23 +114,7 @@ int readCommand(command_t cmd, NPUTF8* buf);
  */
 bool stopCommand(command_t cmd);
 
-#define PLUGIN_NAME "CoNetServ"
-
-#define PLUGIN_LONGNAME "Complex Network Services"
-
-#ifndef VERSION
-#error Version must be specified by -DVERSION option
-#else
-#define PLUGIN_VERSION VERSION
-#endif
-
-#define PLUGIN_DESC "<a href=\"http://www.fres-solutions.com/conetserv/plugin/?version=" \
-                    PLUGIN_VERSION "\">" PLUGIN_NAME " v" PLUGIN_VERSION "</a> " \
-                    " - " PLUGIN_LONGNAME " plugin.<br />(c) 2010 FRES-Solutions"
-
-#define PLUGIN_MIME "application/x-conetserv:conetserv:Complex Network Services"
-
-#endif /*_CONETSERV_H_*/
+#endif /*_PLUGIN_H_*/
 
 /*! \mainpage CoNetServ - Complex Network Services
  *
@@ -137,4 +122,3 @@ bool stopCommand(command_t cmd);
  *
  * \htmlinclude ../../extension/about.html
  */
-

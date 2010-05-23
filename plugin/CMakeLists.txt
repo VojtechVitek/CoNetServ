@@ -1,6 +1,9 @@
 # CoNetServ plugin
 
 # Sources and header files
+include_directories(".")
+configure_file("config.h.in" "${CMAKE_BINARY_DIR}/config.h")
+include_directories(${CMAKE_BINARY_DIR})
 set(sources
 	plugin.c
 )
@@ -9,18 +12,18 @@ set(debug_sources
 )
 set(headers
 	plugin.h
+	${CMAKE_BINARY_DIR}/config.h
 )
-include_directories(".")
-
 
 # Platform-specific sources and header files
 if(UNIX OR APPLE)
+	include_directories("unix")
 	set(platform_sources
 		unix/commands.c
 	)
-	include_directories("unix")
 elseif(WIN32)
-	configure_file("win/dll_export.def.in" "${CMAKE_BINARY_DIR}/dll_module.def")
+	include_directories("win")
+	configure_file("win/dll_export.def.in" "${CMAKE_BINARY_DIR}/dll_export.def")
 	set(platform_sources
 		win/commands.c
 	)
@@ -28,9 +31,8 @@ elseif(WIN32)
 		win/config.h
 		win/resource.h
 		win/stdbool.h
-
+		${CMAKE_BINARY_DIR}/dll_export.def
 	)
-	include_directories("win")
 else()
 	message(FATAL ERROR "Sorry, your operating system is not supported.")
 endif()

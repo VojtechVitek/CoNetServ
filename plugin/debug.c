@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "config.h"
 #include "plugin.h"
 
 char buffer[BUFFER_LENGTH];

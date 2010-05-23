@@ -1,10 +1,20 @@
 # CoNetServ (Complex Network Services) project
-project(CoNetServ)
+project("CoNetServ")
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 2)
 
-set(PROJECT ${CMAKE_PROJECT_NAME})
+# Project strings
 set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION})
+set(PROJECT_NAME ${CMAKE_PROJECT_NAME})
+set(PROJECT_LONG "Complex Network Services")
+set(PROJECT_DESC "Extension which integrates network services into the browser.")
+
+# Plugin strings
+set(PLUGIN_NAME ${PROJECT_NAME})
+set(PLUGIN_LONG ${PROJECT_LONG})
+set(PLUGIN_TYPE "application/x-conetserv")
+set(PLUGIN_DESC "<a href=\\\"http://www.fres-solutions.com/conetserv/plugin/?version=${VERSION}\\\"> \\
+                ${PROJECT_NAME} v${VERSION}</a> - ${PROJECT_LONG} plugin.<br />(c) 2010 FRES-Solutions")
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
@@ -15,12 +25,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakePlugins")
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	# Release build
 	message(STATUS "Build type: Release")
-	add_definitions(-DVERSION="${VERSION}")
 	add_definitions(-DNDEBUG)
 else()
 	# Debug build
 	message(STATUS "Build type: Debug")
-	add_definitions(-DVERSION="${VERSION}.1")
+	set(VERSION ${VERSION}.5)
 	add_definitions(-DDEBUG)
 endif()
 
