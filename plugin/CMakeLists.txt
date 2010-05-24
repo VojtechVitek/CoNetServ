@@ -36,7 +36,6 @@ elseif(WIN32)
 	)
 	set(platform_headers
 		win/config.h
-		win/resource.h
 		win/stdbool.h
 		${CMAKE_BINARY_DIR}/dll_export.def
 	)
