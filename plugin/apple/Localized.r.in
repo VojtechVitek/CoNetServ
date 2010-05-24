@@ -1,0 +1,12 @@
+#include <CoreServices/CoreServices.r>
+//#include <Carbon/Carbon.r>
+
+// Plugin info
+resource 'STR#' (126, "Description") { { "@PLUGIN_LONG@", "@PLUGIN_NAME@" } };
+
+// MIME type descriptions
+resource 'STR#' (127, "MIME type description") { { "@PLUGIN_DESC@" } };
+
+// MIME types
+resource 'STR#' (128, "MIME type") { { "@PLUGIN_TYPE@", "" } };
+

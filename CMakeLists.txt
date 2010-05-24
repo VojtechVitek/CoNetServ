@@ -15,6 +15,7 @@ set(PLUGIN_LONG ${PROJECT_LONG})
 set(PLUGIN_TYPE "application/x-conetserv")
 set(PLUGIN_DESC "<a href=\\\"http://www.fres-solutions.com/conetserv/plugin/?version=${VERSION}\\\"> \\
                 ${PROJECT_NAME} v${VERSION}</a> - ${PROJECT_LONG} plugin.<br />(c) 2010 FRES-Solutions")
+set(PLUGIN_BUNDLE "com.fres-solutions.@PROJECT_NAME@")
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)

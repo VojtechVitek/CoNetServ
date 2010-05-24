@@ -16,7 +16,14 @@ set(headers
 )
 
 # Platform-specific sources and header files
-if(UNIX OR APPLE)
+if(APPLE)
+	configure_file("apple/Info.plist.in" "${CMAKE_BINARY_DIR}/Info.plist")
+	configure_file("apple/Localized.r.in" "${CMAKE_BINARY_DIR}/Localized.r")
+	include_directories("unix")
+	set(platform_sources
+		unix/commands.c
+	)
+elseif(UNIX)
 	include_directories("unix")
 	set(platform_sources
 		unix/commands.c
@@ -94,9 +101,6 @@ elseif(WIN32)
 	add_definitions(-DXULRUNNER_SDK)
 
 endif()
-
-# Set library prefixes
-set(LIBDIR "lib${LIB_SUFFIX}")
 
 # Create library (shared)
 add_library(CoNetServ SHARED ${sources} ${platform_sources} ${headers} ${platform_headers})

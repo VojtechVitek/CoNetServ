@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>npCoNetServ</string>
+	<string>@PLUGIN_FILENAME@</string>
 	<key>CFBundleName</key>
-	<string>CoNetServ</string>
+	<string>@PLUGIN_NAME@</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Complex Network Services</string>
+	<string>@PLUGIN_LONG@</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.fres-solutions.conetserv</string>
+	<string>@PLUGIN_BUNDLE@</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
