@@ -105,6 +105,10 @@ endif()
 add_library(CoNetServ SHARED ${sources} ${platform_sources} ${headers} ${platform_headers})
 set_target_properties(CoNetServ PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(CoNetServ PROPERTIES VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.0 SOVERSION 1)
+set_target_properties(CoNetServ PROPERTIES PREFIX "np")
+
+#get_target_property(VAR_LOCATION CoNetServ LOCATION)
+#message(STATUS ${VAR_LOCATION})
 
 # Create debug program (static)
 add_executable(debug ${debug_sources} ${sources} ${platform_sources} ${headers} ${platform_headers})
