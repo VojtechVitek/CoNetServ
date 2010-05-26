@@ -1,25 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <widget network="public" xmlns="http://xmlns.opera.com/2006/widget">
-  <widgetname>CoNetServ</widgetname>
-  <description>Complex Network Services</description>
-  <id>
-    <host>fres-solutions.com</host>
-    <name>conetserv</name>
-    <revised>@BUILDDATE@</revised>
-  </id>
-  <icon>images/icon16.png</icon>
-  <icon>images/icon32.png</icon>
-  <icon>images/icon48.png</icon>
-  <icon>images/icon128.png</icon>
-  <width>680</width>
-  <height>560</height>
-  <author>
-    <name>FRES-Solutions</name>
-    <email>conetserv@fres-solutions.com</email>
-    <link>http://www.fres-solutions.com/conetserv/opera/</link>
-    <organization>FRES-Solutions</organization>
-  </author>
-  <security>
-    <content java="no" plugins="yes" />
-  </security>
+	<widgetname>@PROJECT_NAME@</widgetname>
+	<description>@PROJECT_LONG@</description>
+	<id>
+		<host>@EXTENSION_HOST@</host>
+		<name>@PROJECT_NAME@</name>
+		<revised>@BUILD_DATE@</revised>
+	</id>
+	<icon>images/icon16.png</icon>
+	<icon>images/icon32.png</icon>
+	<icon>images/icon48.png</icon>
+	<icon>images/icon128.png</icon>
+	<width>680</width>
+	<height>560</height>
+	<author>
+		<name>@EXTENSION_CREATOR@</name>
+		<email>@EXTENSION_ID@</email>
+		<link>@EXTENSION_URL@</link>
+		<organization>@EXTENSION_CREATOR@</organization>
+	</author>
+	<security>
+		<content java="no" plugins="yes" />
+	</security>
 </widget>

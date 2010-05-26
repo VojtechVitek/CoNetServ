@@ -22,6 +22,13 @@ endif()
 
 # Project strings
 set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION})
+if(UNIX)
+	EXEC_PROGRAM(date
+	ARGS +%Y-%m-%d
+	OUTPUT_VARIABLE BUILD_DATE
+	)
+endif()
+SET(MY_OUTPUT "${MY_OUTPUT}" CACHE INTERNAL "")
 set(PROJECT_NAME ${CMAKE_PROJECT_NAME})
 set(PROJECT_LONG "Complex Network Services")
 set(PROJECT_DESC "Extension which integrates network services into the browser.")
@@ -30,9 +37,15 @@ set(PROJECT_DESC "Extension which integrates network services into the browser."
 set(PLUGIN_NAME ${PROJECT_NAME})
 set(PLUGIN_LONG ${PROJECT_LONG})
 set(PLUGIN_TYPE "application/x-conetserv")
-set(PLUGIN_DESC "<a href=\\\"http://www.fres-solutions.com/conetserv/plugin/?version=${VERSION}\\\"> \\
+set(PLUGIN_DESC "<a href=\\\"http://www.${EXTENSION_HOST}/${PROJECT_NAME}/plugin/?version=${VERSION}\\\"> \\
                 ${PROJECT_NAME} v${VERSION}</a> - ${PROJECT_LONG} plugin.<br />(c) 2010 FRES-Solutions")
-set(PLUGIN_BUNDLE "com.fres-solutions.@PROJECT_NAME@")
+set(PLUGIN_ID   "com.fres-solutions.${PROJECT_NAME}")
+
+# Exension strings
+set(EXTENSION_CREATOR "FRES-Solutions")
+set(EXTENSION_HOST    "fres-solutions.com")
+set(EXTENSION_ID      "${PROJECT_NAME}@${EXTENSION_HOST}")
+set(EXTENSION_URL     "http://www.${EXTENSION_HOST}/${PROJECT_NAME}")
 
 # Plugin
 add_subdirectory(plugin)

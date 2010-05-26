@@ -11,7 +11,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>@PLUGIN_LONG@</string>
 	<key>CFBundleIdentifier</key>
-	<string>@PLUGIN_BUNDLE@</string>
+	<string>@PLUGIN_ID@</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
