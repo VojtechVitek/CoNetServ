@@ -45,9 +45,9 @@ var Map = {
       /* Load map into element */
       This.map = new google.maps.Map2(document.getElementById(This.elementId));
       This.map.setUIToDefault();
-      This.map.addControl(new GSmallMapControl());
+      This.map.addControl(new GLargeMapControl());
       This.map.addControl(new GMapTypeControl());
-      This.map.addControl(new GOverviewMapControl());
+      This.map.addControl(new GOverviewMapControl(new GSize(100, 100)));
 
       This.baseIcon = new GIcon(G_DEFAULT_ICON);
       This.baseIcon.shadow = "http://www.google.com/mapfiles/shadow50.png";

@@ -1,16 +1,25 @@
-Extension:
-==========
-* Rewrite CoNetServ API (NPAPI->JS in OOP; split NPAPI and JS tools)
-* Mozilla Firefox add-on updates
-* Google Chrome extension updates
-* Ping lost packet filtering (regexp)
+General:
+- Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
+- Compilation: use automatic tools (cmake or autotools)
+- Multi-platforms: guarantee support for Windows, Linux and Mac OS on both 32bit and 64bit systems
 
 Plugin:
-=======
-* Rewrite CoNetServ API (NPAPI->JS in OOP; objects with properties and methods)
-  * if (CoNetServ.ping) {
-       CoNetServ.ping(..);
-       ..
-  * CoNetServ.version(); // to get current version (front-end for 3rd parties)
-* Windows: Parse locales (not win1250 only)
+- Windows: reimplement locale support
+- Extension API: rewrite NPAPI invokes into OOP (objects with properties and methods)
+- Plugin API: third-party availability, version system
+- Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
+- Local Network Info: nmap to show neighboaring computers
 
+Extension:
+- Plotting: rewrite into OOP
+- Local Info Tab: rename to External Host Info, change layout
+- Settings: implement for different web-browsers (using native API)
+- Network tools: allow long output
+- Network tools: check availability and print additional info (installation, ..)
+- Firefox: automatic icon in toolbar 
+- PING: rewrite packet lost analyser using regexp
+- TRACEROUTE: improve plotting
+- WHOIS: use only first and second domain names
+- Console output: improve visibility of time values
+- External services: ping and traceroute info from public Looking glass servers
+- URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
