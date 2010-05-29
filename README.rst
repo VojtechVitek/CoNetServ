@@ -2,7 +2,7 @@ CoNetServ (Complex Network Services)
 ====================================
 **Extension which integrates network services into the browser.**
 
-.. image:: extensions/images/icon128.png
+.. image:: http://github.com/V-Teq/CoNetServ/raw/master/extension/images/icon128.png
 
 Directory structure
 -------------------
@@ -33,7 +33,7 @@ b) Release mode
 ::
 
   $ mkdir -p build/$(uname)/ && cd build/$(uname)
-  $ cmake -D CMAKE_BUILD_TYPE="Release" ../../
+  $ cmake -DCMAKE_BUILD_TYPE=Release ../../
   $ make
   $ make packages
 

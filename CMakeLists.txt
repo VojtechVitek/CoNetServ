@@ -6,22 +6,22 @@ set(MINOR_VERSION 2)
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(CMAKE_COLOR_MAKEFILE ON)
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakePlugins")
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakePlugins)
 
 # Build type
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	# Release build
 	message(STATUS "Build type: Release")
 	add_definitions(-DNDEBUG)
+	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION})
 else()
 	# Debug build
-	message(STATUS "Build type: Debug")
-	set(VERSION ${VERSION}.5)
+	message(STATUS Build type: Debug)
 	add_definitions(-DDEBUG)
+ 	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.5)
 endif()
 
 # Project strings
-set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION})
 if(UNIX)
 	EXEC_PROGRAM(date
 	ARGS +%Y-%m-%d
