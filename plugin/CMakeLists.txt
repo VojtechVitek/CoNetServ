@@ -33,21 +33,31 @@ set_target_properties(CoNetServ PROPERTIES PREFIX "np")
 
 # Export release shared library (force simple packaging)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-	message(STATUS ${CMAKE_SYSTEM_NAME})
-	file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/../export/${CMAKE_SYSTEM_NAME})
+	file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME})
 	get_target_property(CoNetServLibFile CoNetServ LOCATION)
 	file(RELATIVE_PATH CoNetServLibFileName ${CMAKE_CURRENT_BINARY_DIR} ${CoNetServLibFile})
 	add_custom_command(
-		OUTPUT  ${CMAKE_BINARY_DIR}/../export/${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+		OUTPUT  ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
 		COMMAND ${CMAKE_COMMAND} -E copy
-		${CoNetServLibFile} ${CMAKE_BINARY_DIR}/../export/${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+		${CoNetServLibFile} ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
 		DEPENDS ${CoNetServLibFile}
-		COMMENT "Exporting shared library: ${CMAKE_BINARY_DIR}/../export/${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}"
+		COMMENT "Exporting shared library: ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}"
 	)
-	add_custom_target(export ALL
-	DEPENDS ${CMAKE_BINARY_DIR}/../export/${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+	file(RELATIVE_PATH RELEASE_PATH ${CMAKE_BINARY_DIR}/../ ${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz)
+	add_custom_command(
+		OUTPUT  ${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}
+		COMMAND ${CMAKE_COMMAND} -E tar -czf
+		${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz *
+		DEPENDS ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+		COMMENT "Packing release plugin into: ../${RELEASE_PATH}"
 	)
+	add_custom_target(Release ALL
+		DEPENDS ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+		${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz
+	)
+	
 endif()
 
 # Create debug program
-add_executable(debug ${debug_sources} ${sources} ${platform_sources} ${headers} ${platform_headers})
+add_executable(Debug ${debug_sources} ${sources} ${platform_sources} ${headers} ${platform_headers})
