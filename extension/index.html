@@ -1,81 +1,103 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
 <html>
-<head>
-  <title>CoNetServ - Complex Network Services</title>
-  <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
-  <link type="text/css" href="css/conetserv.css" rel="stylesheet" />
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-  <script type="text/javascript" src="js/jquery/jquery-1.3.2.min.js"></script>
-  <script type="text/javascript" src="js/jquery/jquery-ui-1.7.2.custom.min.js"></script>
-  <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
-  <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
-  <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script> 
-  <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
-  <script type="text/javascript" src="js/map.js"></script>
-  <script type="text/javascript" src="js/conetserv.js"></script>
-  <script type="text/javascript" src="js/services.js"></script>
-  <script type="text/javascript" src="js/console.js"></script> 
-  <script type="text/javascript" src="js/plot.js"></script>
-  <script type="text/javascript" src="js/url.js"></script>
-</head>
-<body>
-<div id="tabs">
-    <form action="" onsubmit="stopCommands();startCommands();return false;">
-      <input id="url" type="text" value="" size="60" class="ui-corner-all" onkeydown="document.getElementById('url').style.color='black'"/>
-      <input id="urlButton" type="submit" value="Start" class="ui-button ui-widget ui-state-default ui-corner-all" role="button">
-    </form>
+  <head>
+    <title>CoNetServ - Complex Network Services</title>
+    <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
+    <link type="text/css" href="css/ui.css" rel="stylesheet" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-ui-1.8.1.custom.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
+    <script type="text/javascript" src="js/ui.js"></script>
+  </head>
+  <body>
+    <div id="tabs">
     <ul>
-        <li title="PING IPv4"><span id="pingState" class="tabState"></span><a href="#pingTab">ping</a><span id="pingTabClose" class="tabClose" onclick="stopPing()"></span></li>
-        <li title="PING IPv6"><span id="ping6State" class="tabState"></span><a href="#ping6Tab">ping6</a><span id="ping6TabClose" class="tabClose" onclick="stopPing6()"></span></li>
-        <li title="TRACEROUTE IPv4"><span id="tracerouteState" class="tabState"></span><a href="#tracerouteTab">traceroute</a><span id="tracerouteTabClose" class="tabClose" onclick="stopTraceroute()"></span></li>
-        <li title="TRACEROUTE IPv6"><span id="traceroute6State" class="tabState"></span><a href="#traceroute6Tab">traceroute6</a><span id="traceroute6TabClose" class="tabClose" onclick="stopTraceroute6()"></span></li>
-        <script type="text/javascript">
-          if($.client.os != "Windows") 
-            document.write('<li title="WHOIS"><span id="whoisState" class="tabState"></span><a href="#whoisTab">whois</a><span id="whoisTabClose" class="tabClose" onclick="stopWhois()"></span></li>');
-        </script>
-        <li title="NSLOOKUP"><span id="nslookupState" class="tabState"></span><a href="#nslookupTab">nslookup</a><span id="nslookupTabClose" class="tabClose" onclick="stopNslookup()"></span></li>
-        <li title="Host info (external IP, hostname, country, location, ..)" class="localTab"><span id="localState" class="tabState"></span><a href="#localTab" onclick="startLocalInfo();">host info</a><span id="localTabClose" class="tabClose" onclick=""></span></li>
-        <li title="About" class="aboutTab"><a href="#aboutTab">About</a></li>
+      <li><a href="#local-services">Local services</a></li>
+      <li><a href="#external-services">External services</a></li>
+      <li><a href="#local-info">Local info</a></li>
+      <li><a href="#external-info">external info</a></li>
     </ul>
-    <div id="pingTab">
-      <div id="pingConsole" class="consoleTextarea ui-corner-all"></div>
-	    <div id="pingPlaceholder" class="placeholder"></div>
+    <div id="local-services" class="tab local">
+      <form>
+        <div id="local-services-form">
+          <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
+            <label id="local-ping-label" class= "ping" for="local-ping-input">Ping</label>
+          <input type="radio" id="local-ping6-input" class="radio-tab ping6" name="local-services-form" value ="local-ping6-div" />
+            <label id="local-ping-label" class="ping6" for="local-ping6-input">Ping6</label>
+          <input type="radio" id="local-tracert-input" class="radio-tab tracert" name="local-services-form" value ="local-tracert-div" />
+            <label id="local-tracert-label" class="tracert" for="local-tracert-input">Traceroute</label>
+          <input type="radio" id="local-tracert6-input" class="radio-tab tracert6" name="local-services-form" value ="local-tracert6-div" />
+            <label id="local-tracert6-label" class="tracert6" for="local-tracert6-input">Traceroute6</label>
+          <input type="radio" id="local-whois-input" class="radio-tab whois" name="local-services-form" value ="local-whois-div" />
+            <label id="local-whois-label" class="whois" for="local-whois-input">Whois</label>
+          <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
+            <label id="local-nslookup-label" class="nslookup" for="local-nslookup-input">NSlookup</label>
+        </div>
+      </form>
+      <div id="local-ping-div" class="content ping">
+        <div id="local-ping-console" class="console ui-corner-all"></div>
+        <div id="local-ping-placeholder" class="plot-placeholder"></div>
+      </div>
+      <div id="local-ping6-div" class="content ping6">
+        <div id="local-ping6-console" class="console ui-corner-all"></div>
+        <div id="local-ping6-placeholder" class="plot-placeholder"></div>
+      </div>
+      <div id="local-tracert-div" class="content tracert">
+        <div id="local-tracert-console" class="console ui-corner-all"></div>
+        <div id="local-tracert-placeholder" class="plot-placeholder"></div>
+      </div>
+      <div id="local-tracert6-div" class="content tracert6">
+        <div id="local-tracert6-console" class="console ui-corner-all"></div>
+        <div id="local-tracert6-placeholder" class="plot-placeholder"></div>
+      </div>
+      <div id="local-whois-div" class="content whois">
+        <div id="local-whois-console" class="console ui-corner-all"></div>
+      </div>
+      <div id="local-nslookup-div" class="content nslookup">
+        <div id="local-nslookup-console" class="console ui-corner-all"></div>
+      </div>
+
+
     </div>
-    <div id="ping6Tab">
-      <div id="ping6Console" class="consoleTextarea ui-corner-all"></div>
-      <div id="ping6Placeholder" class="placeholder"></div>
+    <div id="external-services" class="tab">
+      <form>
+        <div id="external-services-form">
+          <input type="radio" id="external-ping" name="radio" checked="checked" /><label for="external-ping">Ping</label>
+          <input type="radio" id="external-ping6" name="radio" /><label for="external-ping6">Ping6</label>
+          <input type="radio" id="external-tracert" name="radio" /><label for="external-tracert">Traceroute</label>
+          <input type="radio" id="external-tracert6" name="radio" /><label for="external-tracert6">Traceroute6</label>
+          <input type="radio" id="external-whois" name="radio" /><label for="external-whois">Whois</label>
+          <input type="radio" id="external-nslookup" name="radio" /><label for="external-nslookup">Nslookup</label>
+        </div>
+      </form>
+      <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
     </div>
-    <div id="tracerouteTab">
-      <div id="tracerouteConsole" class="consoleTextarea ui-corner-all"></div>
-      <div id="traceroutePlaceholder" class="placeholder"></div>
+    <div id="local-info" class="tab">
+      <form>
+        <div id="local-info-form">
+          <input type="radio" id="local-nmap" name="radio" checked="checked" /><label for="local-nmap">Neighbours</label>
+          <input type="radio" id="local-ip" name="radio" /><label for="local-ip">IP settings</label>
+        </div>
+      </form>
+      <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+      <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
     </div>
-    <div id="traceroute6Tab">
-      <div id="traceroute6Console" class="consoleTextarea ui-corner-all"></div>
-      <div id="traceroute6Placeholder" class="placeholder"></div>
+    <div id="external-info" class="tab">
+      <form>
+        <div id="external-info-form">
+          <input type="radio" id="external-provider" name="radio" /><label for="external-provider">Provider</label>
+          <input type="radio" id="external-ip" name="radio" checked="checked" /><label for="external-ip">IP</label>
+          <input type="radio" id="external-map" name="radio" /><label for="external-map">Map</label>
+        </div>
+      </form>
+      <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+      <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
     </div>
-    <script type="text/javascript">
-      if($.client.os != "Windows") {
-        document.write('<div id="whoisTab">');
-        document.write('<div id="whoisConsole" class="consoleTextarea ui-corner-all"></div>');
-        document.write('</div>');
-      }
-    </script>
-    <div id="nslookupTab">
-      <div id="nslookupConsole" class="consoleTextarea ui-corner-all"></div>
-    </div>
-    <div id="localTab">
-      <div id="mapPlaceholder"></div>
-      <h2>Location</h2><ul id="location"></ul>
-      <h2>Hostname</h2><ul id="hostname"></ul>
-      <h2>Provider</h2><ul id="provider"></ul>
-      <h2>Route</h2><ul id="route"></ul>
-      <h2>External IPv4</h2><ul id="externIpv4"></ul>
-      <h2>External IPv6</h2><ul id="externIpv6"></ul>
-    </div>
-    <div id="aboutTab">
-      @ABOUT.HTML@
-    </div>
-</div>
-<object id="conetserv" type="application/x-conetserv" width="0" height="0">Plugin FAILED to load</object>
-</body>
+  </div>
+  </body>
 </html>

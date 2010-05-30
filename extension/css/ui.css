@@ -1,0 +1,49 @@
+/* 
+    Document   : ui
+    Created on : 29.5.2010, 18:11:27
+    Author     : kanei
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body{
+   font-size:62.5%;
+}
+
+#tabs{
+   width: 680px;
+   height: 560px;
+   overflow: hidden;
+}
+
+.content {
+  display: none;
+  height: 300px;
+}
+
+.console {
+  width: 640px;
+  height: 450px;
+  margin-bottom: 5px;
+  padding: 3px 5px;
+  color: #444;
+  background: white;
+  border: 1px solid grey;
+  overflow: auto;
+}
+
+.ping .console {
+  height: 220px;
+}
+
+.ping6 .console {
+  height: 220px;
+}
+
+.tracert .console {
+  height: 220px;
+}
+
+.tracert6 .console {
+  height: 220px;
+}

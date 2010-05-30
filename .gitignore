@@ -15,3 +15,6 @@ build/
 *.backup
 *~
 .*.swp
+# MSVC files
+*.ncb
+*.suo
