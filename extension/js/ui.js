@@ -8,7 +8,14 @@ $(function() {
     tracert : 1,
     tracert6 : 0,
     whois: 1,
-    nslookup : 1
+    nslookup : 1,
+
+    ping_test: 1,
+    ping6_test : 0,
+    tracert_test : 1,
+    tracert6_test : 0,
+    whois_test : 1,
+    nslookup_test : 0
   };
 
   // create tabs
@@ -21,50 +28,88 @@ $(function() {
   $("#external-info-form").buttonset();
 
   /**
+   * removes any DOM children in div and instead writes error message by jquery
+   */
+  var divError = function(div, msg) {
+    $(div).empty();
+    $(div).append(
+      '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> \
+      <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> \
+      <strong>Alert:</strong> ' + msg + '</p></div>');
+  }
+
+  /**
    * checks availability of services and stuff for current system
    */
   var checkAvailability = function() {
+    var err;
     // check for plugin - if not available, disable all dependend parts of
     // CoNetServ
     if(!conetserv) {
-      var errstring = "CoNetServ plugin for your browser has not been correctly \
-        loaded. Please, refer to readme for further steps."
-      $("#local-services").empty();
-      // TODO rewrite error call
-      $("#local-services").append(
-        '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> \
-        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> \
-        <strong>Alert:</strong> ' + errstring + '</p></div>')
+      divError("#local-services", "CoNetServ plugin for your browser has not \\n\
+        been correctly loaded. Please, refer to readme for further steps.")
     }
+    else {
+      // check local services availability
+      // first check for general availability in system - if not, don even display
+      if(!conetserv.ping) {
+        $(".local .ping").remove();
+      }
 
-    // check local services availability
-    // first check for general availability in system - if not, don even display
-    if(!conetserv.ping) {
-      $(".local .ping").remove();
-    }
+      if(!conetserv.ping6) {
+        $(".local .ping6").remove();
+      }
 
-    if(!conetserv.ping6) {
-      $(".local .ping6").remove();
-    }
+      if(!conetserv.tracert) {
+        $(".local .tracert").remove();
+      }
 
-    if(!conetserv.tracert) {
-      $(".local .tracert").remove();
-    }
+      if(!conetserv.tracert6) {
+        $(".local .tracert6").remove();
+      }
 
-    if(!conetserv.tracert6) {
-      $(".local .tracert6").remove();
-    }
+      if(!conetserv.whois) {
+        $(".local .whois").remove();
+      }
 
-    if(!conetserv.whois) {
-      $(".local .whois").remove();
-    }
+      if(!conetserv.nslookup) {
+        $(".local .nslookup").remove();
+      }
 
-    if(!conetserv.nslookup) {
-      $(".local .nslookup").remove();
+      // now check for installed state and if not, show message about installation
+      if(!conetserv.ping_test) {
+        divError("#local-ping-div", "Ping service has not been found in your system. \n\
+        If you want to install it, please follow these steps.");
+      }
+
+      if(!conetserv.ping6_test) {
+        divError("#local-ping6-div", "Ping IPv6 service has not been found in your system. \n\
+        If you want to install it, please follow these steps.");
+      }
+
+      if(!conetserv.tracert_test) {
+        divError("#local-tracert-div", "Traceroute service has not been found in your system. \n\
+        If you want to install it, please follow these steps.");
+      }
+
+      if(!conetserv.tracert6_test) {
+        divError("#local-tracert6-div", "Traceroute IPv6 service has not been found in your system. \n\
+        If you want to install it, please follow these steps.");
+      }
+
+      if(!conetserv.whois_test) {
+        divError("#local-whois-div", "Whois service has not been found in your system. \n\
+        If you want to install it, please follow these steps.");
+      }
+
+      if(!conetserv.nslookup_test) {
+        divError("#local-nslookup-div", "NSlookup service has not been found in your system. \n\
+        If you want to install it, please follow these steps.");
+      }
+
+      //refresh visibility of buttons
+      $("#local-services-form").buttonset("refresh");
     }
-    
-    //refresh visibility of buttons
-    $("#local-services-form").buttonset("refresh");
 
   };
 

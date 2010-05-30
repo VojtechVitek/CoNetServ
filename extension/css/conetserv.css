@@ -3,12 +3,6 @@ body{
    font-size:62.5%;
 }
 
-#tabs{
-   width: 680px; 
-   height: 560px; 
-   overflow: hidden;
-}
-
 #tabs form{
    margin: 2px 2px 5px 5px;
 }
@@ -17,9 +11,6 @@ body{
    margin: 0px;
 }
 
-#url{
-   
-}
 
 .tabState{
    margin-top: 4px;
@@ -43,16 +34,6 @@ body{
    display: none;
 }
 
-.consoleTextarea{
-   width: 640px; 
-   height: 480px;
-   margin-bottom: 5px;
-   padding: 3px 5px;
-   color: #444;
-   background: white;
-   border: 1px solid grey;
-   overflow: auto;
-}
 
 #conetserv {
    width: 0px;
@@ -80,22 +61,6 @@ body{
    position: absolute !important;
    margin-top: -29px !important;
    right: 57px;
-}
-
-#pingConsole{
-   height: 220px;
-}
-
-#ping6Console{
-   height: 220px;
-}
-
-#tracerouteConsole{
-   height: 210px;
-}
-
-#traceroute6Console{
-   height: 210px;
 }
 
 .placeholder{
