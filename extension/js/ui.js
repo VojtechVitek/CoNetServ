@@ -115,7 +115,7 @@ $(function() {
   /**
    * redraws page containing radio buttons used as tabs
    */
-  var redraw = function(){
+  var redrawUi = function(){
     var $tabs = $('#tabs').tabs();
     var selected = $tabs.tabs('option', 'selected');
     var container = false;
@@ -145,10 +145,10 @@ $(function() {
    */
   $(document).ready(function(){
     checkAvailability();
-    redraw();
+    redrawUi();
 
-    var plot = new Plot();
-    plot.plotPing('64 bytes from 66.230.220.41: icmp_seq=1 ttl=45 time=182 ms\
+    Plot.inicialize();
+    Plot.plotPing('64 bytes from 66.230.220.41: icmp_seq=1 ttl=45 time=182 ms\
 64 bytes from 66.230.220.41: icmp_seq=2 ttl=45 time=181 ms\
 64 bytes from 66.230.220.41: icmp_seq=3 ttl=45 time=181 ms\
 64 bytes from 66.230.220.41: icmp_seq=4 ttl=45 time=188 ms', 4);

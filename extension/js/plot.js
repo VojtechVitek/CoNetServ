@@ -1,34 +1,34 @@
 /**
  * Object for plotting of graphs for services like ping and traceroute
  */
-var Plot = function() {
+var Plot = {
    /* initialize data */
 
    /* placeholders for plots */
-   this.pingPlaceholder = $("#local-ping-placeholder");
-   this.ping6Placeholder = $("#local-ping6-placeholder");
-   this.tracertPlaceholder = $("#local-tracert-placeholder");
-   this.tracert6Placeholder = $("#local-tracert6-placeholder");
+   pingPlaceholder : false,
+   ping6Placeholder : false,
+   tracertPlaceholder : false,
+   tracert6Placeholder : false,
 
    /* data for plotting */
-   this.pingData = new pData();
-   this.ping6Data = new pData();
-   this.traceData = new tData();
-   this.trace6Data = new tData();
+   pingData : new pData(),
+   ping6Data : new pData(),
+   traceData : new tData(),
+   trace6Data : new tData(),
 
-   this.tracertAxes = false;
-   this.tracert6Axes = false;
+   tracertAxes : false,
+   tracert6Axes : false,
 
    /* options for flot library - ping and traceroute */
-   this.optionsPing = {
+   optionsPing : {
       lines: {show: true},
       legend: {show: true, position: "sw", backgroundOpacity: 0.5},
       points: {show: true},
       xaxis: {tickDecimals: 0, tickSize: 1},
       yaxis: {min: 0}
-   };
+   },
 
-   this.optionsTrace = {
+   optionsTrace : {
       lines: {show: true},
       legend: {show: true, position: "nw", backgroundOpacity: 0.5},
       points: {show: true},
@@ -37,12 +37,22 @@ var Plot = function() {
       zoom: {interactive: true},
       pan: {interactive: true, frameRate: 30},
       valueLabels: {show: true}
-   };
+   },
+
+   /**
+    * sets all the parameters, which needs to be applied after document.ready
+    */
+   inicialize : function() {
+      this.pingPlaceholder = $("#local-ping-placeholder");
+      this.ping6Placeholder = $("#local-ping6-placeholder");
+      this.tracertPlaceholder = $("#local-tracert-placeholder");
+      this.tracert6Placeholder = $("#local-tracert6-placeholder");
+   },
 
    /**
     * repaints all the plots defined in this file depending on actual data
     */
-   this.repaint = function() {
+   repaint : function() {
       var $tabs = $('#tabs').tabs();
       var selected = $tabs.tabs('option', 'selected');
       
@@ -122,7 +132,7 @@ var Plot = function() {
                plotCont.zoomOut({center: c});
          });
       }
-   }
+   },
 
    /**
     * Paints plot for ping service with received data added to actual data.
@@ -131,7 +141,7 @@ var Plot = function() {
     * @param type Numeral value for defining, which version of ping we are
     * plotting ( 4 for v.4 6 for v.6 ).
     */
-   this.plotPing = function(received, type) {
+   plotPing : function(received, type) {
       if(received == "")
          return;
 
@@ -180,7 +190,7 @@ var Plot = function() {
 
       /*update plots*/
       this.repaint();
-   }
+   },
 
    /**
     * Paints plot for tracert service with received data added to actual data.
@@ -189,7 +199,7 @@ var Plot = function() {
     * @param type Numeral value for defining, which version of ping we are
     * plotting ( 4 for v.4 6 for v.6 ).
     */
-   this.plotTracert = function(received, type) {
+   plotTracert : function(received, type) {
       if(received == "")
          return;
 
@@ -223,7 +233,7 @@ var Plot = function() {
       }
 
       this.repaint();
-   }
+   },
 
 
    /**
@@ -232,7 +242,7 @@ var Plot = function() {
     * @param type Numeral value for defining, which version of ping we are
     * plotting ( 4 for v.4 6 for v.6 ).
     */
-   this._addTPlotDataWin = function(row, type) {
+   _addTPlotDataWin : function(row, type) {
       var data = type == 4? this.traceData : this.trace6Data;
 
       var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
@@ -254,7 +264,7 @@ var Plot = function() {
       label = fields[first + labelPos];
 
       data.add(time, label);
-   }
+   },
 
    /**
     * Private function for adding traceroute data on linux platform
@@ -262,7 +272,7 @@ var Plot = function() {
     * @param type Numeral value for defining, which version of ping we are
     * plotting ( 4 for v.4 6 for v.6 ).
     */
-   this._addTPlotDataLin = function(row, type)
+   _addTPlotDataLin : function(row, type)
    {
       var data = type == 4? this.traceData : this.trace6Data;
       var step, label= "", first = 0;
@@ -293,7 +303,6 @@ var Plot = function() {
 
       data.add(time, label);
    }
-
 }
 
 /* ping time data object*/
