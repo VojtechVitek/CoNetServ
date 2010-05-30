@@ -1,6 +1,7 @@
 General:
 - Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
 - Multi-platforms: guarantee support for Windows, Linux and Mac OS on both 32bit and 64bit systems
+- CMake(Apple): Build release bundle (Darwin directory structure); Find WebKIT Darwin SDK / XULRunner SDK.
 
 Plugin:
 - Windows: reimplement locale support
