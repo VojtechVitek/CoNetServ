@@ -15,16 +15,15 @@ set(headers
 )
 
 # Platform-specific sources and header files
-if(APPLE)
-	include(apple/CMakeLists.txt)
-	include(unix/CMakeLists.txt)
-elseif(UNIX)
+if(UNIX)
 	include(unix/CMakeLists.txt)
 elseif(WIN32)
 	include(win/CMakeLists.txt)
 else()
 	message(FATAL ERROR "Sorry, your operating system is not supported.")
 endif()
+
+set(CMAKE_VERBOSE_MAKEFILE true)
 
 # Create shared library
 add_library(CoNetServ SHARED ${sources} ${platform_sources} ${headers} ${platform_headers})
@@ -33,28 +32,35 @@ set_target_properties(CoNetServ PROPERTIES PREFIX "np")
 
 # Export release shared library (force simple packaging)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-	file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME})
 	get_target_property(CoNetServLibFile CoNetServ LOCATION)
-	file(RELATIVE_PATH CoNetServLibFileName ${CMAKE_CURRENT_BINARY_DIR} ${CoNetServLibFile})
+	get_filename_component(CoNetServLibFileName ${CoNetServLibFile} NAME)
+
+	include(${CMAKE_MODULE_PATH}/MozillaTargetPlatform.cmake)
+	get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
+	set(RELEASE_PACK ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-plugin-binaries.tgz)
+
+	file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH})
+
+	if(APPLE)
+		include(apple/CMakeLists.txt)
+	endif()
+
 	add_custom_command(
-		OUTPUT  ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+		OUTPUT  ${RELEASE_DIR}/${MOZILLA_PATH}${PLATFORM_PATH}${CoNetServLibFileName}
 		COMMAND ${CMAKE_COMMAND} -E copy
-		${CoNetServLibFile} ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
+		${CoNetServLibFile} ${RELEASE_DIR}/${MOZILLA_PATH}${PLATFORM_PATH}${CoNetServLibFileName}
 		DEPENDS ${CoNetServLibFile}
-		COMMENT "Exporting shared library: ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}"
+		COMMENT "Copying release shared library into: ../${MOZILLA_PATH}${PLATFORM_PATH}${CoNetServLibFileName}"
 	)
-	file(RELATIVE_PATH RELEASE_PATH ${CMAKE_BINARY_DIR}/../ ${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz)
 	add_custom_command(
-		OUTPUT  ${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz
-		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}
-		COMMAND ${CMAKE_COMMAND} -E tar -czf
-		${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz *
-		DEPENDS ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
-		COMMENT "Packing release plugin into: ../${RELEASE_PATH}"
+		OUTPUT  ${RELEASE_PACK}
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../
+		COMMAND ${CMAKE_COMMAND} -E tar -czf ${RELEASE_PACK} platform
+		DEPENDS ${RELEASE_DIR}/${MOZILLA_PATH}${PLATFORM_PATH}${CoNetServLibFileName}
+		COMMENT "Packing release plugin binaries into: ${RELEASE_PACK}"
 	)
 	add_custom_target(Release ALL
-		DEPENDS ${CMAKE_BINARY_DIR}/../${CMAKE_SYSTEM_NAME}/${CoNetServLibFileName}
-		${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-${CMAKE_SYSTEM_NAME}.tgz
+		DEPENDS ${RELEASE_DIR}/${MOZILLA_PATH}${PLATFORM_PATH}${CoNetServLibFileName} ${RELEASE_PACK}
 	)
 	
 endif()
