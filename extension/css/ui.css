@@ -47,3 +47,10 @@ body{
 .tracert6 .console {
   height: 220px;
 }
+
+.plot-placeholder {
+  margin-top: 10px;
+  height:220px;
+  width: 640px;
+  background: white;
+}

@@ -1,7 +1,4 @@
 /* CSS file for index.html */ 
-body{
-   font-size:62.5%;
-}
 
 #tabs form{
    margin: 2px 2px 5px 5px;
@@ -61,30 +58,6 @@ body{
    position: absolute !important;
    margin-top: -29px !important;
    right: 57px;
-}
-
-.placeholder{
-   margin-top: 10px;
-}
-
-#pingPlaceholder{
-   height:220px;
-   width: 640px;
-}
-
-#ping6Placeholder{
-   height:220px;
-   width: 640px;
-}
-
-#traceroutePlaceholder{
-   height:250px;
-   width: 640px;
-}
-
-#traceroute6Placeholder{
-   height:250px;
-   width: 640px;
 }
 
 #mapPlaceholder{
@@ -245,7 +218,7 @@ div.lostPacketsLabel{
 }
 
 #localTab li{
-   border: 1px solid grey;
+   border: 1px solid gray;
    background: white;
    padding: 3px 1px;
    margin-right: 10px;
@@ -279,5 +252,5 @@ div.lostPacketsLabel{
    padding: 5px;
    margin-bottom: 10px;
    background: white;
-   border: 1px solid grey;
+   border: 1px solid gray;
 }

@@ -1,20 +1,300 @@
-/* placeholders for plots */
-var pingPlaceholder;
-var ping6Placeholder;
-var traceroutePlaceholder;
-var traceroute6Placeholder;
+/**
+ * Object for plotting of graphs for services like ping and traceroute
+ */
+var Plot = function() {
+   /* initialize data */
 
-/* variables for storing plot identifiers */
-var traceroutePlot;
-var traceroute6Plot;
+   /* placeholders for plots */
+   this.pingPlaceholder = $("#local-ping-placeholder");
+   this.ping6Placeholder = $("#local-ping6-placeholder");
+   this.tracertPlaceholder = $("#local-tracert-placeholder");
+   this.tracert6Placeholder = $("#local-tracert6-placeholder");
 
-/* variables for storing positions in traceroute plot */
-var tracerouteAxes;
-var traceroute6Axes;
+   /* data for plotting */
+   this.pingData = new pData();
+   this.ping6Data = new pData();
+   this.traceData = new tData();
+   this.trace6Data = new tData();
 
-/* Fix bug with fast changing of tabs */
-var tabsLoading = 0;
+   this.tracertAxes = false;
+   this.tracert6Axes = false;
 
+   /* options for flot library - ping and traceroute */
+   this.optionsPing = {
+      lines: {show: true},
+      legend: {show: true, position: "sw", backgroundOpacity: 0.5},
+      points: {show: true},
+      xaxis: {tickDecimals: 0, tickSize: 1},
+      yaxis: {min: 0}
+   };
+
+   this.optionsTrace = {
+      lines: {show: true},
+      legend: {show: true, position: "nw", backgroundOpacity: 0.5},
+      points: {show: true},
+      xaxis: {zoomRange: [1, 10], panRange: [0, 30]},
+      yaxis: {zoomRange: [10, 1000]},
+      zoom: {interactive: true},
+      pan: {interactive: true, frameRate: 30},
+      valueLabels: {show: true}
+   };
+
+   /**
+    * repaints all the plots defined in this file depending on actual data
+    */
+   this.repaint = function() {
+      var $tabs = $('#tabs').tabs();
+      var selected = $tabs.tabs('option', 'selected');
+      
+      if(selected == "0" && this.pingData.changed)  /* ping v4 */
+      {
+         this.pingData.changed = 0;
+
+         $.plot(this.pingPlaceholder, 
+          [ {data: this.pingData.max, label: "Max ["+ this.pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+            {data: this.pingData.avrgs, label: "Avg ["+ this.pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+            {data: this.pingData.min, label: "Min ["+ this.pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+            {data: this.pingData.rows, color: "#2779AA"} ],
+          $.extend(true, {}, this.optionsPing, {
+             xaxis: {min: this.pingData.count - this.pingData.maxValues < 0 ? 0 : this.pingData.count - this.pingData.maxValues, 
+                      max: this.pingData.count > 10? this.pingData.count + 1 : 11}
+             }));
+
+       /* add label with percentage of lost packets */
+       this.pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+this.pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+this.pingData.getLostPercent()+'%</div>');
+      }
+      if(selected == "1" && this.ping6Data.changed)  /* ping v6 */
+      {
+         this.ping6Data.changed = 0;
+
+         $.plot(this.ping6Placeholder, 
+          [ {data: this.ping6Data.max, label: "Max ["+ this.ping6Data.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+            {data: this.ping6Data.avrgs, label: "Avg ["+ this.ping6Data.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+            {data: this.ping6Data.min, label: "Min ["+ this.ping6Data.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+            {data: this.ping6Data.rows, color: "#2779AA"}],
+          $.extend(true, {}, this.optionsPing, {
+             xaxis: {min: this.pingData.count - this.pingData.maxValues < 0 ? 0 : this.pingData.count - this.pingData.maxValues, 
+                      max: this.pingData.count > 10? this.pingData.count + 1 : 11}
+             }));
+          /* add label with percentage of lost packets */
+       this.ping6Placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+this.pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+this.pingData.getLostPercent()+'%</div>');
+      }
+      if((selected == "2" && this.traceData.changed)||(selected == "3" && this.trace6Data.changed))  /* tracert v4, v6 */
+      {
+         var tdata = selected == "2"? this.traceData : this.trace6Data;
+         var placeholder = selected == "2"? this.tracertPlaceholder : this.tracert6Placeholder;
+         var axes = selected == "2"? this.tracertAxes : this.tracert6Axes;
+         var plotCont;
+
+         tdata.changed = 0;
+
+
+         plotCont = $.plot(placeholder, [{data: tdata.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, optionsTrace, {
+           xaxis: {tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30)},
+           yaxis: {min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null)}
+         }));
+
+         // Functions for zooming/paning plots
+         this.tracertPlaceholder.bind('plotpan', function (event, plot) {
+            axes = plot.getAxes();
+            plot.getPlaceholder().find(".valueLabel").remove();
+            plot.getPlaceholder().find(".valueLabelLight").remove();
+            plot.draw();
+         });
+         this.tracertPlaceholder.bind('plotzoom', function (event, plot) {
+            axes = plot.getAxes();
+            plot.getPlaceholder().find(".valueLabel").remove();
+            plot.getPlaceholder().find(".valueLabelLight").remove();
+            plot.draw();
+         });
+
+         var c = plotCont.offset();
+          c.left = 300;
+          c.top = 100;
+
+         /* buttons for zooming in and out */
+         $('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
+               e.preventDefault();
+               plotCont.zoom({center: c});
+         });
+         $('<img id="zoomout" src="images/zoomout.png">').appendTo(placeholder).click(function (e) {
+               e.preventDefault();
+               plotCont.zoomOut({center: c});
+         });
+      }
+   }
+
+   /**
+    * Paints plot for ping service with received data added to actual data.
+    * @param received Defines data, which will be analyzed and stored to
+    * object structures
+    * @param type Numeral value for defining, which version of ping we are
+    * plotting ( 4 for v.4 6 for v.6 ).
+    */
+   this.plotPing = function(received, type) {
+      if(received == "")
+         return;
+
+      var data = type == 4? this.pingData : this.ping6Data;
+      var pingTime;
+      var npos;
+
+      /* connect with previous data */
+      data.prevData += received;
+
+      /* divide input data into lines and add them as data */
+      while((npos = data.prevData.indexOf("\n")) != -1)
+      {
+         var currentData = data.prevData.substr(0, npos);
+         if($.client.os == "Windows")
+         {
+            pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
+            if(pingTime)
+               data.add(pingTime);
+            else
+            {
+               //!! TODO rewrite to a regexp
+               /* control of response keywords */
+               if(currentData.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1
+                  || received.indexOf("timed out") != -1 || received.indexOf("unreachable") != -1 || received.indexOf("expired") != -1)
+               {
+                  data.add(null);
+               }
+            }
+         }
+         else if($.client.os == "Linux")
+         {
+            pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(currentData));
+            if(pingTime)
+            {
+          /* check for lost packets */
+          var actPingId = parseInt((/icmp_seq=\d+/i.exec(currentData))[0].substr(9));
+          while(actPingId != null && actPingId > ++data.prevId)
+                data.add(null);
+          data.add(pingTime);
+            }
+         }
+         /* store remaining data */
+         data.prevData = (data.prevData.substr(npos+1));
+      }
+
+      /*update plots*/
+      this.repaint();
+   }
+
+   /**
+    * Paints plot for tracert service with received data added to actual data.
+    * @param received Defines data, which will be analyzed and stored to
+    * object structures
+    * @param type Numeral value for defining, which version of ping we are
+    * plotting ( 4 for v.4 6 for v.6 ).
+    */
+   this.plotTracert = function(received, type) {
+      if(received == "")
+         return;
+
+      var data = type == 4? this.traceData : this.trace6Data;
+      /* connect with previous data */
+      data.prevData += received;
+      /* prepare data */
+
+      if($.client.os == "Windows")
+      {
+         var npos;
+         /* divide input data into lines and add them as data */
+         while((npos = data.prevData.indexOf("\n")) != -1)
+         {
+            this._addTPlotDataWin(data.prevData.substr(0, npos), type);
+            data.prevData = (data.prevData.substr(npos+1));
+         }
+      }
+      else if($.client.os == "Linux")
+      {
+         var npos;
+         /* divide input data into lines and add them as data */
+         while((npos = data.prevData.indexOf("\n")) != -1)
+         {
+            this._addTPlotDataLin(data.prevData.substr(0, npos), type);
+            data.prevData = (data.prevData.substr(npos+1));
+         }
+      }
+      else
+      {
+      }
+
+      this.repaint();
+   }
+
+
+   /**
+    * Private function for adding traceroute data on windows platform
+    * @param row One row of data to be added to data structures of object.
+    * @param type Numeral value for defining, which version of ping we are
+    * plotting ( 4 for v.4 6 for v.6 ).
+    */
+   this._addTPlotDataWin = function(row, type) {
+      var data = type == 4? this.traceData : this.trace6Data;
+
+      var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+      var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
+
+      var fields = nospaces.split(" ");
+      var step, label, first = 0, labelPos = 4;
+
+      while(fields[first] == "" && first<fields.length-6)
+         first++;
+
+      if(!(step = parseInt(fields[first])))
+         return;
+
+      for( j = first; j < fields.length; j++)
+         if(fields[j] == "ms")
+            labelPos++;
+
+      label = fields[first + labelPos];
+
+      data.add(time, label);
+   }
+
+   /**
+    * Private function for adding traceroute data on linux platform
+    * @param row One row of data to be added to data structures of object.
+    * @param type Numeral value for defining, which version of ping we are
+    * plotting ( 4 for v.4 6 for v.6 ).
+    */
+   this._addTPlotDataLin = function(row, type)
+   {
+      var data = type == 4? this.traceData : this.trace6Data;
+      var step, label= "", first = 0;
+      var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
+
+      var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+      var fields = nospaces.split(" ");
+
+      /* find first column */
+      while(fields[first] == "" && first<fields.length-3)
+         first++;
+
+      if(!(step = parseFloat(fields[first])))
+         return;
+      /* check for not comming packets */
+      if(fields[first+1] != "*")
+         label = fields[first+1];
+      else
+      {
+         if(fields[first+2] != "*")
+       label = fields[first+2];
+         else
+         {
+             if(fields[first+3] != "*")
+                label = fields[first+3];
+         }
+      }
+
+      data.add(time, label);
+   }
+
+}
 
 /* ping time data object*/
 function pData() {
@@ -92,7 +372,7 @@ function pData() {
    };
 }
 
-/* traceroute data object */
+/* tracert data object */
 function tData() {
    this.rows = [];		//array for storing data
    this.count = 0;		//amount of data in array
@@ -120,297 +400,23 @@ function tData() {
    };
 }
 
-/* data objects for ping, traceroute */
-var pingData;
-var ping6Data;
-
-var traceData;
-var trace6Data;
-
-/* chart data */
-var optionsPing;
-var optionsTrace;
-
 /* bind plot functions to tab changing */
 $(document).ready(function()
 {
-   pingData = new pData();
-   ping6Data = new pData();
-   traceData = new tData();
-   trace6Data = new tData();
-
-   /* initialize data */
-   pingPlaceholder = $("#pingPlaceholder");
-   ping6Placeholder = $("#ping6Placeholder");
-   traceroutePlaceholder = $("#traceroutePlaceholder");
-   traceroute6Placeholder = $("#traceroute6Placeholder");
-
-   optionsPing = {
-      lines: { show: true},
-      legend: { show: true, position: "sw", backgroundOpacity: 0.5 },
-      points: { show: true },
-      xaxis: { tickDecimals: 0, tickSize: 1 },
-      yaxis: { min: 0}
-   };
-
-   optionsTrace = {
-      lines: { show: true },
-      legend: { show: true, position: "nw", backgroundOpacity: 0.5 },
-      points: { show: true },
-      xaxis: {zoomRange: [1, 10], panRange: [0, 30] },
-      yaxis: {zoomRange: [10, 1000] },
-      zoom: { interactive: true },
-      pan: { interactive: true, frameRate: 30 },
-      valueLabels: { show: true }
-   };
-
    $("#tabs").bind('tabsshow', function() 
    {
-      tabsLoading = false;
-      pingData.touch();
-      ping6Data.touch();
-      traceData.touch();
-      trace6Data.touch();
-      repaintPlots();
+      this.pingData.touch();
+      this.ping6Data.touch();
+      this.traceData.touch();
+      this.trace6Data.touch();
+      plot.repaint();
    });
 
    $("#tabs").bind('select', function() 
    {
-      if(tabsLoading)
-         return false;
-      else
-         return (tabsLoading = true);
+      return true;
    });
 
-   repaintPlots();
+   plot.repaint();
 }
 );
-
-function repaintPlots() {
-   var $tabs = $('#tabs').tabs();
-   var selected = $tabs.tabs('option', 'selected');
-   if(selected == "0" && pingData.changed)  /* ping v4 */
-   {
-      pingData.changed = 0;
-
-      $.plot(pingPlaceholder, 
-	    [ { data: pingData.max, label: "Max ["+ pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-	      {	data: pingData.avrgs, label: "Avg ["+ pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
-	      { data: pingData.min, label: "Min ["+ pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-	      { data: pingData.rows, color: "#2779AA" }],
-	    $.extend(true, {}, optionsPing, {
-	       xaxis: { min: pingData.count - pingData.maxValues < 0 ? 0 : pingData.count - pingData.maxValues, 
-                   max: pingData.count > 10? pingData.count + 1 : 11}
-	       }));
-	       
-	 /* add label with percentage of lost packets */
-    pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+pingData.getLostPercent()+'%</div>');
-   }
-   if(selected == "1" && ping6Data.changed)  /* ping v6 */
-   {
-      ping6Data.changed = 0;
-
-      $.plot(ping6Placeholder, 
-	    [ { data: ping6Data.max, label: "Max ["+ ping6Data.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-	      {	data: ping6Data.avrgs, label: "Avg ["+ ping6Data.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
-	      { data: ping6Data.min, label: "Min ["+ ping6Data.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-	      { data: ping6Data.rows, color: "#2779AA" }],
-	    $.extend(true, {}, optionsPing, {
-	       xaxis: { min: pingData.count - pingData.maxValues < 0 ? 0 : pingData.count - pingData.maxValues, 
-                   max: pingData.count > 10? pingData.count + 1 : 11}
-	       }));
-	    /* add label with percentage of lost packets */
-    ping6Placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+pingData.getLostPercent()+'%</div>');
-   }
-   if((selected == "2" && traceData.changed)||(selected == "3" && trace6Data.changed))  /* traceroute v4, v6 */
-   {
-      var tdata = selected == "2"? traceData : trace6Data;
-      var placeholder = selected == "2"? traceroutePlaceholder : traceroute6Placeholder;
-      var axes = selected == "2"? tracerouteAxes : traceroute6Axes;
-      var plotCont;
-
-      tdata.changed = 0;
-      
-      
-      plotCont = $.plot(placeholder, [{ data: tdata.rows, label: "Position", color: "#2779AA" }], $.extend(true, {}, optionsTrace, {
-        xaxis: { tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30) },
-        yaxis: { min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null) }
-      }));
-
-      // Functions for zooming/paning plots
-      traceroutePlaceholder.bind('plotpan', function (event, plot) {
-	 axes = plot.getAxes();
-	 plot.getPlaceholder().find(".valueLabel").remove();
-	 plot.getPlaceholder().find(".valueLabelLight").remove();
-	 plot.draw();
-      });
-      traceroutePlaceholder.bind('plotzoom', function (event, plot) {
-	 axes = plot.getAxes();
-	 plot.getPlaceholder().find(".valueLabel").remove();
-	 plot.getPlaceholder().find(".valueLabelLight").remove();
-	 plot.draw();
-      });
-      
-      var c = plotCont.offset();
-	    c.left = 300;
-	    c.top = 100;
-
-      /* buttons for zooming in and out */
-      $('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
-            e.preventDefault();
-            plotCont.zoom({ center: c });
-      });
-      $('<img id="zoomout" src="images/zoomout.png">').appendTo(placeholder).click(function (e) {
-            e.preventDefault();
-            plotCont.zoomOut({ center: c });
-      });
-
-   }
-}
-
-
-function plotPing(received, type)
-{
-   if(received == "")
-      return;
-   
-   var data = type == 4? pingData : ping6Data;   
-   var pingTime;
-   var npos;
-      
-   /* connect with previous data */
-   data.prevData += received;
-   
-   /* divide input data into lines and add them as data */
-   while((npos = data.prevData.indexOf("\n")) != -1)
-   {
-      var currentData = data.prevData.substr(0, npos);
-      if($.client.os == "Windows") 
-      {
-         var pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
-         if(pingTime)
-            data.add(pingTime);
-         else
-         {
-            /* control of response keywords */
-            if(currentData.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1 
-               || received.indexOf("timed out") != -1 || received.indexOf("unreachable") != -1 || received.indexOf("expired") != -1)
-            {
-               data.add(null);
-            }
-         }
-      }
-      else if($.client.os == "Linux") 
-      {
-         var pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(currentData));
-         if(pingTime)
-         {
-	    /* check for lost packets */
-	    var actPingId = parseInt((/icmp_seq=\d+/i.exec(currentData))[0].substr(9)); 
-	    while(actPingId != null && actPingId > ++data.prevId) 
-   	       data.add(null);
-	    data.add(pingTime);
-         }
-      }
-   	/* store remaining data */
-      data.prevData = (data.prevData.substr(npos+1));
-   }
-  
-   /*update plots*/
-   repaintPlots();
-}
-
-function addTPlotDataWin(row, type)
-{
-   var data = type == 4? traceData : trace6Data;
-   
-   var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
-   var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
-      
-   var fields = nospaces.split(" ");
-   var step, label, first = 0, labelPos = 4;
-   
-   while(fields[first] == "" && first<fields.length-6)
-      first++;
-   
-   if(!(step = parseInt(fields[first])))
-      return;
-      
-   for( j = first; j < fields.length; j++)
-      if(fields[j] == "ms") 
-         labelPos++;      
-   
-   label = fields[first + labelPos];
-   
-   data.add(time, label);
-}
-
-function addTPlotDataLin(row, type)
-{
-   var data = type == 4? traceData : trace6Data;
-   var step, label= "", first = 0;
-   var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
-
-   var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
-   var fields = nospaces.split(" ");
-   
-   /* find first column */
-   while(fields[first] == "" && first<fields.length-3)
-      first++;
-
-   if(!(step = parseFloat(fields[first])))
-      return;
-   /* check for not comming packets */
-   if(fields[first+1] != "*")
-      label = fields[first+1];
-   else
-   {
-      if(fields[first+2] != "*")
-	 label = fields[first+2];
-      else
-      {
-      	 if(fields[first+3] != "*")
-      	    label = fields[first+3];
-      }
-   }
-
-   data.add(time, label);
-}
-
-/* draw plot */
-function plotTraceroute(received, type)
-{
-   if(received == "")
-      return;
-      
-   var data = type == 4? traceData : trace6Data;
-   /* connect with previous data */
-   data.prevData += received;
-   /* prepare data */
-   
-   if($.client.os == "Windows")
-   {
-      var npos;
-      /* divide input data into lines and add them as data */
-      while((npos = data.prevData.indexOf("\n")) != -1)
-      {
-         addTPlotDataWin(data.prevData.substr(0, npos), type);
-         data.prevData = (data.prevData.substr(npos+1));
-      }
-   }   
-   else if($.client.os == "Linux")
-   {
-      var npos;
-      /* divide input data into lines and add them as data */
-      while((npos = data.prevData.indexOf("\n")) != -1)
-      {
-         addTPlotDataLin(data.prevData.substr(0, npos), type);
-         data.prevData = (data.prevData.substr(npos+1));
-      }
-   }
-   else
-   {
-   }
-
-   repaintPlots();
-}
