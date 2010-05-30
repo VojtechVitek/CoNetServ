@@ -1,8 +1,23 @@
 # CoNetServ plugin - Apple (Darwin)
 
+# NOTE: File is using special variables from ../CMakeLists.txt
 # File is included -> current path is ../
-configure_file("apple/Info.plist.in" "${CMAKE_BINARY_DIR}/plugin/apple/Info.plist")
-configure_file("apple/Localized.r.in" "${CMAKE_BINARY_DIR}/plugin/apple/Localized.r")
+
+# Make MacOS bundle plugin directory
+set(PLATFORM_PATH np${PROJECT_NAME}.plugin/Contents/MacOS)
+file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/Resources/English.lproj)
+file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/MacOS)
+configure_file("apple/Info.plist.in" "${RELEASE_PATH}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/Info.plist")
+
+configure_file("apple/Localized.r.in" "${CMAKE_BINARY_DIR}/Localized.r")
+find_program(APPLE_RESOURCE Rez /Developer/Tools)
+if(APPLE_RESOURCE)
+	add_custom_command(COMMAND ${APPLE_RESOURCE}
+		-o ${RELEASE_PATH}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/Resources/English.lproj/Localized.rsrc
+		-useDF ${CMAKE_BINARY_DIR}/Localized.r)
+else
+	message(FATAL_ERROR "Can't find /Developer/Tools/Rez.")
+endif()
 
 # TODO:
 find_package(WebKitDarwinSDK REQUIRED)
@@ -14,16 +29,3 @@ find_package(WebKitDarwinSDK REQUIRED)
 # OSCFLAGS = -DXULRUNNER_SDK
 # OSLDFLAGS = -lc
 # endif
-
-#MACOS RESOURCES
-#  ADD_EXECUTABLE(MyExecutable ${MyExecutable_SRCS})
-#  GET_TARGET_PROPERTY(MyExecutable_PATH MyExecutable LOCATION)
-# 
-#  IF(APPLE)
-#    FIND_PROGRAM(APPLE_RESOURCE Rez /Developer/Tools)
-#    IF(APPLE_RESOURCE)
-#      ADD_CUSTOM_COMMAND(TARGET MyExecutable POST_BUILD
-#                         COMMAND ${APPLE_RESOURCE} Carbon.r -o ${MyExecutable_PATH})
-#    ENDIF(APPLE_RESOURCE)
-#  ENDIF(APPLE)
-#CMAKE_OSX_ARCHITECTURES=ppc;i386;ppc64;x86_64
