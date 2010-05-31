@@ -418,7 +418,7 @@ $(document).ready(function()
       this.ping6Data.touch();
       this.traceData.touch();
       this.trace6Data.touch();
-      plot.repaint();
+      Plot.repaint();
    });
 
    $("#tabs").bind('select', function() 
@@ -426,6 +426,6 @@ $(document).ready(function()
       return true;
    });
 
-   plot.repaint();
+   Plot.repaint();
 }
 );
