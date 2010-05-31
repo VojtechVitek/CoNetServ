@@ -9,3 +9,6 @@ install.rdf
 
 # Opera:
 config.xml
+
+# Platform-dependent files:
+platform

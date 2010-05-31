@@ -17,19 +17,12 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION})
 else()
 	# Debug build
-	message(STATUS Build type: Debug)
+	message(STATUS "Build type: Debug")
 	add_definitions(-DDEBUG)
  	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.5)
 endif()
 
 # Project strings
-if(UNIX)
-	EXEC_PROGRAM(date
-	ARGS +%Y-%m-%d
-	OUTPUT_VARIABLE BUILD_DATE
-	)
-endif()
-SET(MY_OUTPUT "${MY_OUTPUT}" CACHE INTERNAL "")
 set(PROJECT_NAME ${CMAKE_PROJECT_NAME})
 set(PROJECT_LONG "Complex Network Services")
 set(PROJECT_DESC "Extension which integrates network services into the browser.")

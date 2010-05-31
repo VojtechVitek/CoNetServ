@@ -1,5 +1,37 @@
 # CoNetServ extension
 
+# Build date
+if(UNIX)
+	exec_program(date
+		ARGS +%Y-%m-%d
+		OUTPUT_VARIABLE BUILD_DATE
+	)
+else()
+	set(BUILD_DATE "2010-02-01")
+endif()
+
+# Chrome plugin paths
+file(GLOB_RECURSE LIBRARY_PATHS ${CMAKE_SOURCE_DIR}/extension/platform/*np${PROJECT_NAME}.*)
+foreach(LIBRARY_PATH ${LIBRARY_PATHS})
+	file(RELATIVE_PATH LIBRARY_PATH ${CMAKE_SOURCE_DIR}/extension/ ${LIBRARY_PATH})
+	if("${CHROME_LIBRARIES}" STREQUAL "")
+		set(CHROME_LIBRARIES  "{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
+	else()
+		set(CHROME_LIBRARIES  "${CHROME_LIBRARIES},{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
+	endif()
+endforeach()
+
+# Firefox plugin paths
+file(GLOB LIBRARY_PATHS ${CMAKE_SOURCE_DIR}/extension/platform/*)
+foreach(LIBRARY_PATH ${LIBRARY_PATHS})
+	file(RELATIVE_PATH LIBRARY_PATH ${CMAKE_SOURCE_DIR}/extension/platform ${LIBRARY_PATH})
+	if("${FIREFOX_LIBRARIES}" STREQUAL "")
+		set(FIREFOX_LIBRARIES "<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
+	else()
+		set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")	
+	endif()
+endforeach()
+
 # Configure debugging package files:
 configure_file("chrome/manifest.json.in" "${CMAKE_SOURCE_DIR}/extension/manifest.json")
 configure_file("firefox/chrome.manifest.in" "${CMAKE_SOURCE_DIR}/extension/chrome.manifest")
