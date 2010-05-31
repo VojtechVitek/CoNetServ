@@ -7,6 +7,7 @@ CoNetServ (Complex Network Services)
 Directory structure
 -------------------
 ==================== =======================================
+CMakePlugins/        CMake plugins
 extension/           Extension source code
 extension/chrome/    Google Chrome (Chromium) specific files
 extension/firefox/   Mozilla Firefox specific files
@@ -35,8 +36,9 @@ b) Release mode
   $ mkdir -p build/$(uname)/ && cd build/$(uname)
   $ cmake -DCMAKE_BUILD_TYPE=Release ../../
   $ make
-  $ make packages
 
+  NOTE: (building 32bit plugin on 64bit system)
+  $ cmake -DCMAKE_C_FLAGS=-m32 -DARCH=x86 -DCMAKE_BUILD_TYPE=Release ../../
 
 Building on Windows
 -------------------

@@ -9,6 +9,7 @@ set(CMAKE_COLOR_MAKEFILE ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakePlugins)
 
 # Build type
+# -DCMAKE_BUILD_TYPE=Release
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	# Release build
 	message(STATUS "Build type: Release")
