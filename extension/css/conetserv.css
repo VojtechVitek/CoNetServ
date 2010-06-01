@@ -153,27 +153,7 @@ div.valueLabel {
 	border:none;
 }
 
-div.lostPacketsLabelLight {
-   position:absolute;
-   left: 530px; 
-   top: 20px; 
-   color:#E33; 
-   font-size:smaller;
-   opacity:0.5;
-	background-color: white;
-	padding: 3px;
-	border: 1px solid #E33; 
-}
 
-div.lostPacketsLabel{
-   position:absolute;
-   left: 530px; 
-   top: 20px; 
-   color:#E33;
-   font-size:smaller;
-   padding: 3px;
-   border: 1px solid #E33;   
-}
 
 #zoomin{
    position: absolute;

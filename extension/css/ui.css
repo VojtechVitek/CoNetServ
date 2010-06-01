@@ -21,23 +21,32 @@ body{
   height: 300px;
 }
 
+.url-input {
+   padding: 0.4em 1em;
+   margin: 0px -1px 10px 0px;
+}
+
+.url-button {
+   margin-bottom: 10px;
+   margin-left: -2px;
+}
+
 .console {
   width: 640px;
   height: 450px;
   margin-bottom: 5px;
   padding: 3px 5px;
   color: #444;
-  background: white;
-  border: 1px solid grey;
   overflow: auto;
+  background: #f8f9fa;
 }
 
 .ping .console {
-  height: 220px;
+  height: 200px;
 }
 
 .ping6 .console {
-  height: 220px;
+  height: 200px;
 }
 
 .tracert .console {
@@ -53,4 +62,27 @@ body{
   height:220px;
   width: 640px;
   background: white;
+}
+
+/* Lost packet banner on ping plot */
+div.lostPacketsLabelLight {
+   position:absolute;
+   left: 530px;
+   top: 20px;
+   color: #E33;
+   font-size: smaller;
+   opacity: 0.5;
+	background-color: white;
+	padding: 3px;
+	border: 1px solid #E33;
+}
+
+div.lostPacketsLabel{
+   position: absolute;
+   left: 530px;
+   top: 20px;
+   color: #E33;
+   font-size: smaller;
+   padding: 3px;
+   border: 1px solid #E33;
 }

@@ -45,15 +45,16 @@ $(document).ready(function(){
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
+   conetserv = 1;
    /* console text-boxes */
-   pingConsole = new console("pingConsole");
+   pingConsole = new console("local-ping-console");
    pingConsole.maxRows = 16;
-   ping6Console = new console("ping6Console");
+   ping6Console = new console("local-ping6-console");
    ping6Console.maxRows = 16;
-   tracerouteConsole = new console("tracerouteConsole");
-   traceroute6Console = new console("traceroute6Console");
-   whoisConsole = new console("whoisConsole");
-   nslookupConsole = new console("nslookupConsole");
+   tracerouteConsole = new console("local-tracert-console");
+   traceroute6Console = new console("local-tracert6-console");
+   whoisConsole = new console("local-whois-console");
+   nslookupConsole = new console("local-nslookup-console");
 
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
@@ -69,6 +70,30 @@ $(document).ready(function(){
          });
       }
    }
+
+   conetserv = {
+    ping : 1,
+    ping6 : 1,
+    tracert : 1,
+    tracert6 : 1,
+    whois: 1,
+    nslookup : 1,
+
+    ping_test: 1,
+    ping6_test : 1,
+    tracert_test : 1,
+    tracert6_test : 1,
+    whois_test : 1,
+    nslookup_test : 0
+   };
+
+   /*
+    * Inicialize ui
+    */
+   Ui.checkAvailability();
+   Ui.redraw();
+
+   Plot.inicialize();
 
 });
 

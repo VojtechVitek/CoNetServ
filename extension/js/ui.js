@@ -1,23 +1,4 @@
 /**
- * before implemented, set values for testing
- */
-var conetserv = {
- ping : 1,
- ping6 : 0,
- tracert : 1,
- tracert6 : 0,
- whois: 1,
- nslookup : 1,
-
- ping_test: 1,
- ping6_test : 0,
- tracert_test : 1,
- tracert6_test : 0,
- whois_test : 1,
- nslookup_test : 0
-};
-
-/**
  * Object for handling CoNetServ ui
  */
 var Ui = {
@@ -33,6 +14,48 @@ var Ui = {
       $("#external-services-form").buttonset();
       $("#local-info-form").buttonset();
       $("#external-info-form").buttonset();
+
+      /**
+      * reimplement behaviour when different tab is selected
+      */
+      $('#tabs').tabs({
+         show: function(event, ui) {
+            Ui.redraw();
+            return true;
+         }
+      });
+
+      /**
+       * when radiobutton on local-services page is selected
+       */
+      $("input[name=local-services-form]").change(function(){
+         Ui.redraw();
+         Plot.repaint();
+      });
+
+      /**
+       * when radiobutton on external-services page is selected
+       */
+      $("input[name=external-services-form]").change(function(){
+         Ui.redraw();
+         Plot.repaint();
+      });
+
+      /**
+       * when radiobutton on local-info page is selected
+       */
+      $("input[name=local-info-form]").change(function(){
+         Ui.redraw();
+         Plot.repaint();
+      });
+
+      /**
+       * when radiobutton on external-info page is selected
+       */
+      $("input[name=external-info-form]").change(function(){
+         Ui.redraw();
+         Plot.repaint();
+      });
    },
 
 
@@ -59,7 +82,7 @@ var Ui = {
        * CoNetServ
        */
       if(!conetserv) {
-         divError("#local-services", "CoNetServ plugin for your browser has not \\n\
+         this.divError("#local-services", "CoNetServ plugin for your browser has not \\n\
             been correctly loaded. Please, refer to readme for further steps.")
       }
       else {
@@ -133,8 +156,8 @@ If you want to install it, please follow these steps.");
    * Redraws page containing radio buttons used as tabs
    */
   redraw : function() {
-    var $tabs = $('#tabs').tabs();
-    var selected = $tabs.tabs('option', 'selected');
+    var tabs = $('#tabs').tabs();
+    var selected = tabs.tabs('option', 'selected');
     var container;
 
     //TODO rewrite to better way
@@ -152,6 +175,7 @@ If you want to install it, please follow these steps.");
         container = '#external-info';
         break;
     }
+
     var active = $(container + " input:radio:checked").val();
     $(container + " .content").css('display', 'none');
     $("#" + active).css('display', 'block');
@@ -159,38 +183,8 @@ If you want to install it, please follow these steps.");
 }
 
 $(function() {
-   Ui.inicialize();
-
    /**
-   * reimplement behaviour while different tab is selected
-   */
-   $('#tabs').tabs({
-      show: function(event, ui) {
-         Ui.redraw();
-         return true;
-      }
-   });
-
-   $("input[name=local-services-form]").change(function(){
-      Ui.redraw();
-   });
-
-   
-});
-
-/**
-* on document.ready
-*/
-$(document).ready(function(){
-   Ui.checkAvailability();
-   Ui.redraw();
-
-   Plot.inicialize();
-   Plot.plotPing('64 bytes from 66.230.220.41: icmp_seq=1 ttl=45 time=182 ms\
-64 bytes from 66.230.220.41: icmp_seq=2 ttl=45 time=181 ms\
-64 bytes from 66.230.220.41: icmp_seq=3 ttl=45 time=181 ms\
-64 bytes from 66.230.220.41: icmp_seq=4 ttl=45 time=188 ms', 4);
-
-
-
+    * inicialize page ui right after page creation
+    */
+   Ui.inicialize();
 });

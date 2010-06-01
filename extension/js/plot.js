@@ -55,82 +55,92 @@ var Plot = {
    repaint : function() {
       var $tabs = $('#tabs').tabs();
       var selected = $tabs.tabs('option', 'selected');
-      
-      if(selected == "0" && this.pingData.changed)  /* ping v4 */
-      {
-         this.pingData.changed = 0;
 
-         $.plot(this.pingPlaceholder, 
-          [ {data: this.pingData.max, label: "Max ["+ this.pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-            {data: this.pingData.avrgs, label: "Avg ["+ this.pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
-            {data: this.pingData.min, label: "Min ["+ this.pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-            {data: this.pingData.rows, color: "#2779AA"} ],
-          $.extend(true, {}, this.optionsPing, {
-             xaxis: {min: this.pingData.count - this.pingData.maxValues < 0 ? 0 : this.pingData.count - this.pingData.maxValues, 
-                      max: this.pingData.count > 10? this.pingData.count + 1 : 11}
+      /* check for local services tab selected for repainting */
+      if(selected == "0")
+      {
+         var active = $("#local-services input:radio:checked").val();
+
+         /* ping v4 */
+         if(active == 'local-ping-div' && this.pingData.changed) {
+
+            this.pingData.changed = 0;
+
+            $.plot(this.pingPlaceholder,
+             [ {data: this.pingData.max, label: "Max ["+ this.pingData.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+               {data: this.pingData.avrgs, label: "Avg ["+ this.pingData.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+               {data: this.pingData.min, label: "Min ["+ this.pingData.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+               {data: this.pingData.rows, color: "#2779AA"} ],
+             $.extend(true, {}, this.optionsPing, {
+                xaxis: {min: this.pingData.count - this.pingData.maxValues < 0 ? 0 : this.pingData.count - this.pingData.maxValues,
+                         max: this.pingData.count > 10? this.pingData.count + 1 : 11}
              }));
 
-       /* add label with percentage of lost packets */
-       this.pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+this.pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+this.pingData.getLostPercent()+'%</div>');
-      }
-      if(selected == "1" && this.ping6Data.changed)  /* ping v6 */
-      {
-         this.ping6Data.changed = 0;
+             /* add label with percentage of lost packets */
+             this.pingPlaceholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+this.pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+this.pingData.getLostPercent()+'%</div>');
+         }
 
-         $.plot(this.ping6Placeholder, 
-          [ {data: this.ping6Data.max, label: "Max ["+ this.ping6Data.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-            {data: this.ping6Data.avrgs, label: "Avg ["+ this.ping6Data.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
-            {data: this.ping6Data.min, label: "Min ["+ this.ping6Data.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-            {data: this.ping6Data.rows, color: "#2779AA"}],
-          $.extend(true, {}, this.optionsPing, {
-             xaxis: {min: this.pingData.count - this.pingData.maxValues < 0 ? 0 : this.pingData.count - this.pingData.maxValues, 
-                      max: this.pingData.count > 10? this.pingData.count + 1 : 11}
-             }));
-          /* add label with percentage of lost packets */
-       this.ping6Placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+this.pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+this.pingData.getLostPercent()+'%</div>');
-      }
-      if((selected == "2" && this.traceData.changed)||(selected == "3" && this.trace6Data.changed))  /* tracert v4, v6 */
-      {
-         var tdata = selected == "2"? this.traceData : this.trace6Data;
-         var placeholder = selected == "2"? this.tracertPlaceholder : this.tracert6Placeholder;
-         var axes = selected == "2"? this.tracertAxes : this.tracert6Axes;
-         var plotCont;
+         /* ping v6 */
+         if(active == 'local-ping6-div' && this.ping6Data.changed) {
+            this.ping6Data.changed = 0;
 
-         tdata.changed = 0;
+            $.plot(this.ping6Placeholder,
+             [ {data: this.ping6Data.max, label: "Max ["+ this.ping6Data.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+               {data: this.ping6Data.avrgs, label: "Avg ["+ this.ping6Data.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
+               {data: this.ping6Data.min, label: "Min ["+ this.ping6Data.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+               {data: this.ping6Data.rows, color: "#2779AA"}],
+            $.extend(true, {}, this.optionsPing, {
+                xaxis: {min: this.pingData.count - this.pingData.maxValues < 0 ? 0 : this.pingData.count - this.pingData.maxValues,
+                         max: this.pingData.count > 10? this.pingData.count + 1 : 11}
+                }));
+             /* add label with percentage of lost packets */
+            this.ping6Placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: '+this.pingData.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: '+this.pingData.getLostPercent()+'%</div>');
+         }
+
+         /* traceroute */
+         if((active == 'local-tracert-div' && this.traceData.changed)||(active =='local-tracert6-div' && this.trace6Data.changed))  /* tracert v4, v6 */
+         {
+            var tdata = selected == "2"? this.traceData : this.trace6Data;
+            var placeholder = selected == "2"? this.tracertPlaceholder : this.tracert6Placeholder;
+            var axes = selected == "2"? this.tracertAxes : this.tracert6Axes;
+            var plotCont;
+
+            tdata.changed = 0;
 
 
-         plotCont = $.plot(placeholder, [{data: tdata.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, optionsTrace, {
-           xaxis: {tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30)},
-           yaxis: {min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null)}
-         }));
+            plotCont = $.plot(placeholder, [{data: tdata.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, optionsTrace, {
+              xaxis: {tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30)},
+              yaxis: {min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null)}
+            }));
 
-         // Functions for zooming/paning plots
-         this.tracertPlaceholder.bind('plotpan', function (event, plot) {
-            axes = plot.getAxes();
-            plot.getPlaceholder().find(".valueLabel").remove();
-            plot.getPlaceholder().find(".valueLabelLight").remove();
-            plot.draw();
-         });
-         this.tracertPlaceholder.bind('plotzoom', function (event, plot) {
-            axes = plot.getAxes();
-            plot.getPlaceholder().find(".valueLabel").remove();
-            plot.getPlaceholder().find(".valueLabelLight").remove();
-            plot.draw();
-         });
+            // Functions for zooming/paning plots
+            this.tracertPlaceholder.bind('plotpan', function (event, plot) {
+               axes = plot.getAxes();
+               plot.getPlaceholder().find(".valueLabel").remove();
+               plot.getPlaceholder().find(".valueLabelLight").remove();
+               plot.draw();
+            });
+            this.tracertPlaceholder.bind('plotzoom', function (event, plot) {
+               axes = plot.getAxes();
+               plot.getPlaceholder().find(".valueLabel").remove();
+               plot.getPlaceholder().find(".valueLabelLight").remove();
+               plot.draw();
+            });
 
-         var c = plotCont.offset();
-          c.left = 300;
-          c.top = 100;
+            var c = plotCont.offset();
+             c.left = 300;
+             c.top = 100;
 
-         /* buttons for zooming in and out */
-         $('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
-               e.preventDefault();
-               plotCont.zoom({center: c});
-         });
-         $('<img id="zoomout" src="images/zoomout.png">').appendTo(placeholder).click(function (e) {
-               e.preventDefault();
-               plotCont.zoomOut({center: c});
-         });
+            /* buttons for zooming in and out */
+            $('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
+                  e.preventDefault();
+                  plotCont.zoom({center: c});
+            });
+            $('<img id="zoomout" src="images/zoomout.png">').appendTo(placeholder).click(function (e) {
+                  e.preventDefault();
+                  plotCont.zoomOut({center: c});
+            });
+         }
       }
    },
 
@@ -414,10 +424,10 @@ $(document).ready(function()
 {
    $("#tabs").bind('tabsshow', function() 
    {
-      this.pingData.touch();
-      this.ping6Data.touch();
-      this.traceData.touch();
-      this.trace6Data.touch();
+      Plot.pingData.touch();
+      Plot.ping6Data.touch();
+      Plot.traceData.touch();
+      Plot.trace6Data.touch();
       Plot.repaint();
    });
 

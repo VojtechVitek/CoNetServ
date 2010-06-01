@@ -1,103 +1,158 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
-  <head>
-    <title>CoNetServ - Complex Network Services</title>
-    <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
-    <link type="text/css" href="css/ui.css" rel="stylesheet" />
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery-ui-1.8.1.custom.min.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script>
-    <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
-    <script type="text/javascript" src="js/ui.js"></script>
-    <script type="text/javascript" src="js/plot.js"></script>
-  </head>
-  <body>
-    <div id="tabs">
-    <ul>
-      <li><a href="#local-services">Local services</a></li>
-      <li><a href="#external-services">External services</a></li>
-      <li><a href="#local-info">Local info</a></li>
-      <li><a href="#external-info">external info</a></li>
-    </ul>
-    <div id="local-services" class="tab local">
-      <form>
-        <div id="local-services-form">
-          <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
-            <label id="local-ping-label" class= "ping" for="local-ping-input">Ping</label>
-          <input type="radio" id="local-ping6-input" class="radio-tab ping6" name="local-services-form" value ="local-ping6-div" />
-            <label id="local-ping-label" class="ping6" for="local-ping6-input">Ping6</label>
-          <input type="radio" id="local-tracert-input" class="radio-tab tracert" name="local-services-form" value ="local-tracert-div" />
-            <label id="local-tracert-label" class="tracert" for="local-tracert-input">Traceroute</label>
-          <input type="radio" id="local-tracert6-input" class="radio-tab tracert6" name="local-services-form" value ="local-tracert6-div" />
-            <label id="local-tracert6-label" class="tracert6" for="local-tracert6-input">Traceroute6</label>
-          <input type="radio" id="local-whois-input" class="radio-tab whois" name="local-services-form" value ="local-whois-div" />
-            <label id="local-whois-label" class="whois" for="local-whois-input">Whois</label>
-          <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
-            <label id="local-nslookup-label" class="nslookup" for="local-nslookup-input">NSlookup</label>
-        </div>
-      </form>
-      <div id="local-ping-div" class="content ping">
-        <div id="local-ping-console" class="console ui-corner-all"></div>
-        <div id="local-ping-placeholder" class="plot-placeholder"></div>
-      </div>
-      <div id="local-ping6-div" class="content ping6">
-        <div id="local-ping6-console" class="console ui-corner-all"></div>
-        <div id="local-ping6-placeholder" class="plot-placeholder"></div>
-      </div>
-      <div id="local-tracert-div" class="content tracert">
-        <div id="local-tracert-console" class="console ui-corner-all"></div>
-        <div id="local-tracert-placeholder" class="plot-placeholder"></div>
-      </div>
-      <div id="local-tracert6-div" class="content tracert6">
-        <div id="local-tracert6-console" class="console ui-corner-all"></div>
-        <div id="local-tracert6-placeholder" class="plot-placeholder"></div>
-      </div>
-      <div id="local-whois-div" class="content whois">
-        <div id="local-whois-console" class="console ui-corner-all"></div>
-      </div>
-      <div id="local-nslookup-div" class="content nslookup">
-        <div id="local-nslookup-console" class="console ui-corner-all"></div>
-      </div>
+   <head>
+      <title>CoNetServ - Complex Network Services</title>
+      <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
+      <link type="text/css" href="css/ui.css" rel="stylesheet" />
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+      <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery-ui-1.8.1.custom.min.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
+      <script type="text/javascript" src="js/conetserv.js"></script>
+      <script type="text/javascript" src="js/console.js"></script>
+      <script type="text/javascript" src="js/url.js"></script>
+      <script type="text/javascript" src="js/ui.js"></script>
+      <script type="text/javascript" src="js/plot.js"></script>
+   </head>
+   <body>
+      <div id="tabs">
+         <ul>
+            <li><a href="#local-services">Local services</a></li>
+            <li><a href="#external-services">External services</a></li>
+            <li><a href="#local-info">Local info</a></li>
+            <li><a href="#external-info">external info</a></li>
+         </ul>
+         <div id="local-services" class="tab local">
+            <form action="" onsubmit="stopCommands();startCommands();return false;">
+               <input id="local-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
+               
+               <input id="local-url-button" type="submit" value="Start" class="url-button ui-button ui-widget ui-state-default ui-corner-right" role="button">
+               
+               <div id="local-services-form">
+                  <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
+                  <label id="local-ping-label" class= "ping" for="local-ping-input">Ping</label>
+                  <input type="radio" id="local-ping6-input" class="radio-tab ping6" name="local-services-form" value ="local-ping6-div" />
+                  <label id="local-ping-label" class="ping6" for="local-ping6-input">Ping6</label>
+                  <input type="radio" id="local-tracert-input" class="radio-tab tracert" name="local-services-form" value ="local-tracert-div" />
+                  <label id="local-tracert-label" class="tracert" for="local-tracert-input">Traceroute</label>
+                  <input type="radio" id="local-tracert6-input" class="radio-tab tracert6" name="local-services-form" value ="local-tracert6-div" />
+                  <label id="local-tracert6-label" class="tracert6" for="local-tracert6-input">Traceroute6</label>
+                  <input type="radio" id="local-whois-input" class="radio-tab whois" name="local-services-form" value ="local-whois-div" />
+                  <label id="local-whois-label" class="whois" for="local-whois-input">Whois</label>
+                  <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
+                  <label id="local-nslookup-label" class="nslookup" for="local-nslookup-input">NSlookup</label>
+               </div>              
+               
+            </form>
 
-    </div>
-    <div id="external-services" class="tab">
-      <form>
-        <div id="external-services-form">
-          <input type="radio" id="external-ping" name="radio" checked="checked" /><label for="external-ping">Ping</label>
-          <input type="radio" id="external-ping6" name="radio" /><label for="external-ping6">Ping6</label>
-          <input type="radio" id="external-tracert" name="radio" /><label for="external-tracert">Traceroute</label>
-          <input type="radio" id="external-tracert6" name="radio" /><label for="external-tracert6">Traceroute6</label>
-          <input type="radio" id="external-whois" name="radio" /><label for="external-whois">Whois</label>
-          <input type="radio" id="external-nslookup" name="radio" /><label for="external-nslookup">Nslookup</label>
-        </div>
-      </form>
-      <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
-    </div>
-    <div id="local-info" class="tab">
-      <form>
-        <div id="local-info-form">
-          <input type="radio" id="local-nmap" name="radio" checked="checked" /><label for="local-nmap">Neighbours</label>
-          <input type="radio" id="local-ip" name="radio" /><label for="local-ip">IP settings</label>
-        </div>
-      </form>
-      <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-      <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
-    </div>
-    <div id="external-info" class="tab">
-      <form>
-        <div id="external-info-form">
-          <input type="radio" id="external-provider" name="radio" /><label for="external-provider">Provider</label>
-          <input type="radio" id="external-ip" name="radio" checked="checked" /><label for="external-ip">IP</label>
-          <input type="radio" id="external-map" name="radio" /><label for="external-map">Map</label>
-        </div>
-      </form>
-      <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-      <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
-    </div>
-  </div>
-  </body>
+            <div id="local-ping-div" class="content ping">
+               <div id="local-ping-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="local-ping-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="local-ping6-div" class="content ping6">
+               <div id="local-ping6-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="local-ping6-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="local-tracert-div" class="content tracert">
+               <div id="local-tracert-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="local-tracert-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="local-tracert6-div" class="content tracert6">
+               <div id="local-tracert6-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="local-tracert6-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="local-whois-div" class="content whois">
+               <div id="local-whois-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+            <div id="local-nslookup-div" class="content nslookup">
+               <div id="local-nslookup-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+
+         </div>
+         <div id="external-services" class="tab external">
+            <form action="">
+               <input id="external-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
+               <input id="external-url-button" type="submit" value="Start" class="url-button ui-button ui-widget ui-state-default ui-corner-right" role="button">
+
+               <div id="external-services-form">
+                  <input type="radio" id="external-ping" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
+                  <label for="external-ping">Ping</label>
+                  <input type="radio" id="external-ping6" class="radio-tab pin6"  name="external-services-form" value="external-ping6-div"/>
+                  <label for="external-ping6">Ping6</label>
+                  <input type="radio" id="external-tracert" class="radio-tab tracert" name="external-services-form" value="external-tracert-div"/>
+                  <label for="external-tracert">Traceroute</label>
+                  <input type="radio" id="external-tracert6" class="radio-tab tracert6" name="external-services-form" value="external-tracert6-div"/>
+                  <label for="external-tracert6">Traceroute6</label>
+                  <input type="radio" id="external-whois" class="radio-tab whois" name="external-services-form" value="external-whois-div"/>
+                  <label for="external-whois">Whois</label>
+                  <input type="radio" id="external-nslookup" class="radio-tab nslookup" name="external-services-form" value="external-nslookup-div"/>
+                  <label for="external-nslookup">Nslookup</label>
+               </div>
+            </form>
+             <div id="external-ping-div" class="content ping">
+               <div id="external-ping-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="external-ping-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="external-ping6-div" class="content ping6">
+               <div id="external-ping6-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="external-ping6-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="external-tracert-div" class="content tracert">
+               <div id="external-tracert-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="external-tracert-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="external-tracert6-div" class="content tracert6">
+               <div id="external-tracert6-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <div id="external-tracert6-placeholder" class="plot-placeholder"></div>
+            </div>
+            <div id="external-whois-div" class="content whois">
+               <div id="external-whois-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+            <div id="external-nslookup-div" class="content nslookup">
+               <div id="external-nslookup-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+         </div>
+         <div id="local-info" class="tab">
+            <form action="">
+               <div id="local-info-form">
+                  <input type="radio" id="local-nmap" class="radio-tab" name="local-info-form" checked="checked" /><label for="local-nmap">Neighbours</label>
+                  <input type="radio" id="local-ip" class="radio-tab" name="local-info-form" /><label for="local-ip">IP settings</label>
+               </div>
+            </form>
+            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+            <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+         </div>
+         <div id="external-info" class="tab">
+            <form action="">
+               <div id="external-info-form">
+                  <input type="radio" id="external-provider" class="radio-tab" name="external-info-form" value="external-provider-div" checked="checked"/>
+                  <label for="external-provider">Provider</label>
+                  <input type="radio" id="external-ip" class="radio-tab" name="external-info-form" value="external-ip-div" />
+                  <label for="external-ip">IP</label>
+                  <input type="radio" id="external-map" class="radio-tab" name="external-info-form" value="external-map-div" />
+                  <label for="external-map">Map</label>
+               </div>
+            </form>
+            <div id="external-provider-div" class="content provider">
+               <h2>Location</h2><ul id="location"></ul>
+               <h2>Hostname</h2><ul id="hostname"></ul>
+               <h2>Provider</h2><ul id="provider"></ul>
+               <h2>Route</h2><ul id="route"></ul>
+               <h2>External IPv4</h2><ul id="externIpv4"></ul>
+               <h2>External IPv6</h2><ul id="externIpv6"></ul>
+            </div>
+            <div id="external-ip-div" class="content ip">
+               <p> Ip div </p>
+            </div>
+            <div id="external-map-div" class="content map">
+               <p> Map div </p>
+            </div>
+
+         </div>
+      </div>
+   </body>
 </html>
