@@ -22,3 +22,5 @@ Extension:
 - WHOIS: use only first and second domain names
 - Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
+- Possibility to save ping and traceroute plot to a jpg file
+- Hide url bar while services are running
