@@ -42,12 +42,18 @@ set(EXTENSION_ID      "${PROJECT_NAME}@${EXTENSION_HOST}")
 set(EXTENSION_URL     "http://www.${EXTENSION_HOST}/${PROJECT_NAME}")
 
 # Contributors
-set(cat_prog cat)
-if(WIN32 AND NOT UNIX)
-    set(cat_prog type)
+if(WIN32)
+	set(cat_prog type)
+else()
+	set(cat_prog cat)
 endif()
-exec_program(${cat_prog} ARGS ${CMAKE_SOURCE_DIR}/AUTHORS.txt OUTPUT_VARIABLE AUTHORS)
-string(REGEX MATCHALL "[^\n]+" AUTHORS ${AUTHORS})
+FILE(TO_NATIVE_PATH ${CMAKE_SOURCE_DIR}/AUTHORS.txt AUTHORS_FILE)
+execute_process(
+	COMMAND ${cat_prog} ${AUTHORS_FILE}
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	OUTPUT_VARIABLE AUTHORS
+)
+string(REGEX MATCHALL "[^\n]+" AUTHORS "${AUTHORS}")
 
 # Plugin
 add_subdirectory(plugin)

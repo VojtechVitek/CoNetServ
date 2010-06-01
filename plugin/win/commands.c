@@ -4,9 +4,16 @@
 #include <windows.h>
 
 #include "plugin.h"
-#include "config.h"
 
 #define DEBUGCON 0
+#define strcasecmp stricmp
+#define strncasecmp strnicmp
+
+#define LOCALEDIR "."
+
+#if _MSC_VER && !__cplusplus
+# define inline __inline
+#endif
 
 /* Pipe recources 0 for read 1 for write*/
 HANDLE pipes[command_t_count][2];

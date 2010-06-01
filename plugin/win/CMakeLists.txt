@@ -1,15 +1,24 @@
 # CoNetServ plugin - Windows
 
 # File is included -> current path is ../
-configure_file("win/dll_export.def.in" "${CMAKE_BINARY_DIR}/win/dll_export.def")
-include_directories(win/ ${CMAKE_BINARY_DIR}/win)
-set(platform_sources
+include_directories(win)
+
+set(PLUGIN_FILENAME "np${PROJECT_NAME}.dll")
+configure_file("win/dll_export.def.in" "${CMAKE_BINARY_DIR}/dll_export.def" IMMEDIATE @ONLY)
+
+set(sources
+	${sources}
 	win/commands.c
 )
-set(platform_headers
-	win/config.h
+
+set(library_sources
+	${library_sources}
+	${CMAKE_BINARY_DIR}/dll_export.def
+)
+
+set(headers
+	${headers}
 	win/stdbool.h
-	${CMAKE_BINARY_DIR}/win/dll_export.def
 )
 
 find_package(XULRunnerSDK REQUIRED)

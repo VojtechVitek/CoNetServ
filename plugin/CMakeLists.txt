@@ -1,17 +1,22 @@
 # CoNetServ plugin
 
 # Sources and header files
-configure_file(config.h.in ${CMAKE_BINARY_DIR}/plugin/config.h)
-include_directories(. ${CMAKE_BINARY_DIR}/plugin)
+include_directories(${CMAKE_BINARY_DIR})
+
+configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 set(sources
 	plugin.c
 )
+
 set(debug_sources
 	debug.c
 )
+
 set(headers
 	plugin.h
-	${CMAKE_BINARY_DIR}/plugin/config.h
+	${CMAKE_BINARY_DIR}/config.h
 )
 
 # Platform-specific sources and header files
@@ -24,7 +29,7 @@ else()
 endif()
 
 # Create shared library
-add_library(CoNetServ SHARED ${sources} ${platform_sources} ${headers} ${platform_headers})
+add_library(CoNetServ SHARED ${library_sources} ${sources} ${headers})
 set_target_properties(CoNetServ PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(CoNetServ PROPERTIES PREFIX "np")
 
@@ -83,6 +88,6 @@ else()
 	)
 
 	# Create debug program
-	add_executable(Debug ${debug_sources} ${sources} ${platform_sources} ${headers} ${platform_headers})
+	add_executable(Debug ${debug_sources} ${sources} ${headers})
 
 endif()

@@ -44,10 +44,11 @@ foreach(AUTHOR ${AUTHORS})
 endforeach()
 
 # Configure debugging package files:
-configure_file("chrome/manifest.json.in" "${CMAKE_SOURCE_DIR}/extension/manifest.json")
-configure_file("firefox/chrome.manifest.in" "${CMAKE_SOURCE_DIR}/extension/chrome.manifest")
-configure_file("firefox/install.rdf.in" "${CMAKE_SOURCE_DIR}/extension/install.rdf")
-configure_file("opera/config.xml.in" "${CMAKE_SOURCE_DIR}/extension/config.xml")
+message(STATUS "Configuring browser-specific manifest files")
+configure_file("chrome/manifest.json.in" "${CMAKE_SOURCE_DIR}/extension/manifest.json" IMMEDIATE @ONLY)
+configure_file("firefox/chrome.manifest.in" "${CMAKE_SOURCE_DIR}/extension/chrome.manifest" IMMEDIATE @ONLY)
+configure_file("firefox/install.rdf.in" "${CMAKE_SOURCE_DIR}/extension/install.rdf" IMMEDIATE @ONLY)
+configure_file("opera/config.xml.in" "${CMAKE_SOURCE_DIR}/extension/config.xml" IMMEDIATE @ONLY)
 
 # _firefox:
 # 	@echo "  Build Mozilla Firefox add-on:"

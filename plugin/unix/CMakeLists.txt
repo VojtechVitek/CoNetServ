@@ -2,7 +2,9 @@
 
 # File is included -> current path is ../
 include_directories(unix)
-set(platform_sources
+
+set(sources
+	${sources}
 	unix/commands.c
 )
 

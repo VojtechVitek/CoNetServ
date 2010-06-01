@@ -3,7 +3,7 @@
 #define _PLUGIN_H_
 
 #if defined(_WINDOWS)
-	#include <stdbool.h>
+	#include "stdbool.h"
 #endif
 
 #if defined(XULRUNNER_SDK)
