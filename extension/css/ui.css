@@ -72,6 +72,10 @@ body {
   background: white;
 }
 
+#map-placeholder {
+   height: 400px;
+   width: 640px;
+}
 /* Lost packet banner on ping plot */
 div.lostPacketsLabelLight {
    position:absolute;

@@ -45,7 +45,6 @@ $(document).ready(function(){
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
 
-   conetserv = 1;
    /* console text-boxes */
    pingConsole = new console("local-ping-console");
    pingConsole.maxRows = 16;
@@ -71,7 +70,7 @@ $(document).ready(function(){
       }
    }
 
-   conetserv = {
+/*   conetserv = {
     ping : 1,
     ping6 : 1,
     tracert : 1,
@@ -86,7 +85,7 @@ $(document).ready(function(){
     whois_test : 1,
     nslookup_test : 0
    };
-
+*/
    /*
     * Inicialize ui
     */
@@ -111,13 +110,13 @@ function startLocalInfo()
    isLocalInfoRunning = 1;
 
    /* set element to write map into */
-   Map.setElementId("mapPlaceholder");
+   Map.setElementId("map-placeholder");
 
    /* Start local info services */   
    Services.start(
       /* started */
       function() {
-         startAnim("local");
+         Ui.addIcons(".external", ".provider", "");
       },
       /* service results */
       function(service, result) {
@@ -152,7 +151,7 @@ function startLocalInfo()
       },
       /* stopped */
       function() {
-         stopAnim("local");
+         Ui.removeIcons(".external", ".provider");
       }
    );
 };

@@ -14,9 +14,11 @@
       <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
       <script type="text/javascript" src="js/conetserv.js"></script>
       <script type="text/javascript" src="js/console.js"></script>
+      <script type="text/javascript" src="js/services.js"></script>
       <script type="text/javascript" src="js/url.js"></script>
       <script type="text/javascript" src="js/ui.js"></script>
       <script type="text/javascript" src="js/plot.js"></script>
+      <script type="text/javascript" src="js/map.js"></script>
    </head>
    <body>
       <div id="tabs">
@@ -24,7 +26,7 @@
             <li><a href="#local-services">Local services</a></li>
             <li><a href="#external-services">External services</a></li>
             <li><a href="#local-info">Local info</a></li>
-            <li><a href="#external-info">External info</a></li>
+            <li ><a href="#external-info" onclick="startLocalInfo();">External info</a></li>
             <li id="about-tab-header"><a href="#about">About</a></li>
          </ul>
          <div id="local-services" class="tab local">
@@ -148,7 +150,7 @@
                <p> Ip div </p>
             </div>
             <div id="external-map-div" class="content map">
-               <p> Map div </p>
+               <div id="map-placeholder"></div>
             </div>
 
          </div>

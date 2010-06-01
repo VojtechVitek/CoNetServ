@@ -93,8 +93,8 @@ var Ui = {
        * CoNetServ
        */
       if(!conetserv) {
-         this.divError("#local-services", "CoNetServ plugin for your browser has not \\n\
-            been correctly loaded. Please, refer to readme for further steps.")
+         this.divError("#local-services", "CoNetServ plugin for your browser has not \
+            been correctly loaded. Local services will not be available. <br /><br />Please, refer to readme for correct installation steps.")
       }
       else {
          /*
@@ -206,9 +206,11 @@ If you want to install it, please follow these steps.");
         secondary:'ui-icon-circle-close'
      });
      // register callback function
-     $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
-        func();
-     })
+     if(func){
+        $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
+           func();
+        });
+     }
   },
   /**
    * Hides icons of an radio button item in menu ( submenu )
