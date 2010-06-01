@@ -14,6 +14,8 @@ set(sources
 set(library_sources
 	${library_sources}
 	${CMAKE_BINARY_DIR}/dll_export.def
+	win/resource.h
+	win/resource.rc
 )
 
 set(headers
