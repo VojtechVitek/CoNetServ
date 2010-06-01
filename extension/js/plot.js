@@ -100,21 +100,19 @@ var Plot = {
          /* traceroute */
          if((active == 'local-tracert-div' && this.traceData.changed)||(active =='local-tracert6-div' && this.trace6Data.changed))  /* tracert v4, v6 */
          {
-            var tdata = selected == "2"? this.traceData : this.trace6Data;
-            var placeholder = selected == "2"? this.tracertPlaceholder : this.tracert6Placeholder;
-            var axes = selected == "2"? this.tracertAxes : this.tracert6Axes;
+            var tdata = active == 'local-tracert-div'? this.traceData : this.trace6Data;
+            var placeholder = active == 'local-tracert-div'? this.tracertPlaceholder : this.tracert6Placeholder;
             var plotCont;
 
             tdata.changed = 0;
 
 
             plotCont = $.plot(placeholder, [{data: tdata.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, this.optionsTrace, {
-              xaxis: {tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30)},
-              yaxis: {min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null)}
+              xaxis: {tickDecimals: 0, tickSize: 1 }
             }));
 
             // Functions for zooming/paning plots
-            this.tracertPlaceholder.bind('plotpan', function (event, plot) {
+            /*this.tracertPlaceholder.bind('plotpan', function (event, plot) {
                axes = plot.getAxes();
                plot.getPlaceholder().find(".valueLabel").remove();
                plot.getPlaceholder().find(".valueLabelLight").remove();
@@ -125,21 +123,21 @@ var Plot = {
                plot.getPlaceholder().find(".valueLabel").remove();
                plot.getPlaceholder().find(".valueLabelLight").remove();
                plot.draw();
-            });
+            });*/
 
             var c = plotCont.offset();
              c.left = 300;
              c.top = 100;
 
             /* buttons for zooming in and out */
-            $('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
+            /*$('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
                   e.preventDefault();
                   plotCont.zoom({center: c});
             });
             $('<img id="zoomout" src="images/zoomout.png">').appendTo(placeholder).click(function (e) {
                   e.preventDefault();
                   plotCont.zoomOut({center: c});
-            });
+            });*/
          }
       }
    },

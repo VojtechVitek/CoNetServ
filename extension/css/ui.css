@@ -72,9 +72,15 @@ body {
   background: white;
 }
 
-#map-placeholder {
+#map-conteiner {
    height: 400px;
    width: 640px;
+   padding: 5px;
+}
+
+#map-placeholder {
+   height: 390px;
+   width: 630px;
 }
 /* Lost packet banner on ping plot */
 div.lostPacketsLabelLight {
@@ -99,8 +105,36 @@ div.lostPacketsLabel{
    border: 1px solid #E33;
 }
 
+/* plot labels styling */
+.valueLabels {
+	font-size:80%;
+	color:black;
+}
+div.valueLabelLight {
+	opacity:0.5;
+	background-color: white;
+	border:none;
+	position:absolute;
+}
+div.valueLabel {
+	position:absolute;
+	border:none;
+}
+
 /* First icon on service radio button*/
 .service-state {
    display: none;
 }
 
+/* content styling */
+.color1{
+   color: #2779aa;
+}
+
+.color2{
+   color: blue;
+}
+
+.color3{
+   color: green;
+}

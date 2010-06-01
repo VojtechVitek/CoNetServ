@@ -20,27 +20,13 @@ var nslookupConsole;
 /* local info running */
 var isLocalInfoRunning = 0;
 
-function startAnim(id)
-{
-   if (document.getElementById(id + "State") && document.getElementById(id + "State").style)
-      document.getElementById(id + "State").style.display = 'block';
-   if (document.getElementById(id + "TabClose") && document.getElementById(id + "TabClose").style)
-      document.getElementById(id + "TabClose").style.display = 'block';
-}
-
-function stopAnim(id)
-{
-   if (document.getElementById(id + "State") && document.getElementById(id + "State").style)
-      document.getElementById(id + "State").style.display = 'none';
-   if (document.getElementById(id + "TabClose") && document.getElementById(id + "TabClose").style)
-      document.getElementById(id + "TabClose").style.display = 'none';
-}
-
 $(document).ready(function(){
 
    /* Toggle tabs with opacity effect */
    //too slow and thus buggy; disable temporarily
    //$("#tabs").tabs({ fx: { opacity: 'toggle' } });
+
+   $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
 
    /* CoNetServ object - NPAPI plugin */
    conetserv = document.getElementById("conetserv");
@@ -183,13 +169,13 @@ function readPing()
       return;
    }
    if (received === false) {
-      stopAnim("ping");
+      Ui.removeIcons(".local", ".ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
       return;
    }
    pingConsole.add(received);
-   plotPing(received, 4);
+   Plot.plotPing(received, 4);
 }
 
 /**
@@ -208,13 +194,13 @@ function readPing6()
       return;
    }
    if (received === false) {
-      stopAnim("ping6");
+      Ui.removeIcons(".local", ".ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
       return;
    }
    ping6Console.add(received);
-   plotPing(received, 6);
+   Plot.plotPing(received, 6);
 }
 
 /**
@@ -232,13 +218,13 @@ function readTraceroute()
       tracerouteConsole.add(e);
    }
    if (received === false) {
-      stopAnim("traceroute");
+      Ui.removeIcons(".local", ".tracert");
       window.clearInterval(tracerouteInterval);
       tracerouteInterval = -1;
       return;
    }
    tracerouteConsole.add(received);
-   plotTraceroute(received, 4);
+   Plot.plotTracert(received, 4);
 }
 
 /**
@@ -256,13 +242,13 @@ function readTraceroute6()
       traceroute6Console.add(e);
    }
    if (received === false) {
-      stopAnim("traceroute6");
+      Ui.removeIcons(".local", ".tracert6");
       window.clearInterval(traceroute6Interval);
       traceroute6Interval = -1;
       return;
    }
    traceroute6Console.add(received);
-   plotTraceroute(received, 6);
+   Plot.plotTracert(received, 6);
 }
 
 /**
@@ -280,7 +266,7 @@ function readWhois()
       whoisConsole.add(e);
    }
    if (received === false) {
-      stopAnim("whois");
+      Ui.removeIcons(".local", ".whois");
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
       return;
@@ -303,7 +289,7 @@ function readNslookup()
       nslookupConsole.add(e);
    }
    if (received === false) {
-      stopAnim("nslookup");
+      Ui.removeIcons(".local", ".nslookup");
       window.clearInterval(nslookupInterval);
       nslookupInterval = -1;
       return;
@@ -328,8 +314,7 @@ function startCommands()
    startTraceroute();
    startTraceroute6();
    startNslookup();
-   if($.client.os != "Windows")
-      startWhois();
+   startWhois();
 }
 
 
@@ -343,7 +328,7 @@ function startPing()
          pingConsole.clear();
          if (document.getElementById("conetserv").startPing(url.hostname)) {
              /* reset data and start animation */
-             pingData.reset(); 
+             Plot.pingData.reset();
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
 
@@ -369,7 +354,7 @@ function startPing6()
          ping6Console.clear();
          if (document.getElementById("conetserv").startPing6(url.hostname)) {
              /* reset data and start animation */
-             ping6Data.reset();
+             Plot.ping6Data.reset();
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
 
@@ -394,7 +379,7 @@ function startTraceroute()
       try {
          tracerouteConsole.clear();
          if (document.getElementById("conetserv").startTraceroute(url.hostname)) {
-            traceData.reset();
+            Plot.traceData.reset();
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
             readTraceroute();
 
@@ -420,7 +405,7 @@ function startTraceroute6()
       try {
          traceroute6Console.clear();
          if (document.getElementById("conetserv").startTraceroute6(url.hostname)) {
-            trace6Data.reset();
+            Plot.trace6Data.reset();
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
 
@@ -474,7 +459,8 @@ function startNslookup()
          if (document.getElementById("conetserv").startNslookup(url.hostname)) {
             nslookupInterval = window.setInterval("readNslookup()", 500);
             readNslookup();
-            
+
+            Ui.addIcons(".local", ".nslookup", stopNslookup);
          }
          else {
             nslookupInterval = -1;
@@ -485,7 +471,7 @@ function startNslookup()
          nslookupInterval = -1;
       }
 
-      Ui.addIcons(".local", ".nslookup", stopNslookup);
+      
    }
 }
 

@@ -48,9 +48,9 @@
                var $tabs = $('#tabs').tabs();
                var selected = $tabs.tabs('option', 'selected');
                if(selected == 2)
-                  tail = '">' + traceData.labels[i] + '</div>';
+                  tail = '">' + Plot.traceData.labels[i] + '</div>';
                else
-                  tail = '">' + trace6Data.labels[i] + '</div>';
+                  tail = '">' + Plot.trace6Data.labels[i] + '</div>';
 					html+= head + "Light" + tail + head + tail;
 				}
 			}

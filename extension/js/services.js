@@ -136,6 +136,10 @@ var Services = {
 
                var result = {};
 
+               if(!data) {
+                  return result;
+               }
+               
                if (data.address) {
                   if (data.address.country_code)
                      result.countryCode = data.address.country_code;
