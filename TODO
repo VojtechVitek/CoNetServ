@@ -23,3 +23,5 @@ Extension:
 - Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
 - URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
+- Possibility to save ping and traceroute plot to a jpg file
+- Hide url bar while services are running
