@@ -108,7 +108,7 @@ var Plot = {
             tdata.changed = 0;
 
 
-            plotCont = $.plot(placeholder, [{data: tdata.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, optionsTrace, {
+            plotCont = $.plot(placeholder, [{data: tdata.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, this.optionsTrace, {
               xaxis: {tickDecimals: 0, tickSize: 1, min: (axes != undefined ? axes.xaxis.min : 0), max: (axes != undefined ? axes.xaxis.max : 30)},
               yaxis: {min: (axes != undefined ? axes.yaxis.min : 0), max: (axes != undefined ? axes.yaxis.max : null)}
             }));

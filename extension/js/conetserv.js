@@ -59,14 +59,14 @@ $(document).ready(function(){
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
       if (window && window.arguments && window.arguments[0] && url.set(window.arguments[0])) {
-         document.getElementById("url").value = url.hostname;
+         document.getElementById("local-url").value = url.hostname;
       }
    /* init url in Chrome */
    } else if ($.client.browser == "Chrome") {
       if (chrome && chrome.tabs && chrome.tabs.getSelected) {
          chrome.tabs.getSelected(null, function(tab) {
             url.set(tab.url);
-            document.getElementById("url").value = url.hostname;
+            document.getElementById("local-url").value = url.hostname;
          });
       }
    }
@@ -92,6 +92,13 @@ $(document).ready(function(){
     */
    Ui.checkAvailability();
    Ui.redraw();
+
+   /*
+    * Bind start button to start local services
+    */
+   $("#local-url-start").click(function() {
+      stopCommands();startCommands();
+   });
 
    Plot.inicialize();
 
@@ -311,9 +318,9 @@ function readNslookup()
 function startCommands()
 {
    //set value for commands
-   if(!url.set(document.getElementById("url").value)) {
-      document.getElementById("url").style.color="red";
-      document.getElementById("url").focus();
+   if(!url.set(document.getElementById("local-url").value)) {
+      document.getElementById("local-url").style.color="red";
+      document.getElementById("local-url").focus();
       return;
    }
 
@@ -326,6 +333,7 @@ function startCommands()
       startWhois();
 }
 
+
 /**
  * Start PING command
  */
@@ -337,9 +345,10 @@ function startPing()
          if (document.getElementById("conetserv").startPing(url.hostname)) {
              /* reset data and start animation */
              pingData.reset(); 
-             startAnim("ping");
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
+
+             Ui.addIcons(".local", ".ping", stopPing);
          } else {
             pingInterval = -1;
          }
@@ -362,9 +371,10 @@ function startPing6()
          if (document.getElementById("conetserv").startPing6(url.hostname)) {
              /* reset data and start animation */
              ping6Data.reset();
-             startAnim("ping6");
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
+
+             Ui.addIcons(".local", ".ping6", stopPing6);
          } else {
             ping6Interval = -1;
          }
@@ -386,9 +396,10 @@ function startTraceroute()
          tracerouteConsole.clear();
          if (document.getElementById("conetserv").startTraceroute(url.hostname)) {
             traceData.reset();
-            startAnim("traceroute");
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
-            readTraceroute();            
+            readTraceroute();
+
+            Ui.addIcons(".local", ".tracert", stopTraceroute);
          }
          else {
             tracerouteInterval = -1;
@@ -411,9 +422,10 @@ function startTraceroute6()
          traceroute6Console.clear();
          if (document.getElementById("conetserv").startTraceroute6(url.hostname)) {
             trace6Data.reset();
-            startAnim("traceroute6");
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
+
+            Ui.addIcons(".local", ".tracert6", stopTraceroute6);
          }
          else {
             traceroute6Interval = -1;
@@ -423,6 +435,7 @@ function startTraceroute6()
          traceroute6Console.add(e);
          traceroute6Interval = -1;
       }
+
    }
 }
 
@@ -436,9 +449,9 @@ function startWhois()
          whoisConsole.clear();
          if (document.getElementById("conetserv").startWhois(url.hostname)) {
             whoisInterval = window.setInterval("readWhois()", 500);
-            startAnim("whois");
-	    readWhois();
-            
+            readWhois();
+
+            Ui.addIcons(".local", ".whois", stopWhois);
          }
          else {
             whoisInterval = -1;
@@ -461,8 +474,7 @@ function startNslookup()
          nslookupConsole.clear();
          if (document.getElementById("conetserv").startNslookup(url.hostname)) {
             nslookupInterval = window.setInterval("readNslookup()", 500);
-            startAnim("nslookup");
-	    readNslookup();
+            readNslookup();
             
          }
          else {
@@ -473,6 +485,8 @@ function startNslookup()
          nslookupConsole.add(e);
          nslookupInterval = -1;
       }
+
+      Ui.addIcons(".local", ".nslookup", stopNslookup);
    }
 }
 
@@ -502,7 +516,8 @@ function stopPing()
       catch(e) {
          pingConsole.add(e);
       }
-      stopAnim("ping");
+      
+      Ui.removeIcons(".local", ".ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
    }
@@ -520,7 +535,8 @@ function stopPing6()
       catch(e) {
          ping6Console.add(e);
       }
-      stopAnim("ping6");
+      
+      Ui.removeIcons(".local", ".ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
    }
@@ -538,7 +554,8 @@ function stopTraceroute()
       catch(e) {
          tracerouteConsole.add(e);
       }
-      stopAnim("traceroute");
+
+      Ui.removeIcons(".local", ".tracert");
       window.clearInterval(tracerouteInterval);
       tracerouteInterval = -1;
    }
@@ -556,7 +573,8 @@ function stopTraceroute6()
       catch(e) {
          traceroute6Console.add(e);
       }
-      stopAnim("traceroute6");
+
+      Ui.removeIcons(".local", ".tracert6");
       window.clearInterval(traceroute6Interval);
       traceroute6Interval = -1;
    }
@@ -574,7 +592,8 @@ function stopWhois()
       catch(e) {
          whoisConsole.add(e);
       }
-      stopAnim("whois");
+
+      Ui.removeIcons(".local", ".whois");
       window.clearInterval(whoisInterval);
       whoisInterval = -1;
    }
@@ -592,7 +611,8 @@ function stopNslookup()
       catch(e) {
          nslookupConsole.add(e);
       }
-      stopAnim("nslookup");
+
+      Ui.removeIcons(".local", ".nslookup");
       window.clearInterval(nslookupInterval);
       nslookupInterval = -1;
    }

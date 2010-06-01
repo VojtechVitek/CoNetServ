@@ -24,19 +24,19 @@
             <li><a href="#local-services">Local services</a></li>
             <li><a href="#external-services">External services</a></li>
             <li><a href="#local-info">Local info</a></li>
-            <li><a href="#external-info">external info</a></li>
+            <li><a href="#external-info">External info</a></li>
+            <li id="about-tab-header"><a href="#about">About</a></li>
          </ul>
          <div id="local-services" class="tab local">
-            <form action="" onsubmit="stopCommands();startCommands();return false;">
-               <input id="local-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
-               
-               <input id="local-url-button" type="submit" value="Start" class="url-button ui-button ui-widget ui-state-default ui-corner-right" role="button">
+            <form action="" onsubmit="return false;">
+               <input id="local-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('local-url').style.color='black'" />
+               <button id="local-url-start" class="url-start">Start</button>
                
                <div id="local-services-form">
                   <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
                   <label id="local-ping-label" class= "ping" for="local-ping-input">Ping</label>
                   <input type="radio" id="local-ping6-input" class="radio-tab ping6" name="local-services-form" value ="local-ping6-div" />
-                  <label id="local-ping-label" class="ping6" for="local-ping6-input">Ping6</label>
+                  <label id="local-ping6-label" class="ping6" for="local-ping6-input">Ping6</label>
                   <input type="radio" id="local-tracert-input" class="radio-tab tracert" name="local-services-form" value ="local-tracert-div" />
                   <label id="local-tracert-label" class="tracert" for="local-tracert-input">Traceroute</label>
                   <input type="radio" id="local-tracert6-input" class="radio-tab tracert6" name="local-services-form" value ="local-tracert6-div" />
@@ -46,7 +46,6 @@
                   <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
                   <label id="local-nslookup-label" class="nslookup" for="local-nslookup-input">NSlookup</label>
                </div>              
-               
             </form>
 
             <div id="local-ping-div" class="content ping">
@@ -152,6 +151,9 @@
                <p> Map div </p>
             </div>
 
+         </div>
+         <div id="about" class="tab">
+            @ABOUT.HTML@
          </div>
       </div>
    </body>

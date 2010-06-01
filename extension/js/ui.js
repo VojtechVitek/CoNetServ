@@ -56,6 +56,17 @@ var Ui = {
          Ui.redraw();
          Plot.repaint();
       });
+
+      /**
+       * style start button
+       */
+      $("button.url-start").button({
+            icons: {
+                primary: 'ui-icon-play'
+            }
+        })
+        .removeClass("ui-corner-all")
+        .addClass("ui-corner-right");
    },
 
 
@@ -179,6 +190,34 @@ If you want to install it, please follow these steps.");
     var active = $(container + " input:radio:checked").val();
     $(container + " .content").css('display', 'none');
     $("#" + active).css('display', 'block');
+  },
+
+  /**
+   * Shows running state of radio item in menu ( submenu )
+   * @param parent Is DOM element, which is parent of input and label items
+   * @param selector Defines which radio buttons will be effected
+   * @param func Function, which will be called after icon on the right side will
+   * be clicked.
+   */
+  addIcons : function(parent, selector, func) {
+     // show icons
+     $(parent + " input" + selector).button("option", "icons", {
+        primary:'ui-icon-flag',
+        secondary:'ui-icon-circle-close'
+     });
+     // register callback function
+     $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
+        func();
+     })
+  },
+  /**
+   * Hides icons of an radio button item in menu ( submenu )
+   * @param parent Is DOM element, which is parent of input and label items
+   * @param selector Defines which radio buttons will be effected
+   */
+  removeIcons : function(parent, selector) {
+     $(parent + " input" + selector).button("option", "icons", false);
+     //!!TODO remove empty space after icons are deleted
   }
 }
 
