@@ -32,6 +32,17 @@ foreach(LIBRARY_PATH ${LIBRARY_PATHS})
 	endif()
 endforeach()
 
+# Firefox contributors
+foreach(AUTHOR ${AUTHORS})
+	string(REGEX REPLACE "[<]" "&lt;" AUTHOR "${AUTHOR}")
+	string(REGEX REPLACE "[>]" "&gt;" AUTHOR "${AUTHOR}")
+	if("${FIREFOX_AUTHORS}" STREQUAL "")
+		set(FIREFOX_AUTHORS "<em:contributor>${AUTHOR}</em:contributor>")
+	else()
+		set(FIREFOX_AUTHORS "${FIREFOX_AUTHORS}<em:contributor>${AUTHOR}</em:contributor>")	
+	endif()
+endforeach()
+
 # Configure debugging package files:
 configure_file("chrome/manifest.json.in" "${CMAKE_SOURCE_DIR}/extension/manifest.json")
 configure_file("firefox/chrome.manifest.in" "${CMAKE_SOURCE_DIR}/extension/chrome.manifest")

@@ -18,6 +18,6 @@
 				<em:maxVersion>3.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
-		@FIREFOX_CONTRIBUTORS@
+		@FIREFOX_AUTHORS@
 	</Description>
 </RDF>

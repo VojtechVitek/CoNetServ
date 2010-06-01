@@ -41,6 +41,14 @@ set(EXTENSION_HOST    "fres-solutions.com")
 set(EXTENSION_ID      "${PROJECT_NAME}@${EXTENSION_HOST}")
 set(EXTENSION_URL     "http://www.${EXTENSION_HOST}/${PROJECT_NAME}")
 
+# Contributors
+set(cat_prog cat)
+if(WIN32 AND NOT UNIX)
+    set(cat_prog type)
+endif()
+exec_program(${cat_prog} ARGS ${CMAKE_SOURCE_DIR}/AUTHORS.txt OUTPUT_VARIABLE AUTHORS)
+string(REGEX MATCHALL "[^\n]+" AUTHORS ${AUTHORS})
+
 # Plugin
 add_subdirectory(plugin)
 
