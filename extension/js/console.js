@@ -26,16 +26,18 @@ function console(div) {
       var color;
       // 0.2 = 100(percent)/500(maxvalue)
       var percent = parseFloat(input)*0.2;
+      percent = 80;
       if (percent <= 50) {
          color = parseInt(percent/50*255);
-         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "ff00";
+
+         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "7f00";
       }
       else if(percent<100)
-         color = "#ff" + (parseInt(255-(percent-50)/50*255)).toString(16) + "00";
+         color = "#ff" + (parseInt(255-(percent-50)/50*127)).toString(16) + "00";
       else 
          color = "#f00";
 
-      return "<span style=\"color:" + color + "\">" + input + "</span>";
+      return '<span style="color:' + color + '">' + input + '</span>';
    }
    
    //sets div for output - accepts name of div

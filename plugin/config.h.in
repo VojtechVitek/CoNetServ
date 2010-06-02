@@ -1,0 +1,11 @@
+#pragma once
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+#define VERSION     "@VERSION@"
+#define PLUGIN_NAME "@PLUGIN_NAME@"
+#define PLUGIN_LONG "@PLUGIN_LONG@"
+#define PLUGIN_DESC "@PLUGIN_DESC@"
+#define PLUGIN_MIME "@PLUGIN_TYPE@:@PLUGIN_LOW@:@PLUGIN_LONG@"
+
+#endif /*_CONFIG_H_*/

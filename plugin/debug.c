@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "conetserv.h"
+#include "config.h"
+#include "plugin.h"
 
 char buffer[BUFFER_LENGTH];
 
 int main(int argc, char **argv)
 {
+   NPUTF8 str[] = "github.com";
    command_t cmd;
    int len;
 
@@ -24,8 +26,6 @@ int main(int argc, char **argv)
       fprintf(stderr, "Second parameter should be a command name.\nPING\nPING6\nTRACEROUTE\nTRACEROUTE6\nWHOIS\n");
       return 1;
    }
-
-   NPUTF8 str[] = "github.com";
 
    startCommand(cmd, str);
 

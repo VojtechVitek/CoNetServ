@@ -1,4 +1,4 @@
-LIBRARY   npconetserv.dll
+LIBRARY @PLUGIN_FILENAME@
 
 EXPORTS
 	NP_GetEntryPoints     @1

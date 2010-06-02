@@ -1,11 +1,19 @@
-#include <windows.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <ctype.h>
+#include <windows.h>
 
-#include "conetserv.h"
+#include "plugin.h"
 
 #define DEBUGCON 0
+#define strcasecmp stricmp
+#define strncasecmp strnicmp
+
+#define LOCALEDIR "."
+
+#if _MSC_VER && !__cplusplus
+# define inline __inline
+#endif
 
 /* Pipe recources 0 for read 1 for write*/
 HANDLE pipes[command_t_count][2];
@@ -20,7 +28,7 @@ char* cmd_args[command_t_count] = {
    "tracert",
    "tracert -6",
    "nslookup",
-	"nslookup",
+   "nslookup"
 };
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}

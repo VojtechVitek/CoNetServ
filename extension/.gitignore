@@ -1,0 +1,14 @@
+# Ignore auto-generated package files
+
+# Chrome:
+manifest.json
+
+# Firefox:
+chrome.manifest
+install.rdf
+
+# Opera:
+config.xml
+
+# Platform-dependent files:
+platform

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<widget network="public" xmlns="http://xmlns.opera.com/2006/widget">
+	<widgetname>@PROJECT_NAME@</widgetname>
+	<description>@PROJECT_LONG@</description>
+	<id>
+		<host>@PROJECT_HOST@</host>
+		<name>@PROJECT_NAME@</name>
+		<revised>@BUILD_DATE@</revised>
+	</id>
+	<icon>images/icon16.png</icon>
+	<icon>images/icon32.png</icon>
+	<icon>images/icon48.png</icon>
+	<icon>images/icon128.png</icon>
+	<width>680</width>
+	<height>560</height>
+	<author>
+		<name>@PROJECT_COMPANY@</name>
+		<email>@EXTENSION_ID@</email>
+		<link>@PROJECT_URL@</link>
+		<organization>@PROJECT_COMPANY@</organization>
+	</author>
+	<security>
+		<content java="no" plugins="yes" />
+	</security>
+</widget>

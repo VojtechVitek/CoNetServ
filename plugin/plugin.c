@@ -17,7 +17,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "conetserv.h"
+#include "config.h"
+#include "plugin.h"
 
 NPObject        *so       = NULL;
 NPNetscapeFuncs *npnfuncs = NULL;
@@ -91,8 +92,8 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
                }
 #ifdef _WINDOWS
                result->type = NPVariantType_String;                                         \
-               npstr.utf8characters = txt;
-               npstr.utf8length = len;
+               STRING_UTF8CHARACTERS(npstr) = txt;
+			   STRING_UTF8LENGTH(npstr) = len;
                result->value.stringValue = npstr;
 #else
                STRINGN_TO_NPVARIANT(txt, len, *result);

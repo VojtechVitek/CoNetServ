@@ -1,8 +1,9 @@
-#ifndef _CONETSERV_H_
-#define _CONETSERV_H_
+#pragma once
+#ifndef _PLUGIN_H_
+#define _PLUGIN_H_
 
 #if defined(_WINDOWS)
-	#include <stdbool.h>
+	#include "stdbool.h"
 #endif
 
 #if defined(XULRUNNER_SDK)
@@ -46,11 +47,14 @@ extern JNIEnv *pluginJniEnv;
 
 /* WebKIT and XULRunner differs in struct _NPString member names */
 #if defined(WEBKIT_DARWIN_SDK)
-#define STRING_UTF8CHARACTERS(_v) ((_v).UTF8Characters)
-#define STRING_UTF8LENGTH(_v)     ((_v).UTF8Length)
+#define STRING_UTF8CHARACTERS(_v) (_v).UTF8Characters
+#define STRING_UTF8LENGTH(_v)     (_v).UTF8Length
+#elif defined(_WINDOWS)
+#define STRING_UTF8CHARACTERS(_v) (_v).UTF8Characters
+#define STRING_UTF8LENGTH(_v)     (_v).UTF8Length
 #else
-#define STRING_UTF8CHARACTERS(_v) ((_v).utf8characters)
-#define STRING_UTF8LENGTH(_v)     ((_v).utf8length)
+#define STRING_UTF8CHARACTERS(_v) (_v).utf8characters
+#define STRING_UTF8LENGTH(_v)     (_v).utf8length
 #endif
 
 /** NPAPI NPObject variable */
@@ -80,7 +84,7 @@ typedef enum {
    TRACEROUTE,
    TRACEROUTE6,
    WHOIS,
-	NSLOOKUP,
+   NSLOOKUP,
 
    command_t_count
 
@@ -110,23 +114,7 @@ int readCommand(command_t cmd, NPUTF8* buf);
  */
 bool stopCommand(command_t cmd);
 
-#define PLUGIN_NAME "CoNetServ"
-
-#define PLUGIN_LONGNAME "Complex Network Services"
-
-#ifndef VERSION
-#error Version must be specified by -DVERSION option
-#else
-#define PLUGIN_VERSION VERSION
-#endif
-
-#define PLUGIN_DESC "<a href=\"http://www.fres-solutions.com/conetserv/plugin/?version=" \
-                    PLUGIN_VERSION "\">" PLUGIN_NAME " v" PLUGIN_VERSION "</a> " \
-                    " - " PLUGIN_LONGNAME " plugin.<br />(c) 2010 FRES-Solutions"
-
-#define PLUGIN_MIME "application/x-conetserv:conetserv:Complex Network Services"
-
-#endif /*_CONETSERV_H_*/
+#endif /*_PLUGIN_H_*/
 
 /*! \mainpage CoNetServ - Complex Network Services
  *
@@ -134,4 +122,3 @@ bool stopCommand(command_t cmd);
  *
  * \htmlinclude ../../extension/about.html
  */
-

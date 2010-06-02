@@ -121,9 +121,25 @@ div.valueLabel {
 	border:none;
 }
 
+/**************************************************************************
+ * console.js
+ **************************************************************************/
+
 /* First icon on service radio button*/
 .service-state {
    display: none;
+}
+
+.colorbar {
+   display: inline;
+   margin: 0 5px;
+   border: 1px solid white;
+   height: 1em;
+   width: 1em;
+}
+
+.colorbar span {
+   visibility: hidden;
 }
 
 /* content styling */

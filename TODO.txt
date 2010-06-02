@@ -1,7 +1,8 @@
 General:
 - Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
-- Compilation: use automatic tools (cmake or autotools)
 - Multi-platforms: guarantee support for Windows, Linux and Mac OS on both 32bit and 64bit systems
+- CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
+- CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
 
 Plugin:
 - Windows: reimplement locale support
@@ -22,6 +23,5 @@ Extension:
 - WHOIS: use only first and second domain names
 - Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
-- URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
 - Possibility to save ping and traceroute plot to a jpg file
 - Hide url bar while services are running
