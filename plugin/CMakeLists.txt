@@ -29,7 +29,7 @@ else()
 endif()
 
 # Create shared library
-add_library(CoNetServ SHARED ${library_sources} ${sources} ${headers})
+add_library(CoNetServ SHARED ${library_sources} ${sources} ${library_headers} ${headers})
 set_target_properties(CoNetServ PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(CoNetServ PROPERTIES PREFIX "np")
 
@@ -88,6 +88,6 @@ else()
 	)
 
 	# Create debug program
-	add_executable(Debug ${debug_sources} ${sources} ${headers})
+	add_executable(Debug ${debug_sources} ${sources} ${debug_headers} ${headers})
 
 endif()

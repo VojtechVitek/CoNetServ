@@ -6,10 +6,10 @@
 		<em:name>@PROJECT_NAME@</em:name>
 		<em:version>@VERSION@</em:version>
 		@FIREFOX_LIBRARIES@
-		<em:description>@PROJECT_DESC@</em:description>
+		<em:description>@EXTENSION_DESC@</em:description>
 		<em:creator>@EXTENSION_CREATOR@</em:creator>
-		<em:homepageURL>@EXTENSION_URL@</em:homepageURL>
-		<!--<em:updateURL>@EXTENSION_URL@/firefox/update</em:updateURL>-->
+		<em:homepageURL>@PROJECT_URL@</em:homepageURL>
+		<!--<em:updateURL>@PROJECT_URL@/firefox/update</em:updateURL>-->
 		<em:targetApplication>
 			<Description>
 				<!-- Firefox -->

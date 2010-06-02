@@ -5,6 +5,7 @@ include_directories(win)
 
 set(PLUGIN_FILENAME "np${PROJECT_NAME}.dll")
 configure_file("win/dll_export.def.in" "${CMAKE_BINARY_DIR}/dll_export.def" IMMEDIATE @ONLY)
+configure_file("win/resource.rc.in" "${CMAKE_BINARY_DIR}/resource.rc" IMMEDIATE @ONLY)
 
 set(sources
 	${sources}
@@ -14,13 +15,17 @@ set(sources
 set(library_sources
 	${library_sources}
 	${CMAKE_BINARY_DIR}/dll_export.def
-	win/resource.h
-	win/resource.rc
+	${CMAKE_BINARY_DIR}/resource.rc
 )
 
 set(headers
 	${headers}
 	win/stdbool.h
+)
+
+set(library_headers
+	${library_headers}
+	win/resource.h
 )
 
 find_package(XULRunnerSDK REQUIRED)

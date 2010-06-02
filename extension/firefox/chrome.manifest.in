@@ -1,6 +1,6 @@
-content conetserv ./
-overlay chrome://browser/content/browser.xul chrome://conetserv/content/firefox/overlay.xul
-locale conetserv en-US firefox/locale/en-US/
-locale conetserv cs-CZ firefox/locale/cs-CZ/
-style chrome://browser/content/browser.xul chrome://conetserv/content/firefox/overlay.css
-style chrome://global/content/customizeToolbar.xul chrome://conetserv/content/firefox/overlay.css
+content @PROJECT_LOW@ ./
+overlay chrome://browser/content/browser.xul chrome://@PROJECT_LOW@/content/firefox/overlay.xul
+locale @PROJECT_LOW@ en-US firefox/locale/en-US/
+locale @PROJECT_LOW@ cs-CZ firefox/locale/cs-CZ/
+style chrome://browser/content/browser.xul chrome://@PROJECT_LOW@/content/firefox/overlay.css
+style chrome://global/content/customizeToolbar.xul chrome://@PROJECT_LOW@/content/firefox/overlay.css

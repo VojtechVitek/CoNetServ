@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by conetserv.rc
+// Used by resource.rc
 //
 #define IDD_MAIN                        101
 #define IDC_BUTTON_GO                   1002

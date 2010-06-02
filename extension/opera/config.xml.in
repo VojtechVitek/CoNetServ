@@ -3,7 +3,7 @@
 	<widgetname>@PROJECT_NAME@</widgetname>
 	<description>@PROJECT_LONG@</description>
 	<id>
-		<host>@EXTENSION_HOST@</host>
+		<host>@PROJECT_HOST@</host>
 		<name>@PROJECT_NAME@</name>
 		<revised>@BUILD_DATE@</revised>
 	</id>
@@ -14,10 +14,10 @@
 	<width>680</width>
 	<height>560</height>
 	<author>
-		<name>@EXTENSION_CREATOR@</name>
+		<name>@PROJECT_COMPANY@</name>
 		<email>@EXTENSION_ID@</email>
-		<link>@EXTENSION_URL@</link>
-		<organization>@EXTENSION_CREATOR@</organization>
+		<link>@PROJECT_URL@</link>
+		<organization>@PROJECT_COMPANY@</organization>
 	</author>
 	<security>
 		<content java="no" plugins="yes" />

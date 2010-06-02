@@ -2,6 +2,7 @@
 project("CoNetServ")
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 2)
+set(PATCH_VERSION 0)
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
@@ -14,32 +15,36 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	# Release build
 	message(STATUS "Build type: Release")
 	add_definitions(-DNDEBUG)
-	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION})
+	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 else()
 	# Debug build
 	message(STATUS "Build type: Debug")
 	add_definitions(-DDEBUG)
- 	set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.5)
+	set(PATCH_VERSION 99)
 endif()
 
 # Project strings
+set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 set(PROJECT_NAME ${CMAKE_PROJECT_NAME})
+string(TOLOWER ${PROJECT_NAME} PROJECT_LOW)
 set(PROJECT_LONG "Complex Network Services")
-set(PROJECT_DESC "Extension which integrates network services into the browser.")
+set(PROJECT_COMPANY "FRES-Solutions")
+set(PROJECT_COPY "(c) 2010 ${PROJECT_COMPANY}")
+set(PROJECT_HOSTNAME "fres-solutions")
+set(PROJECT_HOST_TLD "com")
+set(PROJECT_HOST "${PROJECT_HOSTNAME}${PROJECT_HOST_TLD}")
+set(PROJECT_URL "http://www.${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}/${PROJECT_NAME}")
+
+# Exension strings
+set(EXTENSION_DESC "${PROJECT_LONG} v${VERSION}. Extension which integrates network services into the browser. ${PROJECT_COPY}")
+set(EXTENSION_ID "${PROJECT_LOW}@${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 
 # Plugin strings
 set(PLUGIN_NAME ${PROJECT_NAME})
 set(PLUGIN_LONG ${PROJECT_LONG})
-set(PLUGIN_TYPE "application/x-conetserv")
-set(PLUGIN_DESC "<a href=\\\"http://www.${EXTENSION_HOST}/${PROJECT_NAME}/plugin/?version=${VERSION}\\\"> \\
-                ${PROJECT_NAME} v${VERSION}</a> - ${PROJECT_LONG} plugin.<br />(c) 2010 FRES-Solutions")
-set(PLUGIN_ID   "com.fres-solutions.${PROJECT_NAME}")
-
-# Exension strings
-set(EXTENSION_CREATOR "FRES-Solutions")
-set(EXTENSION_HOST    "fres-solutions.com")
-set(EXTENSION_ID      "${PROJECT_NAME}@${EXTENSION_HOST}")
-set(EXTENSION_URL     "http://www.${EXTENSION_HOST}/${PROJECT_NAME}")
+set(PLUGIN_TYPE "application/x-${PROJECT_LOW}")
+set(PLUGIN_DESC "${PROJECT_LONG} v${VERSION}. Plugin which integrates network services into the browser. ${PROJECT_COPY}")
+set(PLUGIN_ID   "${PROJECT_HOST_TLD}.${PROJECT_HOSTNAME}.${PROJECT_LOW}")
 
 # Contributors
 if(WIN32)

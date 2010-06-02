@@ -1,7 +1,7 @@
 {
 	"name": "@PROJECT_NAME@",
 	"version": "@VERSION@",
-	"description": "@PROJECT_LONG@",
+	"description": "@EXTENSION_DESC@",
 	"icons": {
 		"16": "images/icon16.png",
 		"32": "images/icon32.png",
