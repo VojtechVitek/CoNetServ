@@ -5,7 +5,7 @@
 
 if(NOT XULRunnerSDK_INCLUDE_DIR)
 
-	file(GLOB path1 "/usr/include/xulrunner-sdk-*")
+	file(GLOB path1 "/usr/include/xulrunner-*")
 
 	find_path(XULRunnerSDK_INCLUDE_DIR npapi.h
 		${path1}
