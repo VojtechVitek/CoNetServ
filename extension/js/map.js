@@ -19,9 +19,6 @@ var Map = {
          longitude: result.longitude,
          zoom: result.zoom
       });
-
-      /* Show map */
-      this.show();
    },
 
    loadJsapi: function() {

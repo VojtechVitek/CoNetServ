@@ -85,6 +85,13 @@ $(document).ready(function(){
       stopCommands();startCommands();
    });
 
+   /*
+    * Start services on menuitem clicked
+    */
+    $('#external-info-header a').click(function(){
+       startLocalInfo();
+    });
+       
    Plot.inicialize();
 
 });
@@ -95,8 +102,7 @@ function startLocalInfo()
       return;   
    isLocalInfoRunning = 1;
 
-   /* set element to write map into */
-   Map.setElementId("map-placeholder");
+   
 
    /* Start local info services */   
    Services.start(
@@ -130,9 +136,24 @@ function startLocalInfo()
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-            // show map location
-            if(result.longitude && result.latitude)
-               Map.addLocation(service, result);
+         /* set element to write map into */
+         Map.setElementId("map-placeholder");
+         Map.addLocation(service, result);
+
+         // show map location
+         if(result.longitude && result.latitude) {
+            //check, if page is defaultly shown, otherwise show on buttonclick
+            if($("#external-info input:radio:checked").val() == "external-map-div") {
+               Map.show();
+            }
+            else {
+               $("#external-map").click(function(){
+                  Map.show();
+               });
+            }
+         }
+
+               
          }
       },
       /* stopped */

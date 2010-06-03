@@ -23,10 +23,10 @@
    <body>
       <div id="tabs">
          <ul>
-            <li><a href="#local-services">Local services</a></li>
-            <li><a href="#external-services">External services</a></li>
-            <li><a href="#local-info">Local info</a></li>
-            <li ><a href="#external-info" onclick="startLocalInfo();">External info</a></li>
+            <li id="local-services-header"><a href="#local-services">Local services</a></li>
+            <li id="external-services-header"><a href="#external-services">External services</a></li>
+            <li id="local-info-header"><a href="#local-info">Local info</a></li>
+            <li id="external-info-header"><a href="#external-info">External info</a></li>
             <li id="about-tab-header"><a href="#about">About</a></li>
          </ul>
          <div id="local-services" class="tab local">
@@ -131,11 +131,9 @@
             <form action="">
                <div id="external-info-form">
                   <input type="radio" id="external-provider" class="radio-tab" name="external-info-form" value="external-provider-div" checked="checked"/>
-                  <label for="external-provider">Provider</label>
-                  <input type="radio" id="external-ip" class="radio-tab" name="external-info-form" value="external-ip-div" />
-                  <label for="external-ip">IP</label>
+                  <label for="external-provider">Provider info</label>
                   <input type="radio" id="external-map" class="radio-tab" name="external-info-form" value="external-map-div" />
-                  <label for="external-map">Map</label>
+                  <label for="external-map">Location map</label>
                </div>
             </form>
             <div id="external-provider-div" class="content provider">
@@ -145,9 +143,6 @@
                <h2>Route</h2><ul id="route"></ul>
                <h2>External IPv4</h2><ul id="externIpv4"></ul>
                <h2>External IPv6</h2><ul id="externIpv6"></ul>
-            </div>
-            <div id="external-ip-div" class="content ip">
-               <p> Ip div </p>
             </div>
             <div id="external-map-div" class="content map ui-widget ui-widget-content ui-corner-all">
                <div id="map-conteiner" class="ui-corner-all">
