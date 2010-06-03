@@ -93,8 +93,12 @@ var Ui = {
        * CoNetServ
        */
       if(!conetserv) {
-         this.divError("#local-services", "CoNetServ plugin for your browser has not \
-            been correctly loaded. Local services will not be available. <br /><br />Please, refer to readme for correct installation steps.")
+         var errStr = "CoNetServ plugin for your browser has not \
+            been correctly loaded. Local services will not be available. <br /><br />\
+            Please, refer to readme for correct installation steps.";
+         this.divError("#local-services", errStr)
+
+         this.divError("#local-info", errStr)
       }
       else {
          /*
