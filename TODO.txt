@@ -12,16 +12,16 @@ Plugin:
 - Local Network Info: nmap to show neighboaring computers
 
 Extension:
-- Plotting: rewrite into OOP
-- Local Info Tab: rename to External Host Info, change layout
+XXX Plotting: rewrite into OOP
+XXX Local Info Tab: rename to External Host Info, change layout
 - Settings: implement for different web-browsers (using native API)
-- Network tools: allow long output
+XXX Network tools: allow long output
 - Network tools: check availability and print additional info (installation, ..)
 - Firefox: automatic icon in toolbar 
 - PING: rewrite packet lost analyser using regexp
 - TRACEROUTE: improve plotting
 - WHOIS: use only first and second domain names
-- Console output: improve visibility of time values
+XXX Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
 - Possibility to save ping and traceroute plot to a jpg file
 - Hide url bar while services are running
