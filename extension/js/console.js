@@ -2,6 +2,7 @@
  * function for creating console objects, which are used for output of program
  *
  */
+
 function console(div) {
    this.div = document.getElementById(div);   //pointer to div which object takes care of
    this.code = "";            //container for data to be shown in element
@@ -11,6 +12,7 @@ function console(div) {
    this.rows = [];               //variable for storing rows of code
    this.rowCount = 0;            //defines count of rows
    this.maxRows = 50;            //maximum count of rows
+   this.percent = 0;
 
    /* regular expressions */
    this.linux = new Object();
@@ -18,7 +20,7 @@ function console(div) {
    this.linux.ip = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ig
    this.linux.time = /\d+\.?\d*\s?ms/ig
    
-
+   
    //gets color from string containing number at the begining
    //0% green 50% yellow 100% red
    //returns final html element
@@ -26,16 +28,15 @@ function console(div) {
       var color;
       // 0.2 = 100(percent)/500(maxvalue)
       var percent = parseFloat(input)*0.2;
-      percent = 80;
       if (percent <= 50) {
-         color = parseInt(percent/50*255);
+         color = parseInt(percent/50*196);
 
-         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "7f00";
+         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "B000";
       }
       else if(percent<100)
-         color = "#ff" + (parseInt(255-(percent-50)/50*127)).toString(16) + "00";
+         color = "#B0" + (parseInt(196-(percent-50)/50*196)).toString(16) + "00";
       else 
-         color = "#f00";
+         color = "#B00000";
 
       return '<span style="color:' + color + '">' + input + '</span>';
    }

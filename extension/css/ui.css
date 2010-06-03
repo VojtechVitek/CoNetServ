@@ -154,3 +154,14 @@ div.valueLabel {
 .color3{
    color: green;
 }
+
+/* plugin loader */
+#plugin-placeholder {
+   width: 0px;
+   height: 0px;
+}
+
+#plugin-placeholder object {
+   width: 0px;
+   height: 0px;
+}
