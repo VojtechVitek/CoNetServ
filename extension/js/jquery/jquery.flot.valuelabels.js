@@ -46,8 +46,8 @@
 					var tail;
 					/*Used for correct output of labels */
                var $tabs = $('#tabs').tabs();
-               var selected = $tabs.tabs('option', 'selected');
-               if(selected == 2)
+               var active = $("#local-services input:radio:checked").val();
+               if(active == 'local-tracert-div')
                   tail = '">' + Plot.traceData.labels[i] + '</div>';
                else
                   tail = '">' + Plot.trace6Data.labels[i] + '</div>';
