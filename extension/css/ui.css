@@ -40,6 +40,15 @@ body {
    margin-left: -2px;
 }
 
+.radio-tab-label.ui-button-text-icon .ui-button-text{
+   padding: 0.4em 2em 0.4em 1em;
+}
+
+.ui-icon-circle-close {
+   position: absolute;
+   right: 3px;
+}
+
 .console {
   width: 640px;
   height: 450px;

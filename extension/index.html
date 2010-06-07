@@ -38,17 +38,17 @@
                
                <div id="local-services-form">
                   <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
-                  <label id="local-ping-label" class= "ping" for="local-ping-input">Ping</label>
+                  <label id="local-ping-label" class= "radio-tab-label ping" for="local-ping-input">Ping</label>
                   <input type="radio" id="local-ping6-input" class="radio-tab ping6" name="local-services-form" value ="local-ping6-div" />
-                  <label id="local-ping6-label" class="ping6" for="local-ping6-input">Ping6</label>
+                  <label id="local-ping6-label" class="radio-tab-label ping6" for="local-ping6-input">Ping6</label>
                   <input type="radio" id="local-tracert-input" class="radio-tab tracert" name="local-services-form" value ="local-tracert-div" />
-                  <label id="local-tracert-label" class="tracert" for="local-tracert-input">Traceroute</label>
+                  <label id="local-tracert-label" class="radio-tab-label tracert" for="local-tracert-input">Traceroute</label>
                   <input type="radio" id="local-tracert6-input" class="radio-tab tracert6" name="local-services-form" value ="local-tracert6-div" />
-                  <label id="local-tracert6-label" class="tracert6" for="local-tracert6-input">Traceroute6</label>
+                  <label id="local-tracert6-label" class="radio-tab-label tracert6" for="local-tracert6-input">Traceroute6</label>
                   <input type="radio" id="local-whois-input" class="radio-tab whois" name="local-services-form" value ="local-whois-div" />
-                  <label id="local-whois-label" class="whois" for="local-whois-input">Whois</label>
+                  <label id="local-whois-label" class="radio-tab-label whois" for="local-whois-input">Whois</label>
                   <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
-                  <label id="local-nslookup-label" class="nslookup" for="local-nslookup-input">NSlookup</label>
+                  <label id="local-nslookup-label" class="radio-tab-label nslookup" for="local-nslookup-input">NSlookup</label>
                </div>              
             </form>
 
@@ -79,7 +79,7 @@
          <div id="external-services" class="tab external">
             <form action="">
                <input id="external-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
-               <input id="external-url-button" type="submit" value="Start" class="url-button ui-button ui-widget ui-state-default ui-corner-right" role="button">
+               <button id="external-url-start" class="url-start">Start</button>
 
                <div id="external-services-form">
                   <input type="radio" id="external-ping" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
@@ -168,19 +168,19 @@
                      
                   <div id="settings-general-frontpage" class="group ui-corner-all ui-widget-content ui-widget">
                      <div>
-                        <input type="radio" id="frontpage-local-services" class="parent" name="settings-general-frontpage" value="local-services-form"/>
+                        <input type="radio" id="frontpage-local-services" class="parent" name="settings-general-frontpage" value="local-services"/>
                         <label for="frontpage-local-services">Local services</label>
                      </div>
                      <div>
-                        <input type="radio" id="frontpage-external-services" class="parent" name="settings-general-frontpage" value="external-services-form"/>
+                        <input type="radio" id="frontpage-external-services" class="parent" name="settings-general-frontpage" value="external-services"/>
                         <label for="frontpage-external-services">External services</label>
                      </div>
                      <div>
-                        <input type="radio" id="frontpage-local-info" class="parent" name="settings-general-frontpage" value="local-info-form"/>
+                        <input type="radio" id="frontpage-local-info" class="parent" name="settings-general-frontpage" value="local-info"/>
                         <label for="frontpage-local-info">Local info</label>
                      </div>
                      <div>
-                        <input type="radio" id="frontpage-external-info" class="parent" name="settings-general-frontpage" value="external-info-form"/>
+                        <input type="radio" id="frontpage-external-info" class="parent" name="settings-general-frontpage" value="external-info"/>
                         <label for="frontpage-external-info">External info</label>
                      </div>
                   </div>

@@ -16,19 +16,18 @@ var Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
-      $("#tabs").tabs('select', 5);
       /* inicialize options */
       Options.inicialize();
-      this.inicializeOptions();
 
+      $("#settings-general-frontpage").change(function(){
+         Ui.redrawOptions();
+      });
 
       $("#settings-general-submit").button();
-
       $("#settings-general-submit").click(function() {
          Options.save();
          return false;
       });
-      
 
       /**
       * reimplement behaviour when different tab is selected
@@ -198,10 +197,7 @@ If you want to install it, please follow these steps.");
    */
   redraw : function() {
     var tabs = $('#tabs').tabs();
-    var selected = tabs.tabs('option', 'selected');
-    var container;
-
-    container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
+    var container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
     
     var active = $(container + " input:radio:checked").val();
     $(container + " .content").css('display', 'none');
@@ -218,7 +214,6 @@ If you want to install it, please follow these steps.");
   addIcons : function(parent, selector, func) {
      // show icons
      $(parent + " input" + selector).button("option", "icons", {
-        primary:'ui-icon-flag',
         secondary:'ui-icon-circle-close'
      });
      // register callback function
@@ -235,17 +230,16 @@ If you want to install it, please follow these steps.");
    */
   removeIcons : function(parent, selector) {
      $(parent + " input" + selector).button("option", "icons", false);
+     $(parent + " label" + selector).removeClass("ui-button-text-icon");
      //!!TODO remove empty space after icons are deleted
   },
 
   /**
-   * Inicializes page with options and handles its events
+   * Redraws options in case they were changed programly
    */
-  inicializeOptions : function () {
-    $("#settings-general-frontpage").change(function(){
-       var parent = $("#settings-general-frontpage input:checked").val();
-       $("#settings-general-frontpage-children").html(Ui.frontpageSettingsChildForm(parent));
-    });
+  redrawOptions : function () {
+     var parent = $("#settings-general-frontpage input:checked").val();
+       $("#settings-general-frontpage-children").html(this.frontpageSettingsChildForm(parent));
   },
 
   /**
@@ -256,7 +250,7 @@ If you want to install it, please follow these steps.");
   frontpageSettingsChildForm : function (parent) {
       var output = '';
       var label;
-      $.each($("#" + parent + " input"), function(index,div) {
+      $.each($("#" + parent + " input.radio-tab"), function(index,div) {
          label = $('label[for=' + div.id + ']');
          output += '<div>';
          output += '<input type="radio" id="frontpage-' + div.id + '" class="child" value="' + div.id + '" name="settings-general-frontpage-children"/>';

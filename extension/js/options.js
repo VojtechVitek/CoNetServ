@@ -25,6 +25,19 @@ var Options = {
       
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
       $("#settings-general-toolbox").attr("checked", this.toolbarButton);
+
+      /* redraw options page */
+      this.frontPageParent = this.storage['conetserv-settings-general-frontpage'];
+      this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
+      $("#frontpage-" + this.frontPageParent).attr("checked", true);
+      Ui.redrawOptions();
+      $("#frontpage-" + this.frontPageChild).attr("checked", true);
+
+      /* depending on options page, set the active tab */
+      //$("#" + this.frontPageParent+"-header").addClass("ui-tabs-selected ui-state-active");//addClass("ui-tabs-hide");
+      //$("#" + this.frontPageParent).removeClass("ui-tabs-hide");//addClass("ui-tabs-hide");
+      //$("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
+      //$("#tabs").tabs('select', 5);
    },
 
    /**
@@ -37,9 +50,11 @@ var Options = {
       this.toolbarButton = $("#settings-general-toolbox").is(":checked");
       this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
 
-      var tabpanel = $("#settings-general-frontpage input:checked").val();
-      alert(tabpanel);
-      alert($("#" . tabpanel));
+      /* frontpage */
+      this.frontPageParent = $("#settings-general-frontpage input:checked").val();
+      this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
+      this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
+      this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
 
    },
 
