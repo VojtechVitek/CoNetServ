@@ -349,9 +349,10 @@ function startPing()
          pingConsole.clear();
          if (document.getElementById("conetserv").startPing(url.hostname)) {
              /* reset data and start animation */
-             Plot.pingData.reset();
+             Plot.localPingData.reset();
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
+
 
              Ui.addIcons(".local", ".ping", stopPing);
          } else {
@@ -375,7 +376,7 @@ function startPing6()
          ping6Console.clear();
          if (document.getElementById("conetserv").startPing6(url.hostname)) {
              /* reset data and start animation */
-             Plot.ping6Data.reset();
+             Plot.localPing6Data.reset();
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
 
@@ -400,7 +401,7 @@ function startTraceroute()
       try {
          tracerouteConsole.clear();
          if (document.getElementById("conetserv").startTraceroute(url.hostname)) {
-            Plot.traceData.reset();
+            Plot.localTraceData.reset();
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
             readTraceroute();
 
@@ -426,7 +427,7 @@ function startTraceroute6()
       try {
          traceroute6Console.clear();
          if (document.getElementById("conetserv").startTraceroute6(url.hostname)) {
-            Plot.trace6Data.reset();
+            Plot.localTrace6Data.reset();
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
 

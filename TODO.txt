@@ -28,3 +28,4 @@ XXX Console output: improve visibility of time values
 - Autorun service on start
 - DESIGN: add templates
 - OPTIONS: select default page
+- on tab select, focus on url bar
