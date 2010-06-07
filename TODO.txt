@@ -18,10 +18,12 @@ XXX Local Info Tab: rename to External Host Info, change layout
 XXX Network tools: allow long output
 - Network tools: check availability and print additional info (installation, ..)
 - Firefox: automatic icon in toolbar 
-- PING: rewrite packet lost analyser using regexp
+XXX PING: rewrite packet lost analyser using regexp -- implemented, not tested yet
 - TRACEROUTE: improve plotting
 - WHOIS: use only first and second domain names
 XXX Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
 - Possibility to save ping and traceroute plot to a jpg file
 - Hide url bar while services are running
+- Autorun service on start
+- OPTIONS: select default page

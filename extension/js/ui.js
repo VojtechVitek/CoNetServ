@@ -14,6 +14,7 @@ var Ui = {
       $("#external-services-form").buttonset();
       $("#local-info-form").buttonset();
       $("#external-info-form").buttonset();
+      $("#settings-form").buttonset();
 
       /**
       * reimplement behaviour when different tab is selected
@@ -55,6 +56,13 @@ var Ui = {
       $("input[name=external-info-form]").change(function(){
          Ui.redraw();
          Plot.repaint();
+      });
+
+      /**
+       * when radiobutton on settings page is selected
+       */
+      $("input[name=settings-form]").change(function(){
+         Ui.redraw();
       });
 
       /**
@@ -188,6 +196,9 @@ If you want to install it, please follow these steps.");
         break;
       case 3:
         container = '#external-info';
+        break;
+      case 4:
+        container = '#settings';
         break;
     }
 

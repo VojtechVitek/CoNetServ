@@ -27,6 +27,7 @@
             <li id="external-services-header"><a href="#external-services">External services</a></li>
             <li id="local-info-header"><a href="#local-info">Local info</a></li>
             <li id="external-info-header"><a href="#external-info">External info</a></li>
+            <li id="settings-tab-header"><a href="#settings">Settings</a></li>
             <li id="about-tab-header"><a href="#about">About</a></li>
          </ul>
          <div id="local-services" class="tab local">
@@ -151,9 +152,31 @@
             </div>
 
          </div>
+         <div id="settings" class="tab">
+            <form action="">
+               <div id="settings-form">
+                  <input type="radio" id="settings-general" class="radio-tab" name="settings-form" value="settings-general-div" checked="checked"/>
+                  <label for="settings-general">General</label>
+                  <input type="radio" id="settings-services" class="radio-tab" name="settings-form" value="settings-services-div" />
+                  <label for="settings-services">Services</label>
+               </div>
+            </form>
+            <div id="settings-general-div" class="content geneal">
+               <form action="">
+                  <input type="checkbox" id="settings-general-toolbox"/>
+                     <label for="settings-general-toolbox">Show button in toolbox?</label>
+                  <input type="submit" name="op" id="settings-general-submit" />                   
+               </form>
+            </div>
+            <div id="settings-services-div" class="content servies">
+               <p>Ahojlasdflka sjd;fl asdl </p>
+            </div>
+
+         </div>
          <div id="about" class="tab">
             @ABOUT.HTML@
          </div>
+
       </div>
       <div id="plugin-placeholder"></div>
    </body>

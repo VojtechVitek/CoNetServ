@@ -166,15 +166,16 @@ var Plot = {
          var currentData = data.prevData.substr(0, npos);
          if($.client.os == "Windows")
          {
+            var regHead = /^\w+\s.*?\d+\.\d+\.\d+\.\d+.*/
+            alert(regHead.exec(currentData));
             pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
             if(pingTime)
                data.add(pingTime);
             else
             {
-               //!! TODO rewrite to a regexp
+               //!! TODO check on windows!!
                /* control of response keywords */
-               if(currentData.indexOf("Vyprsel") != -1 || received.indexOf("neni dostupny") != -1
-                  || received.indexOf("timed out") != -1 || received.indexOf("unreachable") != -1 || received.indexOf("expired") != -1)
+               if(!regHead.exec(currentData))
                {
                   data.add(null);
                }
