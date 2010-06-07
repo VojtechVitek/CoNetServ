@@ -17,10 +17,11 @@ body {
 }
 
 #about-tab-header {
-   position: absolute !important;
-   margin-top: 5px !important;
-   margin-right: 5px;
-   right: 0px;
+   float: right;
+}
+
+#settings-tab-header {
+   float: right;
 }
 
 .content {
@@ -164,4 +165,40 @@ div.valueLabel {
 #plugin-placeholder object {
    width: 0px;
    height: 0px;
+}
+
+/**************************************************************************
+ * settings tab
+ **************************************************************************/
+#settings-general-frontpage {
+   height: 150px;
+   width: 200px;
+   float: left;
+   margin: 0 10px 10px 0;
+   padding: 10px;
+}
+
+#settings-general-frontpage-children {
+   height: 150px;
+   width: 200px;
+   margin: 0 10px 10px 0;
+   padding: 10px;
+   float: left;
+}
+
+#settings-general-toolbox-div {
+   clear: left;
+}
+
+#settings-general-submit {
+   margin-top: 10px;
+   display: block;
+   clear: left;
+}
+#settings-general-div input.single-line{
+   clear: left;
+}
+
+#settings-general-div label.single-line{
+
 }

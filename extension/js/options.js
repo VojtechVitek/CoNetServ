@@ -2,8 +2,10 @@
  * Object for manipulating CoNetServ options
  */
 var Options = {
-   storage : null,
+   storage : false,
    toolbarButton : false,
+   frontPageParent : false,
+   frontPageChild : false,
    
    /**
     * Inicializes CoNetServ options
@@ -16,19 +18,29 @@ var Options = {
       else if($.client.browser == "Chrome") {
          this.storage = localStorage;
       }
+      else {
+         this.storage = false;
+         return;
+      }
       
-
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
       $("#settings-general-toolbox").attr("checked", this.toolbarButton);
-
    },
 
    /**
     * Saves options, depending on set values in forms.
     */
    save : function() {
+      if(!this.storage)
+         return;
+
       this.toolbarButton = $("#settings-general-toolbox").is(":checked");
       this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
+
+      var tabpanel = $("#settings-general-frontpage input:checked").val();
+      alert(tabpanel);
+      alert($("#" . tabpanel));
+
    },
 
    /**

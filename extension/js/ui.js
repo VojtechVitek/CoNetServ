@@ -6,7 +6,7 @@ var Ui = {
     * Inicializes UI object ( sets tabs, buttons, ... )
     */
    inicialize : function() {
-      /* inicialize tabs */
+      /* inicialize tabs and its children on selected tab*/
       $("#tabs").tabs();
 
       /* create radios for virtual tabs */
@@ -16,8 +16,10 @@ var Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
+      $("#tabs").tabs('select', 5);
       /* inicialize options */
       Options.inicialize();
+      this.inicializeOptions();
 
 
       $("#settings-general-submit").button();
@@ -87,6 +89,8 @@ var Ui = {
         })
         .removeClass("ui-corner-all")
         .addClass("ui-corner-right");
+
+      Ui.redraw();
    },
 
 
@@ -125,6 +129,8 @@ var Ui = {
           * check local services availability
           * first check for general availability in system - if not, don even display
           */
+         return;
+         
          if(!conetserv.ping) {
             $(".local .ping").remove();
          }
@@ -195,25 +201,8 @@ If you want to install it, please follow these steps.");
     var selected = tabs.tabs('option', 'selected');
     var container;
 
-    //TODO rewrite to better way
-    switch(selected) {
-      case 0:
-        container = '#local-services';
-        break;
-      case 1:
-        container = '#external-services';
-        break;
-      case 2:
-        container = '#local-info';
-        break;
-      case 3:
-        container = '#external-info';
-        break;
-      case 4:
-        container = '#settings';
-        break;
-    }
-
+    container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
+    
     var active = $(container + " input:radio:checked").val();
     $(container + " .content").css('display', 'none');
     $("#" + active).css('display', 'block');
@@ -247,6 +236,35 @@ If you want to install it, please follow these steps.");
   removeIcons : function(parent, selector) {
      $(parent + " input" + selector).button("option", "icons", false);
      //!!TODO remove empty space after icons are deleted
+  },
+
+  /**
+   * Inicializes page with options and handles its events
+   */
+  inicializeOptions : function () {
+    $("#settings-general-frontpage").change(function(){
+       var parent = $("#settings-general-frontpage input:checked").val();
+       $("#settings-general-frontpage-children").html(Ui.frontpageSettingsChildForm(parent));
+    });
+  },
+
+  /**
+   * Creates form with children
+   * @param parent div, which is parenting shown items
+   * @return html code to be inserted to a page
+   */
+  frontpageSettingsChildForm : function (parent) {
+      var output = '';
+      var label;
+      $.each($("#" + parent + " input"), function(index,div) {
+         label = $('label[for=' + div.id + ']');
+         output += '<div>';
+         output += '<input type="radio" id="frontpage-' + div.id + '" class="child" value="' + div.id + '" name="settings-general-frontpage-children"/>';
+         output += '<label for="frontpage-' + div.id + '">' + label.text() +'</label>';
+         output += '</div>';
+      });
+
+      return output;
   }
 }
 

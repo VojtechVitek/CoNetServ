@@ -28,8 +28,8 @@
             <li id="external-services-header"><a href="#external-services">External services</a></li>
             <li id="local-info-header"><a href="#local-info">Local info</a></li>
             <li id="external-info-header"><a href="#external-info">External info</a></li>
-            <li id="settings-tab-header"><a href="#settings">Settings</a></li>
             <li id="about-tab-header"><a href="#about">About</a></li>
+            <li id="settings-tab-header"><a href="#settings">Settings</a></li>
          </ul>
          <div id="local-services" class="tab local">
             <form action="" onsubmit="return false;">
@@ -84,7 +84,7 @@
                <div id="external-services-form">
                   <input type="radio" id="external-ping" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
                   <label for="external-ping">Ping</label>
-                  <input type="radio" id="external-ping6" class="radio-tab pin6"  name="external-services-form" value="external-ping6-div"/>
+                  <input type="radio" id="external-ping6" class="radio-tab ping6"  name="external-services-form" value="external-ping6-div"/>
                   <label for="external-ping6">Ping6</label>
                   <input type="radio" id="external-tracert" class="radio-tab tracert" name="external-services-form" value="external-tracert-div"/>
                   <label for="external-tracert">Traceroute</label>
@@ -164,9 +164,41 @@
             </form>
             <div id="settings-general-div" class="content geneal">
                <form id="settings-general-form" action="">
-                  <input type="checkbox" id="settings-general-toolbox"/>
-                     <label for="settings-general-toolbox">Show button in toolbox?</label>
+                  <h4>Choose you frontpage:</h4>
+                     
+                  <div id="settings-general-frontpage" class="group ui-corner-all ui-widget-content ui-widget">
+                     <div>
+                        <input type="radio" id="frontpage-local-services" class="parent" name="settings-general-frontpage" value="local-services-form"/>
+                        <label for="frontpage-local-services">Local services</label>
+                     </div>
+                     <div>
+                        <input type="radio" id="frontpage-external-services" class="parent" name="settings-general-frontpage" value="external-services-form"/>
+                        <label for="frontpage-external-services">External services</label>
+                     </div>
+                     <div>
+                        <input type="radio" id="frontpage-local-info" class="parent" name="settings-general-frontpage" value="local-info-form"/>
+                        <label for="frontpage-local-info">Local info</label>
+                     </div>
+                     <div>
+                        <input type="radio" id="frontpage-external-info" class="parent" name="settings-general-frontpage" value="external-info-form"/>
+                        <label for="frontpage-external-info">External info</label>
+                     </div>
+                  </div>
+                     
+                  <div id="settings-general-frontpage-children" class="group ui-corner-all ui-widget-content ui-widget">
+                  </div>
+
+                  <div id="settings-general-toolbox-div" class="group">
+                     <input type="checkbox" id="settings-general-toolbox" class="single-line"/>
+                        <label class="single-line" for="settings-general-toolbox">Show button in toolbox?</label>
+                  </div>
+                  <div id="settings-general-autostart-div" class="group">
+                     <input type="checkbox" id="settings-general-autostart" class="single-line"/>
+                        <label class="single-line" for="settings-general-toolbox">Automaticaly start default service?</label>
+                  </div>
+
                   <button id="settings-general-submit">Save</button>
+
                </form>
             </div>
             <div id="settings-services-div" class="content servies">

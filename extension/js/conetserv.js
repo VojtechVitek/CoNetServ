@@ -29,7 +29,7 @@ $(document).ready(function(){
    $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
 
    /* CoNetServ object - NPAPI plugin */
-   conetserv = document.getElementById("conetserv");
+   conetserv = $("conetserv");
 
    /* console text-boxes */
    pingConsole = new console("local-ping-console");
