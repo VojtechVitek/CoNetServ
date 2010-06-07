@@ -26,4 +26,5 @@ XXX Console output: improve visibility of time values
 - Possibility to save ping and traceroute plot to a jpg file
 - Hide url bar while services are running
 - Autorun service on start
+- DESIGN: add templates
 - OPTIONS: select default page

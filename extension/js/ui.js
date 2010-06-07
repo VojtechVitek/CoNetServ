@@ -16,6 +16,18 @@ var Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
+      /* inicialize options */
+      Options.inicialize();
+
+
+      $("#settings-general-submit").button();
+
+      $("#settings-general-submit").click(function() {
+         Options.save();
+         return false;
+      });
+      
+
       /**
       * reimplement behaviour when different tab is selected
       */

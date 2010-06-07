@@ -15,6 +15,7 @@
       <script type="text/javascript" src="js/conetserv.js"></script>
       <script type="text/javascript" src="js/console.js"></script>
       <script type="text/javascript" src="js/services.js"></script>
+      <script type="text/javascript" src="js/options.js"></script>
       <script type="text/javascript" src="js/url.js"></script>
       <script type="text/javascript" src="js/ui.js"></script>
       <script type="text/javascript" src="js/plot.js"></script>
@@ -162,10 +163,10 @@
                </div>
             </form>
             <div id="settings-general-div" class="content geneal">
-               <form action="">
+               <form id="settings-general-form" action="">
                   <input type="checkbox" id="settings-general-toolbox"/>
                      <label for="settings-general-toolbox">Show button in toolbox?</label>
-                  <input type="submit" name="op" id="settings-general-submit" />                   
+                  <button id="settings-general-submit">Save</button>
                </form>
             </div>
             <div id="settings-services-div" class="content servies">
