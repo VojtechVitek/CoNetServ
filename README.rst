@@ -2,7 +2,7 @@ CoNetServ (Complex Network Services)
 ====================================
 **Extension which integrates network services into the browser.**
 
-.. image:: http://github.com/V-Teq/CoNetServ/raw/master/extension/images/icon128.png
+.. image:: http://github.com/V-Teq/CoNetServ/raw/master/extension/images/icon128.jpg
 
 Directory structure
 -------------------
