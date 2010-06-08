@@ -73,7 +73,7 @@ $(document).ready(function(){
    };
 */
    /*
-    * Inicialize ui
+    * Initialize ui
     */
    Ui.checkAvailability();
    Ui.redraw();
@@ -82,7 +82,8 @@ $(document).ready(function(){
     * Bind start button to start local services
     */
    $("#local-url-start").click(function() {
-      stopCommands();startCommands();
+      stopCommands();
+      startCommands();
    });
 
    /*
@@ -92,7 +93,7 @@ $(document).ready(function(){
        startLocalInfo();
     });
 
-   Plot.inicialize();
+   Plot.initialize();
 
 });
 

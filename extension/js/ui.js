@@ -3,10 +3,10 @@
  */
 var Ui = {
    /**
-    * Inicializes UI object ( sets tabs, buttons, ... )
+    * Initializes UI object ( sets tabs, buttons, ... )
     */
-   inicialize : function() {
-      /* inicialize tabs */
+   initialize : function() {
+      /* initialize tabs */
       $("#tabs").tabs();
 
       /* create radios for virtual tabs */
@@ -240,7 +240,7 @@ If you want to install it, please follow these steps.");
 
 $(function() {
    /**
-    * inicialize page ui right after page creation
+    * initialize page ui right after page creation
     */
-   Ui.inicialize();
+   Ui.initialize();
 });
