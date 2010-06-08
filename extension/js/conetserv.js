@@ -17,7 +17,7 @@ var traceroute6Console;
 var whoisConsole;
 var nslookupConsole;
 
-/* local info running */
+/* external info running */
 var isExternalInfoRunning = 0;
 
 $(document).ready(function(){
@@ -55,7 +55,6 @@ $(document).ready(function(){
          });
       }
    }
-
    /*
     * Initialize ui
     */
@@ -132,16 +131,14 @@ function startExternalInfo()
                source + '</li>'
             );
 
-            /* set element to write map into */
-            Map.addLocation(service, result);
-
             // show map location
             if(result.longitude && result.latitude) {
+               /* set element to write map into */
+               Map.addLocation(service, result);
                //check, if page is defaultly shown, otherwise show on buttonclick
                if($("#external-info input[type=radio]:checked").val() == "external-map-div") {
                   Map.show();
-               }
-               else {
+               } else {
                   $("#external-map").click(function(){
                      Map.show();
                   });
@@ -155,17 +152,6 @@ function startExternalInfo()
       }
    );
 };
-
-/**
- * Checks address for validity to ping, traceroute,...
- *
- */
-function checkAddress(addr)
-{
-   var IPv4regxp = /^(f|ht)tp[s]{0,1}:[/]{2}\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ig;
-   var http = /(http|https|ftp)([^ ]+)/ig
-   return IPv4regxp.exec(addr) || http.exec(addr);
-}
 
 /**
  * Read output of PING6 command
