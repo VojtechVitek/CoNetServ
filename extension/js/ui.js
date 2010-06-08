@@ -134,7 +134,7 @@ var Ui = {
           * first check for general availability in system - if not, don even display
           */
          return;
-         
+
          if(!conetserv.ping) {
             $(".local .ping").remove();
          }
@@ -203,8 +203,8 @@ If you want to install it, please follow these steps.");
   redraw : function() {
     var tabs = $('#tabs').tabs();
     var container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
-    
-    var active = $(container + " input:radio:checked").val();
+
+    var active = $(container + " input[type=radio]:checked").val();
     $(container + " .content").css('display', 'none');
     $("#" + active).css('display', 'block');
   },
@@ -246,7 +246,7 @@ If you want to install it, please follow these steps.");
      var parent = $("#settings-general-frontpage input:checked").val();
        $("#settings-general-frontpage-children").html(this.frontpageSettingsChildForm(parent));
   },
-  
+
   /**
    * Creates form with children
    * @param parent div, which is parenting shown items
