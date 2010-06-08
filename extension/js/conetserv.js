@@ -91,7 +91,7 @@ $(document).ready(function(){
     $('#external-info-header a').click(function(){
        startLocalInfo();
     });
-       
+
    Plot.inicialize();
 
 });
@@ -99,12 +99,12 @@ $(document).ready(function(){
 function startLocalInfo()
 {
    if(isLocalInfoRunning)
-      return;   
+      return;
    isLocalInfoRunning = 1;
 
-   
 
-   /* Start local info services */   
+
+   /* Start local info services */
    Services.start(
       /* started */
       function() {
@@ -126,12 +126,12 @@ function startLocalInfo()
          if (result.city || result.region || result.country ||
              result.countryCode || result.longitude || result.latitude) {
             $("#location").append(
-               '<li class="ui-corner-all"><strong>' + 
+               '<li class="ui-corner-all"><strong>' +
                (result.city ? result.city + ', ' : '') +
                (result.region ? + result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
-               '</strong> ' + 
+               '</strong> ' +
                (result.longitude ? 'Longitude: ' + result.longitude : '') +
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
@@ -143,7 +143,7 @@ function startLocalInfo()
          // show map location
          if(result.longitude && result.latitude) {
             //check, if page is defaultly shown, otherwise show on buttonclick
-            if($("#external-info input:radio:checked").val() == "external-map-div") {
+            if($("#external-info input[type=radio]:checked").val() == "external-map-div") {
                Map.show();
             }
             else {
@@ -153,7 +153,7 @@ function startLocalInfo()
             }
          }
 
-               
+
          }
       },
       /* stopped */
@@ -163,7 +163,7 @@ function startLocalInfo()
    );
 };
 
-/** 
+/**
  * Checks address for validity to ping, traceroute,...
  *
  */
@@ -492,7 +492,7 @@ function startNslookup()
          nslookupInterval = -1;
       }
 
-      
+
    }
 }
 
@@ -506,7 +506,7 @@ function stopCommands()
    stopTraceroute();
    stopTraceroute6();
    stopNslookup();
-   if($.client.os != "Windows") 
+   if($.client.os != "Windows")
       stopWhois();
 }
 
@@ -522,7 +522,7 @@ function stopPing()
       catch(e) {
          pingConsole.add(e);
       }
-      
+
       Ui.removeIcons(".local", ".ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
@@ -541,7 +541,7 @@ function stopPing6()
       catch(e) {
          ping6Console.add(e);
       }
-      
+
       Ui.removeIcons(".local", ".ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
@@ -566,7 +566,7 @@ function stopTraceroute()
       tracerouteInterval = -1;
    }
 }
- 
+
 /**
  * Stop TRACEROUTE6 command
  */

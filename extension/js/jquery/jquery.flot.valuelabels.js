@@ -11,7 +11,7 @@
 	    show: false,
         }
     };
-    
+
     function init(plot) {
         plot.hooks.draw.push(function (plot, ctx) {
 	    if (!plot.getOptions().valueLabels.show) {
@@ -26,7 +26,7 @@
 		    for (var i = 0; i < series.data.length; ++i) {
 			if (series.data[i] == null)
 			    continue;
-			  
+
 			var x = series.data[i][0], y = series.data[i][1];
 			if (x < series.xaxis.min || x > series.xaxis.max || y < series.yaxis.min || y > series.yaxis.max)
 			    continue;
@@ -46,7 +46,7 @@
 					var tail;
 					/*Used for correct output of labels */
                var $tabs = $('#tabs').tabs();
-               var active = $("#local-services input:radio:checked").val();
+               var active = $("#local-services input[type=radio]:checked").val();
                if(active == 'local-tracert-div')
                   tail = '">' + Plot.traceData.labels[i] + '</div>';
                else
@@ -60,7 +60,7 @@
 		});
         });
     }
-    
+
     $.plot.plugins.push({
         init: init,
         options: options,

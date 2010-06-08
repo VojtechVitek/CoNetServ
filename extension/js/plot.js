@@ -59,7 +59,7 @@ var Plot = {
       /* check for local services tab selected for repainting */
       if(selected == "0")
       {
-         var active = $("#local-services input:radio:checked").val();
+         var active = $("#local-services input[type=radio]:checked").val();
 
          /* ping v4 */
          if(active == 'local-ping-div' && this.pingData.changed) {
@@ -332,15 +332,15 @@ function pData() {
    this.avrgs = [];		//array for storing average values
    this.min = [];
    this.max = [];
-   
+
    this.prevData = "";  //data for storing received data from previous steps
 
    this.changed = 1;		//for checking for change in data since last tick
    //functions
-   this.add = function (val) { 
+   this.add = function (val) {
       this.count++;
       this.changed = 1;
-      
+
       if( val == null)
       {
       	 this.actVal = 0;
@@ -352,25 +352,25 @@ function pData() {
       	 this.actVal = parseFloat(val);
       	 this.rows.push([this.count, this.actVal]);
       	 this.sum += this.actVal;
-         
+
       	 this.minVal = (this.minVal == 0 ? this.actVal : ( this.actVal < this.minVal ? this.actVal : this.minVal));
-      	 this.maxVal = (this.maxVal == 0 ? this.actVal : ( this.actVal > this.maxVal ? this.actVal : this.maxVal));	 
-      }   
+      	 this.maxVal = (this.maxVal == 0 ? this.actVal : ( this.actVal > this.maxVal ? this.actVal : this.maxVal));
+      }
       this.avrgVal = this.sum/(this.count-this.lost);
-      
+
       this.min.push([this.count, this.minVal]);
       this.max.push([this.count, this.maxVal]);
-      this.avrgs.push([this.count, this.avrgVal]);                
+      this.avrgs.push([this.count, this.avrgVal]);
       //limit maximum data count in field
       if(this.rows.length > this.maxValues)
       {
-	        this.rows.shift();  
+	        this.rows.shift();
       }
       if(this.avrgs.length > this.maxValues)
       {
       	 this.avrgs.shift();
-      	 this.min.shift();  
-      	 this.max.shift();  
+      	 this.min.shift();
+      	 this.max.shift();
       }
    };
 
@@ -395,7 +395,7 @@ function tData() {
    this.rows = [];		//array for storing data
    this.count = 0;		//amount of data in array
 
-   this.prevId = 0;   
+   this.prevId = 0;
    this.prevData = "";
    this.labels = [];
    this.changed = 1;		//for checking for change in data since last tick
@@ -404,13 +404,13 @@ function tData() {
       this.count++;
 
       this.changed = 1;
-      this.rows.push( [ this.count, (val == null || val == NaN) ? this.rows[this.count-1][1] : val ]);        
+      this.rows.push( [ this.count, (val == null || val == NaN) ? this.rows[this.count-1][1] : val ]);
       this.labels.push(label);
    };
 
    /* sets data for reploting */
    this.touch = function (){this.changed = true;};
-   
+
    /* resets object to initial state */
    this.reset = function() {
       this.count = this.prevId = 0;
@@ -421,7 +421,7 @@ function tData() {
 /* bind plot functions to tab changing */
 $(document).ready(function()
 {
-   $("#tabs").bind('tabsshow', function() 
+   $("#tabs").bind('tabsshow', function()
    {
       Plot.pingData.touch();
       Plot.ping6Data.touch();
@@ -430,7 +430,7 @@ $(document).ready(function()
       Plot.repaint();
    });
 
-   $("#tabs").bind('select', function() 
+   $("#tabs").bind('select', function()
    {
       return true;
    });

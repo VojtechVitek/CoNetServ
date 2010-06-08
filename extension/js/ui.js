@@ -174,7 +174,7 @@ If you want to install it, please follow these steps.");
 
    },
 
-  
+
   /**
    * Redraws page containing radio buttons used as tabs
    */
@@ -202,7 +202,7 @@ If you want to install it, please follow these steps.");
         break;
     }
 
-    var active = $(container + " input:radio:checked").val();
+    var active = $(container + " input[type=radio]:checked").val();
     $(container + " .content").css('display', 'none');
     $("#" + active).css('display', 'block');
   },
