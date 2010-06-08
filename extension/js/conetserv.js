@@ -18,7 +18,7 @@ var whoisConsole;
 var nslookupConsole;
 
 /* local info running */
-var isLocalInfoRunning = 0;
+var isExternalInfoRunning = 0;
 
 $(document).ready(function(){
 
@@ -90,20 +90,20 @@ $(document).ready(function(){
     * Start services on menuitem clicked
     */
     $('#external-info-header a').click(function(){
-       startLocalInfo();
+       startExternalInfo();
     });
 
    Plot.initialize();
 
 });
 
-function startLocalInfo()
+function startExternalInfo()
 {
-   if(isLocalInfoRunning)
+   if(isExternalInfoRunning)
       return;
-   isLocalInfoRunning = 1;
+   isExternalInfoRunning = 1;
 
-
+   Map.setElementId("map-placeholder");
 
    /* Start local info services */
    Services.start(
@@ -137,24 +137,22 @@ function startLocalInfo()
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-         /* set element to write map into */
-         Map.setElementId("map-placeholder");
-         Map.addLocation(service, result);
 
-         // show map location
-         if(result.longitude && result.latitude) {
-            //check, if page is defaultly shown, otherwise show on buttonclick
-            if($("#external-info input[type=radio]:checked").val() == "external-map-div") {
-               Map.show();
-            }
-            else {
-               $("#external-map").click(function(){
+            /* set element to write map into */
+            Map.addLocation(service, result);
+
+            // show map location
+            if(result.longitude && result.latitude) {
+               //check, if page is defaultly shown, otherwise show on buttonclick
+               if($("#external-info input[type=radio]:checked").val() == "external-map-div") {
                   Map.show();
-               });
+               }
+               else {
+                  $("#external-map").click(function(){
+                     Map.show();
+                  });
+               }
             }
-         }
-
-
          }
       },
       /* stopped */
