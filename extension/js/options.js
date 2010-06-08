@@ -34,10 +34,8 @@ var Options = {
       $("#frontpage-" + this.frontPageChild).attr("checked", true);
 
       /* depending on options page, set the active tab */
-      //$("#" + this.frontPageParent+"-header").addClass("ui-tabs-selected ui-state-active");//addClass("ui-tabs-hide");
-      //$("#" + this.frontPageParent).removeClass("ui-tabs-hide");//addClass("ui-tabs-hide");
-      //$("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
-      //$("#tabs").tabs('select', 5);
+      $("#tabs").tabs('select', "#" + this.frontPageParent);
+      $("#external-tracert").attr("checked", "checked");
    },
 
    /**
