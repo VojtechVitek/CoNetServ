@@ -25,7 +25,7 @@ XXX Console output: improve visibility of time values
 - External services: ping and traceroute info from public Looking glass servers
 - Possibility to save ping and traceroute plot to a jpg file
 - Hide url bar while services are running
-- Autorun service on start
+XXX Autorun service on start
 - DESIGN: add templates
 - OPTIONS: select default page
-- on tab select, focus on url bar
+XXX on tab select, focus on url bar

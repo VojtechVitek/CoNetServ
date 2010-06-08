@@ -16,8 +16,6 @@ var Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
-      /* inicialize options */
-      Options.inicialize();
 
       $("#settings-general-frontpage").change(function(){
          Ui.redrawOptions();
@@ -34,6 +32,13 @@ var Ui = {
       */
       $('#tabs').tabs({
          show: function(event, ui) {
+            // set focus to url-bar
+            if(ui.panel.id == "local-services") {
+               $("#local-url").focus();
+            }
+            if(ui.panel.id == "external-services") {
+               $("#external-url").focus();
+            }
             Ui.redraw();
             return true;
          }

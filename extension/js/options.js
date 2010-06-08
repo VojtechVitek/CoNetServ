@@ -4,6 +4,7 @@
 var Options = {
    storage : false,
    toolbarButton : false,
+   autostart : false,
    frontPageParent : false,
    frontPageChild : false,
    
@@ -26,6 +27,9 @@ var Options = {
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
       $("#settings-general-toolbox").attr("checked", this.toolbarButton);
 
+      this.autostart = this._toBool(this.storage['conetserv-settings-general-autostart']);
+      $("#settings-general-autostart").attr("checked", this.autostart);
+
       /* redraw options page */
       this.frontPageParent = this.storage['conetserv-settings-general-frontpage'];
       this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
@@ -47,6 +51,9 @@ var Options = {
 
       this.toolbarButton = $("#settings-general-toolbox").is(":checked");
       this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
+
+      this.autostart = $("#settings-general-autostart").is(":checked");
+      this.storage["conetserv-settings-general-autostart"] = this.autostart;
 
       /* frontpage */
       this.frontPageParent = $("#settings-general-frontpage input:checked").val();

@@ -56,22 +56,6 @@ $(document).ready(function(){
       }
    }
 
-/*   conetserv = {
-    ping : 1,
-    ping6 : 1,
-    tracert : 1,
-    tracert6 : 1,
-    whois: 1,
-    nslookup : 1,
-
-    ping_test: 1,
-    ping6_test : 1,
-    tracert_test : 1,
-    tracert6_test : 1,
-    whois_test : 1,
-    nslookup_test : 0
-   };
-*/
    /*
     * Inicialize ui
     */
@@ -82,7 +66,8 @@ $(document).ready(function(){
     * Bind start button to start local services
     */
    $("#local-url-start").click(function() {
-      stopCommands();startCommands();
+      stopCommands();
+      startCommands();
    });
 
    /*
@@ -93,7 +78,17 @@ $(document).ready(function(){
     });
        
    Plot.inicialize();
+   Options.inicialize();
 
+});
+
+$(window).load(function() {
+   /*
+    * Check autostart - on true start services
+    */
+   if(Options.autostart) {
+      startCommands();
+   }
 });
 
 function startLocalInfo()
@@ -329,7 +324,6 @@ function startCommands()
       document.getElementById("local-url").focus();
       return;
    }
-
    startPing();
    startPing6();
    startTraceroute();
