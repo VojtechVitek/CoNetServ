@@ -18,7 +18,7 @@ var whoisConsole;
 var nslookupConsole;
 
 /* local info running */
-var isLocalInfoRunning = 0;
+var isExternalInfoRunning = 0;
 
 $(document).ready(function(){
 
@@ -57,7 +57,7 @@ $(document).ready(function(){
    }
 
    /*
-    * initialize ui
+    * Initialize ui
     */
    Ui.checkAvailability();
    Ui.redraw();
@@ -74,7 +74,7 @@ $(document).ready(function(){
     * Start services on menuitem clicked
     */
     $('#external-info-header a').click(function(){
-       startLocalInfo();
+       startExternalInfo();
     });
        
    Plot.initialize();
@@ -91,15 +91,15 @@ $(window).load(function() {
    }
 });
 
-function startLocalInfo()
+function startExternalInfo()
 {
-   if(isLocalInfoRunning)
-      return;   
-   isLocalInfoRunning = 1;
+   if(isExternalInfoRunning)
+      return;
+   isExternalInfoRunning = 1;
 
-   
+   Map.setElementId("map-placeholder");
 
-   /* Start local info services */   
+   /* Start local info services */
    Services.start(
       /* started */
       function() {
@@ -121,34 +121,32 @@ function startLocalInfo()
          if (result.city || result.region || result.country ||
              result.countryCode || result.longitude || result.latitude) {
             $("#location").append(
-               '<li class="ui-corner-all"><strong>' + 
+               '<li class="ui-corner-all"><strong>' +
                (result.city ? result.city + ', ' : '') +
                (result.region ? + result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
-               '</strong> ' + 
+               '</strong> ' +
                (result.longitude ? 'Longitude: ' + result.longitude : '') +
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-         /* set element to write map into */
-         Map.setElementId("map-placeholder");
-         Map.addLocation(service, result);
 
-         // show map location
-         if(result.longitude && result.latitude) {
-            //check, if page is defaultly shown, otherwise show on buttonclick
-            if($("#external-info input:radio:checked").val() == "external-map-div") {
-               Map.show();
-            }
-            else {
-               $("#external-map").click(function(){
+            /* set element to write map into */
+            Map.addLocation(service, result);
+
+            // show map location
+            if(result.longitude && result.latitude) {
+               //check, if page is defaultly shown, otherwise show on buttonclick
+               if($("#external-info input[type=radio]:checked").val() == "external-map-div") {
                   Map.show();
-               });
+               }
+               else {
+                  $("#external-map").click(function(){
+                     Map.show();
+                  });
+               }
             }
-         }
-
-               
          }
       },
       /* stopped */
@@ -158,7 +156,7 @@ function startLocalInfo()
    );
 };
 
-/** 
+/**
  * Checks address for validity to ping, traceroute,...
  *
  */
@@ -487,7 +485,7 @@ function startNslookup()
          nslookupInterval = -1;
       }
 
-      
+
    }
 }
 
@@ -501,7 +499,7 @@ function stopCommands()
    stopTraceroute();
    stopTraceroute6();
    stopNslookup();
-   if($.client.os != "Windows") 
+   if($.client.os != "Windows")
       stopWhois();
 }
 
@@ -517,7 +515,7 @@ function stopPing()
       catch(e) {
          pingConsole.add(e);
       }
-      
+
       Ui.removeIcons(".local", ".ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
@@ -536,7 +534,7 @@ function stopPing6()
       catch(e) {
          ping6Console.add(e);
       }
-      
+
       Ui.removeIcons(".local", ".ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
@@ -561,7 +559,7 @@ function stopTraceroute()
       tracerouteInterval = -1;
    }
 }
- 
+
 /**
  * Stop TRACEROUTE6 command
  */

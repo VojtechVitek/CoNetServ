@@ -196,7 +196,7 @@ If you want to install it, please follow these steps.");
 
    },
 
-  
+
   /**
    * Redraws page containing radio buttons used as tabs
    */
