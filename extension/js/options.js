@@ -9,9 +9,9 @@ var Options = {
    frontPageChild : false,
    
    /**
-    * Inicializes CoNetServ options
+    * initializes CoNetServ options
     */
-   inicialize : function() {
+   initialize : function() {
       // fix localStorage for firefox
       if($.client.browser == "Firefox") {
          this.storage = globalStorage[location.hostname];

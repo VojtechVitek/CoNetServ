@@ -83,14 +83,14 @@ body {
 }
 
 #map-conteiner {
-   height: 400px;
+   height: 450px;
    width: 640px;
    padding: 5px;
 }
 
 #map-placeholder {
-   height: 390px;
-   width: 630px;
+   height: 450px;
+   width: 640px;
 }
 /* Lost packet banner on ping plot */
 div.lostPacketsLabelLight {

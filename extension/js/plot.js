@@ -42,7 +42,7 @@ var Plot = {
    /**
     * sets all the parameters, which needs to be applied after document.ready
     */
-   inicialize : function() {
+   initialize : function() {
       this.localPingPlaceholder = $("#local-ping-placeholder");
       this.localPing6Placeholder = $("#local-ping6-placeholder");
       this.localTracertPlaceholder = $("#local-tracert-placeholder");

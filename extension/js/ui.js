@@ -3,10 +3,10 @@
  */
 var Ui = {
    /**
-    * Inicializes UI object ( sets tabs, buttons, ... )
+    * initializes UI object ( sets tabs, buttons, ... )
     */
-   inicialize : function() {
-      /* inicialize tabs and its children on selected tab*/
+   initialize : function() {
+      /* initialize tabs and its children on selected tab*/
       $("#tabs").tabs();
 
       /* create radios for virtual tabs */
@@ -246,7 +246,7 @@ If you want to install it, please follow these steps.");
      var parent = $("#settings-general-frontpage input:checked").val();
        $("#settings-general-frontpage-children").html(this.frontpageSettingsChildForm(parent));
   },
-
+  
   /**
    * Creates form with children
    * @param parent div, which is parenting shown items
@@ -269,7 +269,7 @@ If you want to install it, please follow these steps.");
 
 $(function() {
    /**
-    * inicialize page ui right after page creation
+    * initialize page ui right after page creation
     */
-   Ui.inicialize();
+   Ui.initialize();
 });

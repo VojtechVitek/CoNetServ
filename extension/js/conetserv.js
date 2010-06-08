@@ -57,7 +57,7 @@ $(document).ready(function(){
    }
 
    /*
-    * Inicialize ui
+    * initialize ui
     */
    Ui.checkAvailability();
    Ui.redraw();
@@ -77,8 +77,8 @@ $(document).ready(function(){
        startLocalInfo();
     });
        
-   Plot.inicialize();
-   Options.inicialize();
+   Plot.initialize();
+   Options.initialize();
 
 });
 
