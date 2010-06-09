@@ -252,7 +252,7 @@ div.valueLabel {
 }
 
 #aboutTab .column {
-   width: 300px;
+   width: 320px;
    float: left;
 }
 
@@ -275,7 +275,7 @@ div.valueLabel {
 
 #aboutTab ul {
    list-style-type: none;
-   padding-left: 20px;
+   padding-left: 10px;
 }
 
 #aboutTab li {
@@ -283,16 +283,7 @@ div.valueLabel {
 }
 
 #aboutTab p {
-   margin-left: 20px;
-}
-
-#aboutTab table {
-   font-size: 12px;
-   width: 600px;
-}
-
-#aboutTab table td {
-   vertical-align: top;
+   margin-left: 10px;
 }
 
 #aboutTab .slogan {
