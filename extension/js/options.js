@@ -75,6 +75,8 @@ var Options = {
       /* skin */
       this.skin = $("#settings-general-skin input:checked").val();
       this.storage["conetserv-settings-general-skin"] = this.skin;
+
+      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + this.skin + "/jquery-ui-1.8.2.custom.css")
    },
 
    /**

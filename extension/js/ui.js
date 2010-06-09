@@ -99,7 +99,7 @@ var Ui = {
        */
       var head = document.getElementsByTagName('head')[0]; 
       $(document.createElement('link')) 
-          .attr({type: 'text/css', href: "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css",
+          .attr({id:'jquery-ui-stylesheet', type: 'text/css', href: "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css",
              rel: 'stylesheet', media: 'screen'}) 
           .appendTo(head);
 
