@@ -1,7 +1,0 @@
-# SERVICES PARSERS:
-http://www.hostip.info
-http://www.robtex.com/ipinfo.js
-
-# FLAGS / charts
-http://code.google.com/apis/chart/docs/gallery/map_charts.html#introduction
-http://flags.redpixart.com/czech_republic/
