@@ -18,14 +18,22 @@ Extension:
 [ ] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [ ] Network tools: check availability and print additional info (installation, ..)
-[ ] Firefox: automatic icon in toolbar 
+[ ] Firefox: automatic icon in toolbar
 [x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
 [ ] TRACEROUTE: improve plotting
-[ ] WHOIS: use only first and second domain names
+[x] WHOIS: use only first and second domain names
 [x] Console output: improve visibility of time values
 [ ] External services: ping and traceroute info from public Looking glass servers
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
 [ ] Possibility to save ping and traceroute plot to a jpg file
 [ ] Hide url bar while services are running
-[ ] Autorun service on start
-[ ] OPTIONS: select default page
+[x] Autorun service on start
+[x] OPTIONS: select default page
+[x] On tab select, focus on url bar
+[x] Repair long output in console
+[x] OPTIONS: Multiple skins implementation
+[ ] OPTIONS: ping console - unlimited/ limited
+[ ] Service parser for http://www.hostip.info
+[ ] Service parser for http://www.robtex.com/ipinfo.js
+[ ] Country flags images from http://flags.redpixart.com/czech_republic/
+[ ] Country map charts http://code.google.com/apis/chart/docs/gallery/map_charts.html#introduction

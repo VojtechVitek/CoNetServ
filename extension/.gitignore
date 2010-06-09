@@ -1,5 +1,7 @@
 # Ignore auto-generated package files
 
+about.html
+
 # Chrome:
 manifest.json
 

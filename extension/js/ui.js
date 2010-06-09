@@ -3,10 +3,26 @@
  */
 var Ui = {
    /**
-    * Inicializes UI object ( sets tabs, buttons, ... )
+    * initializes UI object ( sets tabs, buttons, ... )
     */
-   inicialize : function() {
-      /* inicialize tabs */
+   initialize : function() {
+      /**
+       * Load jquery ui css file depending on selected one from options
+       */
+      var head = document.getElementsByTagName('head')[0];
+      /* JQuery Ui stylesheet */
+      $(document.createElement('link'))
+          .attr({id:'jquery-ui-stylesheet', type: 'text/css',
+             rel: 'stylesheet', media: 'screen'})
+          .appendTo(head);
+      /* Custom CoNetServ stylesheet */
+      $(document.createElement('link'))
+          .attr({id:'conetserv-ui-stylesheet', type: 'text/css',
+             rel: 'stylesheet', media: 'screen'})
+          .appendTo(head);
+      this.reloadSkin();
+
+      /* initialize tabs and its children on selected tab*/
       $("#tabs").tabs();
 
       /* create radios for virtual tabs */
@@ -16,11 +32,29 @@ var Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
+
+      $("#settings-general-frontpage").change(function(){
+         Ui.redrawOptions();
+      });
+
+      $("#settings-general-submit").button();
+      $("#settings-general-submit").click(function() {
+         Options.save();
+         return false;
+      });
+
       /**
       * reimplement behaviour when different tab is selected
       */
       $('#tabs').tabs({
          show: function(event, ui) {
+            // set focus to url-bar
+            if(ui.panel.id == "local-services") {
+               $("#local-url").focus();
+            }
+            if(ui.panel.id == "external-services") {
+               $("#external-url").focus();
+            }
             Ui.redraw();
             return true;
          }
@@ -75,8 +109,18 @@ var Ui = {
         })
         .removeClass("ui-corner-all")
         .addClass("ui-corner-right");
+      
+
+      Ui.redraw();
    },
 
+   /**
+    * reloads skin depending on current option
+    */
+   reloadSkin : function() {
+     $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
+     $("#conetserv-ui-stylesheet").attr("href", "css/" + Options.skin + ".css")
+   },
 
    /**
    * removes any DOM children in div and instead writes error message by jquery
@@ -113,6 +157,8 @@ var Ui = {
           * check local services availability
           * first check for general availability in system - if not, don even display
           */
+         return;
+
          if(!conetserv.ping) {
             $(".local .ping").remove();
          }
@@ -174,35 +220,15 @@ If you want to install it, please follow these steps.");
 
    },
 
-  
+
   /**
    * Redraws page containing radio buttons used as tabs
    */
   redraw : function() {
     var tabs = $('#tabs').tabs();
-    var selected = tabs.tabs('option', 'selected');
-    var container;
+    var container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
 
-    //TODO rewrite to better way
-    switch(selected) {
-      case 0:
-        container = '#local-services';
-        break;
-      case 1:
-        container = '#external-services';
-        break;
-      case 2:
-        container = '#local-info';
-        break;
-      case 3:
-        container = '#external-info';
-        break;
-      case 4:
-        container = '#settings';
-        break;
-    }
-
-    var active = $(container + " input:radio:checked").val();
+    var active = $(container + " input[type=radio]:checked").val();
     $(container + " .content").css('display', 'none');
     $("#" + active).css('display', 'block');
   },
@@ -217,7 +243,6 @@ If you want to install it, please follow these steps.");
   addIcons : function(parent, selector, func) {
      // show icons
      $(parent + " input" + selector).button("option", "icons", {
-        primary:'ui-icon-flag',
         secondary:'ui-icon-circle-close'
      });
      // register callback function
@@ -234,13 +259,41 @@ If you want to install it, please follow these steps.");
    */
   removeIcons : function(parent, selector) {
      $(parent + " input" + selector).button("option", "icons", false);
+     $(parent + " label" + selector).removeClass("ui-button-text-icon");
      //!!TODO remove empty space after icons are deleted
+  },
+
+  /**
+   * Redraws options in case they were changed programly
+   */
+  redrawOptions : function () {
+     var parent = $("#settings-general-frontpage input:checked").val();
+       $("#settings-general-frontpage-children").html(this.frontpageSettingsChildForm(parent));
+  },
+
+  /**
+   * Creates form with children
+   * @param parent div, which is parenting shown items
+   * @return html code to be inserted to a page
+   */
+  frontpageSettingsChildForm : function (parent) {
+      var output = '';
+      var label;
+      $.each($("#" + parent + " input.radio-tab"), function(index,div) {
+         label = $('label[for=' + div.id + ']');
+         output += '<div>';
+         output += '<input type="radio" id="frontpage-' + div.id + '" class="child" value="' + div.id + '" name="settings-general-frontpage-children"/>';
+         output += '<label for="frontpage-' + div.id + '">' + label.text() +'</label>';
+         output += '</div>';
+      });
+
+      return output;
   }
 }
 
 $(function() {
    /**
-    * inicialize page ui right after page creation
+    * initialize page ui right after page creation
     */
-   Ui.inicialize();
+   Ui.initialize();
 });

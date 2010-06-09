@@ -17,8 +17,8 @@ var traceroute6Console;
 var whoisConsole;
 var nslookupConsole;
 
-/* local info running */
-var isLocalInfoRunning = 0;
+/* external info running */
+var isExternalInfoRunning = 0;
 
 $(document).ready(function(){
 
@@ -29,7 +29,7 @@ $(document).ready(function(){
    $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
 
    /* CoNetServ object - NPAPI plugin */
-   conetserv = document.getElementById("conetserv");
+   conetserv = $("conetserv");
 
    /* console text-boxes */
    pingConsole = new console("local-ping-console");
@@ -55,25 +55,8 @@ $(document).ready(function(){
          });
       }
    }
-
-/*   conetserv = {
-    ping : 1,
-    ping6 : 1,
-    tracert : 1,
-    tracert6 : 1,
-    whois: 1,
-    nslookup : 1,
-
-    ping_test: 1,
-    ping6_test : 1,
-    tracert_test : 1,
-    tracert6_test : 1,
-    whois_test : 1,
-    nslookup_test : 0
-   };
-*/
    /*
-    * Inicialize ui
+    * Initialize ui
     */
    Ui.checkAvailability();
    Ui.redraw();
@@ -82,29 +65,50 @@ $(document).ready(function(){
     * Bind start button to start local services
     */
    $("#local-url-start").click(function() {
-      stopCommands();startCommands();
+      stopCommands();
+      startCommands();
    });
 
    /*
     * Start services on menuitem clicked
     */
     $('#external-info-header a').click(function(){
-       startLocalInfo();
+       startExternalInfo();
     });
-       
-   Plot.inicialize();
+
+   Plot.initialize();
+   Options.initialize();
 
 });
 
-function startLocalInfo()
+/*
+ * Function, which is started after everything has been loaded
+ */
+$(window).load(function() {
+   /*
+    * Check autostart - on true start services
+    */
+   if(Options.autostart) {
+      startCommands();
+   }
+
+   /*
+    * If main page is eternal info, start them
+    */
+   if(Options.frontPageParent == "external-info") {
+       setTimeout("startExternalInfo()",250);
+   }
+});
+
+function startExternalInfo()
 {
-   if(isLocalInfoRunning)
-      return;   
-   isLocalInfoRunning = 1;
+   if(isExternalInfoRunning)
+      return;
+   isExternalInfoRunning = 1;
 
-   
+   Map.setElementId("map-placeholder");
 
-   /* Start local info services */   
+   /* Start local info services */
    Services.start(
       /* started */
       function() {
@@ -126,34 +130,30 @@ function startLocalInfo()
          if (result.city || result.region || result.country ||
              result.countryCode || result.longitude || result.latitude) {
             $("#location").append(
-               '<li class="ui-corner-all"><strong>' + 
+               '<li class="ui-corner-all"><strong>' +
                (result.city ? result.city + ', ' : '') +
                (result.region ? + result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
-               '</strong> ' + 
+               '</strong> ' +
                (result.longitude ? 'Longitude: ' + result.longitude : '') +
                (result.latitude ? ', Latitude: ' + result.latitude : '') +
                source + '</li>'
             );
-         /* set element to write map into */
-         Map.setElementId("map-placeholder");
-         Map.addLocation(service, result);
 
-         // show map location
-         if(result.longitude && result.latitude) {
-            //check, if page is defaultly shown, otherwise show on buttonclick
-            if($("#external-info input:radio:checked").val() == "external-map-div") {
-               Map.show();
-            }
-            else {
-               $("#external-map").click(function(){
+            // show map location
+            if(result.longitude && result.latitude) {
+               /* set element to write map into */
+               Map.addLocation(service, result);
+               //check, if page is defaultly shown, otherwise show on buttonclick
+               if($("#external-info input[type=radio]:checked").val() == "external-map-div") {
                   Map.show();
-               });
+               } else {
+                  $("#external-map").click(function(){
+                     Map.show();
+                  });
+               }
             }
-         }
-
-               
          }
       },
       /* stopped */
@@ -162,17 +162,6 @@ function startLocalInfo()
       }
    );
 };
-
-/** 
- * Checks address for validity to ping, traceroute,...
- *
- */
-function checkAddress(addr)
-{
-   var IPv4regxp = /^(f|ht)tp[s]{0,1}:[/]{2}\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/ig;
-   var http = /(http|https|ftp)([^ ]+)/ig
-   return IPv4regxp.exec(addr) || http.exec(addr);
-}
 
 /**
  * Read output of PING6 command
@@ -329,7 +318,6 @@ function startCommands()
       document.getElementById("local-url").focus();
       return;
    }
-
    startPing();
    startPing6();
    startTraceroute();
@@ -349,9 +337,10 @@ function startPing()
          pingConsole.clear();
          if (document.getElementById("conetserv").startPing(url.hostname)) {
              /* reset data and start animation */
-             Plot.pingData.reset();
+             Plot.localPingData.reset();
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
+
 
              Ui.addIcons(".local", ".ping", stopPing);
          } else {
@@ -375,7 +364,7 @@ function startPing6()
          ping6Console.clear();
          if (document.getElementById("conetserv").startPing6(url.hostname)) {
              /* reset data and start animation */
-             Plot.ping6Data.reset();
+             Plot.localPing6Data.reset();
              ping6Interval = window.setInterval("readPing6()", 500);
              readPing6();
 
@@ -400,7 +389,7 @@ function startTraceroute()
       try {
          tracerouteConsole.clear();
          if (document.getElementById("conetserv").startTraceroute(url.hostname)) {
-            Plot.traceData.reset();
+            Plot.localTraceData.reset();
             tracerouteInterval = window.setInterval("readTraceroute()", 500);
             readTraceroute();
 
@@ -426,7 +415,7 @@ function startTraceroute6()
       try {
          traceroute6Console.clear();
          if (document.getElementById("conetserv").startTraceroute6(url.hostname)) {
-            Plot.trace6Data.reset();
+            Plot.localTrace6Data.reset();
             traceroute6Interval = window.setInterval("readTraceroute6()", 500);
             readTraceroute6();
 
@@ -452,7 +441,7 @@ function startWhois()
    if (whoisInterval == -1) {
       try {
          whoisConsole.clear();
-         if (document.getElementById("conetserv").startWhois(url.hostname)) {
+         if (url.domain != '' && document.getElementById("conetserv").startWhois(url.domain)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             readWhois();
 
@@ -492,7 +481,7 @@ function startNslookup()
          nslookupInterval = -1;
       }
 
-      
+
    }
 }
 
@@ -506,7 +495,7 @@ function stopCommands()
    stopTraceroute();
    stopTraceroute6();
    stopNslookup();
-   if($.client.os != "Windows") 
+   if($.client.os != "Windows")
       stopWhois();
 }
 
@@ -522,7 +511,7 @@ function stopPing()
       catch(e) {
          pingConsole.add(e);
       }
-      
+
       Ui.removeIcons(".local", ".ping");
       window.clearInterval(pingInterval);
       pingInterval = -1;
@@ -541,7 +530,7 @@ function stopPing6()
       catch(e) {
          ping6Console.add(e);
       }
-      
+
       Ui.removeIcons(".local", ".ping6");
       window.clearInterval(ping6Interval);
       ping6Interval = -1;
@@ -566,7 +555,7 @@ function stopTraceroute()
       tracerouteInterval = -1;
    }
 }
- 
+
 /**
  * Stop TRACEROUTE6 command
  */

@@ -90,10 +90,5 @@ extern NPP              inst;
 /** System-specific debug function */
 void logmsg(const char *msg);
 
-/**
- * Commands callable in NPAPI plugin
- * System called commands
- * Library implemented commands
- */
-
 #endif /*_PLUGIN_H_*/
+

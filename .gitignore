@@ -1,20 +1,16 @@
-# Build directory
-build/
-
 # Temporary and backup files
 *~
 .*.swp
-# MSVC files
-*.ncb
-*.suo
-=======
 .*.swo
 *.backup
 
 # Chrome private key for building extension
 *.pem
 
-# CMake
+# Default build directory
+build/
+
+# CMake-generated files
 CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
