@@ -64,6 +64,13 @@ var Plot = {
       this.colors["south-street"].avrgs = "rgba(140, 230, 50, 0.3)";
       this.colors["south-street"].min  = "rgba(140, 230, 50, 1)";
       this.colors["south-street"].rows  = "#479f03";
+
+      /* sunny */
+      this.colors["sunny"] = new Object();
+      this.colors["sunny"].max = "rgba(250, 195, 11, 0.1)";
+      this.colors["sunny"].avrgs = "rgba(250, 195, 11, 0.3)";
+      this.colors["sunny"].min  = "rgba(250, 195, 11, 1)";
+      this.colors["sunny"].rows  = "#878a87";
    },
 
    /**
