@@ -35,7 +35,7 @@ var utf16 = {
 }
 
 //Javascript Punycode converter derived from example in RFC3492.
-//This implementation is created by some@domain.name and released to public domain    
+//This implementation is created by some@domain.name and released to public domain
 var punycode = new function Punycode() {
     var initial_n = 0x80;
     var initial_bias = 72;
@@ -47,7 +47,7 @@ var punycode = new function Punycode() {
     var skew=38;
 
     var maxint = 0x7FFFFFFF;
-    // decode_digit(cp) returns the numeric value of a basic code 
+    // decode_digit(cp) returns the numeric value of a basic code
     // point (for use in representing integers) in the range 0 to
     // base-1, or base if cp is does not represent a value.
 
@@ -55,16 +55,16 @@ var punycode = new function Punycode() {
         return  cp - 48 < 10 ? cp - 22 :  cp - 65 < 26 ? cp - 65 : cp - 97 < 26 ? cp - 97 : base;
     }
 
-    // encode_digit(d,flag) returns the basic code point whose value      
-    // (when used for representing integers) is d, which needs to be in   
-    // the range 0 to base-1.  The lowercase form is used unless flag is  
-    // nonzero, in which case the uppercase form is used.  The behavior   
-    // is undefined if flag is nonzero and digit d has no uppercase form. 
+    // encode_digit(d,flag) returns the basic code point whose value
+    // (when used for representing integers) is d, which needs to be in
+    // the range 0 to base-1.  The lowercase form is used unless flag is
+    // nonzero, in which case the uppercase form is used.  The behavior
+    // is undefined if flag is nonzero and digit d has no uppercase form.
 
     function encode_digit(d, flag) {
         return d + 22 + 75 * (d < 26) - ((flag != 0) << 5);
-        //  0..25 map to ASCII a..z or A..Z 
-        // 26..35 map to ASCII 0..9         
+        //  0..25 map to ASCII a..z or A..Z
+        // 26..35 map to ASCII 0..9
     }
     //** Bias adaptation function **
     function adapt(delta, numpoints, firsttime ) {
@@ -81,7 +81,7 @@ var punycode = new function Punycode() {
     // encode_basic(bcp,flag) forces a basic code point to lowercase if flag is zero,
     // uppercase if flag is nonzero, and returns the resulting code point.
     // The code point is unchanged if it  is caseless.
-    // The behavior is undefined if bcp is not a basic code point.                                                   
+    // The behavior is undefined if bcp is not a basic code point.
 
     function encode_basic(bcp, flag) {
         bcp -= (bcp - 97 < 26) << 5;
@@ -97,15 +97,15 @@ var punycode = new function Punycode() {
 
         var n, out, i, bias, basic, j, ic, oldi, w, k, digit, t, len;
 
-        // Initialize the state: 
+        // Initialize the state:
 
         n = initial_n;
         i = 0;
         bias = initial_bias;
 
-        // Handle the basic code points:  Let basic be the number of input code 
-        // points before the last delimiter, or 0 if there is none, then    
-        // copy the first basic code points to the output.                      
+        // Handle the basic code points:  Let basic be the number of input code
+        // points before the last delimiter, or 0 if there is none, then
+        // copy the first basic code points to the output.
 
         basic = input.lastIndexOf(delimiter);
         if (basic < 0) basic = 0;
@@ -118,16 +118,16 @@ var punycode = new function Punycode() {
                 output.push( input.charCodeAt(j) );
         }
 
-        // Main decoding loop:  Start just after the last delimiter if any  
-        // basic code points were copied; start at the beginning otherwise. 
+        // Main decoding loop:  Start just after the last delimiter if any
+        // basic code points were copied; start at the beginning otherwise.
 
         for (ic = basic > 0 ? basic + 1 : 0;  ic < input_length; ) {
 
                 // ic is the index of the next character to be consumed,
 
-                // Decode a generalized variable-length integer into delta,  
-                // which gets added to i.  The overflow checking is easier   
-                // if we increase i as we go, then subtract off its starting 
+                // Decode a generalized variable-length integer into delta,
+                // which gets added to i.  The overflow checking is easier
+                // if we increase i as we go, then subtract off its starting
                 // value at the end to obtain delta.
                 for (oldi = i, w = 1, k = base;  ;  k += base) {
                         if (ic >= input_length) {
@@ -153,16 +153,16 @@ var punycode = new function Punycode() {
                 out = output.length + 1;
                 bias = adapt(i - oldi, out, oldi === 0);
 
-                // i was supposed to wrap around from out to 0,   
-                // incrementing n each time, so we'll fix that now: 
+                // i was supposed to wrap around from out to 0,
+                // incrementing n each time, so we'll fix that now:
                 if ( Math.floor(i / out) > maxint - n) {
                         throw RangeError("punycode_overflow(3)");
                 }
                 n += Math.floor( i / out ) ;
                 i %= out;
 
-                // Insert n at position i of the output: 
-                // Case of last character determines uppercase flag: 
+                // Insert n at position i of the output:
+                // Case of last character determines uppercase flag:
                 if (preserveCase) { case_flags.splice(i, 0, input.charCodeAt(ic -1)  -65 < 26);}
 
                 output.splice(i, 0, n);
@@ -175,7 +175,7 @@ var punycode = new function Punycode() {
                         }
                 }
         }
-        return utf16.encode(output);            
+        return utf16.encode(output);
     };
 
     //** Main encode function **
@@ -205,12 +205,12 @@ var punycode = new function Punycode() {
         var output=[];
 
 
-        // Initialize the state: 
+        // Initialize the state:
         n = initial_n;
         delta = 0;
         bias = initial_bias;
 
-        // Handle the basic code points: 
+        // Handle the basic code points:
         for (j = 0;  j < input_length;  ++j) {
                 if ( input[j] < 0x80) {
                         output.push(
@@ -223,24 +223,24 @@ var punycode = new function Punycode() {
 
         h = b = output.length;
 
-        // h is the number of code points that have been handled, b is the  
-        // number of basic code points 
+        // h is the number of code points that have been handled, b is the
+        // number of basic code points
 
         if (b > 0) output.push(delimiter);
 
-        // Main encoding loop: 
+        // Main encoding loop:
         //
         while (h < input_length) {
-                // All non-basic code points < n have been     
-                // handled already. Find the next larger one: 
+                // All non-basic code points < n have been
+                // handled already. Find the next larger one:
 
                 for (m = maxint, j = 0;  j < input_length;  ++j) {
                         ijv = input[j];
                         if (ijv >= n && ijv < m) m = ijv;
                 }
 
-                // Increase delta enough to advance the decoder's    
-                // <n,i> state to <m,0>, but guard against overflow: 
+                // Increase delta enough to advance the decoder's
+                // <n,i> state to <m,0>, but guard against overflow:
 
                 if (m - n > Math.floor((maxint - delta) / (h + 1))) {
                         throw RangeError("punycode_overflow (1)");
@@ -256,7 +256,7 @@ var punycode = new function Punycode() {
                         }
 
                         if (ijv == n) {
-                                // Represent delta as a generalized variable-length integer: 
+                                // Represent delta as a generalized variable-length integer:
                                 for (q = delta, k = base;  ;  k += base) {
                                         t = k <= bias ? tmin : k >= bias + tmax ? tmax : k - bias;
                                         if (q < t) break;
@@ -277,7 +277,7 @@ var punycode = new function Punycode() {
 }();
 
 
-/** 
+/**
  * Object for handling urls - filtering, ...
  *
  */
@@ -303,14 +303,21 @@ var url = {
    // FIXME: Convert to \uXXXX equivalents, it's probably not working in current JavaScript
    punycodeUtfTld: /^(?:бг|рф|укр)$/i,
 
-   // parsed value
-   hostname: '', // www.fres-solutions.com or 127.0.0.1
+   // Get domain from hostname
+   domainFromHostname: /^.*?([^.]+\.[^.]+)$/i,
+
+   // parsed values
+   hostname: '', // www.example.com or 127.0.0.1
+   domain: '', // example.com
 
    // Test url/ip address and parse it's hostname
    // @returns true on success, false otherwise
    set: function(addr) {
 
       var result;
+
+      this.hostname = '';
+      this.domain = '';
 
       // Parse hostname string
       if (this.proto.test(addr)){
@@ -320,10 +327,15 @@ var url = {
       // Regular IPv4/IPv6?
       if (this.ip.test(addr)) {
          this.hostname = this.ip.exec(addr)[1];
+         this.domain = this.hostname;
       }
       // Regular ASCII url?
       else if (this.url.test(addr)) {
          this.hostname = this.url.exec(addr)[1];
+         // Parse domain from hostname string
+         if (this.domainFromHostname.test(this.hostname)){
+            this.domain = this.domainFromHostname.exec(this.hostname)[1];
+         }
       }
       // Regular Punycode url?
       // -> try to convert to ASCII
@@ -363,7 +375,12 @@ var url = {
          else
             return false;
          this.hostname = ascii;
+         // Parse domain from hostname string
+         if (this.domainFromHostname.test(this.hostname)){
+            this.domain = this.domainFromHostname.exec(this.hostname)[1];
+         }
       }
+
       return true;
    }
 };
