@@ -42,7 +42,7 @@ include(${CMAKE_MODULE_PATH}/MozillaTargetPlatform.cmake)
 # Export release shared library (force simple packaging)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
-	get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../extension/ ABSOLUTE)
+	get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
 	set(RELEASE_PACK ${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-plugin-binaries.tgz)
 
 	file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH})
@@ -68,7 +68,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	add_custom_target(PluginReleasePack ALL
 		DEPENDS ${RELEASE_DIR}/${MOZILLA_PATH}${PLATFORM_PATH}${CoNetServLibFileName} ${RELEASE_PACK}
 	)
-	
+
 else()
 
 	get_filename_component(DEBUG_DIR ${CMAKE_SOURCE_DIR}/extension/ ABSOLUTE)
