@@ -1,9 +1,10 @@
 General:
 [ ] Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
 [x] Project: Switch to CMake build system
+[ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
 [ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
 [ ] CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
-[ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
+[ ] CMake: Regenerate manifest files after target PluginCopy
 
 Plugin:
 [ ] Windows: reimplement locale support
