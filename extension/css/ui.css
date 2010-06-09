@@ -247,12 +247,13 @@ div.valueLabel {
  **************************************************************************/
 
 #aboutTab {
-   background: url("../images/icon128.jpg") no-repeat 550px 372px;
+   background: url("../images/icon128.png") no-repeat 500px 340px;
    height: 480px;
+   font-size: 12px;
 }
 
 #aboutTab h2 {
-   font-size: 30px;
+   font-size: 24px;
    margin-top: 5px;
    margin-bottom: 5px;
 }
@@ -273,6 +274,7 @@ div.valueLabel {
 }
 
 #aboutTab table {
+   font-size: 12px;
    width: 600px;
 }
 

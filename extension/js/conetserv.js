@@ -341,7 +341,6 @@ function startPing()
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
 
-
              Ui.addIcons(".local", ".ping", stopPing);
          } else {
             pingInterval = -1;
