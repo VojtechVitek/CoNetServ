@@ -99,13 +99,20 @@ var Ui = {
        */
       var head = document.getElementsByTagName('head')[0]; 
       $(document.createElement('link')) 
-          .attr({id:'jquery-ui-stylesheet', type: 'text/css', href: "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css",
+          .attr({id:'jquery-ui-stylesheet', type: 'text/css',
              rel: 'stylesheet', media: 'screen'}) 
           .appendTo(head);
+      this.reloadSkin();
 
       Ui.redraw();
    },
 
+   /**
+    * reloads skin depending on current option
+    */
+   reloadSkin : function() {
+     $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
+   },
 
    /**
    * removes any DOM children in div and instead writes error message by jquery
