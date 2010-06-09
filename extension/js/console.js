@@ -11,7 +11,7 @@ function console(div) {
    this.direction = 0;            //direction of output 0 = downwards 1 = upwards
    this.rows = [];               //variable for storing rows of code
    this.rowCount = 0;            //defines count of rows
-   this.maxRows = 50;            //maximum count of rows
+   this.maxRows = 0;            //maximum count of rows
    this.percent = 0;
 
    /* regular expressions */
@@ -57,12 +57,14 @@ function console(div) {
          
          if(this.direction) { //writing to the begining of container
             this.rows.unshift(row);
-            if(this.rowCount > this.maxRows)
-            this.rows.pop();
+            if(this.maxRows && this.rowCount > this.maxRows) {
+               this.rows.pop();
+            }
          } else { //writing to the end of container
             this.rows.push(row);
-            if(this.rowCount > this.maxRows)
-            this.rows.shift();
+            if(this.maxRows && this.rowCount > this.maxRows) {
+               this.rows.shift();
+            }
          }
          
          this.code = this.rows.join("");
