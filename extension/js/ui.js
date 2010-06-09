@@ -6,6 +6,22 @@ var Ui = {
     * initializes UI object ( sets tabs, buttons, ... )
     */
    initialize : function() {
+      /**
+       * Load jquery ui css file depending on selected one from options
+       */
+      var head = document.getElementsByTagName('head')[0];
+      /* JQuery Ui stylesheet */
+      $(document.createElement('link'))
+          .attr({id:'jquery-ui-stylesheet', type: 'text/css',
+             rel: 'stylesheet', media: 'screen'})
+          .appendTo(head);
+      /* Custom CoNetServ stylesheet */
+      $(document.createElement('link'))
+          .attr({id:'conetserv-ui-stylesheet', type: 'text/css',
+             rel: 'stylesheet', media: 'screen'})
+          .appendTo(head);
+      this.reloadSkin();
+
       /* initialize tabs and its children on selected tab*/
       $("#tabs").tabs();
 
@@ -93,22 +109,7 @@ var Ui = {
         })
         .removeClass("ui-corner-all")
         .addClass("ui-corner-right");
-        
-      /**
-       * Load jquery ui css file depending on selected one from options
-       */
-      var head = document.getElementsByTagName('head')[0];
-      /* JQuery Ui stylesheet */
-      $(document.createElement('link')) 
-          .attr({id:'jquery-ui-stylesheet', type: 'text/css',
-             rel: 'stylesheet', media: 'screen'}) 
-          .appendTo(head);
-      /* Custom CoNetServ stylesheet */
-      $(document.createElement('link'))
-          .attr({id:'conetserv-ui-stylesheet', type: 'text/css',
-             rel: 'stylesheet', media: 'screen'})
-          .appendTo(head);
-      this.reloadSkin();
+      
 
       Ui.redraw();
    },
