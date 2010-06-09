@@ -80,7 +80,7 @@ Services.service.push({
                if (google.loader.ClientLocation.address.country_code)
                   result.countryCode = google.loader.ClientLocation.address.country_code;
 
-               if (google.loader.ClientLocation.address.country)
+               if (google.loader.ClientLocation.address.country && google.loader.ClientLocation.address.country != '-' && google.loader.ClientLocation.address.country != 'NaN')
                   result.country = google.loader.ClientLocation.address.country;
 
                if (google.loader.ClientLocation.address.city && google.loader.ClientLocation.address.city != '-' && google.loader.ClientLocation.address.city != 'NaN')
@@ -147,7 +147,7 @@ Services.service.push({
          }
 
          if (data.address) {
-            if (data.address.country_code)
+            if (data.address.country_code && data.address.country_code != '-' && data.address.country_code != 'NaN')
                result.countryCode = data.address.country_code;
 
             if (data.address.country)

@@ -132,7 +132,7 @@ function startExternalInfo()
             $("#location").append(
                '<li class="ui-corner-all"><strong>' +
                (result.city ? result.city + ', ' : '') +
-               (result.region ? + result.region + ', ' : '') +
+               (result.region ? result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
                '</strong> ' +
