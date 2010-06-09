@@ -247,7 +247,6 @@ div.valueLabel {
  **************************************************************************/
 
 #aboutTab {
-   background: url("../images/icon128.png") no-repeat 500px 340px;
    height: 480px;
    font-size: 12px;
 }
@@ -277,6 +276,7 @@ div.valueLabel {
 #aboutTab ul {
    list-style-type: none;
    padding-left: 10px;
+   padding-left: 20px;
 }
 
 #aboutTab li {
@@ -288,5 +288,16 @@ div.valueLabel {
 }
 
 #aboutTab .slogan {
+   font-weight: bold;
    font-size: 16px;
+}
+
+#about-logo {
+   background: url("../images/icon128.png") no-repeat;
+   height: 128px;
+   width: 128px;
+   position: absolute;
+   right: 20px;
+   bottom: 20px;
+   z-index: auto;
 }
