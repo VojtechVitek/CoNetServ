@@ -164,19 +164,6 @@ div.valueLabel {
    visibility: hidden;
 }
 
-/* content styling */
-.color1{
-   color: #2779aa;
-}
-
-.color2{
-   color: blue;
-}
-
-.color3{
-   color: green;
-}
-
 /* plugin loader */
 #plugin-placeholder {
    width: 0px;

@@ -97,10 +97,16 @@ var Ui = {
       /**
        * Load jquery ui css file depending on selected one from options
        */
-      var head = document.getElementsByTagName('head')[0]; 
+      var head = document.getElementsByTagName('head')[0];
+      /* JQuery Ui stylesheet */
       $(document.createElement('link')) 
           .attr({id:'jquery-ui-stylesheet', type: 'text/css',
              rel: 'stylesheet', media: 'screen'}) 
+          .appendTo(head);
+      /* Custom CoNetServ stylesheet */
+      $(document.createElement('link'))
+          .attr({id:'conetserv-ui-stylesheet', type: 'text/css',
+             rel: 'stylesheet', media: 'screen'})
           .appendTo(head);
       this.reloadSkin();
 
@@ -112,6 +118,7 @@ var Ui = {
     */
    reloadSkin : function() {
      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
+     $("#conetserv-ui-stylesheet").attr("href", "css/" + Options.skin + ".css")
    },
 
    /**

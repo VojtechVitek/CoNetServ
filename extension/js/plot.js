@@ -39,6 +39,8 @@ var Plot = {
       valueLabels: {show: true}
    },
 
+   colors : [],
+
    /**
     * sets all the parameters, which needs to be applied after document.ready
     */
@@ -47,6 +49,21 @@ var Plot = {
       this.localPing6Placeholder = $("#local-ping6-placeholder");
       this.localTracertPlaceholder = $("#local-tracert-placeholder");
       this.localTracert6Placeholder = $("#local-tracert6-placeholder");
+
+      /* Inicialize colours for different skins */
+      /* cupertino */
+      this.colors["cupertino"] = new Object();
+      this.colors["cupertino"].max = "rgba(103, 170, 238, 0.1)";
+      this.colors["cupertino"].avrgs = "rgba(103, 170, 238, 0.3)";
+      this.colors["cupertino"].min  = "rgba(103, 170, 238, 1)";
+      this.colors["cupertino"].rows  = "#2779AA";
+      
+      /* south-street */
+      this.colors["south-street"] = new Object();
+      this.colors["south-street"].max = "rgba(140, 230, 50, 0.1)";
+      this.colors["south-street"].avrgs = "rgba(140, 230, 50, 0.3)";
+      this.colors["south-street"].min  = "rgba(140, 230, 50, 1)";
+      this.colors["south-street"].rows  = "#479f03";
    },
 
    /**
@@ -259,12 +276,13 @@ var Plot = {
     */
    _plotPing : function(placeholder, data) {
       data.changed = 0;
+      var color = this.colors[Options.skin];
 
       $.plot(placeholder,
-       [ {data: data.max, label: "Max ["+ data.maxVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.1)", lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-         {data: data.avrgs, label: "Avg ["+ data.avrgVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 1)", points: {show: false}},
-         {data: data.min, label: "Min ["+ data.minVal.toFixed(2) +"ms]", color: "rgba(103, 170, 238, 0.3)", lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-         {data: data.rows, color: "#2779AA"} ],
+       [ {data: data.max, label: "Max ["+ data.maxVal.toFixed(2) +"ms]", color: color.max, lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
+         {data: data.avrgs, label: "Avg ["+ data.avrgVal.toFixed(2) +"ms]", color: color.avrgs, points: {show: false}},
+         {data: data.min, label: "Min ["+ data.minVal.toFixed(2) +"ms]", color: color.min, lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
+         {data: data.rows, color: color.rows} ],
        $.extend(true, {}, this.optionsPing, {
           xaxis: {min: data.count - data.maxValues < 0 ? 0 : data.count - data.maxValues,
                    max: data.count > 10? data.count + 1 : 11}
@@ -281,11 +299,12 @@ var Plot = {
     */
    _plotTracert : function(placeholder, data) {
       var plotCont;
+      var color = this.colors[Options.skin];
 
       data.changed = 0;
 
 
-      plotCont = $.plot(placeholder, [{data: data.rows, label: "Position", color: "#2779AA"}], $.extend(true, {}, this.optionsTrace, {
+      plotCont = $.plot(placeholder, [{data: data.rows, label: "Position", color: color.rows}], $.extend(true, {}, this.optionsTrace, {
         xaxis: {tickDecimals: 0, tickSize: 1}
       }));
 
