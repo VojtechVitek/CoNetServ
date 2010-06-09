@@ -18,7 +18,7 @@ Extension:
 [ ] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [ ] Network tools: check availability and print additional info (installation, ..)
-[ ] Firefox: automatic icon in toolbar 
+[x] Firefox: automatic icon in toolbar 
 [x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
 [ ] TRACEROUTE: improve plotting
 [ ] WHOIS: use only first and second domain names

@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://conetserv/content/firefox/overlay.css" type="text/css"?>
 <overlay id="conetservOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="chrome://conetserv/content/js/firefox.js" />
+  <script type="application/x-javascript" src="chrome://conetserv/content/firefox/overlay.js" />
+
+  <script>
+    window.addEventListener("load", conetserv_install, false);
+  </script>
+
   <commandset id="mainCommandSet">
     <command id="conetservStart" oncommand="window.openDialog(
     'chrome://conetserv/content/index.html',

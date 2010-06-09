@@ -12,14 +12,22 @@ var Ui = {
       var head = document.getElementsByTagName('head')[0];
       /* JQuery Ui stylesheet */
       $(document.createElement('link'))
-          .attr({id:'jquery-ui-stylesheet', type: 'text/css',
-             rel: 'stylesheet', media: 'screen'})
-          .appendTo(head);
+      .attr({
+         id:'jquery-ui-stylesheet',
+         type: 'text/css',
+         rel: 'stylesheet',
+         media: 'screen'
+      })
+      .appendTo(head);
       /* Custom CoNetServ stylesheet */
       $(document.createElement('link'))
-          .attr({id:'conetserv-ui-stylesheet', type: 'text/css',
-             rel: 'stylesheet', media: 'screen'})
-          .appendTo(head);
+      .attr({
+         id:'conetserv-ui-stylesheet',
+         type: 'text/css',
+         rel: 'stylesheet',
+         media: 'screen'
+      })
+      .appendTo(head);
       this.reloadSkin();
 
       /* initialize tabs and its children on selected tab*/
@@ -103,12 +111,12 @@ var Ui = {
        * style start button
        */
       $("button.url-start").button({
-            icons: {
-                primary: 'ui-icon-play'
-            }
-        })
-        .removeClass("ui-corner-all")
-        .addClass("ui-corner-right");
+         icons: {
+            primary: 'ui-icon-play'
+         }
+      })
+      .removeClass("ui-corner-all")
+      .addClass("ui-corner-right");
       
 
       Ui.redraw();
@@ -118,8 +126,8 @@ var Ui = {
     * reloads skin depending on current option
     */
    reloadSkin : function() {
-     $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
-     $("#conetserv-ui-stylesheet").attr("href", "css/" + Options.skin + ".css")
+      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
+      $("#conetserv-ui-stylesheet").attr("href", "css/" + Options.skin + ".css")
    },
 
    /**
@@ -221,62 +229,62 @@ If you want to install it, please follow these steps.");
    },
 
 
-  /**
+   /**
    * Redraws page containing radio buttons used as tabs
    */
-  redraw : function() {
-    var tabs = $('#tabs').tabs();
-    var container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
+   redraw : function() {
+      var tabs = $('#tabs').tabs();
+      var container = "#" + $("#tabs div.ui-tabs-panel:not(.ui-tabs-hide)").attr("id");
 
-    var active = $(container + " input[type=radio]:checked").val();
-    $(container + " .content").css('display', 'none');
-    $("#" + active).css('display', 'block');
-  },
+      var active = $(container + " input[type=radio]:checked").val();
+      $(container + " .content").css('display', 'none');
+      $("#" + active).css('display', 'block');
+   },
 
-  /**
+   /**
    * Shows running state of radio item in menu ( submenu )
    * @param parent Is DOM element, which is parent of input and label items
    * @param selector Defines which radio buttons will be effected
    * @param func Function, which will be called after icon on the right side will
    * be clicked.
    */
-  addIcons : function(parent, selector, func) {
-     // show icons
-     $(parent + " input" + selector).button("option", "icons", {
-        secondary:'ui-icon-circle-close'
-     });
-     // register callback function
-     if(func){
-        $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
-           func();
-        });
-     }
-  },
-  /**
+   addIcons : function(parent, selector, func) {
+      // show icons
+      $(parent + " input" + selector).button("option", "icons", {
+         secondary:'ui-icon-circle-close'
+      });
+      // register callback function
+      if(func){
+         $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
+            func();
+         });
+      }
+   },
+   /**
    * Hides icons of an radio button item in menu ( submenu )
    * @param parent Is DOM element, which is parent of input and label items
    * @param selector Defines which radio buttons will be effected
    */
-  removeIcons : function(parent, selector) {
-     $(parent + " input" + selector).button("option", "icons", false);
-     $(parent + " label" + selector).removeClass("ui-button-text-icon");
-     //!!TODO remove empty space after icons are deleted
-  },
+   removeIcons : function(parent, selector) {
+      $(parent + " input" + selector).button("option", "icons", false);
+      $(parent + " label" + selector).removeClass("ui-button-text-icon");
+   //!!TODO remove empty space after icons are deleted
+   },
 
-  /**
+   /**
    * Redraws options in case they were changed programly
    */
-  redrawOptions : function () {
-     var parent = $("#settings-general-frontpage input:checked").val();
-       $("#settings-general-frontpage-children").html(this.frontpageSettingsChildForm(parent));
-  },
+   redrawOptions : function () {
+      var parent = $("#settings-general-frontpage input:checked").val();
+      $("#settings-general-frontpage-children").html(this.frontpageSettingsChildForm(parent));
+   },
 
-  /**
+   /**
    * Creates form with children
    * @param parent div, which is parenting shown items
    * @return html code to be inserted to a page
    */
-  frontpageSettingsChildForm : function (parent) {
+   frontpageSettingsChildForm : function (parent) {
       var output = '';
       var label;
       $.each($("#" + parent + " input.radio-tab"), function(index,div) {
@@ -288,7 +296,7 @@ If you want to install it, please follow these steps.");
       });
 
       return output;
-  }
+   }
 }
 
 $(function() {

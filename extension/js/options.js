@@ -47,7 +47,6 @@ var Options = {
          $("#" + Options.frontPageChild).attr("checked", true);
       });
       
-      
       /* skin options */
       this.skin = this.storage['conetserv-settings-general-skin'];
       if(!this.skin) {
