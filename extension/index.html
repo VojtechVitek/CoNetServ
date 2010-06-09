@@ -3,11 +3,10 @@
 <html>
    <head>
       <title>CoNetServ - Complex Network Services</title>
-      <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
       <link type="text/css" href="css/ui.css" rel="stylesheet" />
       <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
       <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
-      <script type="text/javascript" src="js/jquery/jquery-ui-1.8.1.custom.min.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery-ui-1.8.2.custom.min.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script>
@@ -184,8 +183,24 @@
                         <label for="frontpage-external-info">External info</label>
                      </div>
                   </div>
-                     
+
                   <div id="settings-general-frontpage-children" class="group ui-corner-all ui-widget-content ui-widget">
+                  </div>
+
+                  <h4>Choose you favourite skin:</h4>
+
+                  <div id="settings-general-skin" class="group ui-corner-all ui-widget-content ui-widget">
+                     <div>
+                        <div>
+                           <input type="radio" id="skin-cupertino" name="settings-general-skin" value="cupertino"/>
+                           <label for="skin-cupertino">Cupertino</label>
+                        </div>
+
+                        <div>
+                           <input type="radio" id="skin-south-street" name="settings-general-skin" value="south-street"/>
+                           <label for="skin-south-street">South Street</label>
+                        </div>
+                     </div>
                   </div>
 
                   <div id="settings-general-toolbox-div" class="group">

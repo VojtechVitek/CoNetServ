@@ -220,6 +220,14 @@ div.valueLabel {
    clear: left;
 }
 
-#settings-general-div label.single-line{
+#settings-general-div h4{
+   clear:left;
+}
 
+#settings-general-skin{
+   height: 70px;
+   width: 200px;
+   margin: 0 10px 10px 0;
+   padding: 10px;
+   clear: left;
 }

@@ -93,6 +93,15 @@ var Ui = {
         })
         .removeClass("ui-corner-all")
         .addClass("ui-corner-right");
+        
+      /**
+       * Load jquery ui css file depending on selected one from options
+       */
+      var head = document.getElementsByTagName('head')[0]; 
+      $(document.createElement('link')) 
+          .attr({type: 'text/css', href: "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css",
+             rel: 'stylesheet', media: 'screen'}) 
+          .appendTo(head);
 
       Ui.redraw();
    },

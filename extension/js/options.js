@@ -7,6 +7,7 @@ var Options = {
    autostart : false,
    frontPageParent : false,
    frontPageChild : false,
+   skin: false,
    
    /**
     * initializes CoNetServ options
@@ -43,6 +44,13 @@ var Options = {
       /* depending on options page, set the active tab */
       $("#tabs").tabs('select', "#" + this.frontPageParent);
       $("#external-tracert").attr("checked", "checked");
+      
+      /* skin options */
+      this.skin = this.storage['conetserv-settings-general-skin'];
+      if(!this.skin) {
+         this.skin = $("#settings-general-skin input").val();
+      }
+      $("#settings-general-skin input[value="+this.skin+"]").attr("checked", true);
    },
 
    /**
@@ -64,6 +72,9 @@ var Options = {
       this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
       this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
 
+      /* skin */
+      this.skin = $("#settings-general-skin input:checked").val();
+      this.storage["conetserv-settings-general-skin"] = this.skin;
    },
 
    /**
