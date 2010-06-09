@@ -75,7 +75,7 @@ $(document).ready(function(){
     $('#external-info-header a').click(function(){
        startExternalInfo();
     });
-       
+
    Plot.initialize();
    Options.initialize();
 
@@ -441,7 +441,7 @@ function startWhois()
    if (whoisInterval == -1) {
       try {
          whoisConsole.clear();
-         if (document.getElementById("conetserv").startWhois(url.hostname)) {
+         if (url.domain != '' && document.getElementById("conetserv").startWhois(url.domain)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             readWhois();
 

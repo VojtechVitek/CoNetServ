@@ -18,10 +18,10 @@ Extension:
 [ ] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [ ] Network tools: check availability and print additional info (installation, ..)
-[ ] Firefox: automatic icon in toolbar 
+[ ] Firefox: automatic icon in toolbar
 [x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
 [ ] TRACEROUTE: improve plotting
-[ ] WHOIS: use only first and second domain names
+[x] WHOIS: use only first and second domain names
 [x] Console output: improve visibility of time values
 [ ] External services: ping and traceroute info from public Looking glass servers
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html

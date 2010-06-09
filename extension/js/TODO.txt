@@ -1,9 +1,3 @@
-# WHOIS
-function getHostname(str) {
-  var re = new RegExp('^(?:f|ht)tp(?:s)?\://([^/]+)', 'im');
-  return str.match(re)[1].toString();
-}
-
 # SERVICES PARSERS:
 http://www.hostip.info
 http://www.robtex.com/ipinfo.js
