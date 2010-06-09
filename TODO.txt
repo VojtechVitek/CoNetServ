@@ -4,6 +4,7 @@ General:
 [ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
 [ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
 [ ] CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
+[ ] CMake: Automatic generation of extension packages for Firefox, Chrome and Opera browser
 [ ] CMake: Regenerate manifest files after target PluginCopy
 [ ] CMake(WIN32): Generate authors from AUTHORS.txt
 
@@ -20,7 +21,7 @@ Extension:
 [ ] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [ ] Network tools: check availability and print additional info (installation, ..)
-[x] Firefox: automatic icon in toolbar 
+[x] Firefox: automatic icon in toolbar
 [x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
 [ ] TRACEROUTE: improve plotting
 [x] WHOIS: use only first and second domain names
