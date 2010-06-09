@@ -18,7 +18,7 @@ Plugin:
 Extension:
 [x] Plotting: rewrite into OOP
 [x] Local Info Tab: rename to External Host Info, change layout
-[ ] Settings: implement for different web-browsers (using native API)
+[x] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [ ] Network tools: check availability and print additional info (installation, ..)
 [x] Firefox: automatic icon in toolbar

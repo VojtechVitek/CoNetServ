@@ -165,61 +165,9 @@ var Ui = {
           * check local services availability
           * first check for general availability in system - if not, don even display
           */
-         return;
 
-         if(!conetserv.ping) {
-            $(".local .ping").remove();
-         }
-
-         if(!conetserv.ping6) {
-            $(".local .ping6").remove();
-         }
-
-         if(!conetserv.tracert) {
-            $(".local .tracert").remove();
-         }
-
-         if(!conetserv.tracert6) {
-            $(".local .tracert6").remove();
-         }
-
-         if(!conetserv.whois) {
+         if($.client.os == "Windows") {
             $(".local .whois").remove();
-         }
-
-         if(!conetserv.nslookup) {
-            $(".local .nslookup").remove();
-         }
-
-         // now check for installed state and if not, show message about installation
-         if(!conetserv.ping_test) {
-            this.divError("#local-ping-div", "Ping service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.ping6_test) {
-            this.divError("#local-ping6-div", "Ping IPv6 service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.tracert_test) {
-            this.divError("#local-tracert-div", "Traceroute service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.tracert6_test) {
-            this.divError("#local-tracert6-div", "Traceroute IPv6 service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.whois_test) {
-            this.divError("#local-whois-div", "Whois service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.nslookup_test) {
-            this.divError("#local-nslookup-div", "NSlookup service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
          }
 
          //refresh visibility of buttons
