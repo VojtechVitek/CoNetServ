@@ -41,7 +41,6 @@ var Options = {
       $("#frontpage-" + this.frontPageChild).attr("checked", true);
 
       /* depending on options page, set the active tab */
-      //$("#" + this.frontPageParent + "-header a").trigger("click");
       $("#tabs").tabs('select', "#" + this.frontPageParent);
       $("#external-tracert").attr("checked", "checked");
    },

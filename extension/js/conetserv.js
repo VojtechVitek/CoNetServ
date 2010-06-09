@@ -81,12 +81,22 @@ $(document).ready(function(){
 
 });
 
+/*
+ * Function, which is started after everything has been loaded
+ */
 $(window).load(function() {
    /*
     * Check autostart - on true start services
     */
    if(Options.autostart) {
       startCommands();
+   }
+
+   /*
+    * If main page is eternal info, start them
+    */
+   if(Options.frontPageParent == "external-info") {
+      //startExternalInfo();
    }
 });
 
