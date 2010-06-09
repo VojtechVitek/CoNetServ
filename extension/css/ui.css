@@ -68,11 +68,11 @@ body {
 }
 
 .tracert .console {
-  height: 220px;
+  height: 200px;
 }
 
 .tracert6 .console {
-  height: 220px;
+  height: 200px;
 }
 
 .plot-placeholder {
@@ -113,6 +113,18 @@ div.lostPacketsLabel{
    font-size: smaller;
    padding: 3px;
    border: 1px solid #E33;
+}
+
+.zoomin{
+   position: absolute;
+   left: 580px;
+   top: 20px;
+}
+
+.zoomout{
+   position: absolute;
+   left: 600px;
+   top: 20px;
 }
 
 /* plot labels styling */

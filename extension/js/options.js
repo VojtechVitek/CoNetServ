@@ -32,12 +32,16 @@ var Options = {
 
       /* redraw options page */
       this.frontPageParent = this.storage['conetserv-settings-general-frontpage'];
+      if(!this.frontPageParent) {
+         this.frontPageParent = "local-services";
+      }
       this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
       $("#frontpage-" + this.frontPageParent).attr("checked", true);
       Ui.redrawOptions();
       $("#frontpage-" + this.frontPageChild).attr("checked", true);
 
       /* depending on options page, set the active tab */
+      //$("#" + this.frontPageParent + "-header a").trigger("click");
       $("#tabs").tabs('select', "#" + this.frontPageParent);
       $("#external-tracert").attr("checked", "checked");
    },

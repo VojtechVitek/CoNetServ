@@ -80,7 +80,6 @@ var Plot = {
          if((active == 'local-tracert6-div' && this.localTrace6Data.changed)) {
             this._plotTracert(this.localTracert6Placeholder, this.localTrace6Data);
          }
-         
       }
    },
 
@@ -217,6 +216,43 @@ var Plot = {
    },
 
    /**
+    * Private function for adding traceroute data on linux platform
+    * @param row One row of data to be added to data structures of object.
+    * @param type Numeral value for defining, which version of ping we are
+    * plotting ( 4 for v.4 6 for v.6 ).
+    */
+   _addTPlotDataLin : function(row, type) {
+      var data = type == 4? this.localTraceData : this.localTrace6Data;
+      var step, label= "", first = 0;
+      var time = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(row));
+
+      var nospaces = row.replace(/\s+/g, ' ');	/* remove multiple spaces */
+      var fields = nospaces.split(" ");
+
+      /* find first column */
+      while(fields[first] == "" && first<fields.length-3)
+         first++;
+
+      if(!(step = parseFloat(fields[first])))
+         return;
+      /* check for not comming packets */
+      if(fields[first+1] != "*")
+         label = fields[first+1];
+      else
+      {
+         if(fields[first+2] != "*")
+       label = fields[first+2];
+         else
+         {
+             if(fields[first+3] != "*")
+                label = fields[first+3];
+         }
+      }
+
+      data.add(time, label);
+   },
+
+   /**
     * Creates ping plot
     * @param placeholder defines div for plot to be drawn into
     * @param data defines PingData object with data to be drawn
@@ -254,32 +290,30 @@ var Plot = {
       }));
 
       // Functions for zooming/paning plots
-      /*this.tracertPlaceholder.bind('plotpan', function (event, plot) {
-         axes = plot.getAxes();
+      placeholder.bind('plotpan', function (event, plot) {
          plot.getPlaceholder().find(".valueLabel").remove();
          plot.getPlaceholder().find(".valueLabelLight").remove();
          plot.draw();
       });
-      this.tracertPlaceholder.bind('plotzoom', function (event, plot) {
-         axes = plot.getAxes();
+      placeholder.bind('plotzoom', function (event, plot) {
          plot.getPlaceholder().find(".valueLabel").remove();
          plot.getPlaceholder().find(".valueLabelLight").remove();
          plot.draw();
-      });*/
+      });
 
       var c = plotCont.offset();
        c.left = 300;
        c.top = 100;
 
       /* buttons for zooming in and out */
-      /*$('<img id="zoomin" src="images/zoomin.png">').appendTo(placeholder).click(function (e) {
+      $('<span class="ui-icon ui-icon-circle-plus zoomin"></span>').appendTo(placeholder).click(function (e) {
             e.preventDefault();
             plotCont.zoom({center: c});
       });
-      $('<img id="zoomout" src="images/zoomout.png">').appendTo(placeholder).click(function (e) {
+      $('<span class="ui-icon ui-icon-circle-minus zoomout"></span>').appendTo(placeholder).click(function (e) {
             e.preventDefault();
             plotCont.zoomOut({center: c});
-      });*/
+      });
    }
 }
 
