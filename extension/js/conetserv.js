@@ -96,7 +96,7 @@ $(window).load(function() {
     * If main page is eternal info, start them
     */
    if(Options.frontPageParent == "external-info") {
-      //startExternalInfo();
+       setTimeout("startExternalInfo()",250);
    }
 });
 
