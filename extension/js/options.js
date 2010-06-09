@@ -43,7 +43,10 @@ var Options = {
 
       /* depending on options page, set the active tab */
       $("#tabs").tabs('select', "#" + this.frontPageParent);
-      $("#external-tracert").attr("checked", "checked");
+      $("#" + this.frontPageParent).ready(function() {
+         $("#" + Options.frontPageChild).attr("checked", true);
+      });
+      
       
       /* skin options */
       this.skin = this.storage['conetserv-settings-general-skin'];
