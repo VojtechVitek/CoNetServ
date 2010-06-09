@@ -3,17 +3,6 @@
    <p class="slogan color1">@EXTENSION_SLOGAN@</p>
    <div class="column">
       <div class="block ui-widget-content ui-widget-content ui-corner-all">
-         <h3 class="color1">Supported tools:</h3>
-         <ul>
-            <li>PING (IPv4)</li>
-            <li>PING6 (IPv6)</li>
-            <li>TRACEROUTE (IPv4)</li>
-            <li>TRACEROUTE6 (IPv6)</li>
-            <li>WHOIS</li>
-            <li>NSLOOKUP</li>
-         </ul>
-      </div>
-      <div class="block ui-widget-content ui-widget-content ui-corner-all">
          <h3 class="color1">Source code:</h3>
          <p>Licence: GPLv2<br />
          WIKI: <a href="http://wiki.github.com/V-Teq/CoNetServ/">github</a><br />
@@ -25,6 +14,11 @@
       <div class="block ui-widget-content ui-widget-content ui-corner-all">
          <h3 class="color1">Developers:</h3>
          <p>@ABOUT_AUTHORS@</p>
+      </div>
+      <div class="block ui-widget-content ui-widget-content ui-corner-all">
+         <h3 class="color1">Supported by:</h3>
+         <p><a href="http://www.nic.cz/vip/">CZ.NIC</a><br />
+         <a href="http://www.fres-solutions.com/CoNetServ/">FRES-Solutions</a></p>
       </div>
    </div>
    <div class="column">
@@ -45,11 +39,6 @@
          <li>GNU/Linux [x86, x86_64]</li>
          <li>MacOSX Darwin [x86]</li>
       </ul>
-      </div>
-      <div class="block ui-widget-content ui-widget-content ui-corner-all">
-      <h3 class="color1">Supported by:</h3>
-      <p><a href="http://www.nic.cz/vip/">CZ.NIC</a><br />
-      <a href="http://www.fres-solutions.com/CoNetServ/">FRES-Solutions</a></p>
       </div>
    </div>
    <div id="about-logo">

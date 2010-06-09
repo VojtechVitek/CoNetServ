@@ -75,7 +75,7 @@ $(document).ready(function(){
     $('#external-info-header a').click(function(){
        startExternalInfo();
     });
-       
+
    Plot.initialize();
    Options.initialize();
 
@@ -132,7 +132,7 @@ function startExternalInfo()
             $("#location").append(
                '<li class="ui-corner-all"><strong>' +
                (result.city ? result.city + ', ' : '') +
-               (result.region ? + result.region + ', ' : '') +
+               (result.region ? result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
                '</strong> ' +
@@ -440,7 +440,7 @@ function startWhois()
    if (whoisInterval == -1) {
       try {
          whoisConsole.clear();
-         if (document.getElementById("conetserv").startWhois(url.hostname)) {
+         if (url.domain != '' && document.getElementById("conetserv").startWhois(url.domain)) {
             whoisInterval = window.setInterval("readWhois()", 500);
             readWhois();
 
