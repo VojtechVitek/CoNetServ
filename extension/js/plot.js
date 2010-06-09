@@ -131,24 +131,20 @@ var Plot = {
          var currentData = data.prevData.substr(0, npos);
          if($.client.os == "Windows")
          {
-            var regHead = /^\w+\s.*?\d+\.\d+\.\d+\.\d+.*/
-            alert(regHead.exec(currentData));
+            data.rowId++;
             pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
-            if(pingTime)
+            if(pingTime) {
                data.add(pingTime);
+            }
             else
             {
-               //!! TODO check on windows!!
-               /* control of response keywords */
-               if(!regHead.exec(currentData))
-               {
+               if(data.rowId > 3) {
                   data.add(null);
                }
             }
          }
          else if($.client.os == "Linux")
          {
-            pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(currentData));
             if(pingTime)
             {
           /* check for lost packets */
@@ -362,6 +358,7 @@ function pData() {
    this.min = [];
    this.max = [];
 
+   this.rowId = 0;
    this.prevData = "";  //data for storing received data from previous steps
 
    this.changed = 1;		//for checking for change in data since last tick
