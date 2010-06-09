@@ -79,7 +79,6 @@ body {
   margin-top: 10px;
   height:220px;
   width: 640px;
-  background: white;
 }
 
 #map-conteiner {
@@ -217,4 +216,28 @@ div.valueLabel {
    margin: 0 10px 10px 0;
    padding: 10px;
    clear: left;
+}
+
+/**************************************************************************
+ * external-info tab
+ **************************************************************************/
+#external-provider-div div {
+   height: 130px;
+   width: 290px;
+   margin: 0 10px 10px 0;
+   padding: 5px;
+   float: left;
+}
+
+#external-provider-div h4 {
+   margin: 0px;
+}
+
+#external-provider-div ul {
+   list-style-type: none;
+   padding: 0px;
+}
+
+#external-provider-div ul li {
+   margin-left: 5px;
 }
