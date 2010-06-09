@@ -17,10 +17,11 @@ body {
 }
 
 #about-tab-header {
-   position: absolute !important;
-   margin-top: 5px !important;
-   margin-right: 5px;
-   right: 0px;
+   float: right;
+}
+
+#settings-tab-header {
+   float: right;
 }
 
 .content {
@@ -39,9 +40,18 @@ body {
    margin-left: -2px;
 }
 
+.radio-tab-label.ui-button-text-icon .ui-button-text{
+   padding: 0.4em 2em 0.4em 1em;
+}
+
+.ui-icon-circle-close {
+   position: absolute;
+   right: 3px;
+}
+
 .console {
   width: 640px;
-  height: 450px;
+  height: 420px;
   margin-bottom: 5px;
   padding: 3px 5px;
   color: #444;
@@ -58,11 +68,11 @@ body {
 }
 
 .tracert .console {
-  height: 220px;
+  height: 200px;
 }
 
 .tracert6 .console {
-  height: 220px;
+  height: 200px;
 }
 
 .plot-placeholder {
@@ -73,14 +83,14 @@ body {
 }
 
 #map-conteiner {
-   height: 400px;
+   height: 450px;
    width: 640px;
    padding: 5px;
 }
 
 #map-placeholder {
-   height: 390px;
-   width: 630px;
+   height: 450px;
+   width: 640px;
 }
 /* Lost packet banner on ping plot */
 div.lostPacketsLabelLight {
@@ -103,6 +113,18 @@ div.lostPacketsLabel{
    font-size: smaller;
    padding: 3px;
    border: 1px solid #E33;
+}
+
+.zoomin{
+   position: absolute;
+   left: 580px;
+   top: 20px;
+}
+
+.zoomout{
+   position: absolute;
+   left: 600px;
+   top: 20px;
 }
 
 /* plot labels styling */
@@ -142,19 +164,6 @@ div.valueLabel {
    visibility: hidden;
 }
 
-/* content styling */
-.color1{
-   color: #2779aa;
-}
-
-.color2{
-   color: blue;
-}
-
-.color3{
-   color: green;
-}
-
 /* plugin loader */
 #plugin-placeholder {
    width: 0px;
@@ -164,4 +173,48 @@ div.valueLabel {
 #plugin-placeholder object {
    width: 0px;
    height: 0px;
+}
+
+/**************************************************************************
+ * settings tab
+ **************************************************************************/
+#settings-general-frontpage {
+   height: 150px;
+   width: 200px;
+   float: left;
+   margin: 0 10px 10px 0;
+   padding: 10px;
+}
+
+#settings-general-frontpage-children {
+   height: 150px;
+   width: 200px;
+   margin: 0 10px 10px 0;
+   padding: 10px;
+   float: left;
+}
+
+#settings-general-toolbox-div {
+   clear: left;
+}
+
+#settings-general-submit {
+   margin-top: 10px;
+   display: block;
+   clear: left;
+}
+#settings-general-div input.single-line{
+   clear: left;
+}
+
+#settings-general-div h4{
+   clear:left;
+}
+
+#settings-general-skin{
+   height: 70px;
+   width: 200px;
+   margin: 0 10px 10px 0;
+   padding: 10px;
+   clear: left;
 }

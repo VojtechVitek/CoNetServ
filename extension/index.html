@@ -3,11 +3,10 @@
 <html>
    <head>
       <title>CoNetServ - Complex Network Services</title>
-      <link type="text/css" href="css/jquery/cupertino/jquery-ui-1.8.1.custom.css" rel="stylesheet" />
       <link type="text/css" href="css/ui.css" rel="stylesheet" />
       <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
       <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
-      <script type="text/javascript" src="js/jquery/jquery-ui-1.8.1.custom.min.js"></script>
+      <script type="text/javascript" src="js/jquery/jquery-ui-1.8.2.custom.min.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.navigate.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script>
@@ -15,6 +14,7 @@
       <script type="text/javascript" src="js/conetserv.js"></script>
       <script type="text/javascript" src="js/console.js"></script>
       <script type="text/javascript" src="js/services.js"></script>
+      <script type="text/javascript" src="js/options.js"></script>
       <script type="text/javascript" src="js/url.js"></script>
       <script type="text/javascript" src="js/ui.js"></script>
       <script type="text/javascript" src="js/plot.js"></script>
@@ -27,8 +27,8 @@
             <li id="external-services-header"><a href="#external-services">External services</a></li>
             <li id="local-info-header"><a href="#local-info">Local info</a></li>
             <li id="external-info-header"><a href="#external-info">External info</a></li>
-            <li id="settings-tab-header"><a href="#settings">Settings</a></li>
             <li id="about-tab-header"><a href="#about">About</a></li>
+            <li id="settings-tab-header"><a href="#settings">Settings</a></li>
          </ul>
          <div id="local-services" class="tab local">
             <form action="" onsubmit="return false;">
@@ -37,17 +37,17 @@
                
                <div id="local-services-form">
                   <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
-                  <label id="local-ping-label" class= "ping" for="local-ping-input">Ping</label>
+                  <label id="local-ping-label" class= "radio-tab-label ping" for="local-ping-input">Ping</label>
                   <input type="radio" id="local-ping6-input" class="radio-tab ping6" name="local-services-form" value ="local-ping6-div" />
-                  <label id="local-ping6-label" class="ping6" for="local-ping6-input">Ping6</label>
+                  <label id="local-ping6-label" class="radio-tab-label ping6" for="local-ping6-input">Ping6</label>
                   <input type="radio" id="local-tracert-input" class="radio-tab tracert" name="local-services-form" value ="local-tracert-div" />
-                  <label id="local-tracert-label" class="tracert" for="local-tracert-input">Traceroute</label>
+                  <label id="local-tracert-label" class="radio-tab-label tracert" for="local-tracert-input">Traceroute</label>
                   <input type="radio" id="local-tracert6-input" class="radio-tab tracert6" name="local-services-form" value ="local-tracert6-div" />
-                  <label id="local-tracert6-label" class="tracert6" for="local-tracert6-input">Traceroute6</label>
+                  <label id="local-tracert6-label" class="radio-tab-label tracert6" for="local-tracert6-input">Traceroute6</label>
                   <input type="radio" id="local-whois-input" class="radio-tab whois" name="local-services-form" value ="local-whois-div" />
-                  <label id="local-whois-label" class="whois" for="local-whois-input">Whois</label>
+                  <label id="local-whois-label" class="radio-tab-label whois" for="local-whois-input">Whois</label>
                   <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
-                  <label id="local-nslookup-label" class="nslookup" for="local-nslookup-input">NSlookup</label>
+                  <label id="local-nslookup-label" class="radio-tab-label nslookup" for="local-nslookup-input">NSlookup</label>
                </div>              
             </form>
 
@@ -78,21 +78,21 @@
          <div id="external-services" class="tab external">
             <form action="">
                <input id="external-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
-               <input id="external-url-button" type="submit" value="Start" class="url-button ui-button ui-widget ui-state-default ui-corner-right" role="button">
+               <button id="external-url-start" class="url-start">Start</button>
 
                <div id="external-services-form">
-                  <input type="radio" id="external-ping" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
-                  <label for="external-ping">Ping</label>
-                  <input type="radio" id="external-ping6" class="radio-tab pin6"  name="external-services-form" value="external-ping6-div"/>
-                  <label for="external-ping6">Ping6</label>
-                  <input type="radio" id="external-tracert" class="radio-tab tracert" name="external-services-form" value="external-tracert-div"/>
-                  <label for="external-tracert">Traceroute</label>
-                  <input type="radio" id="external-tracert6" class="radio-tab tracert6" name="external-services-form" value="external-tracert6-div"/>
-                  <label for="external-tracert6">Traceroute6</label>
-                  <input type="radio" id="external-whois" class="radio-tab whois" name="external-services-form" value="external-whois-div"/>
-                  <label for="external-whois">Whois</label>
-                  <input type="radio" id="external-nslookup" class="radio-tab nslookup" name="external-services-form" value="external-nslookup-div"/>
-                  <label for="external-nslookup">NSlookup</label>
+                  <input type="radio" id="external-ping-input" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
+                  <label id="external-nslookup-label" for="external-ping-input">Ping</label>
+                  <input type="radio" id="external-ping6-input" class="radio-tab ping6"  name="external-services-form" value="external-ping6-div"/>
+                  <label id="external-nslookup-label" for="external-ping6-input">Ping6</label>
+                  <input type="radio" id="external-tracert-input" class="radio-tab tracert" name="external-services-form" value="external-tracert-div"/>
+                  <label id="external-nslookup-label" for="external-tracert-input">Traceroute</label>
+                  <input type="radio" id="external-tracert6-input" class="radio-tab tracert6" name="external-services-form" value="external-tracert6-div"/>
+                  <label id="external-nslookup-label" for="external-tracert6-input">Traceroute6</label>
+                  <input type="radio" id="external-whois-input" class="radio-tab whois" name="external-services-form" value="external-whois-div"/>
+                  <label id="external-nslookup-label" for="external-whois-input">Whois</label>
+                  <input type="radio" id="external-nslookup-input" class="radio-tab nslookup" name="external-services-form" value="external-nslookup-div"/>
+                  <label id="external-nslookup-label" for="external-nslookup-input">NSlookup</label>
                </div>
             </form>
              <div id="external-ping-div" class="content ping">
@@ -145,9 +145,9 @@
                <h2>External IPv4</h2><ul id="externIpv4"></ul>
                <h2>External IPv6</h2><ul id="externIpv6"></ul>
             </div>
-            <div id="external-map-div" class="content map ui-widget ui-widget-content ui-corner-all">
-               <div id="map-conteiner" class="ui-corner-all">
-                  <div id="map-placeholder"></div>
+            <div id="external-map-div" class="content map">
+               <div id="map-conteiner" class="ui-widget ui-widget-content ui-corner-all">
+                  <div id="map-placeholder">Please wait - map is loading...</div>
                </div>
             </div>
 
@@ -162,14 +162,67 @@
                </div>
             </form>
             <div id="settings-general-div" class="content geneal">
-               <form action="">
-                  <input type="checkbox" id="settings-general-toolbox"/>
-                     <label for="settings-general-toolbox">Show button in toolbox?</label>
-                  <input type="submit" name="op" id="settings-general-submit" />                   
+               <form id="settings-general-form" action="">
+                  <h4>Choose you frontpage:</h4>
+                     
+                  <div id="settings-general-frontpage" class="group ui-corner-all ui-widget-content ui-widget">
+                     <div>
+                        <input type="radio" id="frontpage-local-services" class="parent" name="settings-general-frontpage" value="local-services"/>
+                        <label for="frontpage-local-services">Local services</label>
+                     </div>
+                     <div>
+                        <input type="radio" id="frontpage-external-services" class="parent" name="settings-general-frontpage" value="external-services"/>
+                        <label for="frontpage-external-services">External services</label>
+                     </div>
+                     <div>
+                        <input type="radio" id="frontpage-local-info" class="parent" name="settings-general-frontpage" value="local-info"/>
+                        <label for="frontpage-local-info">Local info</label>
+                     </div>
+                     <div>
+                        <input type="radio" id="frontpage-external-info" class="parent" name="settings-general-frontpage" value="external-info"/>
+                        <label for="frontpage-external-info">External info</label>
+                     </div>
+                  </div>
+
+                  <div id="settings-general-frontpage-children" class="group ui-corner-all ui-widget-content ui-widget">
+                  </div>
+
+                  <h4>Choose you favourite skin:</h4>
+
+                  <div id="settings-general-skin" class="group ui-corner-all ui-widget-content ui-widget">
+                     <div>
+                        <div>
+                           <input type="radio" id="skin-cupertino" name="settings-general-skin" value="cupertino"/>
+                           <label for="skin-cupertino">Cupertino</label>
+                        </div>
+
+                        <div>
+                           <input type="radio" id="skin-south-street" name="settings-general-skin" value="south-street"/>
+                           <label for="skin-south-street">South Street</label>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div id="settings-general-toolbox-div" class="group">
+                     <input type="checkbox" id="settings-general-toolbox" class="single-line"/>
+                        <label class="single-line" for="settings-general-toolbox">Show button in toolbox?</label>
+                  </div>
+                  <div id="settings-general-autostart-div" class="group">
+                     <input type="checkbox" id="settings-general-autostart" class="single-line"/>
+                        <label class="single-line" for="settings-general-autostart">Automaticaly start default service?</label>
+                  </div>
+
+                  <button id="settings-general-submit">Save</button>
+
                </form>
             </div>
             <div id="settings-services-div" class="content servies">
-               <p>Ahojlasdflka sjd;fl asdl </p>
+               <form id="settings-services-form" action="">
+                  <h4>Ping</h4>
+                  <input id="settings-services-ping-number" class="ui-corner-all ui-widget ui-widget-content" type="text" size="5"/>
+                  <label for="settings-services-ping-number">Number of packets</label>
+               </form>
+
             </div>
 
          </div>

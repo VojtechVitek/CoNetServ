@@ -27,5 +27,9 @@ Extension:
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
 [ ] Possibility to save ping and traceroute plot to a jpg file
 [ ] Hide url bar while services are running
-[ ] Autorun service on start
-[ ] OPTIONS: select default page
+[x] Autorun service on start
+[x] OPTIONS: select default page
+[x] On tab select, focus on url bar
+[x] Repair long output in console
+[x] OPTIONS: Multiple skins implementation
+[ ] OPTIONS: ping console - unlimited/ limited
