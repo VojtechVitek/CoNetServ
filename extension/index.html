@@ -23,12 +23,12 @@
    <body>
       <div id="tabs">
          <ul>
-            <li id="local-services-header"><a href="#local-services">Local services</a></li>
-            <li id="external-services-header"><a href="#external-services">External services</a></li>
-            <li id="local-info-header"><a href="#local-info">Local info</a></li>
-            <li id="external-info-header"><a href="#external-info">External info</a></li>
-            <li id="about-tab-header"><a href="about.html">About</a></li>
-            <li id="settings-tab-header"><a href="#settings">Settings</a></li>
+            <li id="local-services-header"><a class="tab-header-button" href="#local-services">Local services</a></li>
+            <li id="external-services-header"><a class="tab-header-button" href="#external-services">External services</a></li>
+            <li id="local-info-header"><a class="tab-header-button" href="#local-info">Local info</a></li>
+            <li id="external-info-header"><a class="tab-header-button" href="#external-info">External info</a></li>
+            <li id="about-tab-header"><a class="tab-header-button" href="about.html">About</a></li>
+            <li id="settings-tab-header"><a class="tab-header-button" href="#settings">Settings</a></li>
          </ul>
          <div id="local-services" class="tab local">
             <form action="" onsubmit="return false;">
@@ -131,10 +131,10 @@
          <div id="external-info" class="tab">
             <form action="">
                <div id="external-info-form">
-                  <input type="radio" id="external-provider" class="radio-tab" name="external-info-form" value="external-provider-div" checked="checked"/>
-                  <label for="external-provider">Provider info</label>
-                  <input type="radio" id="external-map" class="radio-tab" name="external-info-form" value="external-map-div" />
-                  <label for="external-map">Location map</label>
+                  <input type="radio" id="external-provider" class="radio-tab-input" name="external-info-form" value="external-provider-div" checked="checked"/>
+                  <label for="external-provider" class="radio-tab-label">Provider info</label>
+                  <input type="radio" id="external-map" class="radio-tab-input" name="external-info-form" value="external-map-div" />
+                  <label for="external-map" class="radio-tab-label">Location map</label>
                </div>
             </form>
             <div id="external-provider-div" class="content provider">

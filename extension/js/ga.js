@@ -14,6 +14,10 @@ $(document).ready(function(){
       _gaq.push(['_trackEvent', 'button' + this.id, 'clicked']);
    });
 
+   $(".tab-header-button").click(function() {
+      _gaq.push(['_trackEvent', 'button' + this.parentNode.id, 'clicked']);
+   });
+
 _gaq.push(['_trackPageview']);
    
 });
