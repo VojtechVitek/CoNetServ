@@ -31,4 +31,5 @@ Extension:
 [ ] OPTIONS: select default page
 [x] On tab select, focus on url bar
 [x] Repair long output in console
+[x] OPTIONS: Multiple skins implementation
 [ ] OPTIONS: ping console - unlimited/ limited
