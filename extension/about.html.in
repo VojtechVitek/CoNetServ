@@ -1,30 +1,31 @@
-<h2>@PROJECT_NAME@ (@PROJECT_LONG@)</h2>
-<p class="slogan">@EXTENSION_DESC@</p>
-<p>Version @VERSION@ (built @BUILDDATE@)</p>
-<table>
-<tr>
-<td>
-<h3>Supported tools:</h3>
-<ul><li>PING (IPv4)</li><li>PING6 (IPv6)</li><li>TRACEROUTE (IPv4)</li><li>TRACEROUTE6 (IPv6)</li><li>WHOIS</li><li>NSLOOKUP</li></ul>
-<h3>Source code:</h3>
-<p>Licence: GPLv2<br />
-WIKI: <a href="http://wiki.github.com/V-Teq/CoNetServ/">github</a><br />
-Development: <a href="http://github.com/V-Teq/CoNetServ/">github</a><br />
-JavaScript API: <a href="http://www.fres-solutions.com/CoNetServ/doxygen/conetserv-javascript-api_8h.html">doxygen</a><br />
-Doxygen documentation: <a href="http://www.fres-solutions.com/CoNetServ/doxygen/index.html">doxygen</a>
-</p>
-<h3>Developers:</h3>
-@DOXYGEN_DEVELOPERS@
-</td>
-<td>
-<h3>Browser support:</h3>
-<ul><li>Mozilla Firefox 3.0+ add-on</li><li>Google Chrome 4.0+ extension</li><li>Opera 10.5+ widget</li></ul>
-<h3>Operating system [arch] support:</h3>
-<ul><li>Microsoft Windows Seven [x86, x86_64]</li><li>Microsoft Windows Vista [x86, x86_64]</li><li>Microsoft Windows XP [x86, x86_64]</li><li>GNU/Linux [x86, x86_64]</li><li>MacOSX Darwin [x86]</li></ul>
-<br /><br /><br />
-<h3>Supported by:</h3>
-<p><a href="http://www.nic.cz/vip/">CZ.NIC</a><br />
-<a href="http://www.fres-solutions.com/CoNetServ/">FRES-Solutions</a></p>
-</td>
-</tr>
-</table>
+<div id="aboutTab">
+   <h2>@PROJECT_NAME@ (@PROJECT_LONG@) v@VERSION@</h2>
+   <p class="slogan">@EXTENSION_SLOGAN@</p>
+   <table>
+      <tr>
+         <td>
+            <h3>Supported tools:</h3>
+            <ul><li>PING (IPv4)</li><li>PING6 (IPv6)</li><li>TRACEROUTE (IPv4)</li><li>TRACEROUTE6 (IPv6)</li><li>WHOIS</li><li>NSLOOKUP</li></ul>
+            <h3>Source code:</h3>
+            <p>Licence: GPLv2<br />
+            WIKI: <a href="http://wiki.github.com/V-Teq/CoNetServ/">github</a><br />
+            Development: <a href="http://github.com/V-Teq/CoNetServ/">github</a><br />
+            JavaScript API: <a href="http://www.fres-solutions.com/CoNetServ/doxygen/conetserv-javascript-api_8h.html">doxygen</a><br />
+            Doxygen documentation: <a href="http://www.fres-solutions.com/CoNetServ/doxygen/index.html">doxygen</a>
+            </p>
+            <h3>Developers:</h3>
+            <p>@ABOUT_AUTHORS@</p>
+         </td>
+         <td>
+            <h3>Browser support:</h3>
+            <ul><li>Mozilla Firefox 3.0+ add-on</li><li>Google Chrome 4.0+ extension</li><li>Opera 10.5+ widget</li></ul>
+            <h3>Operating system [arch] support:</h3>
+            <ul><li>Microsoft Windows Seven [x86, x86_64]</li><li>Microsoft Windows Vista [x86, x86_64]</li><li>Microsoft Windows XP [x86, x86_64]</li><li>GNU/Linux [x86, x86_64]</li><li>MacOSX Darwin [x86]</li></ul>
+            <br /><br /><br />
+            <h3>Supported by:</h3>
+            <p><a href="http://www.nic.cz/vip/">CZ.NIC</a><br />
+            <a href="http://www.fres-solutions.com/CoNetServ/">FRES-Solutions</a></p>
+         </td>
+      </tr>
+   </table>
+</div>

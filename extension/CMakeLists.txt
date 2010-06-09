@@ -43,6 +43,22 @@ foreach(AUTHOR ${AUTHORS})
 	endif()
 endforeach()
 
+# About page contributors
+foreach(AUTHOR ${AUTHORS})
+	string(REGEX REPLACE "[<]" "&lt;" AUTHOR "${AUTHOR}")
+	string(REGEX REPLACE "[>]" "&gt;" AUTHOR "${AUTHOR}")
+	string(REGEX REPLACE "[@]" "@<span class="hidden">&#185;</span>" AUTHOR "${AUTHOR}")
+	if("${ABOUT_AUTHORS}" STREQUAL "")
+		set(ABOUT_AUTHORS "${AUTHOR}")
+	else()
+		set(ABOUT_AUTHORS "${ABOUT_AUTHORS}<br />${AUTHOR}")
+	endif()
+endforeach()
+
+# Configure about page
+message(STATUS "Configuring about page")
+configure_file("about.html.in" "${CMAKE_SOURCE_DIR}/extension/about.html" IMMEDIATE @ONLY)
+
 # Configure debugging package files:
 message(STATUS "Configuring browser-specific manifest files")
 configure_file("chrome/manifest.json.in" "${CMAKE_SOURCE_DIR}/extension/manifest.json" IMMEDIATE @ONLY)
