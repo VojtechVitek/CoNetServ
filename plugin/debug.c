@@ -27,16 +27,5 @@ int main(int argc, char **argv)
       return 1;
    }
 
-   startCommand(cmd, str);
-
-   for(;;) {
-      if ((len = readCommand(cmd, buffer)) > 0)
-         fprintf(stderr, "%s", buffer);
-      else if (len == 0)
-         continue;
-      else
-         break;
-   }
-
    return 0;
 }

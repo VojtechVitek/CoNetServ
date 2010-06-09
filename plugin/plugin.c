@@ -1,18 +1,3 @@
-/* ***** BEGIN LICENSE BLOCK *****
- * (C)opyright 2008-2009 Aplix Corporation. anselm@aplixcorp.com
- * Version: MPL 1.1/GPL 2.0/LGPL 2.1
- *
- * The contents of this file are subject to the Mozilla Public License Version
- * 1.1 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- * for the specific language governing rights and limitations under the
- * License.
- * ***** END LICENSE BLOCK ***** */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,9 +5,12 @@
 #include "config.h"
 #include "plugin.h"
 
-NPObject        *so       = NULL;
+NPObject        *plugin = NULL;
 NPNetscapeFuncs *npnfuncs = NULL;
 NPP              inst     = NULL;
+
+/*! Global commands. */
+command commands = NULL;
 
 NPUTF8 buffer[BUFFER_LENGTH];
 
@@ -51,13 +39,8 @@ hasMethod(NPObject* obj, NPIdentifier methodName) {
    logmsg("CoNetServ: hasMethod ");
    logmsg(npnfuncs->utf8fromidentifier(methodName));
    logmsg("()\n");
-   return true;
-}
-
-static bool
-invokeDefault(NPObject *obj, const NPVariant *args, uint32_t argCount, NPVariant *result) {
-   logmsg("CoNetServ: invokeDefault\n");
-   BOOLEAN_TO_NPVARIANT(true, *result);
+   commands *ptr =
+   while (commands
    return true;
 }
 
@@ -115,9 +98,9 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             logmsg("()\n");
 
             /*
-             * Copy JavaScript string argument as char array.
-             * Be sure about terminating '\0' char -
-             * there is no warancy for it from PluginWrapper API.
+             * Copy JavaScript string argument as array of chars.
+             * Be sure about terminating '\0' char - there is
+	     * no warranty provided by PluginWrapper API.
              */
             len = STRING_UTF8LENGTH(NPVARIANT_TO_STRING(args[0]));
             memcpy(buffer, STRING_UTF8CHARACTERS(NPVARIANT_TO_STRING(args[0])), len);
@@ -133,7 +116,7 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
                   continue;
                if (buffer[i] == '.' || buffer[i] == '-')
                   continue;
-               
+
                // not a valid hostname ASCII character
                npnfuncs->setexception(obj, "Not valid hostname ASCII string [a-zA-Z0-9-.] passed as a parameter.");
                logmsg("CoNetServ: invoke: Not valid hostname ASCII character.\n");
@@ -198,6 +181,7 @@ static NPError
 nevv(NPMIMEType pluginType, NPP instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved) {
    inst = instance;
    logmsg("CoNetServ: new\n");
+   fprintf(stderr, "CoNetServ: pluginType %d, mode %d\n", instance, pluginType, mode);
    return NPERR_NO_ERROR;
 }
 
@@ -208,9 +192,9 @@ destroy(NPP instance, NPSavedData **save) {
    for (i = 0; i < command_t_count; ++i)
       stopCommand(i);
 
-   if(so)
-      npnfuncs->releaseobject(so);
-   so = NULL;
+   if(plugin)
+      npnfuncs->releaseobject(plugin);
+   plugin = NULL;
    logmsg("CoNetServ: destroy\n");
    return NPERR_NO_ERROR;
 }
@@ -232,13 +216,17 @@ getValue(NPP instance, NPPVariable variable, void *value) {
       break;
    case NPPVpluginScriptableNPObject:
       logmsg("CoNetServ: getvalue - scriptable object\n");
-      if(!so)
-         so = npnfuncs->createobject(instance, &npcRefObject);
-      npnfuncs->retainobject(so);
-      *(NPObject **)value = so;
+      if(!plugin)
+         plugin = npnfuncs->createobject(instance, &npcRefObject);
+      npnfuncs->retainobject(plugin);
+      *(NPObject **)value = plugin;
       break;
    case NPPVpluginNeedsXEmbed:
       logmsg("CoNetServ: getvalue - xembed\n");
+      *((bool *)value) = true;
+      break;
+   case NPPVpluginKeepLibraryInMemory:
+      logmsg("CoNetServ: getvalue - NPPVpluginKeepLibraryInMemory\n");
       *((bool *)value) = true;
       break;
    }

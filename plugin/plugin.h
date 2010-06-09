@@ -57,8 +57,26 @@ extern JNIEnv *pluginJniEnv;
 #define STRING_UTF8LENGTH(_v)     (_v).utf8length
 #endif
 
+typedef struct _command {
+   NPObject          *obj;
+   struct _command   *next;
+
+   int               not_found;
+   int               err;
+
+   void (*init)();
+   void (*start)();
+   void (*read)();
+   void (*stop)();
+
+   NPIdentifier      *name;
+   NPUTF8            *paths[];
+};
+
+extern command       *commands;
+
 /** NPAPI NPObject variable */
-extern NPObject        *so;
+extern NPObject      *plugin;
 
 /** NPAPI NPNetscapeFuncs variable */
 extern NPNetscapeFuncs *npnfuncs;
@@ -77,48 +95,5 @@ void logmsg(const char *msg);
  * System called commands
  * Library implemented commands
  */
-typedef enum {
-   /* system commands: */
-   PING = 0,
-   PING6,
-   TRACEROUTE,
-   TRACEROUTE6,
-   WHOIS,
-   NSLOOKUP,
-
-   command_t_count
-
-   /* implemented commands: */
-} command_t;
-
-/**
- * Start command
- * @arg cmd Command number.
- * @arg addr URL / IPv4 / IPv6 address.
- * @return True if successfuly started, false otherwise.
- */
-bool startCommand(command_t cmd, NPUTF8* arg_host);
-
-/**
- * Read command
- * @arg cmd Command number.
- * @arg buf Buffer to store read data in.
- * @return Data length, or -1 while error.
- */
-int readCommand(command_t cmd, NPUTF8* buf);
-
-/**
- * Stop command
- * @arg cmd Command number.
- * @return True if successfuly stopped, false otherwise.
- */
-bool stopCommand(command_t cmd);
 
 #endif /*_PLUGIN_H_*/
-
-/*! \mainpage CoNetServ - Complex Network Services
- *
- * \section about About
- *
- * \htmlinclude ../../extension/about.html
- */
