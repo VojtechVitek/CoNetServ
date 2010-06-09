@@ -5,6 +5,7 @@ General:
 [ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
 [ ] CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
 [ ] CMake: Regenerate manifest files after target PluginCopy
+[ ] CMake(WIN32): Generate authors from AUTHORS.txt
 
 Plugin:
 [ ] Windows: reimplement locale support
