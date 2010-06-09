@@ -7,7 +7,7 @@ if(UNIX)
 		OUTPUT_VARIABLE BUILD_DATE
 	)
 else()
-	set(BUILD_DATE "2010-02-01")
+	set(BUILD_DATE "1970-01-01")
 endif()
 
 # Chrome plugin paths
@@ -28,7 +28,7 @@ foreach(LIBRARY_PATH ${LIBRARY_PATHS})
 	if("${FIREFOX_LIBRARIES}" STREQUAL "")
 		set(FIREFOX_LIBRARIES "<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
 	else()
-		set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")	
+		set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
 	endif()
 endforeach()
 
@@ -39,9 +39,25 @@ foreach(AUTHOR ${AUTHORS})
 	if("${FIREFOX_AUTHORS}" STREQUAL "")
 		set(FIREFOX_AUTHORS "<em:contributor>${AUTHOR}</em:contributor>")
 	else()
-		set(FIREFOX_AUTHORS "${FIREFOX_AUTHORS}<em:contributor>${AUTHOR}</em:contributor>")	
+		set(FIREFOX_AUTHORS "${FIREFOX_AUTHORS}<em:contributor>${AUTHOR}</em:contributor>")
 	endif()
 endforeach()
+
+# About page contributors
+foreach(AUTHOR ${AUTHORS})
+	string(REGEX REPLACE "[<]" "&lt;" AUTHOR "${AUTHOR}")
+	string(REGEX REPLACE "[>]" "&gt;" AUTHOR "${AUTHOR}")
+	string(REGEX REPLACE "[@]" "@<span class="hidden">&#185;</span>" AUTHOR "${AUTHOR}")
+	if("${ABOUT_AUTHORS}" STREQUAL "")
+		set(ABOUT_AUTHORS "${AUTHOR}")
+	else()
+		set(ABOUT_AUTHORS "${ABOUT_AUTHORS}<br />${AUTHOR}")
+	endif()
+endforeach()
+
+# Configure about page
+message(STATUS "Configuring about page")
+configure_file("about.html.in" "${CMAKE_SOURCE_DIR}/extension/about.html" IMMEDIATE @ONLY)
 
 # Configure debugging package files:
 message(STATUS "Configuring browser-specific manifest files")
@@ -57,7 +73,7 @@ configure_file("opera/config.xml.in" "${CMAKE_SOURCE_DIR}/extension/config.xml" 
 # 	@cd build/extension && zip -q ../../build/$(NAME)-$(VERSION).xpi \
 # 	   chrome.manifest install.rdf `find firefox` \
 # 	   `find js` `find images` `find css` index.html `find platform`
-# 
+#
 # _chrome:
 # 	@echo "  Build Google Chrome extension:"
 # 	@echo "   * build/$(NAME)-$(VERSION).crx"
@@ -66,7 +82,7 @@ configure_file("opera/config.xml.in" "${CMAKE_SOURCE_DIR}/extension/config.xml" 
 # 	@crxmake --pack-extension=build/extension/ --extension-output=build/$(NAME)-$(VERSION).crx \
 # 	  --pack-extension-key=conetserv.pem --ignore-file=chrome.manifest --ignore-file=config.xml \
 # 	  --ignore-file=about.html --ignore-file=install.rdf --ignore-dir=firefox
-# 
+#
 # _opera:
 # 	@echo "  Build Opera widget:"
 # 	@echo "   * build/$(NAME)-$(VERSION)-no-plugin.wgt"

@@ -1,13 +1,13 @@
-/* 
+/*
     Document   : ui
-    Created on : 29.5.2010, 18:11:27
+    Created on : 29.5.2010
     Author     : kanei
     Description:
-        Purpose of the stylesheet follows.
+    Purpose of the stylesheet follows.
 */
 
 body {
-   font-size:62.5%;
+   font-size: 62.5%;
 }
 
 #tabs {
@@ -240,4 +240,50 @@ div.valueLabel {
 
 #external-provider-div ul li {
    margin-left: 5px;
+}
+
+/**************************************************************************
+ * about tab
+ **************************************************************************/
+
+#aboutTab {
+   background: url("../images/icon128.jpg") no-repeat 550px 372px;
+   height: 480px;
+}
+
+#aboutTab h2 {
+   font-size: 30px;
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+#aboutTab h3 {
+   margin: 0px;
+   font-size: 12px;
+   margin-bottom: 0px;
+}
+
+#aboutTab ul {
+   padding-left: 20px;
+}
+
+#aboutTab li {
+   color: #2779AA;
+   margin: none;
+}
+
+#aboutTab table {
+   width: 600px;
+}
+
+#aboutTab table td {
+   vertical-align: top;
+}
+
+#aboutTab p {
+   color: #2779AA;
+}
+
+#aboutTab .slogan {
+   font-size: 16px;
 }

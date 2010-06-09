@@ -115,10 +115,3 @@ int readCommand(command_t cmd, NPUTF8* buf);
 bool stopCommand(command_t cmd);
 
 #endif /*_PLUGIN_H_*/
-
-/*! \mainpage CoNetServ - Complex Network Services
- *
- * \section about About
- *
- * \htmlinclude ../../extension/about.html
- */

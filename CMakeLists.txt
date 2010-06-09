@@ -36,14 +36,16 @@ set(PROJECT_HOST "${PROJECT_HOSTNAME}${PROJECT_HOST_TLD}")
 set(PROJECT_URL "http://www.${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}/${PROJECT_NAME}")
 
 # Exension strings
-set(EXTENSION_DESC "${PROJECT_LONG} v${VERSION}. Extension which integrates network services into the browser. ${PROJECT_COPY}")
+set(EXTENSION_SLOGAN "Extension which integrates network services into the browser.")
+set(EXTENSION_DESC "${PROJECT_LONG} v${VERSION}. ${EXTENSION_SLOGAN} ${PROJECT_COPY}")
 set(EXTENSION_ID "${PROJECT_LOW}@${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 
 # Plugin strings
+set(PLUGIN_SLOGAN "Plugin which integrates network services into the browser.")
 set(PLUGIN_NAME ${PROJECT_NAME})
 set(PLUGIN_LONG ${PROJECT_LONG})
 set(PLUGIN_TYPE "application/x-${PROJECT_LOW}")
-set(PLUGIN_DESC "${PROJECT_LONG} v${VERSION}. Plugin which integrates network services into the browser. ${PROJECT_COPY}")
+set(PLUGIN_DESC "${PROJECT_LONG} v${VERSION}. ${PLUGIN_SLOGAN} ${PROJECT_COPY}")
 set(PLUGIN_ID   "${PROJECT_HOST_TLD}.${PROJECT_HOSTNAME}.${PROJECT_LOW}")
 
 # Contributors

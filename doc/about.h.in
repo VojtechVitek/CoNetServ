@@ -1,0 +1,6 @@
+/*! \mainpage @PROJECT_NAME@ (@PROJECT_LONG@)
+ *
+ * \section about About
+ *
+ * \htmlinclude about.html
+ */

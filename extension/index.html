@@ -1,8 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
 <html>
    <head>
-      <title>CoNetServ - Complex Network Services</title>
+      <title>CoNetServ (Complex Network Services)</title>
       <link type="text/css" href="css/ui.css" rel="stylesheet" />
       <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
       <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
@@ -27,14 +26,14 @@
             <li id="external-services-header"><a href="#external-services">External services</a></li>
             <li id="local-info-header"><a href="#local-info">Local info</a></li>
             <li id="external-info-header"><a href="#external-info">External info</a></li>
-            <li id="about-tab-header"><a href="#about">About</a></li>
+            <li id="about-tab-header"><a href="about.html">About</a></li>
             <li id="settings-tab-header"><a href="#settings">Settings</a></li>
          </ul>
          <div id="local-services" class="tab local">
             <form action="" onsubmit="return false;">
                <input id="local-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('local-url').style.color='black'" />
                <button id="local-url-start" class="url-start">Start</button>
-               
+
                <div id="local-services-form">
                   <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
                   <label id="local-ping-label" class= "radio-tab-label ping" for="local-ping-input">Ping</label>
@@ -48,7 +47,7 @@
                   <label id="local-whois-label" class="radio-tab-label whois" for="local-whois-input">Whois</label>
                   <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
                   <label id="local-nslookup-label" class="radio-tab-label nslookup" for="local-nslookup-input">NSlookup</label>
-               </div>              
+               </div>
             </form>
 
             <div id="local-ping-div" class="content ping">
@@ -182,7 +181,7 @@
             <div id="settings-general-div" class="content geneal">
                <form id="settings-general-form" action="">
                   <h4>Choose you frontpage:</h4>
-                     
+
                   <div id="settings-general-frontpage" class="group ui-corner-all ui-widget-content ui-widget">
                      <div>
                         <input type="radio" id="frontpage-local-services" class="parent" name="settings-general-frontpage" value="local-services"/>
@@ -248,9 +247,6 @@
 
             </div>
 
-         </div>
-         <div id="about" class="tab">
-            @ABOUT.HTML@
          </div>
 
       </div>
