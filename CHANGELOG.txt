@@ -1,27 +1,36 @@
-Version 1.3 (2010-??-??)
+Version 1.3 (2010-06-??)
 ============================================
+Project:
+ * Switch project build system to CMake
+ * Auto-generation of project files/variables,
+   eg. shared library, plugin or extension info
+ * Automatic generation of browser-specific
+   packages (Firefox, Chrome and Opera)
+Plugin:
+ * Auto-generation of project files using CMake
+   (Linux and Windows compatible)
+ * Significant clean-up in directory structure
+   and platform-dependent files
 Extension:
  * New layout - divided into local services
-   and external info, prepared for more 
-   features
+   and external info (get ready for more
+   features)
+ * Add settings tab (based on LocalStorage)
+ * Possibility to autorun services on startup
+ * Selectable extension tab as front-page
+ * Selectable jQuery themes in settings
+   (Cupertino, South Street and Sunny)
+ * Rewrite plot.js (and some others) into OOP
+ * Fix long output in service consoles
+ * Rewrite lost packet analysis into regexp
+ * Improve visibility of console time values
+ * Fix IPv6 address inside the http protocol
+ * Automatic toolbar icon in Firefox
  * "Google.com - JSAPI" parser
    (countryCode, country, city, region,
     latitude, longitude)
  * Asynchronous Google Map with location
    markers
- * Rewritten plotting and some other 
-   libraries into OOP
- * Fixed long output in service consoles
- * Lost packet analysis by regexp
- * Improved visibility of time values
- * Repaired IpV6 addr inside the http protocol
- * Added settings
- * Possibility to autorun when started
- * User can now choose its frontpage
- * Skins - implemented, added 2 new ones
- * FIREFOX: automatic toolbar icon
-Project:
- * Switch project build system to CMake
 
 Version 1.2 (2010-03-31)
 ============================================
@@ -50,34 +59,23 @@ Extension:
 
 Version 1.1 (2010-03-14)
 ============================================
+Project:
+ * Automated generation of browser-specific
+   packages (Firefox, Chrome, Opera)
+Operating systems [arch] support:
+ * Windows Seven [x86, x86_64]
+ * Windows Vista [x86, x86_64]
+ * Windows XP [x86, x86_64]
+ * MacOSX Darwin [x86]
 Plugin:
  * Punycode support .. UTF-8 (sub-)domains
  * NSLOOKUP command
 Extension:
  * PING(6) plot: min, max and avg values
  * Initiate domain string in Firefox&Chrome
-Operating systems [arch] support:
- * Windows Seven [x86, x86_64]
- * Windows Vista [x86, x86_64]
- * Windows XP [x86, x86_64]
- * MacOSX Darwin [x86]
-Project:
- * Automated generation of browser-specific
-   packages (Firefox, Chrome, Opera)
-
 
 Version 1.0 (2010-02-28)
 ============================================
-Plugin:
- * PING command (IPv4)
- * PING6 command (IPv6)
- * TRACEROUTE command (IPv4)
- * TRACEROUTE6 command (IPv6)
- * WHOIS command
-Extension:
- * Console output of plugin tools
- * PING(6) simple plot
- * TRACEROUTE(6) plot
 Browser support:
  * Mozilla Firefox 2.0+ add-on
  * Google Chrome 1.0+ extension
@@ -88,3 +86,13 @@ Operating systems [arch] support:
 Documentation:
  * Use Doxygen as the source code
    documentation generator tool
+Plugin:
+ * PING command (IPv4)
+ * PING6 command (IPv6)
+ * TRACEROUTE command (IPv4)
+ * TRACEROUTE6 command (IPv6)
+ * WHOIS command
+Extension:
+ * Console output of plugin tools
+ * PING(6) simple plot
+ * TRACEROUTE(6) plot
