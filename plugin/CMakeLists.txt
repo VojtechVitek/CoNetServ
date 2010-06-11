@@ -32,6 +32,8 @@ endif()
 add_library(CoNetServ SHARED ${library_sources} ${sources} ${library_headers} ${headers})
 set_target_properties(CoNetServ PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(CoNetServ PROPERTIES PREFIX "np")
+set_target_properties(CoNetServ PROPERTIES VERSION ${VERSION})
+set_target_properties(CoNetServ PROPERTIES SOVERSION ${MAJOR_VERSION})
 
 # Copy shared library to debug/release directory
 get_target_property(CoNetServLibFile CoNetServ LOCATION)
