@@ -10,6 +10,7 @@ else()
 	set(BUILD_DATE "1970-01-01")
 endif()
 
+# FIXME: Make release manifests separatelly - DO NOT COPY debug files
 # Chrome and Firefox plugin paths
 file(GLOB_RECURSE LIBRARY_PATHS1 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.dylib)
 string(REGEX MATCH "^.*/np${PROJECT_NAME}[.]plugin" LIBRARY_PATHS1 "${LIBRARY_PATHS1}")
@@ -22,7 +23,8 @@ foreach(LIBRARY_PATH ${LIBRARY_PATHS1} ${LIBRARY_PATHS2} ${LIBRARY_PATHS3})
 	else()
 		set(CHROME_LIBRARIES  "${CHROME_LIBRARIES},{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
 	endif()
-	set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
+	string(REGEX REPLACE "^platform[/]([^/]+).+$" "\\1" LIBRARY_PLATFORM "${LIBRARY_PATH}")
+	set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PLATFORM}</em:targetPlatform>")
 endforeach()
 
 # Firefox contributors
