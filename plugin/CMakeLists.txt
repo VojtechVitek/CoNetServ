@@ -44,9 +44,9 @@ include(${CMAKE_MODULE_PATH}/MozillaTargetPlatform.cmake)
 # Export release shared library (force simple packaging)
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
-	get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
-	set(RELEASE_PACK ${CMAKE_BINARY_DIR}/../${PROJECT_NAME}-${VERSION}-plugin-binaries.tgz)
+	set(RELEASE_PACK ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-plugin-binaries.tgz)
 
+	# Create Mozilla-like platform path in release directory
 	file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH})
 
 	if(APPLE)
@@ -73,8 +73,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
 else()
 
-	get_filename_component(DEBUG_DIR ${CMAKE_SOURCE_DIR}/extension/ ABSOLUTE)
-
+	# Create Mozilla-like platform path in debug directory
 	file(MAKE_DIRECTORY ${DEBUG_DIR}/${MOZILLA_PATH})
 
 	add_custom_command(
