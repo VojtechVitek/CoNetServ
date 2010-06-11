@@ -7,7 +7,7 @@
 		<em:version>@VERSION@</em:version>
 		@FIREFOX_LIBRARIES@
 		<em:description>@EXTENSION_DESC@</em:description>
-		<em:creator>@EXTENSION_CREATOR@</em:creator>
+		<em:creator>@PROJECT_COMPANY@</em:creator>
 		<em:homepageURL>@PROJECT_URL@</em:homepageURL>
 		<em:iconURL>chrome://@PROJECT_LOW@/content/images/icon32.png</em:iconURL>
 		<!--<em:updateURL>@PROJECT_URL@/firefox/update</em:updateURL>-->

@@ -10,26 +10,19 @@ else()
 	set(BUILD_DATE "1970-01-01")
 endif()
 
-# Chrome plugin paths
-file(GLOB_RECURSE LIBRARY_PATHS ${CMAKE_SOURCE_DIR}/extension/platform/*np${PROJECT_NAME}.*)
-foreach(LIBRARY_PATH ${LIBRARY_PATHS})
+# Chrome and Firefox plugin paths
+file(GLOB_RECURSE LIBRARY_PATHS1 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.dylib)
+string(REGEX MATCH "^.*/np${PROJECT_NAME}[.]plugin" LIBRARY_PATHS1 "${LIBRARY_PATHS1}")
+file(GLOB_RECURSE LIBRARY_PATHS2 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.dll)
+file(GLOB_RECURSE LIBRARY_PATHS3 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.so)
+foreach(LIBRARY_PATH ${LIBRARY_PATHS1} ${LIBRARY_PATHS2} ${LIBRARY_PATHS3})
 	file(RELATIVE_PATH LIBRARY_PATH ${CMAKE_SOURCE_DIR}/extension/ ${LIBRARY_PATH})
 	if("${CHROME_LIBRARIES}" STREQUAL "")
 		set(CHROME_LIBRARIES  "{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
 	else()
 		set(CHROME_LIBRARIES  "${CHROME_LIBRARIES},{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
 	endif()
-endforeach()
-
-# Firefox plugin paths
-file(GLOB_RECURSE LIBRARY_PATHS ${CMAKE_SOURCE_DIR}/extension/platform/*)
-foreach(LIBRARY_PATH ${LIBRARY_PATHS})
-	file(RELATIVE_PATH LIBRARY_PATH ${CMAKE_SOURCE_DIR}/extension/platform ${LIBRARY_PATH})
-	if("${FIREFOX_LIBRARIES}" STREQUAL "")
-		set(FIREFOX_LIBRARIES "<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
-	else()
-		set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
-	endif()
+	set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PATH}</em:targetPlatform>")
 endforeach()
 
 # Firefox contributors
@@ -69,14 +62,17 @@ configure_file("opera/config.xml.in" "${CMAKE_SOURCE_DIR}/extension/config.xml" 
 # Package generation
 if(UNIX)
 
-	get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
-	file(MAKE_DIRECTORY ${RELEASE_DIR}/platform)
-	file(MAKE_DIRECTORY ${RELEASE_DIR}/chrome)
-	file(REMOVE_RECURSE ${RELEASE_DIR}/chrome/*)
-	file(MAKE_DIRECTORY ${RELEASE_DIR}/firefox)
-	file(REMOVE_RECURSE ${RELEASE_DIR}/firefox/*)
-	file(MAKE_DIRECTORY ${RELEASE_DIR}/opera)
-	file(REMOVE_RECURSE ${RELEASE_DIR}/opera/*)
+	add_custom_target(ChromeExtension ALL
+		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
+	)
+
+	add_custom_target(FirefoxAddOn ALL
+		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
+	)
+
+	add_custom_target(OperaWidget ALL
+		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
+	)
 
 	# Find common files
 	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*)
@@ -100,12 +96,14 @@ if(UNIX)
 		${platform_files}
 	)
 	foreach(chrome_file ${chrome_files})
-		set(chrome_file_string "${chrome_file_string} ${chrome_file}")
+		file(RELATIVE_PATH chrome_file_relative ${CMAKE_CURRENT_SOURCE_DIR}/ ${chrome_file})
+		set(chrome_files_relative ${chrome_files_relative} "${RELEASE_DIR}/chrome/${chrome_file_relative}")
+		add_custom_command(
+			OUTPUT ${RELEASE_DIR}/chrome/${chrome_file_relative}
+			DEPENDS ${chrome_file}
+			COMMAND cmake -E copy ${chrome_file} ${RELEASE_DIR}/chrome/${chrome_file_relative}
+		)
 	endforeach()
-	add_custom_command(
-		OUTPUT ${RELEASE_DIR}/chrome
-		COMMAND cp -r -t ${RELEASE_DIR}/chrome ${chrome_file_string}
-	)
 
 	# Firefox files
 	file(GLOB_RECURSE firefox_files1 ${CMAKE_CURRENT_SOURCE_DIR}/firefox/locale/*)
@@ -119,12 +117,14 @@ if(UNIX)
 		${CMAKE_CURRENT_SOURCE_DIR}/firefox/overlay.xul
 	)
 	foreach(firefox_file ${firefox_files})
-		set(firefox_file_string "${firefox_file_string} ${firefox_file}")
+		file(RELATIVE_PATH firefox_file_relative ${CMAKE_CURRENT_SOURCE_DIR}/ ${firefox_file})
+		set(firefox_files_relative ${firefox_files_relative} "${RELEASE_DIR}/firefox/${firefox_file_relative}")
+		add_custom_command(
+			OUTPUT ${RELEASE_DIR}/firefox/${firefox_file_relative}
+			DEPENDS ${firefox_file}
+			COMMAND cmake -E copy ${firefox_file} ${RELEASE_DIR}/firefox/${firefox_file_relative}
+		)
 	endforeach()
-	add_custom_command(
-		OUTPUT ${RELEASE_DIR}/firefox
-		COMMAND cp -r -t ${RELEASE_DIR}/firefox ${firefox_file_string}
-	)
 
 	# Opera files
 	set(opera_files
@@ -132,48 +132,45 @@ if(UNIX)
 		${common_files}
 	)
 	foreach(opera_file ${opera_files})
-		set(opera_file_string "${opera_file_string} ${opera_file}")
+		file(RELATIVE_PATH opera_file_relative ${CMAKE_CURRENT_SOURCE_DIR}/ ${opera_file})
+		set(opera_files_relative ${opera_files_relative} "${RELEASE_DIR}/opera/${opera_file_relative}")
+		add_custom_command(
+			OUTPUT ${RELEASE_DIR}/opera/${opera_file_relative}
+			DEPENDS ${opera_file}
+			COMMAND cmake -E copy ${opera_file} ${RELEASE_DIR}/opera/${opera_file_relative}
+		)
 	endforeach()
-	add_custom_command(
-		OUTPUT ${RELEASE_DIR}/opera
-		COMMAND cp -r -t ${RELEASE_DIR}/opera ${opera_file_string}
-	)
 
 	# Chrome package build
 	add_custom_command(
 		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
-		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/extension/chrome
+		DEPENDS ${chrome_files_relative}
+		WORKING_DIRECTORY ${RELEASE_DIR}/chrome
 		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
 		COMMAND crxmake --extension-output=${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
-				--pack-extension=${CMAKE_SOURCE_DIR}/extension/chrome --pack-extension-key=${CMAKE_SOURCE_DIR}/conetserv.pem
-	)
-
-	add_custom_target(ChromeExtension ALL
-		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
+		                --pack-extension=${RELEASE_DIR}/chrome
+		                --pack-extension-key=${CMAKE_SOURCE_DIR}/conetserv.pem
+		COMMENT "Generating Chrome Exension into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx"
 	)
 
 	# Firefox package build
 	add_custom_command(
 		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
-		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/extension/firefox
+		DEPENDS ${firefox_files_relative}
+		WORKING_DIRECTORY ${RELEASE_DIR}/firefox
 		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
-		COMMAND zip -q ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi *
-	)
-
-	add_custom_target(FirefoxAddOn ALL
-		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
+		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi *
+		COMMENT "Generating Firefox Add-on into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi"
 	)
 
 	# Opera package build
 	add_custom_command(
 		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
-		WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/extension/opera
+		DEPENDS ${opera_files_relative}
+		WORKING_DIRECTORY ${RELEASE_DIR}/opera
 		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
-		COMMAND zip -q ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt *
-	)
-
-	add_custom_target(OperaWidget ALL
-		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
+		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt *
+		COMMENT "Generating Opera Widget into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt"
 	)
 
 endif()
