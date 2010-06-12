@@ -1,7 +1,7 @@
 # CoNetServ (Complex Network Services) project
 project("CoNetServ")
 set(MAJOR_VERSION 1)
-set(MINOR_VERSION 2)
+set(MINOR_VERSION 3)
 set(PATCH_VERSION 0)
 
 # CMake
