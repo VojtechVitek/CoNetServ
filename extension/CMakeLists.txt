@@ -10,12 +10,11 @@ else()
 	set(BUILD_DATE "1970-01-01")
 endif()
 
-# FIXME: Make release manifests separatelly - DO NOT COPY debug files
 # Chrome and Firefox plugin paths
-file(GLOB_RECURSE LIBRARY_PATHS1 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.dylib)
+file(GLOB_RECURSE LIBRARY_PATHS1 ${RELEASE_DIR}/plugins/*/np${PROJECT_NAME}.dylib)
 string(REGEX MATCH "^.*/np${PROJECT_NAME}[.]plugin" LIBRARY_PATHS1 "${LIBRARY_PATHS1}")
-file(GLOB_RECURSE LIBRARY_PATHS2 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.dll)
-file(GLOB_RECURSE LIBRARY_PATHS3 ${CMAKE_SOURCE_DIR}/extension/platform/*/np${PROJECT_NAME}.so)
+file(GLOB_RECURSE LIBRARY_PATHS2 ${RELEASE_DIR}/plugins/*/np${PROJECT_NAME}.dll)
+file(GLOB_RECURSE LIBRARY_PATHS3 ${RELEASE_DIR}/plugins/*/np${PROJECT_NAME}.so)
 foreach(LIBRARY_PATH ${LIBRARY_PATHS1} ${LIBRARY_PATHS2} ${LIBRARY_PATHS3})
 	file(RELATIVE_PATH LIBRARY_PATH ${CMAKE_SOURCE_DIR}/extension/ ${LIBRARY_PATH})
 	if("${CHROME_LIBRARIES}" STREQUAL "")
@@ -179,5 +178,9 @@ if(UNIX)
 		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt *
 		COMMENT "Generating Opera Widget into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt"
 	)
+
+else()
+
+	message(STATUS "Not generating browser packages. Only UNIX is supported.")
 
 endif()
