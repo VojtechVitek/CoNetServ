@@ -77,13 +77,17 @@ if(UNIX)
 	)
 
 	# Find common files
-	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*)
-	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*)
-	file(GLOB_RECURSE common_files3 ${CMAKE_CURRENT_SOURCE_DIR}/images/*)
+	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*.js)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.css)
+	file(GLOB_RECURSE common_files3 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.png)
+	file(GLOB_RECURSE common_files4 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg)
+	file(GLOB_RECURSE common_files5 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.gif)
 	set(common_files
 		${common_files1}
 		${common_files2}
 		${common_files3}
+		${common_files4}
+		${common_files5}
 		${CMAKE_CURRENT_SOURCE_DIR}/index.html
 		${CMAKE_CURRENT_SOURCE_DIR}/about.html
 	)
@@ -149,10 +153,11 @@ if(UNIX)
 		DEPENDS ${chrome_files_relative}
 		WORKING_DIRECTORY ${RELEASE_DIR}/chrome
 		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
+		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.zip *
 		COMMAND crxmake --extension-output=${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
 		                --pack-extension=${RELEASE_DIR}/chrome
 		                --pack-extension-key=${CMAKE_SOURCE_DIR}/conetserv.pem
-		COMMENT "Generating Chrome Exension into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx"
+		COMMENT "Generating Chrome Exension into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx (.zip)"
 	)
 
 	# Firefox package build
