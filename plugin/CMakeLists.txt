@@ -74,18 +74,18 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 else()
 
 	# Create Mozilla-like platform path in debug directory
-	file(MAKE_DIRECTORY ${DEBUG_DIR}/plugins/${MOZILLA_PATH}/)
+	file(MAKE_DIRECTORY ${DEBUG_DIR}/${MOZILLA_PATH}/)
 
 	add_custom_command(
-		OUTPUT  ${DEBUG_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
+		OUTPUT  ${DEBUG_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 		COMMAND ${CMAKE_COMMAND} -E copy
-		${CoNetServLibFile} ${DEBUG_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
+		${CoNetServLibFile} ${DEBUG_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 		DEPENDS ${CoNetServLibFile}
-		COMMENT "Copying debug shared library into: ${DEBUG_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}"
+		COMMENT "Copying debug shared library into: ${DEBUG_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}"
 	)
 
 	add_custom_target(PluginCopy ALL
-		DEPENDS ${DEBUG_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
+		DEPENDS ${DEBUG_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 	)
 
 	# Create debug program
