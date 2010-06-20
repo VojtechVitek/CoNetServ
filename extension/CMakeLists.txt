@@ -11,11 +11,15 @@ else()
 endif()
 
 # Chrome and Firefox plugin paths
-file(GLOB_RECURSE LIBRARY_PATHS1 ${RELEASE_DIR}/plugins/*/np${PROJECT_NAME}.dylib)
+set(CHROME_LIBRARIES "")
+set(FIREFOX_LIBRARIES "")
+file(GLOB_RECURSE LIBRARY_PATHS1 ${CMAKE_SOURCE_DIR}/extension/platform/Darwin_*/np${PROJECT_NAME}.dylib)
 string(REGEX MATCH "^.*/np${PROJECT_NAME}[.]plugin" LIBRARY_PATHS1 "${LIBRARY_PATHS1}")
-file(GLOB_RECURSE LIBRARY_PATHS2 ${RELEASE_DIR}/plugins/*/np${PROJECT_NAME}.dll)
-file(GLOB_RECURSE LIBRARY_PATHS3 ${RELEASE_DIR}/plugins/*/np${PROJECT_NAME}.so)
+file(GLOB_RECURSE LIBRARY_PATHS2 ${CMAKE_SOURCE_DIR}/extension/platform/WINNT_*/np${PROJECT_NAME}.dll)
+file(GLOB_RECURSE LIBRARY_PATHS3 ${CMAKE_SOURCE_DIR}/extension/platform/Linux_*/np${PROJECT_NAME}.so)
 foreach(LIBRARY_PATH ${LIBRARY_PATHS1} ${LIBRARY_PATHS2} ${LIBRARY_PATHS3})
+	# Get rid of double slash, probably bug in CMake file(GLOB_RECURSE ..)
+	string(REGEX REPLACE "[/]+" "/" LIBRARY_PATH "${LIBRARY_PATH}")
 	file(RELATIVE_PATH LIBRARY_PATH ${CMAKE_SOURCE_DIR}/extension/ ${LIBRARY_PATH})
 	if("${CHROME_LIBRARIES}" STREQUAL "")
 		set(CHROME_LIBRARIES  "{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
@@ -50,11 +54,11 @@ foreach(AUTHOR ${AUTHORS})
 endforeach()
 
 # Configure about page
-message(STATUS "Configuring about page")
+message(STATUS "Configuring About page")
 configure_file("about.html.in" "${CMAKE_SOURCE_DIR}/extension/about.html" IMMEDIATE @ONLY)
 
 # Configure debugging package files:
-message(STATUS "Configuring browser-specific manifest files")
+message(STATUS "Configuring DEBUG browser-specific manifest files")
 configure_file("chrome/manifest.json.in" "${CMAKE_SOURCE_DIR}/extension/manifest.json" IMMEDIATE @ONLY)
 configure_file("firefox/chrome.manifest.in" "${CMAKE_SOURCE_DIR}/extension/chrome.manifest" IMMEDIATE @ONLY)
 configure_file("firefox/install.rdf.in" "${CMAKE_SOURCE_DIR}/extension/install.rdf" IMMEDIATE @ONLY)
@@ -62,6 +66,34 @@ configure_file("opera/config.xml.in" "${CMAKE_SOURCE_DIR}/extension/config.xml" 
 
 # Package generation
 if(UNIX)
+
+	# Chrome and Firefox release plugin paths
+	set(CHROME_LIBRARIES "")
+	set(FIREFOX_LIBRARIES "")
+	file(GLOB_RECURSE LIBRARY_PATHS1 ${RELEASE_DIR}/plugins/platform/Darwin_*/np${PROJECT_NAME}.dylib)
+	string(REGEX MATCH "^.*/np${PROJECT_NAME}[.]plugin" LIBRARY_PATHS1 "${LIBRARY_PATHS1}")
+	file(GLOB_RECURSE LIBRARY_PATHS2 ${RELEASE_DIR}/plugins/platform/WINNT_*/np${PROJECT_NAME}.dll)
+	file(GLOB_RECURSE LIBRARY_PATHS3 ${RELEASE_DIR}/plugins/platform/Linux_*/np${PROJECT_NAME}.so)
+	foreach(LIBRARY_PATH ${LIBRARY_PATHS1} ${LIBRARY_PATHS2} ${LIBRARY_PATHS3})
+		# Get rid of double slash, probably bug in CMake file(GLOB_RECURSE ..)
+		string(REGEX REPLACE "[/]+" "/" LIBRARY_PATH "${LIBRARY_PATH}")
+		file(RELATIVE_PATH LIBRARY_PATH ${RELEASE_DIR}/plugins/ ${LIBRARY_PATH})
+		if("${CHROME_LIBRARIES}" STREQUAL "")
+			set(CHROME_LIBRARIES  "{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
+		else()
+			set(CHROME_LIBRARIES  "${CHROME_LIBRARIES},{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
+		endif()
+		string(REGEX REPLACE "^platform[/]([^/]+).+$" "\\1" LIBRARY_PLATFORM "${LIBRARY_PATH}")
+		set(FIREFOX_LIBRARIES "${FIREFOX_LIBRARIES}<em:targetPlatform>${LIBRARY_PLATFORM}</em:targetPlatform>")
+	endforeach()
+
+	# Configure release package files:
+	message(STATUS "Configuring RELEASE browser-specific manifest files")
+	configure_file("chrome/manifest.json.in" "${RELEASE_DIR}/chrome/manifest.json" IMMEDIATE @ONLY)
+	configure_file("firefox/chrome.manifest.in" "${RELEASE_DIR}/firefox/chrome.manifest" IMMEDIATE @ONLY)
+	configure_file("firefox/install.rdf.in" "${RELEASE_DIR}/firefox/install.rdf" IMMEDIATE @ONLY)
+	configure_file("opera/config.xml.in" "${RELEASE_DIR}/opera/config.xml" IMMEDIATE @ONLY)
+
 
 	add_custom_target(ChromeExtension ALL
 		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
@@ -96,7 +128,6 @@ if(UNIX)
 
 	# Chrome files
 	set(chrome_files
-		${CMAKE_CURRENT_SOURCE_DIR}/manifest.json
 		${common_files}
 		${platform_files}
 	)
@@ -113,8 +144,6 @@ if(UNIX)
 	# Firefox files
 	file(GLOB_RECURSE firefox_files1 ${CMAKE_CURRENT_SOURCE_DIR}/firefox/locale/*)
 	set(firefox_files
-		${CMAKE_CURRENT_SOURCE_DIR}/install.rdf
-		${CMAKE_CURRENT_SOURCE_DIR}/chrome.manifest
 		${common_files}
 		${platform_files}
 		${firefox_files1}
@@ -133,7 +162,6 @@ if(UNIX)
 
 	# Opera files
 	set(opera_files
-		${CMAKE_CURRENT_SOURCE_DIR}/config.xml
 		${common_files}
 	)
 	foreach(opera_file ${opera_files})
