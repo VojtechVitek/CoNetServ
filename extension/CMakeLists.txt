@@ -124,7 +124,7 @@ if(UNIX)
 	)
 
 	# Find platform files
-	file(GLOB_RECURSE platform_files ${CMAKE_CURRENT_SOURCE_DIR}/platform/*)
+	file(GLOB_RECURSE platform_files ${RELEASE_DIR}/plugins/*)
 
 	# Chrome files
 	set(chrome_files
