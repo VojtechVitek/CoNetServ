@@ -41,6 +41,7 @@ Extension:
 [x] Repair long output in console
 [x] OPTIONS: Multiple skins implementation
 [ ] OPTIONS: ping console - unlimited/ limited
+[ ] OPTIONS: Quick buttons to settings/options from Chrome and Firefox
 [ ] Service parser for http://www.hostip.info
 [ ] Service parser for http://www.robtex.com/ipinfo.js
 [ ] Country flags images from http://flags.redpixart.com/czech_republic/
