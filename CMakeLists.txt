@@ -15,8 +15,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakePlugins)
 # The final packages (which contains of more platform builds) are made in the first
 # level build directory, eg. build/.
 get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
-if("${RELEASE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-	message(FATAL_ERROR "Please, build project in the second level build directory, eg. build/${CMAKE_SYSTEM_NAME}.")
+get_filename_component(CMAKE_SOURCE_DIR_TEST ${CMAKE_BINARY_DIR}/../../ ABSOLUTE)
+if(NOT "${CMAKE_SOURCE_DIR_TEST}" STREQUAL "${CMAKE_SOURCE_DIR}")
+	message(FATAL_ERROR "Please, build project in sub-subdirectory of your source code, eg. build/${CMAKE_SYSTEM_NAME}.")
 endif()
 
 # Debug extensions are built in directory extension (for simple development process)
