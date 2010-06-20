@@ -16,6 +16,7 @@ Extension:
  * Redesign - divide layout into local services
    and external info (be ready for more features,
    eg. external services and local info)
+ * New set of icons (by Rafal Ramatowski)
  * Add settings tab (based on LocalStorage)
  * Possibility to autorun services on startup
  * Selectable extension tab as front-page
