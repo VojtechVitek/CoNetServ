@@ -47,28 +47,28 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	set(RELEASE_PACK ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-plugins.zip)
 
 	# Create Mozilla-like platform path in release directory
-	file(MAKE_DIRECTORY ${RELEASE_DIR}/plugins/${MOZILLA_PATH}/)
+	file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH}/)
 
 	if(APPLE)
 		include(apple/CMakeLists.txt)
 	endif()
 
 	add_custom_command(
-		OUTPUT  ${RELEASE_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
+		OUTPUT  ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 		COMMAND ${CMAKE_COMMAND} -E copy
-		${CoNetServLibFile} ${RELEASE_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
+		${CoNetServLibFile} ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 		DEPENDS ${CoNetServLibFile}
-		COMMENT "Copying release shared library into: ${RELEASE_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}"
+		COMMENT "Copying release shared library into: ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}"
 	)
 	add_custom_command(
 		OUTPUT  ${RELEASE_PACK}
-		WORKING_DIRECTORY ${RELEASE_DIR}/plugins
+		WORKING_DIRECTORY ${RELEASE_DIR}
 		COMMAND zip -q -r ${RELEASE_PACK} *
-		DEPENDS ${RELEASE_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
+		DEPENDS ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 		COMMENT "Packing release plugin binaries into: ${RELEASE_PACK}"
 	)
 	add_custom_target(PluginReleasePack ALL
-		DEPENDS ${RELEASE_DIR}/plugins/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName} ${RELEASE_PACK}
+		DEPENDS ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName} ${RELEASE_PACK}
 	)
 
 else()
