@@ -33,9 +33,9 @@ $(document).ready(function(){
 
    /* console text-boxes */
    pingConsole = new console("local-ping-console");
-   pingConsole.maxRows = 16;
+   pingConsole.maxRows = 15;
    ping6Console = new console("local-ping6-console");
-   ping6Console.maxRows = 16;
+   ping6Console.maxRows = 15;
    tracerouteConsole = new console("local-tracert-console");
    traceroute6Console = new console("local-tracert6-console");
    whoisConsole = new console("local-whois-console");
@@ -132,7 +132,7 @@ function startExternalInfo()
             $("#location").append(
                '<li class="ui-corner-all"><strong>' +
                (result.city ? result.city + ', ' : '') +
-               (result.region ? + result.region + ', ' : '') +
+               (result.region ? result.region + ', ' : '') +
                (result.country ? result.country : '') +
                (result.countryCode ? ' [' + result.countryCode + ']' : '') +
                '</strong> ' +
@@ -340,7 +340,6 @@ function startPing()
              Plot.localPingData.reset();
              pingInterval = window.setInterval("readPing()", 500);
              readPing();
-
 
              Ui.addIcons(".local", ".ping", stopPing);
          } else {

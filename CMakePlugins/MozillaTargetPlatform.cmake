@@ -30,4 +30,4 @@ else()
 endif()
 
 set(MOZILLA_TARGET "${MOZILLA_PLATFORM}_${MOZILLA_ARCH}-${MOZILLA_COMPILER}")
-set(MOZILLA_PATH   "platform/${MOZILLA_TARGET}/plugins/")
+set(MOZILLA_PATH   "platform/${MOZILLA_TARGET}/plugins")

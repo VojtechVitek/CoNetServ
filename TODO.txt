@@ -1,9 +1,16 @@
+CURRENT PLANS
+=============
+
 General:
 [ ] Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
 [x] Project: Switch to CMake build system
+[ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
 [ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
 [ ] CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
-[ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
+[x] CMake: Automatic generation of extension packages for Firefox, Chrome and Opera browser
+[ ] CMake: Regenerate manifest files after target PluginCopy
+[ ] CMake(WIN32): Generate authors from AUTHORS.txt
+[ ] CMake: Generate packages with plugins from Release directory instead of Debug one
 
 Plugin:
 [ ] Windows: reimplement locale support
@@ -15,13 +22,14 @@ Plugin:
 Extension:
 [x] Plotting: rewrite into OOP
 [x] Local Info Tab: rename to External Host Info, change layout
-[ ] Settings: implement for different web-browsers (using native API)
+[x] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [ ] Network tools: check availability and print additional info (installation, ..)
-[ ] Firefox: automatic icon in toolbar
+[x] Firefox: automatic icon in toolbar
 [x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
 [ ] TRACEROUTE: improve plotting
 [x] WHOIS: use only first and second domain names
+[ ] WHOIS: bug when TLD constists of two parts, eg. *.com.uk
 [x] Console output: improve visibility of time values
 [ ] External services: ping and traceroute info from public Looking glass servers
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
@@ -33,7 +41,28 @@ Extension:
 [x] Repair long output in console
 [x] OPTIONS: Multiple skins implementation
 [ ] OPTIONS: ping console - unlimited/ limited
+[ ] OPTIONS: Quick buttons to settings/options from Chrome and Firefox
 [ ] Service parser for http://www.hostip.info
 [ ] Service parser for http://www.robtex.com/ipinfo.js
 [ ] Country flags images from http://flags.redpixart.com/czech_republic/
 [ ] Country map charts http://code.google.com/apis/chart/docs/gallery/map_charts.html#introduction
+
+
+FUTURE PLANS
+============
+
+CoNetServ v2.0+
+* Object-oriented API to JS (availability for 3rd party)
+* Independent objects to run programs and commands with options
+* User-friendly error messages
+* Installation guides for missing programs (OS, platform, distro)
+
+CoNetServ v3.0+
+* External services (Ping, Traceroute, Whois etc. from public servers)
+* Local info (list local interfaces and it's MAC address, IPv4/IPv6 adress, mask, default route, gateway, ..)
+* Ping/Traceroute through specified interface (ethernet, wifi, ..)
+* Nmap (list computers in local network)
+
+CoNetServ v4.0+
+* Distance graph of neighboaring computers (using nmap and auto-ping)
+* Download/upload data transfer meter with plots, current speed

@@ -80,7 +80,7 @@ Services.service.push({
                if (google.loader.ClientLocation.address.country_code)
                   result.countryCode = google.loader.ClientLocation.address.country_code;
 
-               if (google.loader.ClientLocation.address.country)
+               if (google.loader.ClientLocation.address.country && google.loader.ClientLocation.address.country != '-' && google.loader.ClientLocation.address.country != 'NaN')
                   result.country = google.loader.ClientLocation.address.country;
 
                if (google.loader.ClientLocation.address.city && google.loader.ClientLocation.address.city != '-' && google.loader.ClientLocation.address.city != 'NaN')
@@ -147,7 +147,7 @@ Services.service.push({
          }
 
          if (data.address) {
-            if (data.address.country_code)
+            if (data.address.country_code && data.address.country_code != '-' && data.address.country_code != 'NaN')
                result.countryCode = data.address.country_code;
 
             if (data.address.country)
@@ -324,8 +324,10 @@ Services.service.push({
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+
          if (!result.externIpv4)
             return false;
+
          this.data.searchstr = result.externIpv4;
          return true;
       },
@@ -352,6 +354,9 @@ Services.service.push({
 
 /* queue of services to be run */
 Services.queue = new Array();
+
+/* storage of services results */
+Services.result = new Object();
 
 /* number of running services */
 Services.running = 0;
@@ -380,7 +385,6 @@ Services.run = function() {
          /* context */
          This: this,
          Request: Request,
-         $: $, // NOTE: Context bug in Firefox 3.5? jQuery should be global
          /* ajax settings */
          type: Request.type,
          url: Request.url,
@@ -389,11 +393,12 @@ Services.run = function() {
          /* success */
          success: function(data) {
             var result = this.Request.parse(data);
-            this.$.extend(this.This.service[this.Request.ServiceId].result, result);
-            this.$.extend(this.This.result, result);
+            $.extend(Services.result, result);
             this.This.result_callback(this.This.service[this.Request.ServiceId], result);
             if (--this.This.running == 0)
                this.This.stopped_callback();
+            else
+               Services.run();
          },
          /* error */
          error: function() {
@@ -431,6 +436,7 @@ Services.start = function(started_callback, result_callback, stopped_callback) {
          this.queue.push(this.service[i].request[j]);
       }
    }
+
    /* try to run services from the queue */
    this.run();
 };

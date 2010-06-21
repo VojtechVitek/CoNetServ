@@ -21,22 +21,55 @@ var Plot = {
 
    /* options for flot library - ping and traceroute */
    optionsPing : {
-      lines: {show: true},
-      legend: {show: true, position: "sw", backgroundOpacity: 0.5},
-      points: {show: true},
-      xaxis: {tickDecimals: 0, tickSize: 1},
-      yaxis: {min: 0}
+      lines: {
+         show: true
+      },
+      legend: {
+         show: true,
+         position: "sw",
+         backgroundOpacity: 0.5
+      },
+      points: {
+         show: true
+      },
+      xaxis: {
+         tickDecimals: 0,
+         tickSize: 1
+      },
+      yaxis: {
+         min: 0
+      }
    },
 
    optionsTrace : {
-      lines: {show: true},
-      legend: {show: true, position: "nw", backgroundOpacity: 0.5},
-      points: {show: true},
-      xaxis: {zoomRange: [1, 10], panRange: [0, 30]},
-      yaxis: {zoomRange: [10, 1000]},
-      zoom: {interactive: true},
-      pan: {interactive: true, frameRate: 30},
-      valueLabels: {show: true}
+      lines: {
+         show: true
+      },
+      legend: {
+         show: true,
+         position: "nw",
+         backgroundOpacity: 0.5
+      },
+      points: {
+         show: true
+      },
+      xaxis: {
+         zoomRange: [1, 10],
+         panRange: [0, 30]
+         },
+      yaxis: {
+         zoomRange: [10, 1000]
+         },
+      zoom: {
+         interactive: true
+      },
+      pan: {
+         interactive: true,
+         frameRate: 30
+      },
+      valueLabels: {
+         show: true
+      }
    },
 
    colors : [],
@@ -131,17 +164,14 @@ var Plot = {
          var currentData = data.prevData.substr(0, npos);
          if($.client.os == "Windows")
          {
-            var regHead = /^\w+\s.*?\d+\.\d+\.\d+\.\d+.*/
-            alert(regHead.exec(currentData));
+            data.rowId++;
             pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
-            if(pingTime)
+            if(pingTime) {
                data.add(pingTime);
+            }
             else
             {
-               //!! TODO check on windows!!
-               /* control of response keywords */
-               if(!regHead.exec(currentData))
-               {
+               if(data.rowId > 3) {
                   data.add(null);
                }
             }
@@ -151,11 +181,11 @@ var Plot = {
             pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(currentData));
             if(pingTime)
             {
-          /* check for lost packets */
-          var actPingId = parseInt((/icmp_seq=\d+/i.exec(currentData))[0].substr(9));
-          while(actPingId != null && actPingId > ++data.prevId)
-                data.add(null);
-          data.add(pingTime);
+               /* check for lost packets */
+               var actPingId = parseInt((/icmp_seq=\d+/i.exec(currentData))[0].substr(9));
+               while(actPingId != null && actPingId > ++data.prevId)
+                  data.add(null);
+               data.add(pingTime);
             }
          }
          /* store remaining data */
@@ -265,11 +295,11 @@ var Plot = {
       else
       {
          if(fields[first+2] != "*")
-       label = fields[first+2];
+            label = fields[first+2];
          else
          {
-             if(fields[first+3] != "*")
-                label = fields[first+3];
+            if(fields[first+3] != "*")
+               label = fields[first+3];
          }
       }
 
@@ -286,61 +316,111 @@ var Plot = {
       var color = this.colors[Options.skin];
 
       $.plot(placeholder,
-       [ {data: data.max, label: "Max ["+ data.maxVal.toFixed(2) +"ms]", color: color.max, lines: {show: true, fill: 0.1}, points: {show: false}, shadowSize: 0},
-         {data: data.avrgs, label: "Avg ["+ data.avrgVal.toFixed(2) +"ms]", color: color.avrgs, points: {show: false}},
-         {data: data.min, label: "Min ["+ data.minVal.toFixed(2) +"ms]", color: color.min, lines: {show: true, fill: 0.3}, points: {show: false}, shadowSize: 0},
-         {data: data.rows, color: color.rows} ],
-       $.extend(true, {}, this.optionsPing, {
-          xaxis: {min: data.count - data.maxValues < 0 ? 0 : data.count - data.maxValues,
-                   max: data.count > 10? data.count + 1 : 11}
-       }));
+         [ {
+            data: data.max,
+            label: "Max ["+ data.maxVal.toFixed(2) +"ms]",
+            color: color.max,
+            lines: {
+               show: true,
+               fill: 0.1
+            },
+            points: {
+               show: false
+            },
+            shadowSize: 0
+         },
 
-       /* add label with percentage of lost packets */
-       placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: ' + data.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: ' + data.getLostPercent()+'%</div>');
-   },
+         {
+            data: data.avrgs,
+            label: "Avg ["+ data.avrgVal.toFixed(2) +"ms]",
+            color: color.avrgs,
+            points: {
+               show: false
+            }
+         },
 
-   /**
+         {
+         data: data.min,
+         label: "Min ["+ data.minVal.toFixed(2) +"ms]",
+         color: color.min,
+         lines: {
+            show: true,
+            fill: 0.3
+         },
+         points: {
+            show: false
+         },
+         shadowSize: 0
+      },
+
+      {
+         data: data.rows,
+         color: color.rows
+         } ],
+      $.extend(true, {}, this.optionsPing, {
+         xaxis: {
+            min: data.count - data.maxValues < 0 ? 0 : data.count - data.maxValues,
+            max: data.count > 10? data.count + 1 : 11
+            }
+      }));
+
+   /* add label with percentage of lost packets */
+   placeholder.append('<div class = "lostPacketsLabelLight">Packet loss: ' + data.getLostPercent()+'%</div><div class = "lostPacketsLabel">Packet loss: ' + data.getLostPercent()+'%</div>');
+},
+
+/**
     * Creates traceroute plot
     * @param placeholder defines div for plot to be drawn into
     * @param data defines TraceData object with data to be drawn
     */
-   _plotTracert : function(placeholder, data) {
-      var plotCont;
-      var color = this.colors[Options.skin];
+_plotTracert : function(placeholder, data) {
+   var plotCont;
+   var color = this.colors[Options.skin];
 
-      data.changed = 0;
+   data.changed = 0;
 
 
-      plotCont = $.plot(placeholder, [{data: data.rows, label: "Position", color: color.rows}], $.extend(true, {}, this.optionsTrace, {
-        xaxis: {tickDecimals: 0, tickSize: 1}
-      }));
+   plotCont = $.plot(placeholder, [{
+      data: data.rows,
+      label: "Position",
+      color: color.rows
+      }], $.extend(true, {}, this.optionsTrace, {
+      xaxis: {
+         tickDecimals: 0,
+         tickSize: 1
+      }
+   }));
 
-      // Functions for zooming/paning plots
-      placeholder.bind('plotpan', function (event, plot) {
-         plot.getPlaceholder().find(".valueLabel").remove();
-         plot.getPlaceholder().find(".valueLabelLight").remove();
-         plot.draw();
+   // Functions for zooming/paning plots
+   placeholder.bind('plotpan', function (event, plot) {
+      plot.getPlaceholder().find(".valueLabel").remove();
+      plot.getPlaceholder().find(".valueLabelLight").remove();
+      plot.draw();
+   });
+   placeholder.bind('plotzoom', function (event, plot) {
+      plot.getPlaceholder().find(".valueLabel").remove();
+      plot.getPlaceholder().find(".valueLabelLight").remove();
+      plot.draw();
+   });
+
+   var c = plotCont.offset();
+   c.left = 300;
+   c.top = 100;
+
+   /* buttons for zooming in and out */
+   $('<span class="ui-icon ui-icon-circle-plus zoomin"></span>').appendTo(placeholder).click(function (e) {
+      e.preventDefault();
+      plotCont.zoom({
+         center: c
       });
-      placeholder.bind('plotzoom', function (event, plot) {
-         plot.getPlaceholder().find(".valueLabel").remove();
-         plot.getPlaceholder().find(".valueLabelLight").remove();
-         plot.draw();
+   });
+   $('<span class="ui-icon ui-icon-circle-minus zoomout"></span>').appendTo(placeholder).click(function (e) {
+      e.preventDefault();
+      plotCont.zoomOut({
+         center: c
       });
-
-      var c = plotCont.offset();
-       c.left = 300;
-       c.top = 100;
-
-      /* buttons for zooming in and out */
-      $('<span class="ui-icon ui-icon-circle-plus zoomin"></span>').appendTo(placeholder).click(function (e) {
-            e.preventDefault();
-            plotCont.zoom({center: c});
-      });
-      $('<span class="ui-icon ui-icon-circle-minus zoomout"></span>').appendTo(placeholder).click(function (e) {
-            e.preventDefault();
-            plotCont.zoomOut({center: c});
-      });
-   }
+   });
+}
 }
 
 /* ping time data object*/
@@ -372,18 +452,18 @@ function pData() {
 
       if( val == null)
       {
-      	 this.actVal = 0;
-      	 this.rows.push(null);
-      	 this.lost++;
+         this.actVal = 0;
+         this.rows.push(null);
+         this.lost++;
       }
       else
       {
-      	 this.actVal = parseFloat(val);
-      	 this.rows.push([this.count, this.actVal]);
-      	 this.sum += this.actVal;
+         this.actVal = parseFloat(val);
+         this.rows.push([this.count, this.actVal]);
+         this.sum += this.actVal;
 
-      	 this.minVal = (this.minVal == 0 ? this.actVal : ( this.actVal < this.minVal ? this.actVal : this.minVal));
-      	 this.maxVal = (this.maxVal == 0 ? this.actVal : ( this.actVal > this.maxVal ? this.actVal : this.maxVal));
+         this.minVal = (this.minVal == 0 ? this.actVal : ( this.actVal < this.minVal ? this.actVal : this.minVal));
+         this.maxVal = (this.maxVal == 0 ? this.actVal : ( this.actVal > this.maxVal ? this.actVal : this.maxVal));
       }
       this.avrgVal = this.sum/(this.count-this.lost);
 
@@ -393,23 +473,30 @@ function pData() {
       //limit maximum data count in field
       if(this.rows.length > this.maxValues)
       {
-	        this.rows.shift();
+         this.rows.shift();
       }
       if(this.avrgs.length > this.maxValues)
       {
-      	 this.avrgs.shift();
-      	 this.min.shift();
-      	 this.max.shift();
+         this.avrgs.shift();
+         this.min.shift();
+         this.max.shift();
       }
    };
 
    /* sets data for reploting */
-   this.touch = function (){this.changed = true;};
+   this.touch = function (){
+      this.changed = true;
+   };
 
    /* resets object to initial state */
    this.reset = function() {
       this.count = this.prevId = this.sum = this.minVal = this.maxVal = this.avrgVal = this.actVal = this.lost = 0;
-      this.rows = [];this.min = [];this.max = [];this.avrgs=[];this.prevData = "";this.changed = 1;
+      this.rows = [];
+      this.min = [];
+      this.max = [];
+      this.avrgs=[];
+      this.prevData = "";
+      this.changed = 1;
    };
 
    /* returns percentage of lost packets */
@@ -438,12 +525,17 @@ function tData() {
    };
 
    /* sets data for reploting */
-   this.touch = function (){this.changed = true;};
+   this.touch = function (){
+      this.changed = true;
+   };
 
    /* resets object to initial state */
    this.reset = function() {
       this.count = this.prevId = 0;
-      this.rows = [];this.labels = [];this.prevData = "";this.changed = 1;
+      this.rows = [];
+      this.labels = [];
+      this.prevData = "";
+      this.changed = 1;
    };
 }
 

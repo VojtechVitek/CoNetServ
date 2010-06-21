@@ -247,12 +247,22 @@ div.valueLabel {
  **************************************************************************/
 
 #aboutTab {
-   background: url("../images/icon128.jpg") no-repeat 550px 372px;
    height: 480px;
+   font-size: 12px;
+}
+
+#aboutTab .column {
+   width: 320px;
+   float: left;
+}
+
+#aboutTab .block {
+   margin: 0 10px 10px 0;
+   padding: 5px;
 }
 
 #aboutTab h2 {
-   font-size: 30px;
+   font-size: 24px;
    margin-top: 5px;
    margin-bottom: 5px;
 }
@@ -264,26 +274,30 @@ div.valueLabel {
 }
 
 #aboutTab ul {
+   list-style-type: none;
+   padding-left: 10px;
    padding-left: 20px;
 }
 
 #aboutTab li {
-   color: #2779AA;
-   margin: none;
-}
-
-#aboutTab table {
-   width: 600px;
-}
-
-#aboutTab table td {
-   vertical-align: top;
+   margin: 0;
 }
 
 #aboutTab p {
-   color: #2779AA;
+   margin-left: 10px;
 }
 
 #aboutTab .slogan {
+   font-weight: bold;
    font-size: 16px;
+}
+
+#about-logo {
+   background: url("../images/icon128.png") no-repeat;
+   height: 128px;
+   width: 128px;
+   position: absolute;
+   right: 20px;
+   bottom: 20px;
+   z-index: auto;
 }

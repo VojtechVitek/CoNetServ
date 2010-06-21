@@ -1,13 +1,27 @@
 # CoNetServ (Complex Network Services) project
 project("CoNetServ")
 set(MAJOR_VERSION 1)
-set(MINOR_VERSION 2)
-set(PATCH_VERSION 0)
+set(MINOR_VERSION 3)
+set(PATCH_VERSION 1)
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 set(CMAKE_COLOR_MAKEFILE ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakePlugins)
+
+# Release extension packages and/or plugins are built in first level build directory
+# This means, that developer should build project in second level build directory,
+# eg. build/Linux or build/Windows.
+# The final packages (which contains of more platform builds) are made in the first
+# level build directory, eg. build/.
+get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
+get_filename_component(CMAKE_SOURCE_DIR_TEST ${CMAKE_BINARY_DIR}/../../ ABSOLUTE)
+if(NOT "${CMAKE_SOURCE_DIR_TEST}" STREQUAL "${CMAKE_SOURCE_DIR}")
+	message(FATAL_ERROR "Please, build project in sub-subdirectory of your source code, eg. build/${CMAKE_SYSTEM_NAME}.")
+endif()
+
+# Debug extensions are built in directory extension (for simple development process)
+get_filename_component(DEBUG_DIR ${CMAKE_SOURCE_DIR}/extension/ ABSOLUTE)
 
 # Build type
 # -DCMAKE_BUILD_TYPE=Release
@@ -32,7 +46,7 @@ set(PROJECT_COMPANY "FRES-Solutions")
 set(PROJECT_COPY "(c) 2010 ${PROJECT_COMPANY}")
 set(PROJECT_HOSTNAME "fres-solutions")
 set(PROJECT_HOST_TLD "com")
-set(PROJECT_HOST "${PROJECT_HOSTNAME}${PROJECT_HOST_TLD}")
+set(PROJECT_HOST "${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 set(PROJECT_URL "http://www.${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}/${PROJECT_NAME}")
 
 # Exension strings
