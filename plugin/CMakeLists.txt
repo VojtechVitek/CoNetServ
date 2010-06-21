@@ -62,7 +62,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 	)
 	add_custom_command(
 		OUTPUT  ${RELEASE_PACK}
-		WORKING_DIRECTORY ${RELEASE_DIR}
+		WORKING_DIRECTORY ${RELEASE_DIR}/platform
 		COMMAND zip -q -r ${RELEASE_PACK} *
 		DEPENDS ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 		COMMENT "Packing release plugin binaries into: ${RELEASE_PACK}"
