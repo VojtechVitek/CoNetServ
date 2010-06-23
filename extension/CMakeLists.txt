@@ -111,11 +111,14 @@ if(UNIX)
 	add_dependencies(Packages ChromeExtension FirefoxAddOn OperaWidget)
 
 	# Find common files
-	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*.js)
 	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.css)
-	file(GLOB_RECURSE common_files3 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.png)
-	file(GLOB_RECURSE common_files4 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.gif)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.jpg)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.png)
 	file(GLOB_RECURSE common_files5 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.gif)
+	file(GLOB_RECURSE common_files4 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg)
+	file(GLOB_RECURSE common_files3 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.png)
+	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*.js)
 	set(common_files
 		${common_files1}
 		${common_files2}
