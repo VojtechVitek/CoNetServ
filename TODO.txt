@@ -2,7 +2,9 @@ CURRENT PLANS
 =============
 
 General:
-[ ] Versions: release for official repositories with update support (Google Chrome, Mozilla Firefox, additionally Opera and Linux distros)
+[x] Release Add-on for Mozilla Firefox official repository.
+[x] Release Extension for Google Chrome official repository.
+[ ] Release Widget for Opera official repository.
 [x] Project: Switch to CMake build system
 [ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
 [ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
@@ -64,5 +66,7 @@ CoNetServ v3.0+
 * Nmap (list computers in local network)
 
 CoNetServ v4.0+
-* Distance graph of neighboaring computers (using nmap and auto-ping)
+* Translations (JavaScript based, option in settings)
+* Distance graph of neighboaring computers (using canvas, nmap and auto-ping)
 * Download/upload data transfer meter with plots, current speed
+* Release as Safari 5+ extension
