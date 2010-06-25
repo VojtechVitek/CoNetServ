@@ -20,6 +20,7 @@ Plugin:
 [ ] Plugin API: third-party availability, version system
 [ ] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
 [ ] Local Network Info: nmap to show neighboaring computers
+[ ] Services: Add DIG service
 
 Extension:
 [x] Plotting: rewrite into OOP
