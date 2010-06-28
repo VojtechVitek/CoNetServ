@@ -21,6 +21,7 @@ Plugin:
 [ ] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
 [ ] Local Network Info: nmap to show neighboaring computers
 [x] Fix IPv6 colons as valid address
+[ ] Services: Add DIG service
 
 Extension:
 [x] Plotting: rewrite into OOP
