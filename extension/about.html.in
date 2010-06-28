@@ -3,12 +3,11 @@
    <p class="slogan color1">@EXTENSION_SLOGAN@</p>
    <div class="column">
       <div class="block ui-widget-content ui-widget-content ui-corner-all">
-         <h3 class="color1">Source code:</h3>
-         <p>Licence: GPLv2<br />
-         WIKI: <a href="http://wiki.github.com/V-Teq/CoNetServ/">github</a><br />
-         Development: <a href="http://github.com/V-Teq/CoNetServ/">github</a><br />
-         JavaScript API: <a href="http://www.fres-solutions.com/CoNetServ/doxygen/conetserv-javascript-api_8h.html">doxygen</a><br />
-         Doxygen documentation: <a href="http://www.fres-solutions.com/CoNetServ/doxygen/index.html">doxygen</a>
+         <h3 class="color1">Quick links:</h3>
+         <p><a href="http://wiki.github.com/V-Teq/CoNetServ/">WIKI pages</a> at GitHub.com<br />
+         <a href="http://github.com/V-Teq/CoNetServ/">Source code</a> at GitHub.com<br />
+         <a href="http://www.fres-solutions.com/CoNetServ/doxygen/index.html">Doxygen documentation</a> at FRES-Solutions.com<br />
+         <a href="http://www.fres-solutions.com/CoNetServ/doxygen/conetserv-javascript-api_8h.html">JavaScript API</a> (3rd party) at FRES-Solutions.com
          </p>
       </div>
       <div class="block ui-widget-content ui-widget-content ui-corner-all">
@@ -33,11 +32,8 @@
       <div class="block ui-widget-content ui-widget-content ui-corner-all">
       <h3 class="color1">Operating system [arch] support:</h3>
       <ul>
-         <li>Microsoft Windows Seven [x86, x86_64]</li>
-         <li>Microsoft Windows Vista [x86, x86_64]</li>
-         <li>Microsoft Windows XP [x86, x86_64]</li>
+         <li>Microsoft Windows [x86, x86_64]</li>
          <li>GNU/Linux [x86, x86_64]</li>
-         <li>MacOSX Darwin [x86]</li>
       </ul>
       </div>
    </div>

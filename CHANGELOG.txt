@@ -1,47 +1,61 @@
 Version 1.3 (2010-06-12)
-============================================
+========================a
+Browser support:
+ * Mozilla Firefox 3.0+ add-on
+ * Google Chrome 4.0+ extension
+ * Opera 10.5+ widget
+Operating systems [arch] support:
+ * Microsoft Windows [x86, x86_64]
+ * GNU/Linux [x86, x86_64]
+ * MacOSX Darwin [x86] (until version 1.3.3)
 Project:
  * Switch project build system to CMake
- * Auto-generation of project files/variables,
-   eg. shared libraries, manifest files etc.
- * Automatic generation of browser-specific
-   packages (Firefox Add-on, Chrome Extension
-   and Opera Widget)
+ * Auto-generation of project files/variables, eg. shared libraries, manifest
+   files etc.
+ * Automatic generation of browser-specific packages
+   (Firefox Add-on, Chrome Extension and Opera Widget)
 Plugin:
- * Auto-generation of project files using CMake
-   (Linux and Windows compatible)
- * Significant clean-up in directory structure
-   and platform-dependent files
+ * Auto-generation of project files using CMake (Linux and Windows compatible)
+ * Significant clean-up in directory structure and platform-dependent files
 Extension:
- * Redesign - divide layout into local services
-   and external info (be ready for more features,
-   eg. external services and local info)
+ * Redesign - divide layout into local services and external info
+   (get ready for more features, eg. external services and local info)
  * New set of icons (by Rafal Ramatowski)
  * Add settings tab (based on LocalStorage)
  * Possibility to autorun services on startup
  * Selectable extension tab as front-page
- * Selectable jQuery themes in settings
-   (Cupertino, South Street and Sunny)
+ * Selectable jQuery themes in settings (Cupertino, South Street and Sunny)
  * Rewrite plot.js and other files into OOP
  * Fix long output in service consoles
  * Rewrite lost packet analysis into regexp
  * Improve visibility of console time values
  * Fix IPv6 address inside the http protocol
  * Automatic toolbar icon in Firefox
- * "Google.com - JSAPI" parser
-   (countryCode, country, city, region,
+ * "Google.com - JSAPI" parser (countryCode, country, city, region,
     latitude, longitude)
- * Asynchronous Google Map with location
-   markers
+ * Asynchronous Google Map with location markers
 Bugfixes:
+ * Version 1.3.3 (2010-06-28)
+   - Plugin: Fix IPv6 colons as valid command argument
+   - Remove MacOS X bundle and thus Darwin compatibility
+     (wait for build machine and CMake build system compatibility)
+ * Version 1.3.2 (2010-06-23)
+   - Add missing theme images in packages
  * Version 1.3.1 (2010-06-20)
    - Package clean-up
    - Fix Win64 plugin
- * Version 1.3.2 (2010-06-23)
-   - Add missing theme images in packages
+
 
 Version 1.2 (2010-03-31)
-============================================
+========================
+Browser support:
+ * Mozilla Firefox 2.0+ add-on
+ * Google Chrome 1.0+ extension
+ * Opera 9.0+ widget
+Operating systems [arch] support:
+ * Microsoft Windows [x86_64]
+ * GNU/Linux [x86, x86_64]
+ * MacOSX Darwin [x86]
 Plugin:
  * Remove Punycode support and LIB IDN stuff
  * URL parser (valid ASCII characters)
@@ -49,31 +63,27 @@ Extension:
  * URL validator & parser (Punycode support)
  * Services parser (data from remote servers)
  * Host info tab with data from new parsers:
- * "WIPmania.com - WorldIP API" parser
-   (externIpv4, countryCode, country, city,
-    region, latitude, longitude)
- * "CGI script by Chris F.A. Johnson" parser
-   (externIpv4)
- * "Check IP by DynDNS.com" parser
-   (externIpv4)
- * "MojeIP.cz" parser
-   (externIpv4, hostname)
- * "IPinfo Security Portal" parser
-   (externIpv4, hostname)
- * "RADb (Merit Network Inc.)" parser
-   (route, provider)
+ * "WIPmania.com - WorldIP API" parser (externIpv4, countryCode, country,
+   city, region, latitude, longitude)
+ * "CGI script by Chris F.A. Johnson" parser (externIpv4)
+ * "Check IP by DynDNS.com" parser (externIpv4)
+ * "MojeIP.cz" parser (externIpv4, hostname)
+ * "IPinfo Security Portal" parser (externIpv4, hostname)
+ * "RADb (Merit Network Inc.)" parser (route, provider)
  * Google map (init latitude and longitude)
 
 
 Version 1.1 (2010-03-14)
-============================================
+========================
 Project:
- * Automated generation of browser-specific
-   packages (Firefox, Chrome, Opera)
+ * Automated generation of browser-specific packages (Firefox, Chrome, Opera)
+Browser support:
+ * Mozilla Firefox 2.0+ add-on
+ * Google Chrome 1.0+ extension
+ * Opera 9.0+ widget
 Operating systems [arch] support:
- * Windows Seven [x86, x86_64]
- * Windows Vista [x86, x86_64]
- * Windows XP [x86, x86_64]
+ * Microsoft Windows [x86_64]
+ * GNU/Linux [x86, x86_64]
  * MacOSX Darwin [x86]
 Plugin:
  * Punycode support .. UTF-8 (sub-)domains
@@ -82,18 +92,18 @@ Extension:
  * PING(6) plot: min, max and avg values
  * Initiate domain string in Firefox&Chrome
 
+
 Version 1.0 (2010-02-28)
-============================================
+========================
 Browser support:
  * Mozilla Firefox 2.0+ add-on
  * Google Chrome 1.0+ extension
  * Opera 9.0+ widget
 Operating systems [arch] support:
- * Windows XP [x86]
+ * Microsoft Windows [x86]
  * GNU/Linux [x86, x86_64]
 Documentation:
- * Use Doxygen as the source code
-   documentation generator tool
+ * Use Doxygen as the source code documentation generator tool
 Plugin:
  * PING command (IPv4)
  * PING6 command (IPv6)
