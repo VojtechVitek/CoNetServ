@@ -4,7 +4,7 @@
 
 #if defined(DEBUG)
 
-void debug(const char *msg);
+void debug(const char *args, ...);
 
 #else
 
