@@ -6,29 +6,32 @@
 
 #if defined(DEBUG)
 
-void debug(const char *args, ...)
+void debug(const char *fmt, ...)
 {
    FILE *file;
-   va_list ap;
-   va_start(ap, args);
+   va_list va;
+   va_start(va, fmt);
 
 #if defined(_WINDOWS)
-   if (fopen("\\conetserv.log", "a")) {
+   if (fopen("\\" PLUGIN_NAME ".log", "a")) {
       fprintf(file, "%s: ", PLUGIN_NAME);
-      fprintf(file, args);
+      vfprintf(file, fmt, va);
+      fprintf(file, "\n");
       fclose(file);
    }
 #else
    fprintf(stderr, "%s: ", PLUGIN_NAME);
-   fprintf(stderr, args);
-   if (file = fopen("/tmp/conetserv.log", "a")) {
+   vfprintf(stderr, fmt, va);
+   fprintf(stderr, "\n");
+   if (file = fopen("/tmp/" PLUGIN_NAME ".log", "a")) {
       fprintf(file, "%s: ", PLUGIN_NAME);
-      fprintf(file, args);
+      vfprintf(file, fmt, va);
+      fprintf(file, "\n");
       fclose(file);
    }
 #endif
 
-   va_end(ap);
+   va_end(va);
 }
 
 #endif
