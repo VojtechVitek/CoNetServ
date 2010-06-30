@@ -12,7 +12,7 @@ General:
 [x] CMake: Automatic generation of extension packages for Firefox, Chrome and Opera browser
 [ ] CMake: Regenerate manifest files after target PluginCopy
 [ ] CMake(WIN32): Generate authors from AUTHORS.txt
-[ ] CMake: Generate packages with plugins from Release directory instead of Debug one
+[x] CMake: Generate packages with plugins from Release directory instead of Debug one
 
 Plugin:
 [ ] Windows: reimplement locale support
@@ -20,6 +20,8 @@ Plugin:
 [ ] Plugin API: third-party availability, version system
 [ ] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
 [ ] Local Network Info: nmap to show neighboaring computers
+[x] Fix IPv6 colons as valid address
+[ ] Services: Add DIG service
 
 Extension:
 [x] Plotting: rewrite into OOP
@@ -42,7 +44,7 @@ Extension:
 [x] On tab select, focus on url bar
 [x] Repair long output in console
 [x] OPTIONS: Multiple skins implementation
-[ ] OPTIONS: ping console - unlimited/ limited
+[ ] OPTIONS: Ping console - unlimited/ limited
 [ ] OPTIONS: Quick buttons to settings/options from Chrome and Firefox
 [ ] Service parser for http://www.hostip.info
 [ ] Service parser for http://www.robtex.com/ipinfo.js
@@ -68,5 +70,5 @@ CoNetServ v3.0+
 CoNetServ v4.0+
 * Translations (JavaScript based, option in settings)
 * Distance graph of neighboaring computers (using canvas, nmap and auto-ping)
-* Download/upload data transfer meter with plots, current speed
+* Download/upload data transfer meter with plots, current speed (public servers / local tools)
 * Release as Safari 5+ extension
