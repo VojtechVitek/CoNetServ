@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _PLUGIN_H_
-#define _PLUGIN_H_
+#ifndef _PLUGIN_NPAPI_H_
+#define _PLUGIN_NPAPI_H_
 
 #if defined(_WINDOWS)
 	#include "stdbool.h"
@@ -57,38 +57,9 @@ extern JNIEnv *pluginJniEnv;
 #define STRING_UTF8LENGTH(_v)     (_v).utf8length
 #endif
 
-typedef struct _command {
-   NPObject          *obj;
-   struct _command   *next;
-
-   int               not_found;
-   int               err;
-
-   void (*init)();
-   void (*start)();
-   void (*read)();
-   void (*stop)();
-
-   NPIdentifier      *name;
-   NPUTF8            *paths[];
-};
-
-extern command       *commands;
-
-/** NPAPI NPObject variable */
-extern NPObject      *plugin;
-
-/** NPAPI NPNetscapeFuncs variable */
+/*! NPAPI variables */
+extern NPObject        *plugin;
 extern NPNetscapeFuncs *npnfuncs;
+extern NPP              instance;
 
-/** NPAPI NPP variable */
-extern NPP              inst;
-
-/** Buffer for reading from pipes */
-#define BUFFER_LENGTH 1024
-
-/** System-specific debug function */
-void logmsg(const char *msg);
-
-#endif /*_PLUGIN_H_*/
-
+#endif /*_PLUGIN_NPAPI_H_*/

@@ -5,7 +5,14 @@ include_directories(unix)
 
 set(sources
 	${sources}
+   unix/unix_command.c
 	unix/ping.c
+)
+
+set(headers
+   ${headers}
+   unix/init_modules.h
+   unix/unix_command.c
 )
 
 add_definitions(-std=gnu99)

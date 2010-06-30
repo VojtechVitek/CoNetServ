@@ -8,7 +8,24 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "plugin.h"
+#include "debug.h"
+#include "plugin_module.h"
+
+#define BUFFER_LENGTH 1024
+
+typedef enum {
+   /* system commands: */
+   PING = 0,
+   PING6,
+   TRACEROUTE,
+   TRACEROUTE6,
+   WHOIS,
+   NSLOOKUP,
+
+   command_t_count
+
+   /* implemented commands: */
+} command_t;
 
 pid_t pids[command_t_count] = {0};
 
@@ -61,7 +78,7 @@ void execvp_workaround()
    else
       run = true;
 
-   logmsg("CoNetServ: execvp_workaround()");
+   debug("CoNetServ: execvp_workaround()");
 
    int pipes[2];
    int pids;
@@ -119,9 +136,9 @@ void execvp_workaround()
          } else {
 
             buffer[len - 1] = '\0';
-            logmsg("CoNetServ: execvp_workaround(): read \"");
-	    logmsg(buffer);
-	    logmsg("\"\n");
+            debug("CoNetServ: execvp_workaround(): read \"");
+	    debug(buffer);
+	    debug("\"\n");
 
             /* store new command name from which command */
             strncpy(execvp_workaround_paths[i], buffer, len);
@@ -132,9 +149,9 @@ void execvp_workaround()
 
       args[i][0] = execvp_workaround_paths[i];
 
-      logmsg("CoNetServ: execvp_workaround(): chosen:");
-      logmsg(args[i][0]);
-      logmsg(")\n");
+      debug("CoNetServ: execvp_workaround(): chosen:");
+      debug(args[i][0]);
+      debug(")\n");
    }
 }
 
@@ -149,7 +166,7 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 
    /* create pipe for communication */
    if (pipe(pipes[cmd]) == -1) {
-      logmsg("CoNetServ: startCommand(): pipe() - error\n");
+      debug("CoNetServ: startCommand(): pipe() - error\n");
       npnfuncs->setexception(NULL, "CoNetServ: startCommand(): pipe() - error\n");
       return false;
    }
@@ -157,14 +174,14 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
    /* fork the process */
    if ((pids[cmd] = vfork()) == 0) {
       /* child */
-      logmsg("CoNetServ: startCommand(): vfork() - child\n");
+      debug("CoNetServ: startCommand(): vfork() - child\n");
 
       /* close read end of pipe */
       close(pipes[cmd][0]);
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(pipes[cmd][1], 1) == -1 || dup2(pipes[cmd][1], 2) == -1) {
-         logmsg("CoNetServ: startCommand(): dup2() - error\n");
+         debug("CoNetServ: startCommand(): dup2() - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): dup2() - error\n");
          _exit(1);
       }
@@ -174,21 +191,21 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {
-         logmsg("CoNetServ: startCommand(): execv() - error\n");
+         debug("CoNetServ: startCommand(): execv() - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): execv() - error\n");
          //send a signal to parrent
          _exit(1);
       }
    } else if (pids[cmd] == -1) {
       /* error - can't fork the parent process */
-      logmsg("CoNetServ: startCommand(): vfork() - error\n");
+      debug("CoNetServ: startCommand(): vfork() - error\n");
 
       pids[cmd] = 0;
       npnfuncs->setexception(NULL, "CoNetServ: startCommand(): vfork() - error\n");
       return false;
    } else {
       /* parent */
-      logmsg("CoNetServ: startCommand(): vfork() - parent\n");
+      debug("CoNetServ: startCommand(): vfork() - parent\n");
 
       /* close write end of pipe */
       close(pipes[cmd][1]);
@@ -196,12 +213,12 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
       /* make read end of pipe non-blocking */
       int flags;
       if ((flags = fcntl(pipes[cmd][0], F_GETFL)) == -1) {
-         logmsg("CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
+         debug("CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
          return false;
       }
       if (fcntl(pipes[cmd][0], F_SETFL, flags | O_NONBLOCK) == -1) {
-         logmsg("CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
+         debug("CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
          return false;
       }
@@ -213,7 +230,7 @@ bool stopCommand(command_t cmd)
 {
    /* kill the command, if running */
    if (pids[cmd] != 0) {
-      logmsg("CoNetServ: stopCommand()\n");
+      debug("CoNetServ: stopCommand()\n");
       kill(pids[cmd], 9);
       waitpid(pids[cmd], NULL, 0);
       pids[cmd] = 0;
@@ -254,7 +271,7 @@ int readCommand(command_t cmd, char *buf)
    buf[len] = '\0';
 
    if (len != 0) {
-      logmsg("CoNetServ: readCommand()");
+      debug("CoNetServ: readCommand()");
       //fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
       //fprintf(stderr, "%s", buf);
    }
