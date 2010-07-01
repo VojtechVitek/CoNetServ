@@ -6,29 +6,31 @@
 
 /** Plugin module - struct */
 typedef struct _module {
-   struct _module    *next;
-   NPObject          *obj;
-   NPIdentifier      *identifier;
+   struct _module *next;
+   NPObject       *obj;
+   NPIdentifier   *identifier;
+   NPUTF8         *program;
+   NPUTF8         *path;
+   NPUTF8         *version;
 
-   /*
-   NPUTF8            *version;
-   NPUTF8
-   */
+   bool           found;
+   int            err;
 
-   int               not_found;
-   int               err;
-
-   bool (*init)();
    void (*destroy)();
    bool (*start)();
-   void (*read)(NPUTF8 *result;);
+   void (*read)(NPUTF8 *result);
    bool (*stop)();
    bool (*hasProperty)(NPIdentifier propertyName);
    bool (*getProperty)(NPIdentifier propertyName, NPVariant *result);
 
 } module;
 
+typedef struct _module_list {
+   struct _module *first;
+   void (*destroy)();
+} module_list;
+
 /** Plugin modules */
-extern module        *modules;
+extern module_list *modules;
 
 #endif /*_PLUGIN_MODULE_H_*/

@@ -1,27 +1,39 @@
+#include <stdio.h>
+
 #include "debug.h"
-#include "init_modules.h"
 #include "plugin_npapi.h"
 #include "plugin_module.h"
-#include "unix_command.h"
-
-char *default_path = "/bin/ping";
-char *default_name = "ping";
-char *arguments;
+#include "modules.h"
+#include "shell.h"
 
 static bool
-init()
+start()
 {
-   /*
-   // vyhledat, zda existuje v systemu
-   NPUTF8            *paths[];
 
-   // zkusit spustit
-   if (!module->obj) {
-      module->obj = npnfuncs->createobject(instance, &npcRefObject);
-      npnfuncs->retainobject(plugin);
-   }
-   module->identifier = NPN_GetStringIdentifier("ping");
-   */
+}
+
+static void
+read(NPUTF8 *result)
+{
+
+}
+
+static bool
+stop()
+{
+
+}
+
+static bool
+hasProperty(NPIdentifier propertyName)
+{
+
+}
+
+static bool
+getProperty(NPIdentifier propertyName, NPVariant *result)
+{
+
 }
 
 static void
@@ -30,6 +42,24 @@ destroy()
 
 }
 
-void init_module_ping() {
+module *
+init_module_ping() {
+   module *it;
 
+   debug("init_module_ping()");
+   it = (module *)npnfuncs->memalloc(sizeof(module));
+   it->obj = npnfuncs->createobject(instance, &npclass);
+   npnfuncs->retainobject(it->obj);
+   it->identifier = npnfuncs->getstringidentifier("ping");
+   it->path = "ping";
+
+   it->next = NULL;
+   it->destroy = destroy;
+   it->start = start;
+   it->read = read;
+   it->stop = stop;
+   it->hasProperty = hasProperty;
+   it->getProperty = getProperty;
+
+   return it;
 }

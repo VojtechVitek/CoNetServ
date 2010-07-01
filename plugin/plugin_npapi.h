@@ -45,6 +45,11 @@ extern JNIEnv *pluginJniEnv;
 
 #endif
 
+/* Return high byte of the variable */
+#ifndef HIBYTE
+#define HIBYTE(x) ((((uint32_t)(x)) & 0xff00) >> 8)
+#endif
+
 /* WebKIT and XULRunner differs in struct _NPString member names */
 #if defined(WEBKIT_DARWIN_SDK)
 #define STRING_UTF8CHARACTERS(_v) (_v).UTF8Characters
@@ -61,5 +66,6 @@ extern JNIEnv *pluginJniEnv;
 extern NPObject        *plugin;
 extern NPNetscapeFuncs *npnfuncs;
 extern NPP              instance;
+extern NPClass          npclass;
 
 #endif /*_PLUGIN_NPAPI_H_*/

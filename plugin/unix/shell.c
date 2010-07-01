@@ -4,158 +4,112 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <string.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
 #include "debug.h"
+#include "shell.h"
+#include "plugin_npapi.h"
 #include "plugin_module.h"
 
-#define BUFFER_LENGTH 1024
-
-typedef enum {
-   /* system commands: */
-   PING = 0,
-   PING6,
-   TRACEROUTE,
-   TRACEROUTE6,
-   WHOIS,
-   NSLOOKUP,
-
-   command_t_count
-
-   /* implemented commands: */
-} command_t;
-
-pid_t pids[command_t_count] = {0};
-
-int pipes[command_t_count][2];
-
-char* args[command_t_count][5] = {
-   {"ping", NULL},
-   {"ping6", NULL},
-   {"traceroute", NULL},
-   {"traceroute6", NULL},
-   {"whois", NULL},
-   {"nslookup", NULL}
-};
-
 /*
-
-This should work with GLibC 2.11+, where is execvpe() implemented.
-But now it's a time for this work-around (as for Feb 2010):
-$ PATH="$PATH:/usr/sbin/:/sbin/" which traceroute
--> get char* path -> execv(path, ..
--- V-Teq
-
+This should work from glibc 2.11, where execvpe() is implemented:
 char* env[] = { "PATH=$PATH:/usr/sbin:/sbin/", NULL };
-
 args[cmd][1] = addr;
 execvpe(args[cmd][0], args[cmd], env);
 
+But as for now (Feb 2010), we must run `which <cmd>` as work-around:
+$ PATH="$PATH:/usr/sbin/:/sbin/" which <cmd>
+/usr/sbin/<cmd>
+-- V-Teq
 */
 
-/*
-   These paths are default and will not work on all UNIX systems.
-   They will be rewritten by function execvp_workaround()
-   if possible to find better path.
-*/
-char execvp_workaround_paths[command_t_count][30] = {
-   "/bin/ping",
-   "/bin/ping6",
-   "/usr/sbin/traceroute",
-   "/usr/sbin/traceroute6",
-   "/usr/bin/whois",
-   "/usr/bin/nslookup"
-};
-#include <string.h>
-void execvp_workaround()
+cmd_shell *shell = NULL;
+
+char       *buffer = NULL;
+char       *which_argv[] = { "/usr/bin/which", NULL, NULL};
+char       *which_env[] = { NULL, NULL };
+char       *user_paths = NULL;
+const char *root_paths = ":/usr/sbin:/sbin/";
+
+static char* find_program_path(char *program)
 {
-   /* run this function only once */
-   static bool run = false;
-   if (run)
-      return;
-   else
-      run = true;
-
-   debug("CoNetServ: execvp_workaround()");
-
    int pipes[2];
-   int pids;
+   int pid;
+   int len;
 
-   char buffer[BUFFER_LENGTH];
-   char path[BUFFER_LENGTH];
-   char *argv[] = { "/usr/bin/which", NULL, NULL };
-   char *user_paths = getenv("PATH");
-   char *superuser_paths = ":/usr/sbin:/sbin/";
-   char *env[] = { path, NULL };
+   debug("CoNetServ: find_program_path(%s)", program);
 
-   memcpy(path, "PATH=", strlen("PATH="));
-   memcpy(path + strlen("PATH="), user_paths, strlen(user_paths));
-   strncpy(path + strlen("PATH=") + strlen(user_paths), superuser_paths, strlen(superuser_paths));
+   /* create pipe for communication */
+   if (pipe(pipes) == -1)
+      return NULL;
 
-   for (int i = 0; i < command_t_count; ++i) {
-      /* create pipe for communication */
-      if (pipe(pipes) == -1)
-         return;
+   /* fork the process */
+   if ((pid = vfork()) == 0) {
+      /* child */
 
-      /* fork the process */
-      if ((pids = vfork()) == 0) {
-         /* child */
+      /* close read end of pipe */
+      close(pipes[0]);
 
-         /* close read end of pipe */
-         close(pipes[0]);
+      /* redirect stdout to write end of the pipe */
+      if (dup2(pipes[1], 1) == -1)
+         _exit(1);
 
-         /* stdout to write end of the pipe */
-         if (dup2(pipes[1], 1) == -1)
-            _exit(1);
+      /* Fill which argument by program name */
+      which_argv[1] = (char *)program;
 
-         argv[1] = args[i][0];
+      /* Execute command
+       * which <cmd>
+       */
+      if (execve(which_argv[0], which_argv, which_env) == -1)
+         _exit(1);
 
-         /* execute command */
-         if (execve(argv[0], argv, env) == -1)
-            _exit(1);
+   } else if (pid == -1) {
+      /* error - can't fork the parent process */
 
-      } else if (pids == -1) {
-         /* error - can't fork the parent process */
+      return NULL;
 
-         continue;
+   } else {
+      /* parent */
+
+      /* close write end of pipe */
+      close(pipes[1]);
+
+      /* read child data from the pipe */
+      if ((len = read(pipes[0], buffer, BUFLEN - 1)) == -1 || len == 0) {
+         /* Error or zero length*/
+
+         return NULL;
 
       } else {
-         /* parent */
 
-         /* close read end of pipe */
-         close(pipes[1]);
-
-         /* read child data */
-         int len;
-         if ((len = read(pipes[0], buffer, BUFFER_LENGTH - 1)) == -1 || len == 0) {
-
-            continue;
-
-         } else {
-
-            buffer[len - 1] = '\0';
-            debug("CoNetServ: execvp_workaround(): read \"");
-	    debug(buffer);
-	    debug("\"\n");
-
-            /* store new command name from which command */
-            strncpy(execvp_workaround_paths[i], buffer, len);
+         /* Be sure to end string by '\0' character */
+         buffer[len] = '\0';
+         /* We need only first line */
+         for (int i = 0; i < len; i++) {
+            if (buffer[i] == '\n') {
+               buffer[i] = '\0';
+               break;
+            }
          }
-
-         waitpid(pids, NULL, 0);
+         debug("find_program_path(%s): \"%s\"", buffer);
       }
 
-      args[i][0] = execvp_workaround_paths[i];
+      waitpid(pid, NULL, 0);
 
-      debug("CoNetServ: execvp_workaround(): chosen:");
-      debug(args[i][0]);
-      debug(")\n");
+      return buffer;
    }
 }
 
-bool startCommand(command_t cmd, NPUTF8* arg_host)
+static void run_command(char *program_path)
+{
+
+}
+
+#if 0
+static bool startCommand()
 {
    /* already started */
    if (pids[cmd] != 0)
@@ -226,7 +180,7 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
    return true;
 }
 
-bool stopCommand(command_t cmd)
+static bool stopCommand(command_t cmd)
 {
    /* kill the command, if running */
    if (pids[cmd] != 0) {
@@ -242,7 +196,7 @@ bool stopCommand(command_t cmd)
    }
 }
 
-int readCommand(command_t cmd, char *buf)
+static int readCommand(command_t cmd, char *buf)
 {
    int len;
 
@@ -277,4 +231,53 @@ int readCommand(command_t cmd, char *buf)
    }
 
    return len;
+}
+#endif
+
+static void
+destroy()
+{
+   if (shell != NULL)
+      npnfuncs->memfree(shell);
+   if (buffer != NULL)
+      npnfuncs->memfree(buffer);
+   if (which_env[0] != NULL)
+      npnfuncs->memfree(which_env[0]);
+}
+
+cmd_shell *
+init_shell()
+{
+   cmd_shell *shell;
+
+   debug("init_shell()");
+
+   /* Allocate buffer */
+   if ((buffer = npnfuncs->memalloc(BUFLEN * sizeof(char))) == NULL)
+      return NULL;
+
+   /* Get user paths from variable PATH */
+   if ((user_paths = getenv("PATH")) == NULL)
+      return NULL;
+
+   /* Allocate modified PATH variable */
+   if ((which_env[0] = npnfuncs->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
+      return NULL;
+
+   /* Add superuser paths into PATH variable:
+   PATH="$PATH:/usr/sbin/:/sbin/"
+   */
+   memcpy(which_env[0], "PATH=", strlen("PATH="));
+   memcpy(which_env[0] + strlen("PATH="), user_paths, strlen(user_paths));
+   strncpy(which_env[0] + strlen("PATH=") + strlen(user_paths), root_paths, strlen(root_paths));
+
+                                                                                                   /* Allocate buffer */
+   if ((shell = npnfuncs->memalloc(sizeof(cmd_shell))) == NULL)
+      return NULL;
+
+   shell->destroy = destroy;
+   shell->find = find_program_path;
+   shell->run = run_command;
+
+   return shell;
 }
