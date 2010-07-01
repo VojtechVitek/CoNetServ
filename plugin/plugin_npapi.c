@@ -69,23 +69,22 @@ static bool
 getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 {
    module *it;
-#ifdef _WINDOWS
-   NPString npstr;
-#endif
+   NPString str;
+   int len;
 
    if (obj == plugin) {
       /* Plugin main object */
 
       /* Plugin version */
       if (propertyName == version) {
-#ifdef _WINDOWS
+
          result->type = NPVariantType_String;
-         STRING_UTF8CHARACTERS(npstr) = VERSION;
-         STRING_UTF8LENGTH(npstr) = strlen(VERSION);
-         result->value.stringValue = npstr;
-#else
-         STRINGN_TO_NPVARIANT(VERSION, strlen(VERSION), *result);
-#endif
+         len = strlen(VERSION);
+         NPUTF8 *version = npnfuncs->memalloc((len + 1) * sizeof(NPUTF8));
+         strcpy(version, VERSION);
+         STRING_UTF8CHARACTERS(str) = version;
+         STRING_UTF8LENGTH(str) = len;
+         result->value.stringValue = str;
          debug("plugin.getProperty(version)");
 
          return true;
