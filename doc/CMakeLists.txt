@@ -11,7 +11,7 @@ file(GLOB files2 ${CMAKE_SOURCE_DIR}/plugin/api/*.h)
 file(GLOB files3 ${CMAKE_SOURCE_DIR}/plugin/unix/*.[ch])
 file(GLOB files4 ${CMAKE_SOURCE_DIR}/plugin/win/*.[ch])
 file(GLOB files5 ${CMAKE_SOURCE_DIR}/extension/js/*.js)
-set(files_doc ${files1} ${files2} ${files3} ${files4} ${files5} ${CMAKE_BINARY_DIR}/doc/about.h)
+set(files_doc ${files1} ${files2} ${files3} ${files4} ${files5} ${DOCUMENTATION_DIR}/about.h)
 foreach(file ${files_doc})
 	set(DOXY_SOURCE_FILES "${DOXY_SOURCE_FILES} ${file}")
 endforeach()
@@ -31,7 +31,7 @@ if(DOXYGEN_FOUND AND DOXYGEN_EXECUTABLE AND UNIX)
 	configure_file("${DOXY_CONFIG}" "${CMAKE_BINARY_DIR}/doc/Doxyfile")
 
 	# Copy and configure about.h.in
-	configure_file("${DOCUMENTATION_DIR}/about.h.in" "${CMAKE_BINARY_DIR}/doc/about.h")
+	configure_file("${DOCUMENTATION_DIR}/about.h.in" "${DOCUMENTATION_DIR}/about.h")
 
 	# Run doxygen
 	add_custom_command(
