@@ -22,16 +22,14 @@ module_list  *modules = NULL;
 static bool
 hasMethod(NPObject* obj, NPIdentifier methodName)
 {
-   DEBUG_STR("plugin.hasMethod(%s)", DEBUG_GET_IDENTIFIER_1(methodName));
-   DEBUG_FREE_IDENTIFIER_1()
+   DEBUG_STR("plugin.hasMethod(%s)", DEBUG_IDENTIFIER(methodName));
    return false;
 }
 
 static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-   DEBUG_STR("plugin.invoke(%s)", DEBUG_GET_IDENTIFIER_1(methodName));
-   DEBUG_FREE_IDENTIFIER_1()
+   DEBUG_STR("plugin.invoke(%s)", DEBUG_IDENTIFIER(methodName));
 
    return false;
 }
@@ -57,8 +55,7 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
          return true;
       }
 
-      DEBUG_STR("plugin.hasProperty(%s)", DEBUG_GET_IDENTIFIER_1(propertyName));
-      DEBUG_FREE_IDENTIFIER_1()
+      DEBUG_STR("plugin.hasProperty(%s)", DEBUG_IDENTIFIER(propertyName));
 
    } else {
       /* Find module object */
@@ -70,9 +67,7 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
             /* Return hasProperty of module, if found */
             return it->hasProperty(propertyName);
 
-            DEBUG_STR("plugin.%s.hasProperty(%s)", DEBUG_GET_IDENTIFIER_1(it->identifier), DEBUG_GET_IDENTIFIER_2(propertyName));
-            DEBUG_FREE_IDENTIFIER_1()
-            DEBUG_FREE_IDENTIFIER_2()
+            DEBUG_STR("plugin.%s.hasProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
 
          }
       }
@@ -84,8 +79,7 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
 static bool
 getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 {
-   DEBUG_STR("plugin.getProperty(%s)", DEBUG_GET_IDENTIFIER_1(propertyName));
-   DEBUG_FREE_IDENTIFIER_1()
+   DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
 
    module *it;
    NPString str;
@@ -94,8 +88,7 @@ getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
    if (obj == plugin) {
       /* Plugin main object */
 
-      DEBUG_STR("plugin.getProperty(%s)", DEBUG_GET_IDENTIFIER_1(propertyName));
-      DEBUG_FREE_IDENTIFIER_1()
+      DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
 
       /* Plugin version */
       if (propertyName == version) {
@@ -113,9 +106,8 @@ getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 
 
    } else {
-      DEBUG_STR("plugin.%s.getProperty(%s)", DEBUG_GET_IDENTIFIER_1(it->identifier), DEBUG_GET_IDENTIFIER_2(propertyName));
-      DEBUG_FREE_IDENTIFIER_1()
-      DEBUG_FREE_IDENTIFIER_2()
+
+      DEBUG_STR("plugin.%s.getProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
 
       /* Find module object */
       if (!modules || !modules->first)

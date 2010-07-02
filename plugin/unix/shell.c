@@ -40,8 +40,7 @@ static char* find_program_path(char *program)
    int pid;
    int len;
 
-   DEBUG_STR("CoNetServ: find_program_path(%s)", DEBUG_GET_IDENTIFIER_1(program));
-   DEBUG_FREE_IDENTIFIER_1()
+   DEBUG_STR("CoNetServ: find_program_path(%s)", DEBUG_IDENTIFIER(program));
 
    /* create pipe for communication */
    if (pipe(pipes) == -1)
@@ -95,8 +94,7 @@ static char* find_program_path(char *program)
                break;
             }
          }
-         DEBUG_STR("find_program_path(%s): \"%s\"", DEBUG_GET_IDENTIFIER_1(buffer));
-         DEBUG_FREE_IDENTIFIER_1()
+         DEBUG_STR("find_program_path(%s): \"%s\"", DEBUG_IDENTIFIER(buffer));
       }
 
       waitpid(pid, NULL, 0);

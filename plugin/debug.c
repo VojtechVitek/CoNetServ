@@ -1,13 +1,18 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include "plugin_npapi.h"
 #include "config.h"
 #include "debug.h"
 
 #if defined(DEBUG)
 
+NPUTF8 *debug_identifier_str[DEBUG_IDENTIFIER_COUNT] = {0};
+int    debug_identifier_ptr = 0;
+
 void DEBUG_STR(const char *fmt, ...)
 {
+   int i;
    FILE *file;
    va_list va;
    va_start(va, fmt);
@@ -31,9 +36,11 @@ void DEBUG_STR(const char *fmt, ...)
    }
 #endif
 
+   while (debug_identifier_ptr) {
+      npnfuncs->memfree(debug_identifier_str[debug_identifier_ptr--]);
+   }
+
    va_end(va);
 }
-
-NPUTF8 *str1, *str2, *str3, *str4, *str5;
 
 #endif
