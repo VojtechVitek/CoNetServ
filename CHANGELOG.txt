@@ -1,5 +1,5 @@
 Version 1.3 (2010-06-12)
-========================a
+========================
 Browser support:
  * Mozilla Firefox 3.0+ add-on
  * Google Chrome 4.0+ extension
