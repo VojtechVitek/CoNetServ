@@ -8,14 +8,18 @@ var Options = {
    frontPageParent : false,
    frontPageChild : false,
    skin: false,
-   
+
    /**
     * initializes CoNetServ options
     */
    initialize : function() {
       // fix localStorage for firefox
       if($.client.browser == "Firefox") {
-         this.storage = globalStorage[location.hostname];
+         try {
+            this.storage = globalStorage["conetserv"];
+         } catch(err) {
+            this.storage = false;
+         }
       }
       else if($.client.browser == "Chrome") {
          this.storage = localStorage;
@@ -24,7 +28,7 @@ var Options = {
          this.storage = false;
          return;
       }
-      
+
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
       $("#settings-general-toolbox").attr("checked", this.toolbarButton);
 
@@ -46,7 +50,7 @@ var Options = {
       $("#" + this.frontPageParent).ready(function() {
          $("#" + Options.frontPageChild).attr("checked", true);
       });
-      
+
       /* skin options */
       this.skin = this.storage['conetserv-settings-general-skin'];
       if(!this.skin) {
@@ -78,7 +82,7 @@ var Options = {
       this.skin = $("#settings-general-skin input:checked").val();
       this.storage["conetserv-settings-general-skin"] = this.skin;
       Ui.reloadSkin();
-      
+
    },
 
    /**
