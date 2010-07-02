@@ -68,4 +68,31 @@ extern NPNetscapeFuncs *npnfuncs;
 extern NPP              instance;
 extern NPClass          npclass;
 
+/*! EXPORT functions */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+NPError OSCALL
+NP_GetEntryPoints(NPPluginFuncs *nppfuncs);
+
+NPError OSCALL
+NP_Initialize(NPNetscapeFuncs *npnf
+#if defined(ANDROID)
+         , NPPluginFuncs *nppfuncs, JNIEnv *env, jobject plugin_object
+#elif !defined(_WINDOWS) && !defined(WEBKIT_DARWIN_SDK)
+         , NPPluginFuncs *nppfuncs
+#endif
+         );
+
+NPError OSCALL
+NP_Shutdown();
+
+NPError OSCALL
+NP_GetValue(void *npp, NPPVariable variable, void *value);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /*_PLUGIN_NPAPI_H_*/

@@ -16,7 +16,7 @@ typedef struct _module {
    bool           found;
    int            err;
 
-   void (*destroy)();
+   void (*destroy)(struct _module *);
    bool (*start)();
    void (*read)(NPUTF8 *result);
    bool (*stop)();
@@ -27,7 +27,7 @@ typedef struct _module {
 
 typedef struct _module_list {
    struct _module *first;
-   void (*destroy)();
+   void (*destroy)(struct _module_list *);
 } module_list;
 
 /** Plugin modules */

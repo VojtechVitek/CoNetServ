@@ -17,19 +17,29 @@ NPP              instance = NULL;
 NPIdentifier version;
 
 /** Plugin modules */
-module_list  *modules;
+module_list  *modules = NULL;
 
 static bool
 hasMethod(NPObject* obj, NPIdentifier methodName)
 {
-   debug("hasMethod(%s)", npnfuncs->utf8fromidentifier(methodName));
+   DEBUG_STR("plugin.hasMethod(%s)", DEBUG_GET_IDENTIFIER_1(methodName));
+   DEBUG_FREE_IDENTIFIER_1()
    return false;
 }
 
 static bool
 invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result)
 {
-   debug("invoke(%s)", npnfuncs->utf8fromidentifier(methodName));
+   DEBUG_STR("plugin.invoke(%s)", DEBUG_GET_IDENTIFIER_1(methodName));
+   DEBUG_FREE_IDENTIFIER_1()
+
+   return false;
+}
+
+static bool
+invokeDefault(NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+{
+   DEBUG_STR("plugin.invokeDefault()");
    return false;
 }
 
@@ -43,21 +53,27 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
 
       /* Plugin version */
       if (propertyName == version) {
-         debug("plugin.hasProperty(version)");
+         DEBUG_STR("plugin.hasProperty(version)");
          return true;
       }
 
-      debug("plugin.hasProperty(%s)", npnfuncs->utf8fromidentifier(propertyName));
+      DEBUG_STR("plugin.hasProperty(%s)", DEBUG_GET_IDENTIFIER_1(propertyName));
+      DEBUG_FREE_IDENTIFIER_1()
 
    } else {
       /* Find module object */
+      if (!modules || !modules->first)
+         return false;
+
       for (it = modules->first; it != NULL; it = it->next) {
          if (obj == it->obj) {
             /* Return hasProperty of module, if found */
             return it->hasProperty(propertyName);
-            debug("plugin.%s.hasProperty(%s)",
-                  npnfuncs->utf8fromidentifier(it->identifier),
-                  npnfuncs->utf8fromidentifier(propertyName));
+
+            DEBUG_STR("plugin.%s.hasProperty(%s)", DEBUG_GET_IDENTIFIER_1(it->identifier), DEBUG_GET_IDENTIFIER_2(propertyName));
+            DEBUG_FREE_IDENTIFIER_1()
+            DEBUG_FREE_IDENTIFIER_2()
+
          }
       }
    }
@@ -68,12 +84,18 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
 static bool
 getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 {
+   DEBUG_STR("plugin.getProperty(%s)", DEBUG_GET_IDENTIFIER_1(propertyName));
+   DEBUG_FREE_IDENTIFIER_1()
+
    module *it;
    NPString str;
    int len;
 
    if (obj == plugin) {
       /* Plugin main object */
+
+      DEBUG_STR("plugin.getProperty(%s)", DEBUG_GET_IDENTIFIER_1(propertyName));
+      DEBUG_FREE_IDENTIFIER_1()
 
       /* Plugin version */
       if (propertyName == version) {
@@ -85,21 +107,23 @@ getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
          STRING_UTF8CHARACTERS(str) = version;
          STRING_UTF8LENGTH(str) = len;
          result->value.stringValue = str;
-         debug("plugin.getProperty(version)");
 
          return true;
       }
 
-   debug("plugin.getProperty(%s)", npnfuncs->utf8fromidentifier(propertyName));
 
    } else {
+      DEBUG_STR("plugin.%s.getProperty(%s)", DEBUG_GET_IDENTIFIER_1(it->identifier), DEBUG_GET_IDENTIFIER_2(propertyName));
+      DEBUG_FREE_IDENTIFIER_1()
+      DEBUG_FREE_IDENTIFIER_2()
+
       /* Find module object */
+      if (!modules || !modules->first)
+         return false;
+
       for (it = modules->first; it != NULL; it = it->next) {
          if (obj == it->obj) {
             /* Return hasProperty of module, if found */
-            debug("plugin.%s.getProperty(%s)",
-                  npnfuncs->utf8fromidentifier(it->identifier),
-                  npnfuncs->utf8fromidentifier(propertyName));
             return it->getProperty(propertyName, result);
          }
       }
@@ -112,8 +136,9 @@ getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 static NPError
 init(NPMIMEType pluginType, NPP _instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved)
 {
+   DEBUG_STR("init(instance %d, pluginType %d, mode %d, argc %d)", instance, pluginType, mode, argc);
+
    instance = _instance;
-   debug("init(instance %d, pluginType %d, mode %d, argc %d)", instance, pluginType, mode, argc);
    return NPERR_NO_ERROR;
 }
 
@@ -121,11 +146,12 @@ static NPError
 destroy(NPP instance, NPSavedData **save)
 {
    /* Stop possibly running processes. */
+   DEBUG_STR("destroy()");
 
    if(plugin)
       npnfuncs->releaseobject(plugin);
+
    plugin = NULL;
-   debug("destroy()");
    return NPERR_NO_ERROR;
 }
 
@@ -134,30 +160,34 @@ getValue(NPP instance, NPPVariable variable, void *value)
 {
    switch(variable) {
    case NPPVpluginNameString:
-      debug("getValue(NPPVPluginNameString)");
+      DEBUG_STR("getValue(NPPVPluginNameString)");
       *((char **)value) = PLUGIN_NAME;
       break;
    case NPPVpluginDescriptionString:
-      debug("getValue(NPPVPluginDescriptionString)");
+      DEBUG_STR("getValue(NPPVPluginDescriptionString)");
       *((char **)value) = PLUGIN_DESC;
       break;
    case NPPVpluginScriptableNPObject:
-      debug("getValue(NPPVpluginScriptableNPObject");
+      DEBUG_STR("getValue(NPPVpluginScriptableNPObject)");
       if(!plugin)
          plugin = npnfuncs->createobject(instance, &npclass);
+      /* The caller (browser) is responsible to release object (ref_count--).
+       * But we need (at least) object ref_count == 1
+       */
       npnfuncs->retainobject(plugin);
       *(NPObject **)value = plugin;
       break;
    case NPPVpluginNeedsXEmbed:
-      debug("getValue(NPPVpluginNeedsXEmbed)");
+      DEBUG_STR("getValue(NPPVpluginNeedsXEmbed)");
+      /* This plugin use XEmbed instead of using the old Xt-based mainloop */
       *((bool *)value) = true;
       break;
    case NPPVpluginKeepLibraryInMemory:
-      debug("getValue(NPPVpluginKeepLibraryInMemory)");
+      DEBUG_STR("getValue(NPPVpluginKeepLibraryInMemory)");
       *((bool *)value) = true;
       break;
    default:
-      debug("getValue(default) - ERROR");
+      DEBUG_STR("getValue(default) - ERROR");
       return NPERR_GENERIC_ERROR;
    }
    return NPERR_NO_ERROR;
@@ -166,33 +196,46 @@ getValue(NPP instance, NPPVariable variable, void *value)
 static NPError /* expected by Safari on Darwin */
 handleEvent(NPP instance, void *ev)
 {
-   debug("handleEvent()");
+   DEBUG_STR("handleEvent()");
    return NPERR_NO_ERROR;
 }
 
 static NPError /* expected by Opera */
 setWindow(NPP instance, NPWindow* pNPWindow)
 {
-   debug("setWindow()");
+   DEBUG_STR("setWindow()");
    return NPERR_NO_ERROR;
 }
-
-/* EXPORT */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 NPError OSCALL
 NP_GetEntryPoints(NPPluginFuncs *nppfuncs)
 {
-   debug("NP_GetEntryPoints()");
+   DEBUG_STR("NP_GetEntryPoints()");
    nppfuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
+   //nppfuncs->size          = sizeof(NPPPluginFuncs);
    nppfuncs->newp          = init;
    nppfuncs->destroy       = destroy;
    nppfuncs->getvalue      = getValue;
    nppfuncs->event         = handleEvent;
-   nppfuncs->setwindow     = setWindow;
-
+   //nppfuncs->setwindow     = setWindow;
+/*
+   pluginFuncs->version    = (NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR;
+   pluginFuncs->size       = sizeof(NPPluginFuncs);
+   pluginFuncs->newp       = NewNPP_NewProc(Private_New);
+   pluginFuncs->destroy    = NewNPP_DestroyProc(Private_Destroy);
+   pluginFuncs->setwindow  = NewNPP_SetWindowProc(Private_SetWindow);
+   pluginFuncs->newstream  = NewNPP_NewStreamProc(Private_NewStream);
+   pluginFuncs->destroystream = NewNPP_DestroyStreamProc(Private_DestroyStream);
+   pluginFuncs->asfile     = NewNPP_StreamAsFileProc(Private_StreamAsFile);
+   pluginFuncs->writeready = NewNPP_WriteReadyProc(Private_WriteReady);
+   pluginFuncs->write      = NewNPP_WriteProc(Private_Write);
+   pluginFuncs->print      = NewNPP_PrintProc(Private_Print);
+   pluginFuncs->urlnotify  = NewNPP_URLNotifyProc(Private_URLNotify);
+   pluginFuncs->getvalue   = NewNPP_GetValueProc(Private_GetValue);
+   pluginFuncs->event      = NewNPP_HandleEventProc(Private_HandleEvent);
+#ifdef OJI
+        pluginFuncs->javaClass  = Private_GetJavaClass();
+#endif*/
    return NPERR_NO_ERROR;
 }
 
@@ -207,7 +250,7 @@ NP_Initialize(NPNetscapeFuncs *npnf
 {
    module *it;
 
-   debug("NP_Initialize()");
+   DEBUG_STR("NP_Initialize()");
    if(npnf == NULL)
       return NPERR_INVALID_FUNCTABLE_ERROR;
 
@@ -226,12 +269,12 @@ NP_Initialize(NPNetscapeFuncs *npnf
    return NPERR_NO_ERROR;
 }
 
-NPError
-OSCALL NP_Shutdown()
+NPError OSCALL
+NP_Shutdown()
 {
-   debug("NP_Shutdown()");
+   DEBUG_STR("NP_Shutdown()");
 
-   modules->destroy();
+   modules->destroy(modules);
 
    return NPERR_NO_ERROR;
 }
@@ -239,14 +282,14 @@ OSCALL NP_Shutdown()
 char *
 NP_GetMIMEDescription(void)
 {
-   debug("NP_GetMIMEDescription");
+   DEBUG_STR("NP_GetMIMEDescription()");
    return PLUGIN_MIME;
 }
 
 NPError OSCALL /* needs to be present for WebKit based browsers */
 NP_GetValue(void *npp, NPPVariable variable, void *value)
 {
-   debug("NP_GetValue");
+   DEBUG_STR("NP_GetValue()");
    return getValue((NPP)npp, variable, value);
 }
 
@@ -257,7 +300,7 @@ NPClass npclass = {
    NULL/*invalidate*/,
    hasMethod,
    invoke,
-   NULL/*invokeDefault*/,
+   invokeDefault,
    hasProperty,
    getProperty,
    NULL/*setProperty*/,
@@ -265,7 +308,3 @@ NPClass npclass = {
    NULL/*enumerate*/,
    NULL/*construct*/
 };
-
-#ifdef __cplusplus
-}
-#endif

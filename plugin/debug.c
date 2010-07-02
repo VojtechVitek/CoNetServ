@@ -6,7 +6,7 @@
 
 #if defined(DEBUG)
 
-void debug(const char *fmt, ...)
+void DEBUG_STR(const char *fmt, ...)
 {
    FILE *file;
    va_list va;
@@ -33,5 +33,7 @@ void debug(const char *fmt, ...)
 
    va_end(va);
 }
+
+NPUTF8 *str1, *str2, *str3, *str4, *str5;
 
 #endif

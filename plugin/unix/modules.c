@@ -6,29 +6,31 @@
 #include "shell.h"
 
 static void
-destroy()
+destroy(module_list *modules)
 {
    module *it, *del;
+
+   DEBUG_STR("modules->destroy()");
 
    shell->destroy();
 
    for (it = modules->first; it != NULL; ) {
       del = it;
       it = it->next;
-      del->destroy();
+      del->destroy(del);
       npnfuncs->memfree(del);
    }
 
    npnfuncs->memfree(modules);
 }
 
-struct _module_list *
+module_list *
 init_modules()
 {
    struct _module_list* modules;
    module **it;
 
-   debug("init_modules()");
+   DEBUG_STR("init_modules()");
 
    shell = init_shell();
 

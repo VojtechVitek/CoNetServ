@@ -40,7 +40,8 @@ static char* find_program_path(char *program)
    int pid;
    int len;
 
-   debug("CoNetServ: find_program_path(%s)", program);
+   DEBUG_STR("CoNetServ: find_program_path(%s)", DEBUG_GET_IDENTIFIER_1(program));
+   DEBUG_FREE_IDENTIFIER_1()
 
    /* create pipe for communication */
    if (pipe(pipes) == -1)
@@ -94,7 +95,8 @@ static char* find_program_path(char *program)
                break;
             }
          }
-         debug("find_program_path(%s): \"%s\"", buffer);
+         DEBUG_STR("find_program_path(%s): \"%s\"", DEBUG_GET_IDENTIFIER_1(buffer));
+         DEBUG_FREE_IDENTIFIER_1()
       }
 
       waitpid(pid, NULL, 0);
@@ -120,7 +122,7 @@ static bool startCommand()
 
    /* create pipe for communication */
    if (pipe(pipes[cmd]) == -1) {
-      debug("CoNetServ: startCommand(): pipe() - error\n");
+      DEBUG_STR("CoNetServ: startCommand(): pipe() - error\n");
       npnfuncs->setexception(NULL, "CoNetServ: startCommand(): pipe() - error\n");
       return false;
    }
@@ -128,14 +130,14 @@ static bool startCommand()
    /* fork the process */
    if ((pids[cmd] = vfork()) == 0) {
       /* child */
-      debug("CoNetServ: startCommand(): vfork() - child\n");
+      DEBUG_STR("CoNetServ: startCommand(): vfork() - child\n");
 
       /* close read end of pipe */
       close(pipes[cmd][0]);
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(pipes[cmd][1], 1) == -1 || dup2(pipes[cmd][1], 2) == -1) {
-         debug("CoNetServ: startCommand(): dup2() - error\n");
+         DEBUG_STR("CoNetServ: startCommand(): dup2() - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): dup2() - error\n");
          _exit(1);
       }
@@ -145,21 +147,21 @@ static bool startCommand()
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {
-         debug("CoNetServ: startCommand(): execv() - error\n");
+         DEBUG_STR("CoNetServ: startCommand(): execv() - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): execv() - error\n");
          //send a signal to parrent
          _exit(1);
       }
    } else if (pids[cmd] == -1) {
       /* error - can't fork the parent process */
-      debug("CoNetServ: startCommand(): vfork() - error\n");
+      DEBUG_STR("CoNetServ: startCommand(): vfork() - error\n");
 
       pids[cmd] = 0;
       npnfuncs->setexception(NULL, "CoNetServ: startCommand(): vfork() - error\n");
       return false;
    } else {
       /* parent */
-      debug("CoNetServ: startCommand(): vfork() - parent\n");
+      DEBUG_STR("CoNetServ: startCommand(): vfork() - parent\n");
 
       /* close write end of pipe */
       close(pipes[cmd][1]);
@@ -167,12 +169,12 @@ static bool startCommand()
       /* make read end of pipe non-blocking */
       int flags;
       if ((flags = fcntl(pipes[cmd][0], F_GETFL)) == -1) {
-         debug("CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
+         DEBUG_STR("CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
          return false;
       }
       if (fcntl(pipes[cmd][0], F_SETFL, flags | O_NONBLOCK) == -1) {
-         debug("CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
+         DEBUG_STR("CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
          npnfuncs->setexception(NULL, "CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
          return false;
       }
@@ -184,7 +186,7 @@ static bool stopCommand(command_t cmd)
 {
    /* kill the command, if running */
    if (pids[cmd] != 0) {
-      debug("CoNetServ: stopCommand()\n");
+      DEBUG_STR("CoNetServ: stopCommand()\n");
       kill(pids[cmd], 9);
       waitpid(pids[cmd], NULL, 0);
       pids[cmd] = 0;
@@ -225,7 +227,7 @@ static int readCommand(command_t cmd, char *buf)
    buf[len] = '\0';
 
    if (len != 0) {
-      debug("CoNetServ: readCommand()");
+      DEBUG_STR("CoNetServ: readCommand()");
       //fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
       //fprintf(stderr, "%s", buf);
    }
@@ -237,6 +239,8 @@ static int readCommand(command_t cmd, char *buf)
 static void
 destroy()
 {
+   DEBUG_STR("shell->destroy()");
+
    if (shell != NULL)
       npnfuncs->memfree(shell);
    if (buffer != NULL)
@@ -250,7 +254,7 @@ init_shell()
 {
    cmd_shell *shell;
 
-   debug("init_shell()");
+   DEBUG_STR("init_shell()");
 
    /* Allocate buffer */
    if ((buffer = npnfuncs->memalloc(BUFLEN * sizeof(char))) == NULL)

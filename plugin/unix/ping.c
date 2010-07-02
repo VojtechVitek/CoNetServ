@@ -37,19 +37,20 @@ getProperty(NPIdentifier propertyName, NPVariant *result)
 }
 
 static void
-destroy()
+destroy(module *it)
 {
-
+   DEBUG_STR("ping->destroy()");
+   npnfuncs->memfree(it);
+   npnfuncs->releaseobject(it->obj);
 }
 
 module *
 init_module_ping() {
    module *it;
 
-   debug("init_module_ping()");
+   DEBUG_STR("init_module_ping()");
    it = (module *)npnfuncs->memalloc(sizeof(module));
    it->obj = npnfuncs->createobject(instance, &npclass);
-   npnfuncs->retainobject(it->obj);
    it->identifier = npnfuncs->getstringidentifier("ping");
    it->path = "ping";
 
