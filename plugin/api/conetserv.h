@@ -3,115 +3,40 @@
  * <object id="conetserv" type="application/x-conetserv" width="0" height="0">
  *   Plugin FAILED to load
  * </object>
- *
- * To access the embedded object you can use this JavaScript code:
- * var conetserv = document.getElementById("conetserv");
- *
- * Now, you can access it's methods. For example:
- * conetserv.startPing();
  */
-object conetserv;
+var conetserv = document.getElementById("conetserv");
 
 /**
- * Read output of PING6 command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
+ * Plugin version
  */
-function readPing();
+conetserv.version;
 
 /**
- * Read output of PING6 command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
+ * PING command
  */
-function readPing6();
+conetserv.ping;
 
 /**
- * Read output of TRACEROUTE command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
+ * PING6 comand
  */
-function readTraceroute();
+conetserv.ping6;
 
 /**
- * Read output of TRACEROUTE6 command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
+ * TRACEROUTE command
  */
-function readTraceroute6();
+conetserv.traceroute;
 
 /**
- * Read output of WHOIS command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
+ * TRACEROUTE6 command
  */
-function readWhois();
+conetserv.traceroute6;
 
 /**
- * Read output of NSLOOKUP command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
+ * WHOIS command
  */
-function readNslookup();
-
+conetserv.whois;
 
 /**
- * Start PING command
+ * NSLOOKUP command
  */
-function startPing();
-
-/**
- * Start PING6 command
- */
-function startPing6();
-
-/**
- * Start TRACEROUTE command
- */
-function startTraceroute();
-
-/**
- * Start TRACEROUTE6 command
- */
-function startTraceroute6();
-
-/**
- * Start WHOIS command
- */
-function startWhois();
-
-/**
- * Start NSLOOKUP command
- */
-function startNslookup();
-
-
-/**
- * Stop PING command
- */
-function stopPing();
-
-/**
- * Stop PING6 command
- */
-function stopPing6();
-
-/**
- * Stop TRACEROUTE command
- */
-function stopTraceroute();
-
-/**
- * Stop TRACEROUTE6 command
- */
-function stopTraceroute6();
-
-/**
- * Stop WHOIS command
- */
-function stopWhois();
-
-/**
- * Stop NSLOOKUP command
- */
-function startNslookup();
+conetserv.traceroute;
