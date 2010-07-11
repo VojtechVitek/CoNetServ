@@ -27,8 +27,9 @@ var Options = {
          this.storage = false;
          return;
       }
-      this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
-      $("#settings-general-toolbox").attr("checked", this.toolbarButton);
+
+      //this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
+      //$("#settings-general-toolbox").attr("checked", this.toolbarButton);
 
       this.autostart = this._toBool(this.storage['conetserv-settings-general-autostart']);
       $("#settings-general-autostart").attr("checked", this.autostart);
