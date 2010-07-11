@@ -131,9 +131,9 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
                   continue;
                if (buffer[i] >= '0' && buffer[i] <= '9')
                   continue;
-               if (buffer[i] == '.' || buffer[i] == '-')
+               if (buffer[i] == '.' || buffer[i] == '-' || buffer[i] == ':')
                   continue;
-               
+
                // not a valid hostname ASCII character
                npnfuncs->setexception(obj, "Not valid hostname ASCII string [a-zA-Z0-9-.] passed as a parameter.");
                logmsg("CoNetServ: invoke: Not valid hostname ASCII character.\n");

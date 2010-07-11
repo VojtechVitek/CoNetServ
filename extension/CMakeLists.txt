@@ -70,14 +70,14 @@ if(UNIX)
 	# Chrome and Firefox release plugin paths
 	set(CHROME_LIBRARIES "")
 	set(FIREFOX_LIBRARIES "")
-	file(GLOB_RECURSE LIBRARY_PATHS1 ${RELEASE_DIR}/plugins/platform/Darwin_*/np${PROJECT_NAME}.dylib)
+	file(GLOB_RECURSE LIBRARY_PATHS1 ${RELEASE_DIR}/platform/Darwin_*/np${PROJECT_NAME}.dylib)
 	string(REGEX MATCH "^.*/np${PROJECT_NAME}[.]plugin" LIBRARY_PATHS1 "${LIBRARY_PATHS1}")
-	file(GLOB_RECURSE LIBRARY_PATHS2 ${RELEASE_DIR}/plugins/platform/WINNT_*/np${PROJECT_NAME}.dll)
-	file(GLOB_RECURSE LIBRARY_PATHS3 ${RELEASE_DIR}/plugins/platform/Linux_*/np${PROJECT_NAME}.so)
+	file(GLOB_RECURSE LIBRARY_PATHS2 ${RELEASE_DIR}/platform/WINNT_*/np${PROJECT_NAME}.dll)
+	file(GLOB_RECURSE LIBRARY_PATHS3 ${RELEASE_DIR}/platform/Linux_*/np${PROJECT_NAME}.so)
 	foreach(LIBRARY_PATH ${LIBRARY_PATHS1} ${LIBRARY_PATHS2} ${LIBRARY_PATHS3})
 		# Get rid of double slash, probably bug in CMake file(GLOB_RECURSE ..)
 		string(REGEX REPLACE "[/]+" "/" LIBRARY_PATH "${LIBRARY_PATH}")
-		file(RELATIVE_PATH LIBRARY_PATH ${RELEASE_DIR}/plugins/ ${LIBRARY_PATH})
+		file(RELATIVE_PATH LIBRARY_PATH ${RELEASE_DIR}/ ${LIBRARY_PATH})
 		if("${CHROME_LIBRARIES}" STREQUAL "")
 			set(CHROME_LIBRARIES  "{ \"path\": \"${LIBRARY_PATH}\", \"public\": true }")
 		else()
@@ -94,25 +94,31 @@ if(UNIX)
 	configure_file("firefox/install.rdf.in" "${RELEASE_DIR}/firefox/install.rdf" IMMEDIATE @ONLY)
 	configure_file("opera/config.xml.in" "${RELEASE_DIR}/opera/config.xml" IMMEDIATE @ONLY)
 
-
-	add_custom_target(ChromeExtension ALL
-		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
+	add_custom_target(ChromeExtension
+		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
 	)
 
-	add_custom_target(FirefoxAddOn ALL
-		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
+	add_custom_target(FirefoxAddOn
+		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Firefox.xpi
 	)
 
-	add_custom_target(OperaWidget ALL
-		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
+	add_custom_target(OperaWidget
+		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Opera.wgt
 	)
+
+	add_custom_target(Packages ALL
+	)
+	add_dependencies(Packages ChromeExtension FirefoxAddOn OperaWidget)
 
 	# Find common files
-	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*.js)
 	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.css)
-	file(GLOB_RECURSE common_files3 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.png)
-	file(GLOB_RECURSE common_files4 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.gif)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.jpg)
+	file(GLOB_RECURSE common_files2 ${CMAKE_CURRENT_SOURCE_DIR}/css/*.png)
 	file(GLOB_RECURSE common_files5 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.gif)
+	file(GLOB_RECURSE common_files4 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.jpg)
+	file(GLOB_RECURSE common_files3 ${CMAKE_CURRENT_SOURCE_DIR}/images/*.png)
+	file(GLOB_RECURSE common_files1 ${CMAKE_CURRENT_SOURCE_DIR}/js/*.js)
 	set(common_files
 		${common_files1}
 		${common_files2}
@@ -124,7 +130,7 @@ if(UNIX)
 	)
 
 	# Find platform files
-	file(GLOB_RECURSE platform_files ${CMAKE_CURRENT_SOURCE_DIR}/platform/*)
+	file(GLOB_RECURSE platform_files ${RELEASE_DIR}/platform/*)
 
 	# Chrome files
 	set(chrome_files
@@ -132,12 +138,13 @@ if(UNIX)
 		${platform_files}
 	)
 	foreach(chrome_file ${chrome_files})
-		file(RELATIVE_PATH chrome_file_relative ${CMAKE_CURRENT_SOURCE_DIR}/ ${chrome_file})
+		string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}[/][^/]+[/](.+)$" "\\1" chrome_file_relative "${chrome_file}")
 		set(chrome_files_relative ${chrome_files_relative} "${RELEASE_DIR}/chrome/${chrome_file_relative}")
 		add_custom_command(
 			OUTPUT ${RELEASE_DIR}/chrome/${chrome_file_relative}
 			DEPENDS ${chrome_file}
 			COMMAND cmake -E copy ${chrome_file} ${RELEASE_DIR}/chrome/${chrome_file_relative}
+			COMMENT "Copying file to Chrome Extension: ${chrome_file_relative}"
 		)
 	endforeach()
 
@@ -151,12 +158,13 @@ if(UNIX)
 		${CMAKE_CURRENT_SOURCE_DIR}/firefox/overlay.xul
 	)
 	foreach(firefox_file ${firefox_files})
-		file(RELATIVE_PATH firefox_file_relative ${CMAKE_CURRENT_SOURCE_DIR}/ ${firefox_file})
+		string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}[/][^/]+[/](.+)$" "\\1" firefox_file_relative "${firefox_file}")
 		set(firefox_files_relative ${firefox_files_relative} "${RELEASE_DIR}/firefox/${firefox_file_relative}")
 		add_custom_command(
 			OUTPUT ${RELEASE_DIR}/firefox/${firefox_file_relative}
 			DEPENDS ${firefox_file}
 			COMMAND cmake -E copy ${firefox_file} ${RELEASE_DIR}/firefox/${firefox_file_relative}
+			COMMENT "Copying file to Firefox Add-on: ${firefox_file_relative}"
 		)
 	endforeach()
 
@@ -165,46 +173,47 @@ if(UNIX)
 		${common_files}
 	)
 	foreach(opera_file ${opera_files})
-		file(RELATIVE_PATH opera_file_relative ${CMAKE_CURRENT_SOURCE_DIR}/ ${opera_file})
+		string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}[/][^/]+[/](.+)$" "\\1" opera_file_relative "${opera_file}")
 		set(opera_files_relative ${opera_files_relative} "${RELEASE_DIR}/opera/${opera_file_relative}")
 		add_custom_command(
 			OUTPUT ${RELEASE_DIR}/opera/${opera_file_relative}
 			DEPENDS ${opera_file}
 			COMMAND cmake -E copy ${opera_file} ${RELEASE_DIR}/opera/${opera_file_relative}
+			COMMENT "Copying file to Opera Widget: ${opera_file_relative}"
 		)
 	endforeach()
 
 	# Chrome package build
 	add_custom_command(
-		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
+		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
 		DEPENDS ${chrome_files_relative}
 		WORKING_DIRECTORY ${RELEASE_DIR}/chrome
-		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
-		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.zip *
-		COMMAND crxmake --extension-output=${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx
+		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
+		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.zip *
+		COMMAND crxmake --extension-output=${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
 		                --pack-extension=${RELEASE_DIR}/chrome
 		                --pack-extension-key=${CMAKE_SOURCE_DIR}/conetserv.pem
-		COMMENT "Generating Chrome Exension into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.crx (.zip)"
+		COMMENT "Generating Chrome Exension into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.(crx|zip)"
 	)
 
 	# Firefox package build
 	add_custom_command(
-		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
+		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Firefox.xpi
 		DEPENDS ${firefox_files_relative}
 		WORKING_DIRECTORY ${RELEASE_DIR}/firefox
-		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi
-		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi *
-		COMMENT "Generating Firefox Add-on into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.xpi"
+		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Firefox.xpi
+		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Firefox.xpi *
+		COMMENT "Generating Firefox Add-on into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Firefox.xpi"
 	)
 
 	# Opera package build
 	add_custom_command(
-		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
+		OUTPUT ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Opera.wgt
 		DEPENDS ${opera_files_relative}
 		WORKING_DIRECTORY ${RELEASE_DIR}/opera
-		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt
-		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt *
-		COMMENT "Generating Opera Widget into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.wgt"
+		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Opera.wgt
+		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Opera.wgt *
+		COMMENT "Generating Opera Widget into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Opera.wgt"
 	)
 
 else()

@@ -2,7 +2,7 @@
 project("CoNetServ")
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 3)
-set(PATCH_VERSION 0)
+set(PATCH_VERSION 3)
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
@@ -15,8 +15,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakePlugins)
 # The final packages (which contains of more platform builds) are made in the first
 # level build directory, eg. build/.
 get_filename_component(RELEASE_DIR ${CMAKE_BINARY_DIR}/../ ABSOLUTE)
-if("${RELEASE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-	message(FATAL_ERROR "Please, build project in the second level build directory, eg. build/${CMAKE_SYSTEM_NAME}.")
+get_filename_component(CMAKE_SOURCE_DIR_TEST ${CMAKE_BINARY_DIR}/../../ ABSOLUTE)
+if(NOT "${CMAKE_SOURCE_DIR_TEST}" STREQUAL "${CMAKE_SOURCE_DIR}")
+	message(FATAL_ERROR "Please, build project in sub-subdirectory of your source code, eg. build/${CMAKE_SYSTEM_NAME}.")
 endif()
 
 # Debug extensions are built in directory extension (for simple development process)
@@ -49,12 +50,12 @@ set(PROJECT_HOST "${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 set(PROJECT_URL "http://www.${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}/${PROJECT_NAME}")
 
 # Exension strings
-set(EXTENSION_SLOGAN "Extension which integrates network services into the browser.")
+set(EXTENSION_SLOGAN "Extension that integrates network tools into the browser.")
 set(EXTENSION_DESC "${PROJECT_LONG} v${VERSION}. ${EXTENSION_SLOGAN} ${PROJECT_COPY}")
 set(EXTENSION_ID "${PROJECT_LOW}@${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 
 # Plugin strings
-set(PLUGIN_SLOGAN "Plugin which integrates network services into the browser.")
+set(PLUGIN_SLOGAN "Plugin that integrates network tools into the browser.")
 set(PLUGIN_NAME ${PROJECT_NAME})
 set(PLUGIN_LONG ${PROJECT_LONG})
 set(PLUGIN_TYPE "application/x-${PROJECT_LOW}")
