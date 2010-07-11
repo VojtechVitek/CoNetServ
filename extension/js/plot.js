@@ -182,7 +182,7 @@ var Plot = {
             if(pingTime)
             {
                /* check for lost packets */
-               var actPingId = parseInt((/icmp_seq=\d+/i.exec(currentData))[0].substr(9));
+               var actPingId = parseInt((/icmp_(s|r)eq=\d+/i.exec(currentData))[0].substr(9));
                while(actPingId != null && actPingId > ++data.prevId)
                   data.add(null);
                data.add(pingTime);
