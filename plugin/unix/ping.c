@@ -45,16 +45,19 @@ destroy(module *it)
 }
 
 module *
-init_module_ping() {
+init_module_ping()
+{
    module *it;
 
    DEBUG_STR("init_module_ping()");
+
    it = (module *)npnfuncs->memalloc(sizeof(module));
+   it->next = NULL;
    it->obj = npnfuncs->createobject(instance, &npclass);
    it->identifier = npnfuncs->getstringidentifier("ping");
-   it->path = "ping";
+   it->program = "ping";
+   it->path = shell->find("ping");
 
-   it->next = NULL;
    it->destroy = destroy;
    it->start = start;
    it->read = read;

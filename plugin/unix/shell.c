@@ -273,7 +273,7 @@ init_shell()
    memcpy(which_env[0] + strlen("PATH="), user_paths, strlen(user_paths));
    strncpy(which_env[0] + strlen("PATH=") + strlen(user_paths), root_paths, strlen(root_paths));
 
-                                                                                                   /* Allocate buffer */
+   /* Allocate buffer */
    if ((shell = npnfuncs->memalloc(sizeof(cmd_shell))) == NULL)
       return NULL;
 
