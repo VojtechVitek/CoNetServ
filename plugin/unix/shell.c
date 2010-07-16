@@ -15,6 +15,8 @@
 #include "plugin_module.h"
 
 /*
+EXECVPE() WORKAROUND
+
 This should work from glibc 2.11, where execvpe() is implemented:
 char* env[] = { "PATH=$PATH:/usr/sbin:/sbin/", NULL };
 args[cmd][1] = addr;
@@ -23,6 +25,7 @@ execvpe(args[cmd][0], args[cmd], env);
 But as for now (Feb 2010), we must run `which <cmd>` as work-around:
 $ PATH="$PATH:/usr/sbin/:/sbin/" which <cmd>
 /usr/sbin/<cmd>
+
 -- V-Teq
 */
 
@@ -40,8 +43,6 @@ static char* find_program_path(char *program)
    int pid;
    int len;
 
-   DEBUG_STR("CoNetServ: find_program_path(%s)", DEBUG_IDENTIFIER(program));
-
    /* create pipe for communication */
    if (pipe(pipes) == -1)
       return NULL;
@@ -50,14 +51,14 @@ static char* find_program_path(char *program)
    if ((pid = vfork()) == 0) {
       /* child */
 
-      /* close read end of pipe */
+      /* close unused unused read end */
       close(pipes[0]);
 
-      /* redirect stdout to write end of the pipe */
+      /* redirect stdout to write end */
       if (dup2(pipes[1], 1) == -1)
          _exit(1);
 
-      /* Fill which argument by program name */
+      /* fill which argument by program name */
       which_argv[1] = (char *)program;
 
       /* Execute command
@@ -66,37 +67,61 @@ static char* find_program_path(char *program)
       if (execve(which_argv[0], which_argv, which_env) == -1)
          _exit(1);
 
+      /* won't get here - executed program exits */
+
    } else if (pid == -1) {
       /* error - can't fork the parent process */
+
+      DEBUG_STR("shell->find(%s): fork() error", program);
 
       return NULL;
 
    } else {
       /* parent */
 
-      /* close write end of pipe */
+      /* close unused write end */
       close(pipes[1]);
+
+#if 0
+      /* make read end of pipe non-blocking */
+      int flags;
+      if ((flags = fcntl(pipes[0], F_GETFL)) == -1) {
+         logmsg("startCommand(): fcntl(F_GETFL) - error");
+         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_GETFL) - error");
+         return false;
+      }
+      if (fcntl(pipes[0], F_SETFL, flags | O_NONBLOCK) == -1) {
+         logmsg("startCommand(): fcntl(F_SETFL) - error");
+         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_SETFL) - error");
+         return false;
+      }
+#endif
 
       /* read child data from the pipe */
       if ((len = read(pipes[0], buffer, BUFLEN - 1)) == -1 || len == 0) {
          /* Error or zero length*/
 
+         DEBUG_STR("shell->find(%s): NULL", program);
+
          return NULL;
 
       } else {
 
-         /* Be sure to end string by '\0' character */
+         /* be sure to end string by '\0' character */
          buffer[len] = '\0';
-         /* We need only first line */
+
+         /* we need only first line */
          for (int i = 0; i < len; i++) {
             if (buffer[i] == '\n') {
                buffer[i] = '\0';
                break;
             }
          }
-         DEBUG_STR("find_program_path(%s): \"%s\"", DEBUG_IDENTIFIER(buffer));
+
+         DEBUG_STR("shell->find(%s): \"%s\"", program, buffer);
       }
 
+      /* clean child's status from process table */
       waitpid(pid, NULL, 0);
 
       return buffer;
@@ -120,23 +145,23 @@ static bool startCommand()
 
    /* create pipe for communication */
    if (pipe(pipes[cmd]) == -1) {
-      DEBUG_STR("CoNetServ: startCommand(): pipe() - error\n");
-      npnfuncs->setexception(NULL, "CoNetServ: startCommand(): pipe() - error\n");
+      DEBUG_STR("startCommand(): pipe() - error\n");
+      npnfuncs->setexception(NULL, "startCommand(): pipe() - error\n");
       return false;
    }
 
    /* fork the process */
    if ((pids[cmd] = vfork()) == 0) {
       /* child */
-      DEBUG_STR("CoNetServ: startCommand(): vfork() - child\n");
+      DEBUG_STR("startCommand(): vfork() - child\n");
 
       /* close read end of pipe */
       close(pipes[cmd][0]);
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(pipes[cmd][1], 1) == -1 || dup2(pipes[cmd][1], 2) == -1) {
-         DEBUG_STR("CoNetServ: startCommand(): dup2() - error\n");
-         npnfuncs->setexception(NULL, "CoNetServ: startCommand(): dup2() - error\n");
+         DEBUG_STR("startCommand(): dup2() - error\n");
+         npnfuncs->setexception(NULL, "startCommand(): dup2() - error\n");
          _exit(1);
       }
 
@@ -145,21 +170,21 @@ static bool startCommand()
 
       /* execute command */
       if (execv(args[cmd][0], args[cmd]) == -1) {
-         DEBUG_STR("CoNetServ: startCommand(): execv() - error\n");
-         npnfuncs->setexception(NULL, "CoNetServ: startCommand(): execv() - error\n");
+         DEBUG_STR("startCommand(): execv() - error\n");
+         npnfuncs->setexception(NULL, "startCommand(): execv() - error\n");
          //send a signal to parrent
          _exit(1);
       }
    } else if (pids[cmd] == -1) {
       /* error - can't fork the parent process */
-      DEBUG_STR("CoNetServ: startCommand(): vfork() - error\n");
+      DEBUG_STR("startCommand(): vfork() - error\n");
 
       pids[cmd] = 0;
-      npnfuncs->setexception(NULL, "CoNetServ: startCommand(): vfork() - error\n");
+      npnfuncs->setexception(NULL, "startCommand(): vfork() - error\n");
       return false;
    } else {
       /* parent */
-      DEBUG_STR("CoNetServ: startCommand(): vfork() - parent\n");
+      DEBUG_STR("startCommand(): vfork() - parent\n");
 
       /* close write end of pipe */
       close(pipes[cmd][1]);
@@ -167,13 +192,13 @@ static bool startCommand()
       /* make read end of pipe non-blocking */
       int flags;
       if ((flags = fcntl(pipes[cmd][0], F_GETFL)) == -1) {
-         DEBUG_STR("CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
-         npnfuncs->setexception(NULL, "CoNetServ: startCommand(): fcntl(F_GETFL) - error\n");
+         DEBUG_STR("startCommand(): fcntl(F_GETFL) - error\n");
+         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_GETFL) - error\n");
          return false;
       }
       if (fcntl(pipes[cmd][0], F_SETFL, flags | O_NONBLOCK) == -1) {
-         DEBUG_STR("CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
-         npnfuncs->setexception(NULL, "CoNetServ: startCommand(): fcntl(F_SETFL) - error\n");
+         DEBUG_STR("startCommand(): fcntl(F_SETFL) - error\n");
+         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_SETFL) - error\n");
          return false;
       }
    }
@@ -184,7 +209,7 @@ static bool stopCommand(command_t cmd)
 {
    /* kill the command, if running */
    if (pids[cmd] != 0) {
-      DEBUG_STR("CoNetServ: stopCommand()\n");
+      DEBUG_STR("stopCommand()\n");
       kill(pids[cmd], 9);
       waitpid(pids[cmd], NULL, 0);
       pids[cmd] = 0;
@@ -225,7 +250,7 @@ static int readCommand(command_t cmd, char *buf)
    buf[len] = '\0';
 
    if (len != 0) {
-      DEBUG_STR("CoNetServ: readCommand()");
+      DEBUG_STR("readCommand()");
       //fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
       //fprintf(stderr, "%s", buf);
    }
@@ -252,7 +277,15 @@ init_shell()
 {
    cmd_shell *shell;
 
-   DEBUG_STR("init_shell()");
+   DEBUG_STR("shell->init()");
+
+   /* Allocate shell object */
+   if ((shell = npnfuncs->memalloc(sizeof(cmd_shell))) == NULL)
+      return NULL;
+
+   shell->destroy = destroy;
+   shell->find = find_program_path;
+   shell->run = run_command;
 
    /* Allocate buffer */
    if ((buffer = npnfuncs->memalloc(BUFLEN * sizeof(char))) == NULL)
@@ -267,19 +300,11 @@ init_shell()
       return NULL;
 
    /* Add superuser paths into PATH variable:
-   PATH="$PATH:/usr/sbin/:/sbin/"
+      PATH="$PATH:/usr/sbin/:/sbin/"
    */
    memcpy(which_env[0], "PATH=", strlen("PATH="));
    memcpy(which_env[0] + strlen("PATH="), user_paths, strlen(user_paths));
    strncpy(which_env[0] + strlen("PATH=") + strlen(user_paths), root_paths, strlen(root_paths));
-
-   /* Allocate buffer */
-   if ((shell = npnfuncs->memalloc(sizeof(cmd_shell))) == NULL)
-      return NULL;
-
-   shell->destroy = destroy;
-   shell->find = find_program_path;
-   shell->run = run_command;
 
    return shell;
 }

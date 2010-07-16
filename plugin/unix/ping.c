@@ -27,13 +27,13 @@ stop()
 static bool
 hasProperty(NPIdentifier propertyName)
 {
-
+   return false;
 }
 
 static bool
 getProperty(NPIdentifier propertyName, NPVariant *result)
 {
-
+   return false;
 }
 
 static void
@@ -49,15 +49,19 @@ init_module_ping()
 {
    module *it;
 
-   DEBUG_STR("init_module_ping()");
+   DEBUG_STR("ping->init()");
 
    it = (module *)npnfuncs->memalloc(sizeof(module));
    it->next = NULL;
    it->obj = npnfuncs->createobject(instance, &npclass);
    it->identifier = npnfuncs->getstringidentifier("ping");
    it->program = "ping";
-   it->path = shell->find("ping");
-
+   it->found = false;
+   if (shell) {
+      if ((it->path = shell->find("ping")) != NULL) {
+         it->found = true;
+      }
+   }
    it->destroy = destroy;
    it->start = start;
    it->read = read;

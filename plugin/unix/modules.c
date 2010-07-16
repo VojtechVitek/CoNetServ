@@ -30,7 +30,7 @@ init_modules()
    struct _module_list* modules;
    module **it;
 
-   DEBUG_STR("init_modules()");
+   DEBUG_STR("modules->init()");
 
    shell = init_shell();
 
