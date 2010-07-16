@@ -62,13 +62,16 @@ CoNetServ v2.0+
 * Installation guides for missing programs (OS, platform, distro)
 
 CoNetServ v3.0+
+* Translations (JavaScript based, option in settings)
 * External services (Ping, Traceroute, Whois etc. from public servers)
 * Local info (list local interfaces and it's MAC address, IPv4/IPv6 adress, mask, default route, gateway, ..)
 * Ping/Traceroute through specified interface (ethernet, wifi, ..)
-* Nmap (list computers in local network)
 
 CoNetServ v4.0+
-* Translations (JavaScript based, option in settings)
+* Nmap (list computers in local network)
 * Distance graph of neighboaring computers (using canvas, nmap and auto-ping)
 * Download/upload data transfer meter with plots, current speed (public servers / local tools)
 * Release as Safari 5+ extension
+
+CoNetServ v5.0+
+* Send files between two CoNetServ plugins in local network
