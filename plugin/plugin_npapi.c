@@ -19,6 +19,9 @@ NPIdentifier version;
 /** Plugin modules */
 module_list  *modules = NULL;
 
+/** Plugin processes */
+process_list *processes = NULL;
+
 static bool
 hasMethod(NPObject* obj, NPIdentifier methodName)
 {
@@ -35,7 +38,7 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
 }
 
 static bool
-invokeDefault(NPObject* obj, const NPVariant *args, uint32_t argCount, NPVariant *result)
+invokeDefault(NPObject* obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
    DEBUG_STR("plugin.invokeDefault()");
    return false;
@@ -46,29 +49,27 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
 {
    module *it;
 
+   /* Plugin main object */
    if (obj == plugin) {
-      /* Plugin main object */
-
-      /* Plugin version */
-      if (propertyName == version) {
-         DEBUG_STR("plugin.hasProperty(version)");
-         return true;
-      }
 
       DEBUG_STR("plugin.hasProperty(%s)", DEBUG_IDENTIFIER(propertyName));
 
-   } else {
-      /* Find module object */
-      if (!modules || !modules->first)
-         return false;
+      /* Plugin version */
+      if (propertyName == version) {
+         return true;
+      }
 
+      return false;
+   }
+
+   /* Plugin module objects */
+   if (modules && modules->first) {
       for (it = modules->first; it != NULL; it = it->next) {
          if (obj == it->obj) {
             /* Return hasProperty of module, if found */
-            return it->hasProperty(propertyName);
-
             DEBUG_STR("plugin.%s.hasProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
 
+            return it->hasProperty(propertyName);
          }
       }
    }
@@ -79,43 +80,41 @@ hasProperty(NPObject *obj, NPIdentifier propertyName)
 static bool
 getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 {
-   DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
-
    module *it;
    NPString str;
    int len;
 
+   DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
+
+   /* Plugin main object */
    if (obj == plugin) {
-      /* Plugin main object */
 
       DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
 
       /* Plugin version */
       if (propertyName == version) {
 
-         result->type = NPVariantType_String;
          len = strlen(VERSION);
          NPUTF8 *version = npnfuncs->memalloc((len + 1) * sizeof(NPUTF8));
          strcpy(version, VERSION);
          STRING_UTF8CHARACTERS(str) = version;
          STRING_UTF8LENGTH(str) = len;
+
+         result->type = NPVariantType_String;
          result->value.stringValue = str;
 
          return true;
       }
 
+      return false;
+   }
 
-   } else {
-
-      DEBUG_STR("plugin.%s.getProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
-
-      /* Find module object */
-      if (!modules || !modules->first)
-         return false;
-
+   /* Plugin module objects */
+   if (modules && modules->first) {
       for (it = modules->first; it != NULL; it = it->next) {
          if (obj == it->obj) {
-            /* Return hasProperty of module, if found */
+            /* Return getProperty of module, if found */
+            DEBUG_STR("plugin.%s.getProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
             return it->getProperty(propertyName, result);
          }
       }
@@ -126,7 +125,7 @@ getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
 
 /* NPP */
 static NPError
-init(NPMIMEType pluginType, NPP _instance, uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved)
+init(const NPMIMEType pluginType, const NPP _instance, const uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved)
 {
    DEBUG_STR("init(instance %d, pluginType %d, mode %d, argc %d)", instance, pluginType, mode, argc);
 
@@ -140,7 +139,7 @@ destroy(NPP instance, NPSavedData **save)
    /* Stop possibly running processes. */
    DEBUG_STR("destroy()");
 
-   if(plugin)
+   if (plugin)
       npnfuncs->releaseobject(plugin);
 
    plugin = NULL;
@@ -148,9 +147,9 @@ destroy(NPP instance, NPSavedData **save)
 }
 
 static NPError
-getValue(NPP instance, NPPVariable variable, void *value)
+getValue(NPP instance, const NPPVariable variable, void *value)
 {
-   switch(variable) {
+   switch (variable) {
    case NPPVpluginNameString:
       DEBUG_STR("getValue(NPPVPluginNameString)");
       *((char **)value) = PLUGIN_NAME;
@@ -243,10 +242,10 @@ NP_Initialize(NPNetscapeFuncs *npnf
    module *it;
 
    DEBUG_STR("NP_Initialize()");
-   if(npnf == NULL)
+   if (npnf == NULL)
       return NPERR_INVALID_FUNCTABLE_ERROR;
 
-   if(HIBYTE(npnf->version) > NP_VERSION_MAJOR)
+   if (HIBYTE(npnf->version) > NP_VERSION_MAJOR)
       return NPERR_INCOMPATIBLE_VERSION_ERROR;
 
    npnfuncs = npnf;
@@ -272,7 +271,7 @@ NP_Shutdown()
 }
 
 char *
-NP_GetMIMEDescription(void)
+NP_GetMIMEDescription()
 {
    DEBUG_STR("NP_GetMIMEDescription()");
    return PLUGIN_MIME;

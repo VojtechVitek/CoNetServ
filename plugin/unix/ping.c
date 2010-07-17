@@ -6,68 +6,69 @@
 #include "modules.h"
 #include "shell.h"
 
-static bool
-start()
+static process *
+start(const module *ping, const NPVariant *args, const uint32_t argc)
 {
+   int i;
 
+   if (!ping->found)
+      return NULL;
+
+   /*
+   for (i = 0; i < argc; ++i) {
+
+   }
+   */
+
+   char * argv[2] = {ping->path, "-n"};
+
+   return shell->run(argv);
 }
 
-static void
-read(NPUTF8 *result)
-{
-
-}
-
 static bool
-stop()
-{
-
-}
-
-static bool
-hasProperty(NPIdentifier propertyName)
+hasProperty(const NPIdentifier property)
 {
    return false;
 }
 
 static bool
-getProperty(NPIdentifier propertyName, NPVariant *result)
+getProperty(const NPIdentifier property, NPVariant *result)
 {
    return false;
 }
 
 static void
-destroy(module *it)
+destroy(module *ping)
 {
    DEBUG_STR("ping->destroy()");
-   npnfuncs->memfree(it);
-   npnfuncs->releaseobject(it->obj);
+   npnfuncs->memfree(ping);
+   npnfuncs->releaseobject(ping->obj);
 }
 
 module *
 init_module_ping()
 {
-   module *it;
+   module *ping;
 
    DEBUG_STR("ping->init()");
 
-   it = (module *)npnfuncs->memalloc(sizeof(module));
-   it->next = NULL;
-   it->obj = npnfuncs->createobject(instance, &npclass);
-   it->identifier = npnfuncs->getstringidentifier("ping");
-   it->program = "ping";
-   it->found = false;
+   if ((ping = (module *)npnfuncs->memalloc(sizeof(module))) == NULL)
+      return NULL;
+
+   ping->next = NULL;
+   ping->obj = npnfuncs->createobject(instance, &npclass);
+   ping->identifier = npnfuncs->getstringidentifier("ping");
+   ping->found = false;
    if (shell) {
-      if ((it->path = shell->find("ping")) != NULL) {
-         it->found = true;
+      if ((ping->path = shell->find("ping")) != NULL) {
+         ping->found = true;
       }
    }
-   it->destroy = destroy;
-   it->start = start;
-   it->read = read;
-   it->stop = stop;
-   it->hasProperty = hasProperty;
-   it->getProperty = getProperty;
+   ping->destroy = destroy;
+   ping->start = start;
 
-   return it;
+   ping->hasProperty = hasProperty;
+   ping->getProperty = getProperty;
+
+   return ping;
 }

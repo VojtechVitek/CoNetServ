@@ -61,7 +61,7 @@ static char* find_program_path(char *program)
       /* fill which argument by program name */
       which_argv[1] = (char *)program;
 
-      /* Execute command
+      /* execute command
        * which <cmd>
        */
       if (execve(which_argv[0], which_argv, which_env) == -1)
@@ -81,21 +81,6 @@ static char* find_program_path(char *program)
 
       /* close unused write end */
       close(pipes[1]);
-
-#if 0
-      /* make read end of pipe non-blocking */
-      int flags;
-      if ((flags = fcntl(pipes[0], F_GETFL)) == -1) {
-         logmsg("startCommand(): fcntl(F_GETFL) - error");
-         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_GETFL) - error");
-         return false;
-      }
-      if (fcntl(pipes[0], F_SETFL, flags | O_NONBLOCK) == -1) {
-         logmsg("startCommand(): fcntl(F_SETFL) - error");
-         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_SETFL) - error");
-         return false;
-      }
-#endif
 
       /* read child data from the pipe */
       if ((len = read(pipes[0], buffer, BUFLEN - 1)) == -1 || len == 0) {
@@ -128,136 +113,187 @@ static char* find_program_path(char *program)
    }
 }
 
-static void run_command(char *program_path)
+static void
+process_stop(process *p)
 {
+   /* kill the process, if running */
+   if (p->running) {
+      DEBUG_STR("process->stop()");
+
+      if (p->pid) {
+         kill(p->pid, 9);
+         waitpid(p->pid, NULL, 0);
+         p->pid = 0;
+         close(p->pipe[0]);
+         close(p->pipe[1]);
+      } else {
+         p->running = false;
+      }
+   }
+}
+
+static void
+process_read(process *p, NPVariant *result)
+{
+   int len;
+   int status;
+   NPString str;
+   NPUTF8 *chars;
+
+   /* check if the process is {still,already} running */
+   if (p->running) {
+
+      /* read from pipe */
+      if ((len = read(p->pipe[0], buffer, BUFLEN - 1)) == -1) {
+
+         if (errno == EAGAIN || errno == EWOULDBLOCK) {
+            /* non-blocking reading */
+
+            len = 0;
+
+         } else {
+            /* error */
+
+            p->running = false;
+            //p->error = errno;
+
+         }
+
+      } else if (len == 0) {
+         /* no data - test if child became a zombie */
+
+         waitpid(p->pid, &status, WNOHANG);
+
+         if (WIFEXITED(status)) {
+            /* child finished, clean it's status from process table */
+            waitpid(p->pid, NULL, 0);
+            p->running = false;
+         }
+
+      }
+
+   } else {
+
+      len = 0;
+
+   }
+
+   buffer[len] = '\0';
+
+   /* fill the result string */
+   chars = npnfuncs->memalloc((len + 1) * sizeof(NPUTF8));
+   memcpy(chars, buffer, len);
+   STRING_UTF8CHARACTERS(str) = chars;
+   STRING_UTF8LENGTH(str) = len;
+
+   result->type = NPVariantType_String;
+   result->value.stringValue = str;
+}
+
+
+static void
+process_destroy(process *p)
+{
+   DEBUG_STR("process->destroy()");
+   npnfuncs->memfree(p);
+   npnfuncs->releaseobject(p->obj);
+}
+
+process *
+process_init()
+{
+   process *p;
+
+   if ((p = (process *)npnfuncs->memalloc(sizeof(process))) == NULL)
+      return NULL;
+
+   p->pid = 0;
+   p->running = false;
+
+   p->destroy = process_destroy;
+   p->read = process_read;
+   p->stop = process_stop;
 
 }
 
-#if 0
-static bool startCommand()
+static process *
+run_command(char *argv[])
 {
-   /* already started */
-   if (pids[cmd] != 0)
-      return false;
+   process *p;
 
-   /* workaround for execvp() */
-   execvp_workaround();
+   DEBUG_STR("shell->run(\"%s\")", argv[0]);
+
+   if ((p = process_init()) == NULL)
+      return NULL;
 
    /* create pipe for communication */
-   if (pipe(pipes[cmd]) == -1) {
-      DEBUG_STR("startCommand(): pipe() - error\n");
-      npnfuncs->setexception(NULL, "startCommand(): pipe() - error\n");
-      return false;
+   if (pipe(p->pipe) == -1) {
+      DEBUG_STR("shell->run(): pipe() error\n");
+      npnfuncs->setexception(NULL, "shell->run(): pipe() error\n");
+      return NULL;
    }
 
    /* fork the process */
-   if ((pids[cmd] = vfork()) == 0) {
+   if ((p->pid = vfork()) == 0) {
       /* child */
       DEBUG_STR("startCommand(): vfork() - child\n");
 
       /* close read end of pipe */
-      close(pipes[cmd][0]);
+      close(p->pipe[0]);
 
       /* stdout and stderr to write end of the pipe */
-      if (dup2(pipes[cmd][1], 1) == -1 || dup2(pipes[cmd][1], 2) == -1) {
+      if (dup2(p->pipe[1], 1) == -1 || dup2(p->pipe[1], 2) == -1) {
          DEBUG_STR("startCommand(): dup2() - error\n");
          npnfuncs->setexception(NULL, "startCommand(): dup2() - error\n");
          _exit(1);
       }
 
-      /* copy addr argument to array */
-      args[cmd][1] = arg_host;
-
       /* execute command */
-      if (execv(args[cmd][0], args[cmd]) == -1) {
-         DEBUG_STR("startCommand(): execv() - error\n");
-         npnfuncs->setexception(NULL, "startCommand(): execv() - error\n");
-         //send a signal to parrent
+      if (execv(argv[0], argv) == -1) {
+         DEBUG_STR("shell->run(): execv() error\n");
+         npnfuncs->setexception(NULL, "shell->run(): execv() error\n");
          _exit(1);
       }
-   } else if (pids[cmd] == -1) {
-      /* error - can't fork the parent process */
-      DEBUG_STR("startCommand(): vfork() - error\n");
 
-      pids[cmd] = 0;
-      npnfuncs->setexception(NULL, "startCommand(): vfork() - error\n");
-      return false;
+      /* won't get here - executed program exits */
+
+   } else if (p->pid == -1) {
+      /* error - can't fork the parent process */
+
+      DEBUG_STR("shell->run(): vfork() error\n");
+      npnfuncs->setexception(NULL, "shell->run(): vfork() error\n");
+
+      p->pid = 0;
+      return NULL;
+
    } else {
       /* parent */
-      DEBUG_STR("startCommand(): vfork() - parent\n");
+      DEBUG_STR("shell->run(): vfork() parent\n");
 
       /* close write end of pipe */
-      close(pipes[cmd][1]);
+      close(p->pipe[1]);
 
       /* make read end of pipe non-blocking */
       int flags;
-      if ((flags = fcntl(pipes[cmd][0], F_GETFL)) == -1) {
-         DEBUG_STR("startCommand(): fcntl(F_GETFL) - error\n");
-         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_GETFL) - error\n");
-         return false;
+      if ((flags = fcntl(p->pipe[0], F_GETFL)) == -1) {
+         DEBUG_STR("shell->run(): fcntl(F_GETFL) error\n");
+         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_GETFL) error\n");
+         close(p->pipe[0]);
+         return NULL;
       }
-      if (fcntl(pipes[cmd][0], F_SETFL, flags | O_NONBLOCK) == -1) {
-         DEBUG_STR("startCommand(): fcntl(F_SETFL) - error\n");
-         npnfuncs->setexception(NULL, "startCommand(): fcntl(F_SETFL) - error\n");
-         return false;
+      if (fcntl(p->pipe[0], F_SETFL, flags | O_NONBLOCK) == -1) {
+         DEBUG_STR("shell->run(): fcntl(F_SETFL) error\n");
+         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_SETFL) error\n");
+         close(p->pipe[0]);
+         return NULL;
       }
+
+      p->running = true;
    }
-   return true;
+
+   return p;
 }
 
-static bool stopCommand(command_t cmd)
-{
-   /* kill the command, if running */
-   if (pids[cmd] != 0) {
-      DEBUG_STR("stopCommand()\n");
-      kill(pids[cmd], 9);
-      waitpid(pids[cmd], NULL, 0);
-      pids[cmd] = 0;
-      close(pipes[cmd][0]);
-      close(pipes[cmd][1]);
-      return true;
-   } else {
-      return false;
-   }
-}
-
-static int readCommand(command_t cmd, char *buf)
-{
-   int len;
-
-   /* check if the process is started */
-   if (pids[cmd] != 0) {
-      /* read from command pipe */
-      if ((len = read(pipes[cmd][0], buf, BUFFER_LENGTH - 1)) == -1) {
-         /* error but no data while non-blocking reading */
-         if (errno == EAGAIN || errno == EWOULDBLOCK)
-            len = 0;
-      } else if (len == 0) {
-         /* no data - child possibly became a zombie */
-         int status;
-         waitpid(pids[cmd], &status, WNOHANG);
-         if (WIFEXITED(status)) {
-            /* child was really exited, clean it's status from process table */
-            waitpid(pids[cmd], NULL, 0);
-            pids[cmd] = 0;
-         }
-      }
-   } else {
-      /* commnad not running */
-      return -1;
-   }
-
-   buf[len] = '\0';
-
-   if (len != 0) {
-      DEBUG_STR("readCommand()");
-      //fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
-      //fprintf(stderr, "%s", buf);
-   }
-
-   return len;
-}
-#endif
 
 static void
 destroy()

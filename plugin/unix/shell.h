@@ -4,12 +4,15 @@
 
 #include "plugin_npapi.h"
 
+//#include "process.h"
+#include "plugin_module.h"
+
 #define BUFLEN 1024
 
 typedef struct _cmd_shell {
    void (*destroy)();
-   char* (*find)(char *program_name);
-   void (*run)(char *program_path);
+   char * (*find)(char *program_name);
+   process * (*run)(char *argv[]);
 } cmd_shell;
 
 cmd_shell * init_shell();
