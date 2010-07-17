@@ -2,7 +2,7 @@
 project("CoNetServ")
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 3)
-set(PATCH_VERSION 3)
+set(PATCH_VERSION 4)
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
