@@ -35,8 +35,9 @@ Extension:
     latitude, longitude)
  * Asynchronous Google Map with location markers
 Bugfixes:
- * Version 1.3.4 (2010-07-11)
-   - Fixed ping plotting bug
+ * Version 1.3.4 (2010-07-??)
+   - Fix ping plotting bug on Linux
+   - Add "-n" argument to ping on Linux
  * Version 1.3.3 (2010-06-28)
    - Plugin: Fix IPv6 colons as valid command argument
    - Remove MacOS X bundle and thus Darwin compatibility

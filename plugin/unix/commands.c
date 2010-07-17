@@ -15,8 +15,8 @@ pid_t pids[command_t_count] = {0};
 int pipes[command_t_count][2];
 
 char* args[command_t_count][5] = {
-   {"ping", NULL},
-   {"ping6", NULL},
+   {"ping", NULL, "-n", NULL},
+   {"ping6", NULL, "-n", NULL},
    {"traceroute", NULL},
    {"traceroute6", NULL},
    {"whois", NULL},
@@ -119,9 +119,9 @@ void execvp_workaround()
          } else {
 
             buffer[len - 1] = '\0';
-            logmsg("CoNetServ: execvp_workaround(): read \"");
-	    logmsg(buffer);
-	    logmsg("\"\n");
+            logmsg("CoNetServ: execvp_workaround(): read \"\n");
+            logmsg(buffer);
+            logmsg("\"\n");
 
             /* store new command name from which command */
             strncpy(execvp_workaround_paths[i], buffer, len);
@@ -254,7 +254,7 @@ int readCommand(command_t cmd, char *buf)
    buf[len] = '\0';
 
    if (len != 0) {
-      logmsg("CoNetServ: readCommand()");
+      logmsg("CoNetServ: readCommand()\n");
       //fprintf(stderr, "cmd = %d), len = %d\n", cmd, len);
       //fprintf(stderr, "%s", buf);
    }
