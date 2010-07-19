@@ -51,7 +51,7 @@ set(PROJECT_URL "http://www.${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}/${PROJECT_NA
 
 # Exension strings
 set(EXTENSION_SLOGAN "Extension that integrates network tools into the browser.")
-set(EXTENSION_DESC "${PROJECT_LONG} v${VERSION}. ${EXTENSION_SLOGAN} ${PROJECT_COPY}")
+set(EXTENSION_DESC "${EXTENSION_SLOGAN} ${PROJECT_COPY}")
 set(EXTENSION_ID "${PROJECT_LOW}@${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 
 # Plugin strings
