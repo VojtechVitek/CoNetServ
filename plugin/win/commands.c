@@ -37,10 +37,10 @@ char* cmd_args[command_t_count] = {
 bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
 	char cmdchar[100];
-	SECURITY_ATTRIBUTES saAttr; 
-	PROCESS_INFORMATION procInfo; 
+	SECURITY_ATTRIBUTES saAttr;
+	PROCESS_INFORMATION procInfo;
    STARTUPINFOA startInfo;
-   BOOL success = FALSE; 
+   BOOL success = FALSE;
 	DWORD status;
 
 	/* check for running state */
@@ -56,16 +56,16 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
          CloseHandle(pipes[cmd][1]);
 		}
 	}
-	
+
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)arg_host);
-	
+   sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
+
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
-   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-   saAttr.bInheritHandle = TRUE; 
-   saAttr.lpSecurityDescriptor = NULL; 
+   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+   saAttr.bInheritHandle = TRUE;
+   saAttr.lpSecurityDescriptor = NULL;
 
 	/* Create a pipe for the child process's STDOUT. */
    if ( ! CreatePipe(&pipes[cmd][0], &pipes[cmd][1], &saAttr, 0) )
@@ -74,13 +74,13 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	/* Ensure the read handle to the pipe for STDOUT is not inherited. */
    if ( ! SetHandleInformation(pipes[cmd][0], HANDLE_FLAG_INHERIT, 0) )
       errorExitFunc("CoNetServ: startCommand(): SetHandleInformation() - error\n")
-	
+
 	/* Create a child process which uses stdout pipe */
-	
+
 	/* Prepare structures and set stdout handles */
 	ZeroMemory( &procInfo, sizeof(PROCESS_INFORMATION) );
 	ZeroMemory( &startInfo, sizeof(STARTUPINFO) );
-   startInfo.cb = sizeof(STARTUPINFO); 
+   startInfo.cb = sizeof(STARTUPINFO);
 
 	if(!DEBUGCON){
 		startInfo.wShowWindow = SW_HIDE;
@@ -90,17 +90,17 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
 
-	success = CreateProcessA(NULL, 
-		cmdchar,			// command line 
-      NULL,          // process security attributes 
-      NULL,          // primary thread security attributes 
-      TRUE,          // handles are inherited 
+	success = CreateProcessA(NULL,
+		cmdchar,			// command line
+      NULL,          // process security attributes
+      NULL,          // primary thread security attributes
+      TRUE,          // handles are inherited
       0,             // creation flags
-      NULL,          // use parent's environment 
-		NULL,          // current directory 
-      &startInfo,		// STARTUPINFO pointer 
-      &procInfo);		// receives PROCESS_INFORMATION 
-	
+      NULL,          // use parent's environment
+		NULL,          // current directory
+      &startInfo,		// STARTUPINFO pointer
+      &procInfo);		// receives PROCESS_INFORMATION
+
 	if(!success)
 	{
 		isRunning[cmd] = 0;
@@ -149,11 +149,11 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 		if(status)
 		{
          success = ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH - 1, &read, NULL);
-			if( ! success || read == 0 ) 
+			if( ! success || read == 0 )
 				read = 0;
 			else	//on success
 			{
-				
+
 				for(i=0; i < read; i++)
 				{
 					switch((unsigned char)buf[i])
@@ -217,5 +217,5 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 	}
 	else return -1;
 
-	
+
 }
