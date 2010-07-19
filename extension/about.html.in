@@ -1,6 +1,7 @@
 <div id="aboutTab">
-   <h2>@PROJECT_NAME@ (@PROJECT_LONG@) v@VERSION@</h2>
+   <h2>@PROJECT_LONG@</h2>
    <p class="slogan color1">@EXTENSION_SLOGAN@</p>
+   <p>Version: @VERSION@</p>
    <div class="column">
       <div class="block ui-widget-content ui-widget-content ui-corner-all">
          <h3 class="color1">Quick links:</h3>

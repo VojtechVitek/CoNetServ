@@ -1,5 +1,5 @@
 {
-	"name": "@PROJECT_NAME@",
+	"name": "@PROJECT_LONG@",
 	"version": "@VERSION@",
 	"description": "@EXTENSION_DESC@",
 	"icons": {
