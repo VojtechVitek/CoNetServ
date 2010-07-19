@@ -90,7 +90,7 @@ var Plot = {
       this.colors["cupertino"].avrgs = "rgba(103, 170, 238, 0.3)";
       this.colors["cupertino"].min  = "rgba(103, 170, 238, 1)";
       this.colors["cupertino"].rows  = "#2779AA";
-      
+
       /* south-street */
       this.colors["south-street"] = new Object();
       this.colors["south-street"].max = "rgba(140, 230, 50, 0.1)";
@@ -165,27 +165,32 @@ var Plot = {
          if($.client.os == "Windows")
          {
             data.rowId++;
-            pingTime = parseFloat(/\d+\.{0,1}\d*ms/i.exec(currentData));
-            if(pingTime) {
-               data.add(pingTime);
-            }
-            else
-            {
+            // Windows ping output:
+            // [EN] "Reply from 77.75.*.*: bytes=32 time=32ms TTL=127"\
+            // [RU] "Ответ от 194.87.*.*: число байт=32 время=28мс TTL=56"
+            // [CZ] "Odpověď od 213.46.*.*: bajty=32 čas=48ms TTL=247"
+            pingTime = /.*?=\d+.*?=(\d+).*=\d+.*?/i.exec(currentData);
+            if(pingTime && pingTime[1]) {
+               data.add(pingTime[1]);
+            } else {
+               /* ignore first 3 lines */
                if(data.rowId > 3) {
                   data.add(null);
                }
             }
          }
-         else if($.client.os == "Linux")
+         else // UNIX
          {
-            pingTime = parseFloat(/\d+\.{0,1}\d*\sms/i.exec(currentData));
-            if(pingTime)
+            // Unix ping output:
+            // "64 bytes from 74.125.*.*: icmp_seq=1 ttl=54 time=32.8 ms"
+            // "64 bytes from 74.125.*.*: icmp_req=3 ttl=127 time=24.7 ms"
+            pingTime = /.*?icmp_[sr]eq=(\d+)\sttl=\d+\stime=(\d+(?:\.\d+)?)\sms/i.exec(currentData);
+            if(pingTime && pingTime[1] && pingTime[2])
             {
                /* check for lost packets */
-               var actPingId = parseInt((/icmp_(s|r)eq=\d+/i.exec(currentData))[0].substr(9));
-               while(actPingId != null && actPingId > ++data.prevId)
+               while(pingTime[1] > ++data.prevId)
                   data.add(null);
-               data.add(pingTime);
+               data.add(pingTime[2]);
             }
          }
          /* store remaining data */
@@ -238,7 +243,7 @@ var Plot = {
 
       this.repaint();
    },
-   
+
    /**
     * Private function for adding traceroute data on windows platform
     * @param row One row of data to be added to data structures of object.
