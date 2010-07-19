@@ -15,7 +15,7 @@ General:
 [x] CMake: Generate packages with plugins from Release directory instead of Debug one
 
 Plugin:
-[ ] Windows: reimplement locale support
+[x] Windows: reimplement locale support
 [ ] Extension API: rewrite NPAPI invokes into OOP (objects with properties and methods)
 [ ] Plugin API: third-party availability, version system
 [ ] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)

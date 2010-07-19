@@ -35,6 +35,10 @@ Extension:
     latitude, longitude)
  * Asynchronous Google Map with location markers
 Bugfixes:
+ * Version 1.3.5 (2010-07-19)
+   - Fix locale issues on Windows (switch to UNICODE)
+   - Improve parsers of ping output
+   - Fix Linux32 plugin
  * Version 1.3.4 (2010-07-17)
    - Fix ping plotting bug on Linux
    - Add "-n" argument to ping on Linux

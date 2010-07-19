@@ -25,7 +25,7 @@ if(UNIX)
 elseif(WIN32)
 	include(win/CMakeLists.txt)
 else()
-	message(FATAL ERROR "Sorry, your operating system is not supported.")
+	message(FATAL_ERROR "Sorry, your operating system is not supported.")
 endif()
 
 # Create shared library
