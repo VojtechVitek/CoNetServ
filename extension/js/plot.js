@@ -1,7 +1,10 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /**
  * Object for plotting of graphs for services like ping and traceroute
  */
-var Plot = {
+Conetserv.Plot = {
    /* initialize data */
 
    /* placeholders for plots */
@@ -549,11 +552,11 @@ $(document).ready(function()
 {
    $("#tabs").bind('tabsshow', function()
    {
-      Plot.localPingData.touch();
-      Plot.localPing6Data.touch();
-      Plot.localTraceData.touch();
-      Plot.localTrace6Data.touch();
-      Plot.repaint();
+      Conetserv.Plot.localPingData.touch();
+      Conetserv.Plot.localPing6Data.touch();
+      Conetserv.Plot.localTraceData.touch();
+      Conetserv.Plot.localTrace6Data.touch();
+      Conetserv.Plot.repaint();
    });
 
    $("#tabs").bind('select', function()
@@ -561,6 +564,6 @@ $(document).ready(function()
       return true;
    });
 
-   Plot.repaint();
+   Conetserv.Plot.repaint();
 }
 );

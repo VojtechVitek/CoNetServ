@@ -57,7 +57,7 @@ Conetserv.onReady = function() {
        Conetserv.ExternalInfo.start();
     });
 
-   Plot.initialize();
+   Conetserv.Plot.initialize();
    this.Options.initialize();
 };
 

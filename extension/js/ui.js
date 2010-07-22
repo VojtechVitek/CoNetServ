@@ -76,7 +76,7 @@ Conetserv.Ui = {
        */
       $("input[name=local-services-form]").change(function(){
          Conetserv.Ui.redraw();
-         Plot.repaint();
+         Conetserv.Plot.repaint();
       });
 
       /**
@@ -84,7 +84,7 @@ Conetserv.Ui = {
        */
       $("input[name=external-services-form]").change(function(){
          Conetserv.Ui.redraw();
-         Plot.repaint();
+         Conetserv.Plot.repaint();
       });
 
       /**
@@ -92,7 +92,7 @@ Conetserv.Ui = {
        */
       $("input[name=local-info-form]").change(function(){
          Conetserv.Ui.redraw();
-         Plot.repaint();
+         Conetserv.Plot.repaint();
       });
 
       /**
@@ -100,7 +100,7 @@ Conetserv.Ui = {
        */
       $("input[name=external-info-form]").change(function(){
          Conetserv.Ui.redraw();
-         Plot.repaint();
+         Conetserv.Plot.repaint();
       });
 
       /**
