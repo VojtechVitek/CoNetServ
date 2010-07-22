@@ -166,7 +166,7 @@ Conetserv.LocalServices = {
    */
    startCommands : function() {
       //set value for commands
-      if(!url.set(document.getElementById("local-url").value)) {
+      if(!Conetserv.Url.set(document.getElementById("local-url").value)) {
          document.getElementById("local-url").style.color="red";
          document.getElementById("local-url").focus();
          return;
@@ -186,7 +186,7 @@ Conetserv.LocalServices = {
       if (this.pingInterval == -1) {
          try {
             this.pingConsole.clear();
-            if (this.plugin.startPing(url.hostname)) {
+            if (this.plugin.startPing(Conetserv.Url.hostname)) {
                /* reset data and start animation */
                Plot.localPingData.reset();
                this.pingInterval = window.setInterval("Conetserv.LocalServices.readPing()", 500);
@@ -211,7 +211,7 @@ Conetserv.LocalServices = {
       if (this.ping6Interval == -1) {
          try {
             this.ping6Console.clear();
-            if (this.plugin.startPing6(url.hostname)) {
+            if (this.plugin.startPing6(Conetserv.Url.hostname)) {
                /* reset data and start animation */
                Plot.localPing6Data.reset();
                this.ping6Interval = window.setInterval("Conetserv.LocalServices.readPing6()", 500);
@@ -236,7 +236,7 @@ Conetserv.LocalServices = {
       if (this.tracerouteInterval == -1) {
          try {
             this.tracerouteConsole.clear();
-            if (this.plugin.startTraceroute(url.hostname)) {
+            if (this.plugin.startTraceroute(Conetserv.Url.hostname)) {
                Plot.localTraceData.reset();
                this.tracerouteInterval = window.setInterval("Conetserv.LocalServices.readTraceroute()", 500);
                this.readTraceroute();
@@ -261,7 +261,7 @@ Conetserv.LocalServices = {
       if (this.traceroute6Interval == -1) {
          try {
             this.traceroute6Console.clear();
-            if (this.plugin.startTraceroute6(url.hostname)) {
+            if (this.plugin.startTraceroute6(Conetserv.Url.hostname)) {
                Plot.localTrace6Data.reset();
                this.traceroute6Interval = window.setInterval("Conetserv.LocalServices.readTraceroute6()", 500);
                this.readTraceroute6();
@@ -286,7 +286,7 @@ Conetserv.LocalServices = {
       if (this.whoisInterval == -1) {
          try {
             this.whoisConsole.clear();
-            if (url.domain != '' && this.plugin.startWhois(url.domain)) {
+            if (Conetserv.Url.domain != '' && this.plugin.startWhois(Conetserv.Url.domain)) {
                this.whoisInterval = window.setInterval("Conetserv.LocalServices.readWhois()", 500);
                this.readWhois();
 
@@ -310,7 +310,7 @@ Conetserv.LocalServices = {
       if (this.nslookupInterval == -1) {
          try {
             this.nslookupConsole.clear();
-            if (this.plugin.startNslookup(url.hostname)) {
+            if (this.plugin.startNslookup(Conetserv.Url.hostname)) {
                this.nslookupInterval = window.setInterval("Conetserv.LocalServices.readNslookup()", 500);
                this.readNslookup();
 

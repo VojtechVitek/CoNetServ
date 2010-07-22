@@ -1,6 +1,9 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 //Javascript UTF16 converter created by some@domain.name
 //This implementation is released to public domain
-var utf16 = {
+Conetserv.utf16 = {
     decode:function(input){
         var output = [], i=0, len=input.length,value,extra;
         while (i < len) {
@@ -36,7 +39,7 @@ var utf16 = {
 
 //Javascript Punycode converter derived from example in RFC3492.
 //This implementation is created by some@domain.name and released to public domain
-var punycode = new function Punycode() {
+Conetserv.Punycode = new function Punycode() {
     var initial_n = 0x80;
     var initial_bias = 72;
     var delimiter = "\x2D";
@@ -175,7 +178,7 @@ var punycode = new function Punycode() {
                         }
                 }
         }
-        return utf16.encode(output);
+        return Conetserv.utf16.encode(output);
     };
 
     //** Main encode function **
@@ -187,11 +190,11 @@ var punycode = new function Punycode() {
 
         if (preserveCase) {
                 // Preserve case, step1 of 2: Get a list of the unaltered string
-                case_flags = utf16.decode(input);
+                case_flags = Conetserv.utf16.decode(input);
         }
         // Converts the input in UTF-16 to Unicode
-        input = utf16.decode(input.toLowerCase());
-        //input = utf16.decode(input);
+        input = Conetserv.utf16.decode(input.toLowerCase());
+        //input = Conetserv.utf16.decode(input);
 
         var input_length = input.length; // Cache the length
 
@@ -281,7 +284,7 @@ var punycode = new function Punycode() {
  * Object for handling urls - filtering, ...
  *
  */
-var url = {
+Conetserv.Url = {
    // proto regexp, eg. https://user:passwd@(hostname):port/dir/index.html
    // @return hostname                       ^^^^^^^^
    proto: /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[^@]*)?@)?(?:\[)?([^\[\]\/]*)(?:\])?(?:[:][0-9]+)?(?:\/.*)?$/i,
@@ -350,7 +353,7 @@ var url = {
                ascii += arr[i] + '.';
             else if (this.punycodeUtf.test(arr[i])) {
                // convert from UTF8 to Punycode ASCII
-               var tmp = punycode.encode(arr[i]);
+               var tmp = Conetserv.Punycode.encode(arr[i]);
                // check if valid ASCII
                if (this.punycodeAscii.test(tmp))
                   ascii += 'xn--' + tmp + '.';
@@ -365,7 +368,7 @@ var url = {
             ascii += arr[arr.length - 1];
          else if (this.punycodeUtfTld.test(arr[arr.length - 1])) {
             // convert from UTF8 to Punycode ASCII
-            var tmp = punycode.encode(arr[arr.length - 1]);
+            var tmp = Conetserv.Punycode.encode(arr[arr.length - 1]);
             // check if valid ASCII
             if (this.punycodeAscii.test(tmp))
                ascii += 'xn--' + tmp;

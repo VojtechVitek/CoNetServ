@@ -380,7 +380,7 @@ var Plot = {
     */
 _plotTracert : function(placeholder, data) {
    var plotCont;
-   var color = this.colors[ConetservOptions.skin];
+   var color = this.colors[Conetserv.Options.skin];
 
    data.changed = 0;
 

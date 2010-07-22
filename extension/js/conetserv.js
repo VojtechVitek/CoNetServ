@@ -22,17 +22,17 @@ Conetserv.onReady = function() {
    this.LocalServices.whoisConsole = new Conetserv.Console("local-whois-console");
    this.LocalServices.nslookupConsole = new Conetserv.Console("local-nslookup-console");
 
-   /* init url in Firefox */
+   /* init Conetserv.Url in Firefox */
    if ($.client.browser == "Firefox") {
-      if (window && window.arguments && window.arguments[0] && url.set(window.arguments[0])) {
-         document.getElementById("local-url").value = url.hostname;
+      if (window && window.arguments && window.arguments[0] && Conetserv.Url.set(window.arguments[0])) {
+         document.getElementById("local-url").value = Conetserv.Url.hostname;
       }
    /* init url in Chrome */
    } else if ($.client.browser == "Chrome") {
       if (chrome && chrome.tabs && chrome.tabs.getSelected) {
          chrome.tabs.getSelected(null, function(tab) {
-            url.set(tab.url);
-            document.getElementById("local-url").value = url.hostname;
+            Conetserv.Url.set(tab.url);
+            document.getElementById("local-url").value = Conetserv.Url.hostname;
          });
       }
    }
