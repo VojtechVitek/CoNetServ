@@ -1,7 +1,10 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /**
  * Object for manipulating CoNetServ options
  */
-var Options = {
+Conetserv.Options = {
    storage : false,
    toolbarButton : false,
    autostart : false,
@@ -48,7 +51,7 @@ var Options = {
       /* depending on options page, set the active tab */
       $("#tabs").tabs('select', "#" + this.frontPageParent);
       $("#" + this.frontPageParent).ready(function() {
-         $("#" + Options.frontPageChild).attr("checked", true);
+         $("#" + Conetserv.Options.frontPageChild).attr("checked", true);
       });
 
       /* skin options */

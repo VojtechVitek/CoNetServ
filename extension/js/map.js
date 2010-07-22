@@ -1,6 +1,8 @@
-/* Google Maps handler */
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
 
-var Map = {
+/* Google Maps handler */
+Conetserv.Map = {
    locations: [],
    firstRun: false,
    elementId: false, /* Must be set to valid DOM element */
@@ -28,14 +30,14 @@ var Map = {
 
       /* Load latest Google JSAPI loader JavaScript */
       var script = document.createElement("script");
-      script.src = "http://www.google.com/jsapi?callback=Map.loadMaps";
+      script.src = "http://www.google.com/jsapi?callback=Conetserv.Map.loadMaps";
       script.type = "text/javascript";
       document.getElementsByTagName("head")[0].appendChild(script);
    },
 
    loadMaps: function() {
       /* Load latest Google Map JavaScript */
-      google.load("maps", "2.x", {"callback" : "Map.createMap(Map)"});
+      google.load("maps", "2.x", {"callback" : "Conetserv.Map.createMap(Conetserv.Map)"});
    },
 
    createMap: function(This) {
@@ -90,5 +92,4 @@ var Map = {
          this.map.addOverlay(this.createMarker(latlng, location.name, location.latitude, location.longitude));
       }
    }
-
 };
