@@ -1,7 +1,10 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /**
  * Object for handling CoNetServ ui
  */
-var Ui = {
+Conetserv.Ui = {
    /**
     * initializes UI object ( sets tabs, buttons, ... )
     */
@@ -42,12 +45,12 @@ var Ui = {
 
 
       $("#settings-general-frontpage").change(function(){
-         Ui.redrawOptions();
+         Conetserv.Ui.redrawOptions();
       });
 
       $("#settings-general-submit").button();
       $("#settings-general-submit").click(function() {
-         Options.save();
+         Conetserv.Options.save();
          return false;
       });
 
@@ -63,7 +66,7 @@ var Ui = {
             if(ui.panel.id == "external-services") {
                $("#external-url").focus();
             }
-            Ui.redraw();
+            Conetserv.Ui.redraw();
             return true;
          }
       });
@@ -72,39 +75,39 @@ var Ui = {
        * when radiobutton on local-services page is selected
        */
       $("input[name=local-services-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on external-services page is selected
        */
       $("input[name=external-services-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on local-info page is selected
        */
       $("input[name=local-info-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on external-info page is selected
        */
       $("input[name=external-info-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on settings page is selected
        */
       $("input[name=settings-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
       });
 
       /**
@@ -119,15 +122,15 @@ var Ui = {
       .addClass("ui-corner-right");
       
 
-      Ui.redraw();
+      Conetserv.Ui.redraw();
    },
 
    /**
     * reloads skin depending on current option
     */
    reloadSkin : function() {
-      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
-      $("#conetserv-ui-stylesheet").attr("href", "css/" + Options.skin + ".css")
+      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Conetserv.Options.skin + "/jquery-ui-1.8.2.custom.css")
+      $("#conetserv-ui-stylesheet").attr("href", "css/" + Conetserv.Options.skin + ".css")
    },
 
    /**
@@ -246,10 +249,3 @@ var Ui = {
       return output;
    }
 }
-
-$(function() {
-   /**
-    * initialize page ui right after page creation
-    */
-   Ui.initialize();
-});

@@ -1,7 +1,10 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /**
  * Object for manipulating CoNetServ options
  */
-var Options = {
+Conetserv.Options = {
    storage : false,
    autostart : false,
    frontPageParent : false,
@@ -41,13 +44,13 @@ var Options = {
       }
       this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
       $("#frontpage-" + this.frontPageParent).attr("checked", true);
-      Ui.redrawOptions();
+      Conetserv.Ui.redrawOptions();
       $("#frontpage-" + this.frontPageChild).attr("checked", true);
 
       /* depending on options page, set the active tab */
       $("#tabs").tabs('select', "#" + this.frontPageParent);
       $("#" + this.frontPageParent).ready(function() {
-         $("#" + Options.frontPageChild).attr("checked", true);
+         $("#" + Conetserv.Options.frontPageChild).attr("checked", true);
       });
 
       /* skin options */
@@ -77,7 +80,7 @@ var Options = {
       /* skin */
       this.skin = $("#settings-general-skin input:checked").val();
       this.storage["conetserv-settings-general-skin"] = this.skin;
-      Ui.reloadSkin();
+      Conetserv.Ui.reloadSkin();
 
    },
 

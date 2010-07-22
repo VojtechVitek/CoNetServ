@@ -1,7 +1,10 @@
-var Services = new Object();
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
+Conetserv.Services = new Object();
 
 /* services parsers */
-Services.service = new Array();
+Conetserv.Services.service = new Array();
 
 /*{
    // TEMPLATE OF SERVICE PARSER
@@ -58,7 +61,7 @@ Services.service = new Array();
 };
 */
 
-Services.service.push({
+Conetserv.Services.service.push({
 
    name: 'Google.com - JSAPI',
    link: 'http://www.google.com/',
@@ -105,7 +108,7 @@ Services.service.push({
 
 });
 
-Services.service.push({
+Conetserv.Services.service.push({
 
    name: 'WIPmania.com - WorldIP API',
    link: 'http://www.wipmania.com/',
@@ -175,7 +178,7 @@ Services.service.push({
 
 });
 
-Services.service.push({
+Conetserv.Services.service.push({
 
    name: 'CGI script by Chris F.A. Johnson',
    link: 'http://cfaj.freeshell.org/',
@@ -229,7 +232,7 @@ Services.service.push({
 
 });
 
-Services.service.push({
+Conetserv.Services.service.push({
 
    name: 'MojeIP.cz',
    link: 'http://www.mojeip.cz/',
@@ -274,7 +277,7 @@ Services.service.push({
 
 });
 
-Services.service.push({
+Conetserv.Services.service.push({
 
    name: 'IPinfo Security Portal',
    link: 'http://ipinfo.info/',
@@ -307,7 +310,7 @@ Services.service.push({
 
 });
 
-Services.service.push({
+Conetserv.Services.service.push({
 
    name: 'RADb, Merit Network Inc.',
    link: 'http://www.radb.net/',
@@ -353,16 +356,16 @@ Services.service.push({
 });
 
 /* queue of services to be run */
-Services.queue = new Array();
+Conetserv.Services.queue = new Array();
 
 /* storage of services results */
-Services.result = new Object();
+Conetserv.Services.result = new Object();
 
 /* number of running services */
-Services.running = 0;
+Conetserv.Services.running = 0;
 
 /* try to run services from the queue */
-Services.run = function() {
+Conetserv.Services.run = function() {
 
    var wait_queue = [];
 
@@ -393,12 +396,12 @@ Services.run = function() {
          /* success */
          success: function(data) {
             var result = this.Request.parse(data);
-            $.extend(Services.result, result);
+            $.extend(Conetserv.Services.result, result);
             this.This.result_callback(this.This.service[this.Request.ServiceId], result);
             if (--this.This.running == 0)
                this.This.stopped_callback();
             else
-               Services.run();
+               Conetserv.Services.run();
          },
          /* error */
          error: function() {
@@ -411,11 +414,11 @@ Services.run = function() {
    this.queue = wait_queue;
 };
 
-Services.start = function(started_callback, result_callback, stopped_callback) {
+Conetserv.Services.start = function(started_callback, result_callback, stopped_callback) {
 
    /* check if still running */
    if (this.queue.length > 0 || this.running > 0) {
-      throw "Services already running..";
+      throw "Conetserv.Services already running..";
       return;
    }
 
