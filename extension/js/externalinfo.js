@@ -13,7 +13,7 @@ Conetserv.ExternalInfo = {
       Conetserv.Map.setElementId("map-placeholder");
 
       /* Start external info services */
-      Services.start(
+      Conetserv.Services.start(
          /* started */
          function() {
             Conetserv.Ui.addIcons(".external", ".provider", "");
