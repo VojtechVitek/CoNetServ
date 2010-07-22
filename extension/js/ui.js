@@ -4,7 +4,7 @@ if(!Conetserv) var Conetserv = {};
 /**
  * Object for handling CoNetServ ui
  */
-var Ui = {
+Conetserv.Ui = {
    /**
     * initializes UI object ( sets tabs, buttons, ... )
     */
@@ -45,7 +45,7 @@ var Ui = {
 
 
       $("#settings-general-frontpage").change(function(){
-         Ui.redrawOptions();
+         Conetserv.Ui.redrawOptions();
       });
 
       $("#settings-general-submit").button();
@@ -66,7 +66,7 @@ var Ui = {
             if(ui.panel.id == "external-services") {
                $("#external-url").focus();
             }
-            Ui.redraw();
+            Conetserv.Ui.redraw();
             return true;
          }
       });
@@ -75,7 +75,7 @@ var Ui = {
        * when radiobutton on local-services page is selected
        */
       $("input[name=local-services-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
          Plot.repaint();
       });
 
@@ -83,7 +83,7 @@ var Ui = {
        * when radiobutton on external-services page is selected
        */
       $("input[name=external-services-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
          Plot.repaint();
       });
 
@@ -91,7 +91,7 @@ var Ui = {
        * when radiobutton on local-info page is selected
        */
       $("input[name=local-info-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
          Plot.repaint();
       });
 
@@ -99,7 +99,7 @@ var Ui = {
        * when radiobutton on external-info page is selected
        */
       $("input[name=external-info-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
          Plot.repaint();
       });
 
@@ -107,7 +107,7 @@ var Ui = {
        * when radiobutton on settings page is selected
        */
       $("input[name=settings-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
       });
 
       /**
@@ -122,7 +122,7 @@ var Ui = {
       .addClass("ui-corner-right");
       
 
-      Ui.redraw();
+      Conetserv.Ui.redraw();
    },
 
    /**
@@ -301,10 +301,3 @@ If you want to install it, please follow these steps.");
       return output;
    }
 }
-
-$(function() {
-   /**
-    * initialize page ui right after page creation
-    */
-   Ui.initialize();
-});

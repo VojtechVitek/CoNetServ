@@ -45,7 +45,7 @@ Conetserv.Options = {
       }
       this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
       $("#frontpage-" + this.frontPageParent).attr("checked", true);
-      Ui.redrawOptions();
+      Conetserv.Ui.redrawOptions();
       $("#frontpage-" + this.frontPageChild).attr("checked", true);
 
       /* depending on options page, set the active tab */
@@ -84,7 +84,7 @@ Conetserv.Options = {
       /* skin */
       this.skin = $("#settings-general-skin input:checked").val();
       this.storage["conetserv-settings-general-skin"] = this.skin;
-      Ui.reloadSkin();
+      Conetserv.Ui.reloadSkin();
 
    },
 

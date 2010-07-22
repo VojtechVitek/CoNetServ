@@ -37,7 +37,7 @@ Conetserv.LocalServices = {
          return;
       }
       if (received === false) {
-         Ui.removeIcons(".local", ".ping");
+         Conetserv.Ui.removeIcons(".local", ".ping");
          window.clearInterval(this.pingInterval);
          this.pingInterval = -1;
          return;
@@ -61,7 +61,7 @@ Conetserv.LocalServices = {
          return;
       }
       if (received === false) {
-         Ui.removeIcons(".local", ".ping6");
+         Conetserv.Ui.removeIcons(".local", ".ping6");
          window.clearInterval(this.ping6Interval);
          this.ping6Interval = -1;
          return;
@@ -85,7 +85,7 @@ Conetserv.LocalServices = {
          this.tracerouteConsole.add(e);
       }
       if (received === false) {
-         Ui.removeIcons(".local", ".tracert");
+         Conetserv.Ui.removeIcons(".local", ".tracert");
          window.clearInterval(this.tracerouteInterval);
          this.tracerouteInterval = -1;
          return;
@@ -108,7 +108,7 @@ Conetserv.LocalServices = {
          this.traceroute6Console.add(e);
       }
       if (received === false) {
-         Ui.removeIcons(".local", ".tracert6");
+         Conetserv.Ui.removeIcons(".local", ".tracert6");
          window.clearInterval(this.traceroute6Interval);
          this.traceroute6Interval = -1;
          return;
@@ -131,7 +131,7 @@ Conetserv.LocalServices = {
          this.whoisConsole.add(e);
       }
       if (received === false) {
-         Ui.removeIcons(".local", ".whois");
+         Conetserv.Ui.removeIcons(".local", ".whois");
          window.clearInterval(this.whoisInterval);
          this.whoisInterval = -1;
          return;
@@ -153,7 +153,7 @@ Conetserv.LocalServices = {
          this.nslookupConsole.add(e);
       }
       if (received === false) {
-         Ui.removeIcons(".local", ".nslookup");
+         Conetserv.Ui.removeIcons(".local", ".nslookup");
          window.clearInterval(this.nslookupInterval);
          this.nslookupInterval = -1;
          return;
@@ -192,7 +192,7 @@ Conetserv.LocalServices = {
                this.pingInterval = window.setInterval("Conetserv.LocalServices.readPing()", 500);
                this.readPing();
 
-               Ui.addIcons(".local", ".ping", this.stopPing);
+               Conetserv.Ui.addIcons(".local", ".ping", this.stopPing);
             } else {
                this.pingInterval = -1;
             }
@@ -217,7 +217,7 @@ Conetserv.LocalServices = {
                this.ping6Interval = window.setInterval("Conetserv.LocalServices.readPing6()", 500);
                this.readPing6();
 
-               Ui.addIcons(".local", ".ping6", this.stopPing6);
+               Conetserv.Ui.addIcons(".local", ".ping6", this.stopPing6);
             } else {
                this.ping6Interval = -1;
             }
@@ -241,7 +241,7 @@ Conetserv.LocalServices = {
                this.tracerouteInterval = window.setInterval("Conetserv.LocalServices.readTraceroute()", 500);
                this.readTraceroute();
 
-               Ui.addIcons(".local", ".tracert", this.stopTraceroute);
+               Conetserv.Ui.addIcons(".local", ".tracert", this.stopTraceroute);
             }
             else {
                this.tracerouteInterval = -1;
@@ -266,7 +266,7 @@ Conetserv.LocalServices = {
                this.traceroute6Interval = window.setInterval("Conetserv.LocalServices.readTraceroute6()", 500);
                this.readTraceroute6();
 
-               Ui.addIcons(".local", ".tracert6", this.stopTraceroute6);
+               Conetserv.Ui.addIcons(".local", ".tracert6", this.stopTraceroute6);
             }
             else {
                this.traceroute6Interval = -1;
@@ -290,7 +290,7 @@ Conetserv.LocalServices = {
                this.whoisInterval = window.setInterval("Conetserv.LocalServices.readWhois()", 500);
                this.readWhois();
 
-               Ui.addIcons(".local", ".whois", stopWhois);
+               Conetserv.Ui.addIcons(".local", ".whois", stopWhois);
             }
             else {
                this.whoisInterval = -1;
@@ -314,7 +314,7 @@ Conetserv.LocalServices = {
                this.nslookupInterval = window.setInterval("Conetserv.LocalServices.readNslookup()", 500);
                this.readNslookup();
 
-               Ui.addIcons(".local", ".nslookup", this.stopNslookup);
+               Conetserv.Ui.addIcons(".local", ".nslookup", this.stopNslookup);
             }
             else {
                this.nslookupInterval = -1;
@@ -351,7 +351,7 @@ Conetserv.LocalServices = {
             this.pingConsole.add(e);
          }
 
-         Ui.removeIcons(".local", ".ping");
+         Conetserv.Ui.removeIcons(".local", ".ping");
          window.clearInterval(pingInterval);
          this.pingInterval = -1;
       }
@@ -369,7 +369,7 @@ Conetserv.LocalServices = {
             this.ping6Console.add(e);
          }
 
-         Ui.removeIcons(".local", ".ping6");
+         Conetserv.Ui.removeIcons(".local", ".ping6");
          window.clearInterval(ping6Interval);
          this.ping6Interval = -1;
       }
@@ -387,7 +387,7 @@ Conetserv.LocalServices = {
             this.tracerouteConsole.add(e);
          }
 
-         Ui.removeIcons(".local", ".tracert");
+         Conetserv.Ui.removeIcons(".local", ".tracert");
          window.clearInterval(tracerouteInterval);
          this.tracerouteInterval = -1;
       }
@@ -405,7 +405,7 @@ Conetserv.LocalServices = {
             this.traceroute6Console.add(e);
          }
 
-         Ui.removeIcons(".local", ".tracert6");
+         Conetserv.Ui.removeIcons(".local", ".tracert6");
          window.clearInterval(traceroute6Interval);
          this.traceroute6Interval = -1;
       }
@@ -423,7 +423,7 @@ Conetserv.LocalServices = {
             this.whoisConsole.add(e);
          }
 
-         Ui.removeIcons(".local", ".whois");
+         Conetserv.Ui.removeIcons(".local", ".whois");
          window.clearInterval(whoisInterval);
          this.whoisInterval = -1;
       }
@@ -441,7 +441,7 @@ Conetserv.LocalServices = {
             this.nslookupConsole.add(e);
          }
 
-         Ui.removeIcons(".local", ".nslookup");
+         Conetserv.Ui.removeIcons(".local", ".nslookup");
          window.clearInterval(nslookupInterval);
          this.nslookupInterval = -1;
       }

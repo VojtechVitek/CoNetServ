@@ -13,5 +13,10 @@ $(window).load(function() {
    Conetserv.onLoad();
 });
 
-
+/**
+ * initialize page ui right after page creation
+ */
+$(function() {
+   Conetserv.Ui.initialize();
+});
 

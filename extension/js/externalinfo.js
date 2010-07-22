@@ -16,7 +16,7 @@ Conetserv.ExternalInfo = {
       Services.start(
          /* started */
          function() {
-            Ui.addIcons(".external", ".provider", "");
+            Conetserv.Ui.addIcons(".external", ".provider", "");
          },
          /* service results */
          function(service, result) {
@@ -62,7 +62,7 @@ Conetserv.ExternalInfo = {
          },
          /* stopped */
          function() {
-            Ui.removeIcons(".external", ".provider");
+            Conetserv.Ui.removeIcons(".external", ".provider");
          }
       );
    }

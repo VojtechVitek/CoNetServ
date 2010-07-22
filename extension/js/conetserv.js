@@ -39,8 +39,8 @@ Conetserv.onReady = function() {
    /*
     * Initialize ui
     */
-   Ui.checkAvailability();
-   Ui.redraw();
+   this.Ui.checkAvailability();
+   this.Ui.redraw();
 
    /*
     * Bind start button to start local services
