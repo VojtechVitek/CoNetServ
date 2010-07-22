@@ -13,14 +13,14 @@ Conetserv.onReady = function() {
    this.LocalServices.plugin = document.getElementById("conetserv");
 
    /* console text-boxes */
-   this.LocalServices.pingConsole = new console("local-ping-console");
+   this.LocalServices.pingConsole = new Conetserv.Console("local-ping-console");
    this.LocalServices.pingConsole.maxRows = 15;
-   this.LocalServices.ping6Console = new console("local-ping6-console");
+   this.LocalServices.ping6Console = new Conetserv.Console("local-ping6-console");
    this.LocalServices.ping6Console.maxRows = 15;
-   this.LocalServices.tracerouteConsole = new console("local-tracert-console");
-   this.LocalServices.traceroute6Console = new console("local-tracert6-console");
-   this.LocalServices.whoisConsole = new console("local-whois-console");
-   this.LocalServices.nslookupConsole = new console("local-nslookup-console");
+   this.LocalServices.tracerouteConsole = new Conetserv.Console("local-tracert-console");
+   this.LocalServices.traceroute6Console = new Conetserv.Console("local-tracert6-console");
+   this.LocalServices.whoisConsole = new Conetserv.Console("local-whois-console");
+   this.LocalServices.nslookupConsole = new Conetserv.Console("local-nslookup-console");
 
    /* init url in Firefox */
    if ($.client.browser == "Firefox") {
