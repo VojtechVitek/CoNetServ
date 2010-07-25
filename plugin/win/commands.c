@@ -23,12 +23,13 @@ HANDLE pids[command_t_count];
 bool isRunning[command_t_count] = {0};
 
 char* cmd_args[command_t_count] = {
-   "ping -t",
+   "ping",
    "ping -6 -t",
    "tracert",
    "tracert -6",
    "nslookup",
-   "nslookup"
+   "nslookup",
+   "chcp 65001 & ping www.seznam.cz",
 };
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
@@ -39,12 +40,15 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	char cmdchar[100];
 	SECURITY_ATTRIBUTES saAttr;
 	PROCESS_INFORMATION procInfo;
-   STARTUPINFOA startInfo;
-   BOOL success = FALSE;
+	STARTUPINFOW startInfo;
+	BOOL success = FALSE;
 	DWORD status;
 
+	LPWSTR utfstring;
+	int length;
+
 	/* check for running state */
-   if (isRunning[cmd])
+	if (isRunning[cmd])
 	{
       GetExitCodeProcess( pids[cmd], &status );
 		if( status == STILL_ACTIVE )
@@ -60,7 +64,17 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-   sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
+   if(cmd == LOCALE) {
+      sprintf(cmdchar, "cmd.exe /U /C \"%s\"", cmd_args[cmd]);
+   }
+   else
+      sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
+
+   /* Prepare data to unicode string for passing to createProccessW function */
+   length = MultiByteToWideChar(CP_UTF8, 0, cmdchar, -1, NULL, 0);
+   utfstring = (LPWSTR) malloc(length * sizeof(WCHAR) + 1);
+
+   MultiByteToWideChar(CP_UTF8, 0, cmdchar, -1, utfstring, length);
 
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -80,26 +94,26 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	/* Prepare structures and set stdout handles */
 	ZeroMemory( &procInfo, sizeof(PROCESS_INFORMATION) );
 	ZeroMemory( &startInfo, sizeof(STARTUPINFO) );
-   startInfo.cb = sizeof(STARTUPINFO);
+	startInfo.cb = sizeof(STARTUPINFO);
 
 	if(!DEBUGCON){
 		startInfo.wShowWindow = SW_HIDE;
 		startInfo.dwFlags |= STARTF_USESHOWWINDOW;
-      startInfo.hStdError = pipes[cmd][1];
-      startInfo.hStdOutput = pipes[cmd][1];
+		startInfo.hStdError = pipes[cmd][1];
+		startInfo.hStdOutput = pipes[cmd][1];
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
 
-	success = CreateProcessA(NULL,
-		cmdchar,			// command line
-      NULL,          // process security attributes
-      NULL,          // primary thread security attributes
-      TRUE,          // handles are inherited
-      0,             // creation flags
-      NULL,          // use parent's environment
+	success = CreateProcessW(NULL,
+		utfstring,			// command line
+		NULL,          // process security attributes
+		NULL,          // primary thread security attributes
+		TRUE,          // handles are inherited
+		0,             // creation flags
+		NULL,          // use parent's environment
 		NULL,          // current directory
-      &startInfo,		// STARTUPINFO pointer
-      &procInfo		// receives PROCESS_INFORMATION
+		&startInfo,		// STARTUPINFO pointer
+		&procInfo		// receives PROCESS_INFORMATION
    );
 
 	if(!success)
@@ -138,25 +152,45 @@ bool stopCommand(command_t cmd)
 
 int readCommand(command_t cmd, NPUTF8 *_buf)
 {
-   char* buf = (char *)_buf;
+	char buf[BUFFER_LENGTH];
 	DWORD len = 0;
 	DWORD status;
 
+	LPWSTR utfstring;
+	int length;
+
+
 	/* check if running */
-   if (isRunning[cmd])
+	if (isRunning[cmd])
 	{
       /* check for data on pipes */
       PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
 		if(status)
 		{
 			if (!ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH - 1, &len, NULL))
-         {
+			{
 				len = 0;
-         }
+			}
 		}
 
-      buf[len] = '\0';
-      //logmsg(buf);
+		buf[len] = '\0';
+
+		if(len) {
+		  /* Convert data first to multibyte and then to utf-8 */
+			len = MultiByteToWideChar(852, 0, buf, -1, NULL, 0);
+			utfstring = (LPWSTR) malloc(len * sizeof(WCHAR) + 2);
+			utfstring[len] = 0;
+
+			MultiByteToWideChar(852, 0, buf, -1, utfstring, len);	
+			//!!TODO needs more atention - not sure if we are not losing data here, needs checking
+			len = WideCharToMultiByte (CP_UTF8, 0, utfstring, -1, 0, 0, 0, 0);
+      
+			len = len > BUFFER_LENGTH - 1 ? BUFFER_LENGTH - 1 : len;
+			_buf[len] = 0;
+
+			WideCharToMultiByte (CP_UTF8, 0, utfstring, -1, _buf, len - 1, 0, 0);
+			//sprintf(_buf, "%d %c", length, utfstring[0]);
+		}
 
       GetExitCodeProcess( pids[cmd], &status );
       if(status != STILL_ACTIVE )

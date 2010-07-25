@@ -22,6 +22,8 @@ int main(int argc, char **argv)
       cmd = TRACEROUTE6;
    else if (argc == 2 && !strcmp(argv[1], "WHOIS"))
       cmd = WHOIS;
+   else if (argc == 2 && !strcmp(argv[1], "LOCALE"))
+      cmd = LOCALE;
    else {
       fprintf(stderr, "Second parameter should be a command name.\nPING\nPING6\nTRACEROUTE\nTRACEROUTE6\nWHOIS\n");
       return 1;
@@ -31,7 +33,7 @@ int main(int argc, char **argv)
 
    for(;;) {
       if ((len = readCommand(cmd, buffer)) > 0)
-         fprintf(stderr, "%s", buffer);
+         fprintf(stdout, "%s", buffer);
       else if (len == 0)
          continue;
       else
