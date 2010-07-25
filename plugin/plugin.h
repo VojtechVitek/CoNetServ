@@ -4,6 +4,7 @@
 
 #if defined(_WINDOWS)
 	#include "stdbool.h"
+	#define _X86_ 
 #endif
 
 #if defined(XULRUNNER_SDK)
@@ -85,6 +86,7 @@ typedef enum {
    TRACEROUTE6,
    WHOIS,
    NSLOOKUP,
+   LOCALE,
 
    command_t_count
 
