@@ -85,15 +85,18 @@ invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t a
             logmsg("()\n");
             if ((len = readCommand(cmd, buffer)) != -1) {
                if (len > 0) {
+						FILE*tmp = fopen("conetserv.txt", "a");
+						fprintf(tmp, "%s", buffer);
+						fclose(tmp);
                   txt = (char *)npnfuncs->memalloc(len);
                   memcpy(txt, buffer, len);
                } else {
                   txt = NULL;
                }
-#ifdef _WINDOWS
-               result->type = NPVariantType_String;                                         \
-               STRING_UTF8CHARACTERS(npstr) = txt;
-			   STRING_UTF8LENGTH(npstr) = len;
+#ifdef _WINDOWS					
+					npstr.UTF8Characters = txt;
+					npstr.UTF8Length = len;
+               result->type = NPVariantType_String;                                        
                result->value.stringValue = npstr;
 #else
                STRINGN_TO_NPVARIANT(txt, len, *result);

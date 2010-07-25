@@ -40,7 +40,7 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	char cmdchar[100];
 	SECURITY_ATTRIBUTES saAttr;
 	PROCESS_INFORMATION procInfo;
-	STARTUPINFOW startInfo;
+	STARTUPINFO startInfo;
 	BOOL success = FALSE;
 	DWORD status;
 
@@ -104,8 +104,8 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
 
-	success = CreateProcessW(NULL,
-		utfstring,			// command line
+	success = CreateProcess(NULL,
+		cmdchar,			// command line
 		NULL,          // process security attributes
 		NULL,          // primary thread security attributes
 		TRUE,          // handles are inherited
@@ -159,6 +159,8 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 	LPWSTR utfstring;
 	int length;
 
+	UINT codepage;
+
 
 	/* check if running */
 	if (isRunning[cmd])
@@ -176,20 +178,23 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 		buf[len] = '\0';
 
 		if(len) {
-		  /* Convert data first to multibyte and then to utf-8 */
-			len = MultiByteToWideChar(852, 0, buf, -1, NULL, 0);
+			/* Get active codepage id */
+			codepage = GetOEMCP();
+
+			/* Convert data first to multibyte and then to utf-8 */
+			len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
 			utfstring = (LPWSTR) malloc(len * sizeof(WCHAR) + 2);
 			utfstring[len] = 0;
 
-			MultiByteToWideChar(852, 0, buf, -1, utfstring, len);	
+			MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);	
 			//!!TODO needs more atention - not sure if we are not losing data here, needs checking
-			len = WideCharToMultiByte (CP_UTF8, 0, utfstring, -1, 0, 0, 0, 0);
+			len = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
       
 			len = len > BUFFER_LENGTH - 1 ? BUFFER_LENGTH - 1 : len;
 			_buf[len] = 0;
 
 			WideCharToMultiByte (CP_UTF8, 0, utfstring, -1, _buf, len - 1, 0, 0);
-			//sprintf(_buf, "%d %c", length, utfstring[0]);
+			//sprintf(_buf, "%d", codepage, utfstring[0]);
 		}
 
       GetExitCodeProcess( pids[cmd], &status );
