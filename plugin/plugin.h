@@ -3,8 +3,8 @@
 #define _PLUGIN_H_
 
 #if defined(_WINDOWS)
-	#include "stdbool.h"
-	#define _X86_ 
+#include "stdbool.h"
+#define _X86_ 
 #endif
 
 #if defined(XULRUNNER_SDK)
@@ -74,45 +74,45 @@ extern NPP              inst;
 void logmsg(const char *msg);
 
 /**
- * Commands callable in NPAPI plugin
- * System called commands
- * Library implemented commands
- */
+* Commands callable in NPAPI plugin
+* System called commands
+* Library implemented commands
+*/
 typedef enum {
-   /* system commands: */
-   PING = 0,
-   PING6,
-   TRACEROUTE,
-   TRACEROUTE6,
-   WHOIS,
-   NSLOOKUP,
+	/* system commands: */
+	PING = 0,
+	PING6,
+	TRACEROUTE,
+	TRACEROUTE6,
+	WHOIS,
+	NSLOOKUP,
 
-   command_t_count
+	command_t_count
 
-   /* implemented commands: */
+	/* implemented commands: */
 } command_t;
 
 /**
- * Start command
- * @arg cmd Command number.
- * @arg addr URL / IPv4 / IPv6 address.
- * @return True if successfuly started, false otherwise.
- */
+* Start command
+* @arg cmd Command number.
+* @arg addr URL / IPv4 / IPv6 address.
+* @return True if successfuly started, false otherwise.
+*/
 bool startCommand(command_t cmd, NPUTF8* arg_host);
 
 /**
- * Read command
- * @arg cmd Command number.
- * @arg buf Buffer to store read data in.
- * @return Data length, or -1 while error.
- */
+* Read command
+* @arg cmd Command number.
+* @arg buf Buffer to store read data in.
+* @return Data length, or -1 while error.
+*/
 int readCommand(command_t cmd, NPUTF8* buf);
 
 /**
- * Stop command
- * @arg cmd Command number.
- * @return True if successfuly stopped, false otherwise.
- */
+* Stop command
+* @arg cmd Command number.
+* @return True if successfuly stopped, false otherwise.
+*/
 bool stopCommand(command_t cmd);
 
 #endif /*_PLUGIN_H_*/
