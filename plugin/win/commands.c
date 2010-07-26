@@ -29,7 +29,6 @@ char* cmd_args[command_t_count] = {
    "tracert -6",
    "nslookup",
    "nslookup",
-   "chcp 65001 & ping www.seznam.cz",
 };
 
 #define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
@@ -43,9 +42,6 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	STARTUPINFO startInfo;
 	BOOL success = FALSE;
 	DWORD status;
-
-	LPWSTR utfstring;
-	int length;
 
 	/* check for running state */
 	if (isRunning[cmd])
@@ -64,17 +60,7 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-   if(cmd == LOCALE) {
-      sprintf(cmdchar, "cmd.exe /U /C \"%s\"", cmd_args[cmd]);
-   }
-   else
-      sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
-
-   /* Prepare data to unicode string for passing to createProccessW function */
-   length = MultiByteToWideChar(CP_UTF8, 0, cmdchar, -1, NULL, 0);
-   utfstring = (LPWSTR) malloc(length * sizeof(WCHAR) + 1);
-
-   MultiByteToWideChar(CP_UTF8, 0, cmdchar, -1, utfstring, length);
+   sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
 
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -169,7 +155,7 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
       PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
 		if(status)
 		{
-			if (!ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH - 1, &len, NULL))
+			if (!ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH/2 - 1, &len, NULL))
 			{
 				len = 0;
 			}
@@ -179,7 +165,7 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 
 		if(len) {
 			/* Get active codepage id */
-			codepage = GetOEMCP();
+				codepage = GetOEMCP();
 
 			/* Convert data first to multibyte and then to utf-8 */
 			len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
@@ -187,14 +173,11 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 			utfstring[len] = 0;
 
 			MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);	
-			//!!TODO needs more atention - not sure if we are not losing data here, needs checking
 			len = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
       
-			len = len > BUFFER_LENGTH - 1 ? BUFFER_LENGTH - 1 : len;
 			_buf[len] = 0;
 
 			WideCharToMultiByte (CP_UTF8, 0, utfstring, -1, _buf, len - 1, 0, 0);
-			//sprintf(_buf, "%d", codepage, utfstring[0]);
 		}
 
       GetExitCodeProcess( pids[cmd], &status );

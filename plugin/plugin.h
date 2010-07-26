@@ -68,7 +68,7 @@ extern NPNetscapeFuncs *npnfuncs;
 extern NPP              inst;
 
 /** Buffer for reading from pipes */
-#define BUFFER_LENGTH 1024
+#define BUFFER_LENGTH 2048
 
 /** System-specific debug function */
 void logmsg(const char *msg);
@@ -86,7 +86,6 @@ typedef enum {
    TRACEROUTE6,
    WHOIS,
    NSLOOKUP,
-   LOCALE,
 
    command_t_count
 
