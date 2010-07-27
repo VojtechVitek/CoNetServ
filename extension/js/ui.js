@@ -147,10 +147,40 @@ Conetserv.Ui = {
    },
 
    /**
+    * Adds installation steps to div and formats mesage depending on current operating system
+    * @param div Which div in DOM will be the message appended to
+    * @param service name of service to be appended to commands
+    */
+   divInstallationSteps : function(div, service) {
+      var output =  '<div class="ui-state-highlight ui-corner-all" style="padding: 0.7em; margin-top:10px;"> \
+         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>';
+      if($.client.os == "Windows") {
+         output +=
+         '';
+      }
+      else if($.client.os == "Linux") {
+         output += '<strong>For installation please run following command depending on your linux distribution:</strong><br/><br/> \
+            Ubuntu/Debian: $ sudo apt-get install ' + service + '<br/> \
+            SUSE/OpenSUSE: $ sudo zypper install ' + service + '<br/> \
+            Fedora/Yellow Dog Linux: $ sudo yum install ' + service + '<br/> \
+            RedHat/CentOS: $ up2date ' + service + '<br/> \
+            Gentoo: $ emerge ' + service + '<br/> \
+            Mandriva: $ urpmi ' + service + '<br/> \
+            <br/>\
+            If your distribution is not listed, use your package installation program instead of listed ones.';
+      }
+      else if($.client.os == "Mac") {
+
+      }
+
+      output += '</p></div>';
+      $(div).append(output);
+   },
+
+   /**
     * checks availability of services and stuff for current system
     */
    checkAvailability : function() {
-      var err;
       /*
        * check for plugin - if not available, disable all dependend parts of
        * CoNetServ
@@ -168,10 +198,10 @@ Conetserv.Ui = {
           * check local services availability
           * first check for general availability in system - if not, don even display
           */
-         return;
 
-         if(!conetserv.ping) {
-            $(".local .ping").remove();
+         if(1) {
+            this.divError("#local-ping-div", "Ping service has not been found in your system.");
+            this.divInstallationSteps("#local-ping-div", "ping");
          }
 
          if(!conetserv.ping6) {
