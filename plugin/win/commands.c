@@ -23,7 +23,7 @@ HANDLE pids[command_t_count];
 bool isRunning[command_t_count] = {0};
 
 char* cmd_args[command_t_count] = {
-	"ping",
+	"ping -t",
 	"ping -6 -t",
 	"tracert",
 	"tracert -6",
@@ -140,10 +140,10 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 {
 	char buf[BUFFER_LENGTH];
 	DWORD len = 0;
+	DWORD len2 = 0;
 	DWORD status;
 
 	LPWSTR utfstring;
-	int length;
 
 	UINT codepage;
 
@@ -169,15 +169,17 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 
 			/* Convert data first to multibyte and then to utf-8 */
 			len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
-			utfstring = (LPWSTR) malloc(len * sizeof(WCHAR) + 2);
+			utfstring = (LPWSTR) npnfuncs->memalloc(len * sizeof(WCHAR) + 2);
 			utfstring[len] = 0;
 
 			MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);	
-			len = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
+			len2 = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
 
-			_buf[len] = 0;
+			_buf[len2-1] = 0;
 
-			WideCharToMultiByte (CP_UTF8, 0, utfstring, -1, _buf, len - 1, 0, 0);
+			WideCharToMultiByte (CP_UTF8, 0, utfstring, len-1, _buf, len2 - 1, 0, 0);
+
+			npnfuncs->memfree(utfstring);
 		}
 
 		GetExitCodeProcess( pids[cmd], &status );
@@ -194,7 +196,7 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 			}
 		}
 
-		return len;
+		return len2;
 	}
 	else
 	{
