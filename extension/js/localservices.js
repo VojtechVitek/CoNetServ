@@ -290,7 +290,7 @@ Conetserv.LocalServices = {
                this.whoisInterval = window.setInterval("Conetserv.LocalServices.readWhois()", 500);
                this.readWhois();
 
-               Conetserv.Ui.addIcons(".local", ".whois", stopWhois);
+               Conetserv.Ui.addIcons(".local", ".whois", this.stopWhois);
             }
             else {
                this.whoisInterval = -1;
@@ -352,7 +352,7 @@ Conetserv.LocalServices = {
          }
 
          Conetserv.Ui.removeIcons(".local", ".ping");
-         window.clearInterval(pingInterval);
+         window.clearInterval(this.pingInterval);
          this.pingInterval = -1;
       }
    },
@@ -370,7 +370,7 @@ Conetserv.LocalServices = {
          }
 
          Conetserv.Ui.removeIcons(".local", ".ping6");
-         window.clearInterval(ping6Interval);
+         window.clearInterval(this.ping6Interval);
          this.ping6Interval = -1;
       }
    },
@@ -388,7 +388,7 @@ Conetserv.LocalServices = {
          }
 
          Conetserv.Ui.removeIcons(".local", ".tracert");
-         window.clearInterval(tracerouteInterval);
+         window.clearIntervalthis(this.tracerouteInterval);
          this.tracerouteInterval = -1;
       }
    },
@@ -406,7 +406,7 @@ Conetserv.LocalServices = {
          }
 
          Conetserv.Ui.removeIcons(".local", ".tracert6");
-         window.clearInterval(traceroute6Interval);
+         window.clearInterval(this.traceroute6Interval);
          this.traceroute6Interval = -1;
       }
    },
@@ -424,7 +424,7 @@ Conetserv.LocalServices = {
          }
 
          Conetserv.Ui.removeIcons(".local", ".whois");
-         window.clearInterval(whoisInterval);
+         window.clearInterval(this.whoisInterval);
          this.whoisInterval = -1;
       }
    },
@@ -442,7 +442,7 @@ Conetserv.LocalServices = {
          }
 
          Conetserv.Ui.removeIcons(".local", ".nslookup");
-         window.clearInterval(nslookupInterval);
+         window.clearInterval(this.nslookupInterval);
          this.nslookupInterval = -1;
       }
    }
