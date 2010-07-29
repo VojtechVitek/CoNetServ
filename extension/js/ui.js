@@ -199,7 +199,9 @@ Conetserv.Ui = {
           * first check for general availability in system - if not, don even display
           */
 
-         if(1) {
+         return;
+         
+         if(!conetserv.ping) {
             this.divError("#local-ping-div", "Ping service has not been found in your system.");
             this.divInstallationSteps("#local-ping-div", "ping");
          }
