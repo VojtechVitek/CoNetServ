@@ -51,6 +51,8 @@
                   <label id="local-whois-label" class="radio-tab-label whois" for="local-whois-input">Whois</label>
                   <input type="radio" id="local-nslookup-input" class="radio-tab nslookup" name="local-services-form" value ="local-nslookup-div" />
                   <label id="local-nslookup-label" class="radio-tab-label nslookup" for="local-nslookup-input">NSlookup</label>
+                  <input type="radio" id="local-nmap-input" class="radio-tab nmap" name="local-services-form" value ="local-nmap-div" />
+                  <label id="local-nmap-label" class="radio-tab-label nmap" for="local-nmap-input">Nmap</label>
                </div>
             </form>
 
@@ -75,6 +77,9 @@
             </div>
             <div id="local-nslookup-div" class="content nslookup">
                <div id="local-nslookup-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+            <div id="local-nmap-div" class="content nmap">
+               <div id="local-nmap-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
             </div>
 
          </div>
@@ -124,12 +129,19 @@
          <div id="local-info" class="tab">
             <form action="">
                <div id="local-info-form">
-                  <input type="radio" id="local-nmap" class="radio-tab" name="local-info-form" checked="checked" /><label for="local-nmap">Neighbours</label>
-                  <input type="radio" id="local-ip" class="radio-tab" name="local-info-form" /><label for="local-ip">IP settings</label>
+                  <input type="radio" id="local-nmap-input" class="radio-tab nmap" name="local-info-form" value="local-nmap-div" checked="checked" />
+                  <label id="local-nmap-label" for="local-nmap-input">Neighbours</label>
+                  <input type="radio" id="local-ip-input" class="radio-tab ip" name="local-info-form" value="local-ip-div" checked="checked" />
+                  <label id="local-ip-label" for="local-ip-input">IP settings</label>
                </div>
             </form>
-            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-            <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+             <div id="local-nmap-div" class="content nmap">
+               <div id="local-nmap-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+             <div id="local-ip-div" class="content ip">
+               <div id="local-ip-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+            </div>
          </div>
          <div id="external-info" class="tab">
             <form action="">

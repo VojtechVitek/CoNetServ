@@ -9,19 +9,6 @@ Conetserv.onReady = function() {
 
    $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
 
-   /* CoNetServ object - NPAPI plugin */
-   this.LocalServices.plugin = document.getElementById("conetserv");
-
-   /* console text-boxes */
-   this.LocalServices.pingConsole = new Conetserv.Console("local-ping-console");
-   this.LocalServices.pingConsole.maxRows = 15;
-   this.LocalServices.ping6Console = new Conetserv.Console("local-ping6-console");
-   this.LocalServices.ping6Console.maxRows = 15;
-   this.LocalServices.tracerouteConsole = new Conetserv.Console("local-tracert-console");
-   this.LocalServices.traceroute6Console = new Conetserv.Console("local-tracert6-console");
-   this.LocalServices.whoisConsole = new Conetserv.Console("local-whois-console");
-   this.LocalServices.nslookupConsole = new Conetserv.Console("local-nslookup-console");
-
    /* init Conetserv.Url in Firefox */
    if ($.client.browser == "Firefox") {
       if (window && window.arguments && window.arguments[0] && Conetserv.Url.set(window.arguments[0])) {
@@ -57,6 +44,7 @@ Conetserv.onReady = function() {
        Conetserv.ExternalInfo.start();
     });
 
+   Conetserv.LocalServices.initialize();
    Conetserv.Plot.initialize();
    this.Options.initialize();
 };

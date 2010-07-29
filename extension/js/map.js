@@ -82,6 +82,7 @@ Conetserv.Map = {
          this.loadJsapi();
          return;
       }
+
       var location;
       while (location = this.locations.shift()) {
          var latlng = new google.maps.LatLng(location.latitude, location.longitude);

@@ -291,7 +291,7 @@ If you want to install it, please follow these steps.");
       // register callback function
       if(func){
          $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
-            func();
+            eval(func);
          });
       }
    },
