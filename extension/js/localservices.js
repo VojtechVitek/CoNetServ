@@ -26,7 +26,12 @@ Conetserv.LocalServices = {
    },
 
    stopCommands : function() {
-
+      this.stop(this.Ping);
+      this.stop(this.Ping6);
+      this.stop(this.Traceroute);
+      this.stop(this.Traceroute6);
+      this.stop(this.Nslookup);
+      this.stop(this.Whois);
    },
 
 
@@ -70,8 +75,8 @@ Conetserv.LocalServices = {
          service.console.add(e);
       }
 
-      //@TODO fix!!
-      if (0) {//received == false) {
+      //@TODO fix after v-teq commits new core!!
+      if (0) {
          Conetserv.Ui.removeIcons(".local", service.cls);
          window.clearInterval(service.interval);
          service.interval = -1;
@@ -203,7 +208,7 @@ Conetserv.LocalServices.Whois = {
    object : 'Conetserv.LocalServices.Whois',                //object full name -- !! IMPORTANT
    cls : '.whois',                                                              //class for icons
    name: 'Nslookup',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
+   argument:'Conetserv.Url.domain',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
    },
