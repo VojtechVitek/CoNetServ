@@ -43,15 +43,28 @@ Conetserv.Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
-
+      /**
+       * Register saving options after changing of forms on options page
+       */
       $("#settings-general-frontpage").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.FRONTPAGE_PARENT);
          Conetserv.Ui.redrawOptions();
       });
 
-      $("#settings-general-submit").button();
-      $("#settings-general-submit").click(function() {
-         Conetserv.Options.save();
-         return false;
+      $("#settings-general-frontpage-children").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.FRONTPAGE_CHILD);
+      });
+
+      $("#settings-general-skin").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.SKIN);
+      });
+
+      $("#settings-general-toolbox").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.SKIN);
+      });
+
+      $("#settings-general-autostart").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.SKIN);
       });
 
       /**
