@@ -11,6 +11,15 @@ Conetserv.Options = {
    frontPageChild : false,
    skin: false,
 
+   //enums for easier argument passing to functions
+   enums : {
+      TOOLBAR_BUTTON :        0,
+      AUTOSTART :             1,
+      FRONTPAGE_PARENT :      2,
+      FRONTPAGE_CHILD :       3,
+      SKIN :                  4
+   },
+
    /**
     * initializes CoNetServ options
     */
@@ -64,24 +73,34 @@ Conetserv.Options = {
    /**
     * Saves options, depending on set values in forms.
     */
-   save : function() {
+   save : function(option) {
       if(!this.storage)
-         return;
+         return false;
 
-      this.autostart = $("#settings-general-autostart").is(":checked");
-      this.storage["conetserv-settings-general-autostart"] = this.autostart;
-
-      /* frontpage */
-      this.frontPageParent = $("#settings-general-frontpage input:checked").val();
-      this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
-      this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
-      this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
-
-      /* skin */
-      this.skin = $("#settings-general-skin input:checked").val();
-      this.storage["conetserv-settings-general-skin"] = this.skin;
-      Conetserv.Ui.reloadSkin();
-
+      switch(option) {
+         case this.enums.TOOLBAR_BUTTON:
+            this.toolbarButton = $("#settings-general-toolbox").is(":checked");
+            this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
+            break;
+         case this.enums.AUTOSTART:
+            this.autostart = $("#settings-general-autostart").is(":checked");
+            this.storage["conetserv-settings-general-autostart"] = this.autostart;
+            break;
+         case this.enums.FRONTPAGE_PARENT:
+            this.frontPageParent = $("#settings-general-frontpage input:checked").val();
+            this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
+            break;
+         case this.enums.FRONTPAGE_CHILD:
+            this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
+            this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
+            break;
+         case this.enums.SKIN:
+            this.skin = $("#settings-general-skin input:checked").val();
+            this.storage["conetserv-settings-general-skin"] = this.skin;
+            Conetserv.Ui.reloadSkin();
+            break;
+      }
+      return true;
    },
 
    /**
