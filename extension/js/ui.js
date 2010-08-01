@@ -60,11 +60,11 @@ Conetserv.Ui = {
       });
 
       $("#settings-general-toolbox").change(function(){
-         Conetserv.Options.save(Conetserv.Options.enums.SKIN);
+         Conetserv.Options.save(Conetserv.Options.enums.TOOLBAR_BUTTON);
       });
 
       $("#settings-general-autostart").change(function(){
-         Conetserv.Options.save(Conetserv.Options.enums.SKIN);
+         Conetserv.Options.save(Conetserv.Options.enums.AUTOSTART);
       });
 
       /**
