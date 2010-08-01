@@ -54,7 +54,7 @@ Conetserv.onLoad = function() {
     * Check autostart - on true start services
     */
    if(this.Options.autostart) {
-      startCommands();
+      Conetserv.LocalServices.startCommands();
    }
 
    /*
