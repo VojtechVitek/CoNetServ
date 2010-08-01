@@ -2,7 +2,7 @@
 project("CoNetServ")
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 3)
-set(PATCH_VERSION 3)
+set(PATCH_VERSION 5)
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
@@ -41,7 +41,7 @@ endif()
 set(VERSION ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
 set(PROJECT_NAME ${CMAKE_PROJECT_NAME})
 string(TOLOWER ${PROJECT_NAME} PROJECT_LOW)
-set(PROJECT_LONG "Complex Network Services")
+set(PROJECT_LONG "CoNetServ (Complex Network Services)")
 set(PROJECT_COMPANY "FRES-Solutions")
 set(PROJECT_COPY "(c) 2010 ${PROJECT_COMPANY}")
 set(PROJECT_HOSTNAME "fres-solutions")
@@ -51,7 +51,7 @@ set(PROJECT_URL "http://www.${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}/${PROJECT_NA
 
 # Exension strings
 set(EXTENSION_SLOGAN "Extension that integrates network tools into the browser.")
-set(EXTENSION_DESC "${PROJECT_LONG} v${VERSION}. ${EXTENSION_SLOGAN} ${PROJECT_COPY}")
+set(EXTENSION_DESC "${EXTENSION_SLOGAN} ${PROJECT_COPY}")
 set(EXTENSION_ID "${PROJECT_LOW}@${PROJECT_HOSTNAME}.${PROJECT_HOST_TLD}")
 
 # Plugin strings

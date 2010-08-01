@@ -37,10 +37,10 @@ char* cmd_args[command_t_count] = {
 bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
 	char cmdchar[100];
-	SECURITY_ATTRIBUTES saAttr; 
-	PROCESS_INFORMATION procInfo; 
+	SECURITY_ATTRIBUTES saAttr;
+	PROCESS_INFORMATION procInfo;
    STARTUPINFOA startInfo;
-   BOOL success = FALSE; 
+   BOOL success = FALSE;
 	DWORD status;
 
 	/* check for running state */
@@ -56,16 +56,16 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
          CloseHandle(pipes[cmd][1]);
 		}
 	}
-	
+
 	isRunning[cmd]=1;
 
    /*creating command for execution*/
-   sprintf(cmdchar, "%s %s", cmd_args[cmd], (char *)arg_host);
-	
+   sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
+
 	/* Set the bInheritHandle flag so pipe handles are inherited. */
-   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-   saAttr.bInheritHandle = TRUE; 
-   saAttr.lpSecurityDescriptor = NULL; 
+   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+   saAttr.bInheritHandle = TRUE;
+   saAttr.lpSecurityDescriptor = NULL;
 
 	/* Create a pipe for the child process's STDOUT. */
    if ( ! CreatePipe(&pipes[cmd][0], &pipes[cmd][1], &saAttr, 0) )
@@ -74,13 +74,13 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 	/* Ensure the read handle to the pipe for STDOUT is not inherited. */
    if ( ! SetHandleInformation(pipes[cmd][0], HANDLE_FLAG_INHERIT, 0) )
       errorExitFunc("CoNetServ: startCommand(): SetHandleInformation() - error\n")
-	
+
 	/* Create a child process which uses stdout pipe */
-	
+
 	/* Prepare structures and set stdout handles */
 	ZeroMemory( &procInfo, sizeof(PROCESS_INFORMATION) );
 	ZeroMemory( &startInfo, sizeof(STARTUPINFO) );
-   startInfo.cb = sizeof(STARTUPINFO); 
+   startInfo.cb = sizeof(STARTUPINFO);
 
 	if(!DEBUGCON){
 		startInfo.wShowWindow = SW_HIDE;
@@ -90,17 +90,18 @@ bool startCommand(command_t cmd, NPUTF8* arg_host)
 		startInfo.dwFlags |= STARTF_USESTDHANDLES;
 	}
 
-	success = CreateProcessA(NULL, 
-		cmdchar,			// command line 
-      NULL,          // process security attributes 
-      NULL,          // primary thread security attributes 
-      TRUE,          // handles are inherited 
+	success = CreateProcessA(NULL,
+		cmdchar,			// command line
+      NULL,          // process security attributes
+      NULL,          // primary thread security attributes
+      TRUE,          // handles are inherited
       0,             // creation flags
-      NULL,          // use parent's environment 
-		NULL,          // current directory 
-      &startInfo,		// STARTUPINFO pointer 
-      &procInfo);		// receives PROCESS_INFORMATION 
-	
+      NULL,          // use parent's environment
+		NULL,          // current directory
+      &startInfo,		// STARTUPINFO pointer
+      &procInfo		// receives PROCESS_INFORMATION
+   );
+
 	if(!success)
 	{
 		isRunning[cmd] = 0;
@@ -130,92 +131,51 @@ bool stopCommand(command_t cmd)
 		return true;
 	}
 	else
-	return false;
+   {
+      return false;
+   }
 }
 
-/* FIXME Supports only ASCII and CP1250 command lines. */
 int readCommand(command_t cmd, NPUTF8 *_buf)
 {
    char* buf = (char *)_buf;
-	unsigned i;
-	DWORD read = 0;
-   BOOL success = FALSE;
+	DWORD len = 0;
 	DWORD status;
-	/* check for running state */
+
+	/* check if running */
    if (isRunning[cmd])
 	{
-		/* check for data on pipes */
+      /* check for data on pipes */
       PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
 		if(status)
 		{
-         success = ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH - 1, &read, NULL);
-			if( ! success || read == 0 ) 
-				read = 0;
-			else	//on success
-			{
-				
-				for(i=0; i < read; i++)
-				{
-					switch((unsigned char)buf[i])
-					{
-					case 0xFD:		//ř
-						buf[i]='r';
-						break;
-					case 0xA1:		//í
-						buf[i]='i';
-						break;
-					case 0x85:		//ů
-						buf[i]='u';
-						break;
-					case 0xD8:		//ě
-						buf[i]='e';
-						break;
-					case 0xD4:		//ď
-						buf[i]='d';
-						break;
-					case 159:		//č
-						buf[i]='c';
-						break;
-					case 0xE7:		//š
-						buf[i]='s';
-						break;
-					case 0xEC:		//ý
-						buf[i]='y';
-						break;
-					case 0xA7:		//ž
-						buf[i]='z';
-						break;
-					case 0xA0:		//á
-						buf[i]='a';
-						break;
-					case 0x82:		//é
-						buf[i]='e';
-						break;
-					default:
-						break;
-					}
-				}
-				buf[read] = '\0';
-				logmsg(buf);
-			}
+			if (!ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH - 1, &len, NULL))
+         {
+				len = 0;
+         }
 		}
+
+      buf[len] = '\0';
+      //logmsg(buf);
 
       GetExitCodeProcess( pids[cmd], &status );
-		if(status != STILL_ACTIVE )
-		{
-			/*check for any extra data*/
+      if(status != STILL_ACTIVE )
+      {
+         /*check for any extra data*/
          PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
-			if(!status)
-			{
-				/* Close handles */
+         if(!status)
+         {
+            /* Close handles */
             CloseHandle(pipes[cmd][0]);
             CloseHandle(pipes[cmd][1]);
-				isRunning[cmd] = 0;
-			}
-		}
-		return read;
-	}
-	else return -1;
+            isRunning[cmd] = 0;
+         }
+      }
 
-	
+		return len;
+	}
+	else
+   {
+      return -1;
+   }
 }

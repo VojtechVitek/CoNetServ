@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <widget network="public" xmlns="http://xmlns.opera.com/2006/widget">
-	<widgetname>@PROJECT_NAME@</widgetname>
-	<description>@PROJECT_LONG@</description>
+	<widgetname>@PROJECT_LONG@</widgetname>
+	<description>@EXTENSION_DESC@</description>
 	<id>
 		<host>@PROJECT_HOST@</host>
 		<name>@PROJECT_NAME@</name>

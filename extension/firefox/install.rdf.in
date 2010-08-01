@@ -3,7 +3,7 @@
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>@EXTENSION_ID@</em:id>
 		<em:type>2</em:type>
-		<em:name>@PROJECT_NAME@</em:name>
+		<em:name>@PROJECT_LONG@</em:name>
 		<em:version>@VERSION@</em:version>
 		@FIREFOX_LIBRARIES@
 		<em:description>@EXTENSION_DESC@</em:description>
