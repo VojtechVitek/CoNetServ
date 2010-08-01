@@ -1,8 +1,8 @@
 
 (function() {
- var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
- ga.src = 'https://ssl.google-analytics.com/ga.js';
- var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = 'https://ssl.google-analytics.com/ga.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
 })();
 
 $(document).ready(function(){
@@ -18,6 +18,6 @@ $(document).ready(function(){
       _gaq.push(['_trackEvent', 'button' + this.parentNode.id, 'clicked']);
    });
 
-_gaq.push(['_trackPageview']);
+   _gaq.push(['_trackPageview']);
    
 });
