@@ -52,9 +52,9 @@
                      var $tabs = $('#tabs').tabs();
                      var active = $("#local-services input[type=radio]:checked").val();
                      if(active == 'local-tracert-div')
-                        tail = '">' + Plot.localTraceData.labels[i] + '</div>';
+                        tail = '">' + Conetserv.Plot.localTraceData.labels[i] + '</div>';
                      else
-                        tail = '">' + Plot.localTrace6Data.labels[i] + '</div>';
+                        tail = '">' + Conetserv.Plot.localTrace6Data.labels[i] + '</div>';
                      html+= head + "Light" + tail + head + tail;
                   }
                }

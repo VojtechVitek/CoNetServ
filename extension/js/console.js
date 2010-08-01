@@ -1,9 +1,11 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /*
  * function for creating console objects, which are used for output of program
  *
  */
-
-function console(div) {
+Conetserv.Console = function(div) {
    this.div = document.getElementById(div);   //pointer to div which object takes care of
    this.code = "";            //container for data to be shown in element
 

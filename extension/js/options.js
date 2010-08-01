@@ -1,13 +1,25 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /**
  * Object for manipulating CoNetServ options
  */
-var Options = {
+Conetserv.Options = {
    storage : false,
    toolbarButton : false,
    autostart : false,
    frontPageParent : false,
    frontPageChild : false,
    skin: false,
+
+   //enums for easier argument passing to functions
+   enums : {
+      TOOLBAR_BUTTON :        0,
+      AUTOSTART :             1,
+      FRONTPAGE_PARENT :      2,
+      FRONTPAGE_CHILD :       3,
+      SKIN :                  4
+   },
 
    /**
     * initializes CoNetServ options
@@ -42,13 +54,13 @@ var Options = {
       }
       this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
       $("#frontpage-" + this.frontPageParent).attr("checked", true);
-      Ui.redrawOptions();
+      Conetserv.Ui.redrawOptions();
       $("#frontpage-" + this.frontPageChild).attr("checked", true);
 
       /* depending on options page, set the active tab */
       $("#tabs").tabs('select', "#" + this.frontPageParent);
       $("#" + this.frontPageParent).ready(function() {
-         $("#" + Options.frontPageChild).attr("checked", true);
+         $("#" + Conetserv.Options.frontPageChild).attr("checked", true);
       });
 
       /* skin options */
@@ -62,12 +74,26 @@ var Options = {
    /**
     * Saves options, depending on set values in forms.
     */
-   save : function() {
+   save : function(option) {
       if(!this.storage)
-         return;
+         return false;
 
-      this.toolbarButton = $("#settings-general-toolbox").is(":checked");
-      this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
+      switch(option) {
+         case this.enums.TOOLBAR_BUTTON:
+            this.toolbarButton = $("#settings-general-toolbox").is(":checked");
+            this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
+            break;
+         case this.enums.AUTOSTART:
+            break;
+         case this.enums.FRONTPAGE_PARENT:
+            break;
+         case this.enums.FRONTPAGE_CHILD:
+            break;
+         case this.enums.SKIN:
+            break;
+      }
+      
+      
 
       this.autostart = $("#settings-general-autostart").is(":checked");
       this.storage["conetserv-settings-general-autostart"] = this.autostart;
@@ -81,7 +107,7 @@ var Options = {
       /* skin */
       this.skin = $("#settings-general-skin input:checked").val();
       this.storage["conetserv-settings-general-skin"] = this.skin;
-      Ui.reloadSkin();
+      Conetserv.Ui.reloadSkin();
 
    },
 

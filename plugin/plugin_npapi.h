@@ -3,7 +3,8 @@
 #define _PLUGIN_NPAPI_H_
 
 #if defined(_WINDOWS)
-	#include "stdbool.h"
+#include "stdbool.h"
+#define _X86_
 #endif
 
 #if defined(XULRUNNER_SDK)

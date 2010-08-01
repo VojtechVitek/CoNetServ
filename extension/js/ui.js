@@ -1,7 +1,10 @@
+/* Check CoNetServ object */
+if(!Conetserv) var Conetserv = {};
+
 /**
  * Object for handling CoNetServ ui
  */
-var Ui = {
+Conetserv.Ui = {
    /**
     * initializes UI object ( sets tabs, buttons, ... )
     */
@@ -40,15 +43,28 @@ var Ui = {
       $("#external-info-form").buttonset();
       $("#settings-form").buttonset();
 
-
+      /**
+       * Register saving options after changing of forms on options page
+       */
       $("#settings-general-frontpage").change(function(){
-         Ui.redrawOptions();
+         Conetserv.Options.save(Conetserv.Options.enums.FRONTPAGE_PARENT);
+         Conetserv.Ui.redrawOptions();
       });
 
-      $("#settings-general-submit").button();
-      $("#settings-general-submit").click(function() {
-         Options.save();
-         return false;
+      $("#settings-general-frontpage-children").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.FRONTPAGE_CHILD);
+      });
+
+      $("#settings-general-skin").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.SKIN);
+      });
+
+      $("#settings-general-toolbox").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.TOOLBAR_BUTTON);
+      });
+
+      $("#settings-general-autostart").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.AUTOSTART);
       });
 
       /**
@@ -63,7 +79,7 @@ var Ui = {
             if(ui.panel.id == "external-services") {
                $("#external-url").focus();
             }
-            Ui.redraw();
+            Conetserv.Ui.redraw();
             return true;
          }
       });
@@ -72,39 +88,39 @@ var Ui = {
        * when radiobutton on local-services page is selected
        */
       $("input[name=local-services-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on external-services page is selected
        */
       $("input[name=external-services-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on local-info page is selected
        */
       $("input[name=local-info-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on external-info page is selected
        */
       $("input[name=external-info-form]").change(function(){
-         Ui.redraw();
-         Plot.repaint();
+         Conetserv.Ui.redraw();
+         Conetserv.Plot.repaint();
       });
 
       /**
        * when radiobutton on settings page is selected
        */
       $("input[name=settings-form]").change(function(){
-         Ui.redraw();
+         Conetserv.Ui.redraw();
       });
 
       /**
@@ -119,15 +135,15 @@ var Ui = {
       .addClass("ui-corner-right");
       
 
-      Ui.redraw();
+      Conetserv.Ui.redraw();
    },
 
    /**
     * reloads skin depending on current option
     */
    reloadSkin : function() {
-      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Options.skin + "/jquery-ui-1.8.2.custom.css")
-      $("#conetserv-ui-stylesheet").attr("href", "css/" + Options.skin + ".css")
+      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Conetserv.Options.skin + "/jquery-ui-1.8.2.custom.css")
+      $("#conetserv-ui-stylesheet").attr("href", "css/" + Conetserv.Options.skin + ".css")
    },
 
    /**
@@ -144,10 +160,40 @@ var Ui = {
    },
 
    /**
+    * Adds installation steps to div and formats mesage depending on current operating system
+    * @param div Which div in DOM will be the message appended to
+    * @param service name of service to be appended to commands
+    */
+   divInstallationSteps : function(div, service) {
+      var output =  '<div class="ui-state-highlight ui-corner-all" style="padding: 0.7em; margin-top:10px;"> \
+         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>';
+      if($.client.os == "Windows") {
+         output +=
+         '';
+      }
+      else if($.client.os == "Linux") {
+         output += '<strong>For installation please run following command depending on your linux distribution:</strong><br/><br/> \
+            Ubuntu/Debian: $ sudo apt-get install ' + service + '<br/> \
+            SUSE/OpenSUSE: $ sudo zypper install ' + service + '<br/> \
+            Fedora/Yellow Dog Linux: $ sudo yum install ' + service + '<br/> \
+            RedHat/CentOS: $ up2date ' + service + '<br/> \
+            Gentoo: $ emerge ' + service + '<br/> \
+            Mandriva: $ urpmi ' + service + '<br/> \
+            <br/>\
+            If your distribution is not listed, use your package installation program instead of listed ones.';
+      }
+      else if($.client.os == "Mac") {
+
+      }
+
+      output += '</p></div>';
+      $(div).append(output);
+   },
+
+   /**
     * checks availability of services and stuff for current system
     */
    checkAvailability : function() {
-      var err;
       /*
        * check for plugin - if not available, disable all dependend parts of
        * CoNetServ
@@ -165,10 +211,12 @@ var Ui = {
           * check local services availability
           * first check for general availability in system - if not, don even display
           */
-         return;
 
+         return;
+         
          if(!conetserv.ping) {
-            $(".local .ping").remove();
+            this.divError("#local-ping-div", "Ping service has not been found in your system.");
+            this.divInstallationSteps("#local-ping-div", "ping");
          }
 
          if(!conetserv.ping6) {
@@ -256,7 +304,7 @@ If you want to install it, please follow these steps.");
       // register callback function
       if(func){
          $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
-            func();
+            eval(func);
          });
       }
    },
@@ -298,10 +346,3 @@ If you want to install it, please follow these steps.");
       return output;
    }
 }
-
-$(function() {
-   /**
-    * initialize page ui right after page creation
-    */
-   Ui.initialize();
-});

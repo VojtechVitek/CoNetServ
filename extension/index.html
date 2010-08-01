@@ -11,9 +11,12 @@
       <script type="text/javascript" src="js/jquery/jquery.flot.valuelabels.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
       <script type="text/javascript" src="js/conetserv.js"></script>
+      <script type="text/javascript" src="js/localservices.js"></script>
+      <script type="text/javascript" src="js/externalinfo.js"></script>
       <script type="text/javascript" src="js/console.js"></script>
       <script type="text/javascript" src="js/services.js"></script>
       <script type="text/javascript" src="js/options.js"></script>
+      <script type="text/javascript" src="js/onload.js"></script>
       <script type="text/javascript" src="js/url.js"></script>
       <script type="text/javascript" src="js/ui.js"></script>
       <script type="text/javascript" src="js/plot.js"></script>
@@ -46,8 +49,10 @@
                   <label id="local-tracert6-label" class="radio-tab-label tracert6" for="local-tracert6-input">Traceroute6</label>
                   <input type="radio" id="local-whois-input" class="radio-tab whois" name="local-services-form" value ="local-whois-div" />
                   <label id="local-whois-label" class="radio-tab-label whois" for="local-whois-input">Whois</label>
-                  <input type="radio" id="local-nslookup-input" class="radio-tab nsloookup" name="local-services-form" value ="local-nslookup-div" />
+                  <input type="radio" id="local-nslookup-input" class="radio-tab nslookup" name="local-services-form" value ="local-nslookup-div" />
                   <label id="local-nslookup-label" class="radio-tab-label nslookup" for="local-nslookup-input">NSlookup</label>
+                  <input type="radio" id="local-nmap-input" class="radio-tab nmap" name="local-services-form" value ="local-nmap-div" />
+                  <label id="local-nmap-label" class="radio-tab-label nmap" for="local-nmap-input">Nmap</label>
                </div>
             </form>
 
@@ -73,6 +78,9 @@
             <div id="local-nslookup-div" class="content nslookup">
                <div id="local-nslookup-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
             </div>
+            <div id="local-nmap-div" class="content nmap">
+               <div id="local-nmap-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
 
          </div>
          <div id="external-services" class="tab external">
@@ -82,17 +90,17 @@
 
                <div id="external-services-form">
                   <input type="radio" id="external-ping-input" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
-                  <label id="external-nslookup-label" for="external-ping-input">Ping</label>
+                  <label id="external-nslookup-label" class= "radio-tab-label ping" for="external-ping-input">Ping</label>
                   <input type="radio" id="external-ping6-input" class="radio-tab ping6"  name="external-services-form" value="external-ping6-div"/>
-                  <label id="external-nslookup-label" for="external-ping6-input">Ping6</label>
+                  <label id="external-nslookup-label" class= "radio-tab-label ping6" for="external-ping6-input">Ping6</label>
                   <input type="radio" id="external-tracert-input" class="radio-tab tracert" name="external-services-form" value="external-tracert-div"/>
-                  <label id="external-nslookup-label" for="external-tracert-input">Traceroute</label>
+                  <label id="external-nslookup-label" class= "radio-tab-label tracert" for="external-tracert-input">Traceroute</label>
                   <input type="radio" id="external-tracert6-input" class="radio-tab tracert6" name="external-services-form" value="external-tracert6-div"/>
-                  <label id="external-nslookup-label" for="external-tracert6-input">Traceroute6</label>
+                  <label id="external-nslookup-label" class= "radio-tab-label tracert6"for="external-tracert6-input">Traceroute6</label>
                   <input type="radio" id="external-whois-input" class="radio-tab whois" name="external-services-form" value="external-whois-div"/>
-                  <label id="external-nslookup-label" for="external-whois-input">Whois</label>
+                  <label id="external-nslookup-label" class= "radio-tab-label whois"for="external-whois-input">Whois</label>
                   <input type="radio" id="external-nslookup-input" class="radio-tab nslookup" name="external-services-form" value="external-nslookup-div"/>
-                  <label id="external-nslookup-label" for="external-nslookup-input">NSlookup</label>
+                  <label id="external-nslookup-label" class= "radio-tab-label nslookup"for="external-nslookup-input">NSlookup</label>
                </div>
             </form>
              <div id="external-ping-div" class="content ping">
@@ -121,20 +129,27 @@
          <div id="local-info" class="tab">
             <form action="">
                <div id="local-info-form">
-                  <input type="radio" id="local-nmap" class="radio-tab" name="local-info-form" checked="checked" /><label for="local-nmap">Neighbours</label>
-                  <input type="radio" id="local-ip" class="radio-tab" name="local-info-form" /><label for="local-ip">IP settings</label>
+                  <input type="radio" id="local-neighbours-input" class="radio-tab neighbours" name="local-info-form" value="local-neighbours-div" checked="checked" />
+                  <label id="local-neighbours-label" for="local-neighbours-input">Neighbours</label>
+                  <input type="radio" id="local-ip-input" class="radio-tab ip" name="local-info-form" value="local-ip-div" checked="checked" />
+                  <label id="local-ip-label" for="local-ip-input">IP settings</label>
                </div>
             </form>
-            <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-            <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+             <div id="local-neighbours-div" class="content neighbours">
+               <div id="local-neighbours-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
+             <div id="local-ip-div" class="content ip">
+               <div id="local-ip-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+               <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+            </div>
          </div>
          <div id="external-info" class="tab">
             <form action="">
                <div id="external-info-form">
-                  <input type="radio" id="external-provider" class="radio-tab-input" name="external-info-form" value="external-provider-div" checked="checked"/>
-                  <label for="external-provider" class="radio-tab-label">Provider info</label>
-                  <input type="radio" id="external-map" class="radio-tab-input" name="external-info-form" value="external-map-div" />
-                  <label for="external-map" class="radio-tab-label">Location map</label>
+                  <input type="radio" id="external-provider" class="radio-tab provider" name="external-info-form" value="external-provider-div" checked="checked"/>
+                  <label for="external-provider" class="radio-tab-label provider">Provider info</label>
+                  <input type="radio" id="external-map" class="radio-tab location" name="external-info-form" value="external-map-div" />
+                  <label for="external-map" class="radio-tab-label location">Location map</label>
                </div>
             </form>
             <div id="external-provider-div" class="content provider">
@@ -234,9 +249,7 @@
                      <input type="checkbox" id="settings-general-autostart" class="single-line"/>
                         <label class="single-line" for="settings-general-autostart">Automaticaly start default service?</label>
                   </div>
-
-                  <button id="settings-general-submit">Save</button>
-
+                  
                </form>
             </div>
             <div id="settings-services-div" class="content servies">
