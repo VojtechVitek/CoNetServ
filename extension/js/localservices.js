@@ -16,7 +16,7 @@ Conetserv.LocalServices = {
          document.getElementById("local-url").focus();
          return;
       }
-      
+
       this.start(this.Ping);
       this.start(this.Ping6);
       this.start(this.Traceroute);
@@ -42,7 +42,7 @@ Conetserv.LocalServices = {
          try {
             service.console.clear();
             // Create function from service details and evaluate it
-            if (eval("Conetserv.LocalServices.plugin.start" + service.name + "(" + service.argument + ")")) {
+            if (eval("Conetserv.LocalServices.plugin." + service.name + ".start(" + service.argument + ")")) {
                service.interval = window.setInterval("Conetserv.LocalServices.read(" + service.object + ")", 500);
                this.read(service);
 
@@ -69,7 +69,7 @@ Conetserv.LocalServices = {
       var received;
       try {
          // Create function from service details and evaluate it
-         received = eval("Conetserv.LocalServices.plugin.read" + service.name + "()");
+         received = eval("Conetserv.LocalServices.plugin." + service.name + ".read()");
       }
       catch(e) {
          service.console.add(e);
@@ -91,7 +91,7 @@ Conetserv.LocalServices = {
    stop : function (service) {
       if (service.interval != -1) {
          try {
-            eval("Conetserv.LocalServices.plugin.stop" + service.name + "()")
+            eval("Conetserv.LocalServices.plugin." + service.name + ".stop()")
          }
          catch(e) {
             service.console.add(e);
@@ -124,7 +124,7 @@ Conetserv.LocalServices.Ping = {
    console : 0,     //text console
    object : 'Conetserv.LocalServices.Ping',                //object full name -- !! IMPORTANT
    cls : '.ping',                                                              //class for icons
-   name: 'Ping',                                                            //name for calling npapi functions
+   name: 'ping',                                                            //name for calling npapi functions
    argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
@@ -141,7 +141,7 @@ Conetserv.LocalServices.Ping6 = {
    console : 0,     //text console
    object : 'Conetserv.LocalServices.Ping6',                //object full name -- !! IMPORTANT
    cls : '.ping6',                                                              //class for icons
-   name: 'Ping6',                                                            //name for calling npapi functions
+   name: 'ping6',                                                            //name for calling npapi functions
    argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
@@ -158,7 +158,7 @@ Conetserv.LocalServices.Traceroute = {
    console : 0,     //text console
    object : 'Conetserv.LocalServices.Traceroute',                //object full name -- !! IMPORTANT
    cls : '.tracert',                                                              //class for icons
-   name: 'Traceroute',                                                            //name for calling npapi functions
+   name: 'traceroute',                                                            //name for calling npapi functions
    argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
@@ -175,7 +175,7 @@ Conetserv.LocalServices.Traceroute6 = {
    console : 0,     //text console
    object : 'Conetserv.LocalServices.Traceroute6',                //object full name -- !! IMPORTANT
    cls : '.tracert6',                                                              //class for icons
-   name: 'Traceroute6',                                                            //name for calling npapi functions
+   name: 'traceroute6',                                                            //name for calling npapi functions
    argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
@@ -192,7 +192,7 @@ Conetserv.LocalServices.Nslookup = {
    console : 0,     //text console
    object : 'Conetserv.LocalServices.Nslookup',                //object full name -- !! IMPORTANT
    cls : '.nslookup',                                                              //class for icons
-   name: 'Nslookup',                                                            //name for calling npapi functions
+   name: 'nslookup',                                                            //name for calling npapi functions
    argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
@@ -207,7 +207,7 @@ Conetserv.LocalServices.Whois = {
    console : 0,     //text console
    object : 'Conetserv.LocalServices.Whois',                //object full name -- !! IMPORTANT
    cls : '.whois',                                                              //class for icons
-   name: 'Nslookup',                                                            //name for calling npapi functions
+   name: 'nslookup',                                                            //name for calling npapi functions
    argument:'Conetserv.Url.domain',                        //parameter to be passed to npapi functions
 
    before_begin : function() {                                  //extra commands to be executed before service is started
