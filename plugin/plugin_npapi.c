@@ -70,9 +70,9 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
 
          if (obj == m->obj) {
             if (identifier == modules->start) {
-               DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
 
                if ((p = m->start(m, args, argc)) != NULL) {
+                  DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
                   p->obj = npnfuncs->createobject(instance, &npclass);
                   npnfuncs->retainobject(p->obj);
                   OBJECT_TO_NPVARIANT(p->obj, *result);
@@ -82,6 +82,7 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
                   *l = p;
                   return true;
                } else {
+                  DEBUG_STR("%s.%s(): false", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
                   BOOLEAN_TO_NPVARIANT(false, *result);
                   return true;
                }
@@ -101,17 +102,32 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
 
          if (obj == p->obj) {
             if (identifier == processes->read) {
-               DEBUG_STR("process.read()");
-               if (p->read(p, result))
-                  BOOLEAN_TO_NPVARIANT(true, *result);
-               else
+               if (p->read(p, result)) {
+                  DEBUG_STR("process.read(): string");
+                  return true;
+               } else {
+                  DEBUG_STR("process.read(): false");
                   BOOLEAN_TO_NPVARIANT(false, *result);
+                  return true;
+               }
             } else if (identifier == processes->stop) {
-               DEBUG_STR("process.stop()");
-               if (p->stop(p))
+               if (p->stop(p)) {
+                  DEBUG_STR("process.stop(): true");
                   BOOLEAN_TO_NPVARIANT(true, *result);
-               else
+               } else {
+                  DEBUG_STR("process.stop(): false");
                   BOOLEAN_TO_NPVARIANT(false, *result);
+               }
+               process *del = p;
+
+               if (processes->first == p) {
+                  processes->first = NULL;
+               } else {
+                  for (p = processes->first; p->next != del; p = p->next);
+                  p->next = del->next;
+               }
+               del->destroy(del);
+               return true;
             }
          }
 

@@ -118,7 +118,7 @@ process_stop(process *p)
 {
    /* kill the process, if running */
    if (p->running) {
-      DEBUG_STR("process->stop()");
+      DEBUG_STR("process->stop(pid %d)", p->pid);
 
       if (p->pid) {
          kill(p->pid, 9);
@@ -224,18 +224,16 @@ process_init()
 }
 
 static process *
-run_command(char *argv[])
+run_command(const char *path, char *const argv[])
 {
    process *p;
-
-   DEBUG_STR("shell->run(\"%s\")", argv[0]);
 
    if ((p = process_init()) == NULL)
       return NULL;
 
    /* create pipe for communication */
    if (pipe(p->pipe) == -1) {
-      DEBUG_STR("shell->run(): pipe() error\n");
+      DEBUG_STR("shell->run(): pipe() error");
       npnfuncs->setexception(NULL, "shell->run(): pipe() error");
       p->destroy(p);
       return NULL;
@@ -244,21 +242,19 @@ run_command(char *argv[])
    /* fork the process */
    if ((p->pid = vfork()) == 0) {
       /* child */
-      DEBUG_STR("shell->run(): vfork() child\n");
+      DEBUG_STR("shell->run(): child");
 
       /* close read end of pipe */
       close(p->pipe[0]);
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(p->pipe[1], 1) == -1 || dup2(p->pipe[1], 2) == -1) {
-         DEBUG_STR("shell->run(): dup2() error\n");
          npnfuncs->setexception(NULL, "startCommand(): dup2() error");
          _exit(1);
       }
 
       /* execute command */
-      if (execv(argv[0], argv) == -1) {
-         DEBUG_STR("shell->run(): execv() error\n");
+      if (execv(path, argv) == -1) {
          npnfuncs->setexception(NULL, "shell->run(): execv() error");
          _exit(1);
       }
@@ -268,14 +264,14 @@ run_command(char *argv[])
    } else if (p->pid == -1) {
       /* error - can't fork the parent process */
 
-      DEBUG_STR("shell->run(): vfork() error\n");
+      DEBUG_STR("shell->run(): vfork() error");
       npnfuncs->setexception(NULL, "shell->run(): vfork() error");
       p->destroy(p);
       return NULL;
 
    } else {
       /* parent */
-      DEBUG_STR("shell->run(): vfork() parent");
+      DEBUG_STR("shell->run(\"%s ...\"): pid %d", path, p->pid);
 
       /* close write end of pipe */
       close(p->pipe[1]);

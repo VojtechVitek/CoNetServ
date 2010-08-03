@@ -12,7 +12,7 @@
 typedef struct _cmd_shell {
    void (*destroy)();
    char * (*find)(char *program_name);
-   process * (*run)(char *argv[]);
+   process * (*run)(const char *path, char *const argv[]);
 } cmd_shell;
 
 cmd_shell * init_shell();
