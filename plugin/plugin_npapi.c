@@ -23,76 +23,168 @@ module_list  *modules = NULL;
 process_list *processes = NULL;
 
 static bool
-hasMethod(NPObject* obj, NPIdentifier methodName)
+hasMethod(NPObject *obj, NPIdentifier identifier)
 {
-   DEBUG_STR("plugin.hasMethod(%s)", DEBUG_IDENTIFIER(methodName));
+   module *m;
+   process *p;
+
+   /* Plugin object */
+   if (obj == plugin) {
+
+      DEBUG_STR("plugin.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+      return false;
+
+   }
+
+   /* Modules */
+   if (modules) {
+      if (identifier == modules->start) {
+         DEBUG_STR("module.hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+         return true;
+      }
+   }
+
+   /* Processess */
+   if (processes) {
+      if (identifier == processes->read || identifier == processes->stop)
+         DEBUG_STR("process.hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+         return true;
+   }
+
+   DEBUG_STR("module/process.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+
    return false;
 }
 
 static bool
-invoke(NPObject* obj, NPIdentifier methodName, const NPVariant *args, uint32_t argCount, NPVariant *result)
+invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
-   DEBUG_STR("plugin.invoke(%s)", DEBUG_IDENTIFIER(methodName));
+   module *m;
+   process *p, **l;
+   NPString str;
+
+   /* Modules */
+   if (modules && modules->first) {
+
+      for (m = modules->first; m != NULL; m = m->next) {
+
+         if (obj == m->obj) {
+            if (identifier == modules->start) {
+               DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
+
+               if ((p = m->start(m, args, argc)) != NULL) {
+                  p->obj = npnfuncs->createobject(instance, &npclass);
+                  npnfuncs->retainobject(p->obj);
+                  OBJECT_TO_NPVARIANT(p->obj, *result);
+                  l = &(processes->first);
+                  while (*l != NULL)
+                     l = &((*l)->next);
+                  *l = p;
+                  return true;
+               } else {
+                  BOOLEAN_TO_NPVARIANT(false, *result);
+                  return true;
+               }
+            } else {
+               return m->getProperty(m, identifier, result);
+            }
+         }
+
+      }
+
+   }
+
+   /* Module objects (running processes) */
+   if (processes && processes->first) {
+
+      for (p = processes->first; p != NULL; p = p->next) {
+
+         if (obj == p->obj) {
+            if (identifier == processes->read) {
+               DEBUG_STR("process.read()");
+               if (p->read(p, result))
+                  BOOLEAN_TO_NPVARIANT(true, *result);
+               else
+                  BOOLEAN_TO_NPVARIANT(false, *result);
+            } else if (identifier == processes->stop) {
+               DEBUG_STR("process.stop()");
+               if (p->stop(p))
+                  BOOLEAN_TO_NPVARIANT(true, *result);
+               else
+                  BOOLEAN_TO_NPVARIANT(false, *result);
+            }
+         }
+
+      }
+   }
+
+   DEBUG_STR("module/process.invoke(): false");
 
    return false;
 }
 
 static bool
-invokeDefault(NPObject* obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
+invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
    DEBUG_STR("plugin.invokeDefault()");
    return false;
 }
 
 static bool
-hasProperty(NPObject *obj, NPIdentifier propertyName)
+hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   module *it;
+   module *m;
+   process *p;
 
-   /* Plugin main object */
+   /* Plugin object */
    if (obj == plugin) {
 
-      DEBUG_STR("plugin.hasProperty(%s)", DEBUG_IDENTIFIER(propertyName));
-
       /* Plugin version */
-      if (propertyName == version) {
+      if (identifier == version) {
+         DEBUG_STR("plugin.hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+
          return true;
       }
 
-      return false;
-   }
+      /* Plugin modules */
+      if (modules && modules->first) {
 
-   /* Plugin module objects */
-   if (modules && modules->first) {
-      for (it = modules->first; it != NULL; it = it->next) {
-         if (obj == it->obj) {
-            /* Return hasProperty of module, if found */
-            DEBUG_STR("plugin.%s.hasProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
+         for (m = modules->first; m != NULL; m = m->next) {
+            if (identifier == m->identifier) {
+               DEBUG_STR("plugin.hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
 
-            return it->hasProperty(propertyName);
+               return true;
+            }
          }
+
       }
+
+      DEBUG_STR("plugin.hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+
+      return false;
+
    }
+
+   DEBUG_STR("module/process.hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
 
    return false;
 }
 
 static bool
-getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
+getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
-   module *it;
+   module *m;
+   process *p;
    NPString str;
    int len;
-
-   DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
 
    /* Plugin main object */
    if (obj == plugin) {
 
-      DEBUG_STR("plugin.getProperty(%s)", DEBUG_IDENTIFIER(propertyName));
-
       /* Plugin version */
-      if (propertyName == version) {
+      if (identifier == version) {
+
+         DEBUG_STR("plugin.%s: string", DEBUG_IDENTIFIER(identifier));
 
          len = strlen(VERSION);
          NPUTF8 *version = npnfuncs->memalloc((len + 1) * sizeof(NPUTF8));
@@ -106,18 +198,32 @@ getProperty(NPObject *obj, NPIdentifier propertyName, NPVariant *result)
          return true;
       }
 
-      return false;
+      /* Plugin modules */
+      if (modules && modules->first) {
+
+         for (m = modules->first; m != NULL; m = m->next) {
+            if (identifier == m->identifier) {
+               DEBUG_STR("plugin.%s: object", DEBUG_IDENTIFIER(identifier));
+
+               OBJECT_TO_NPVARIANT(m->obj, *result);
+               npnfuncs->retainobject(m->obj);
+
+               return true;
+            }
+         }
+
+      }
+
    }
 
-   /* Plugin module objects */
+   /* Modules */
    if (modules && modules->first) {
-      for (it = modules->first; it != NULL; it = it->next) {
-         if (obj == it->obj) {
-            /* Return getProperty of module, if found */
-            DEBUG_STR("plugin.%s.getProperty(%s)", DEBUG_IDENTIFIER(it->identifier), DEBUG_IDENTIFIER(propertyName));
-            return it->getProperty(propertyName, result);
-         }
+
+      for (m = modules->first; m != NULL; m = m->next) {
+         if (obj == m->obj)
+            return m->getProperty(m, identifier, result);
       }
+
    }
 
    return false;
@@ -256,6 +362,8 @@ NP_Initialize(NPNetscapeFuncs *npnf
    version = npnfuncs->getstringidentifier("version");
 
    modules = init_modules();
+
+   processes = init_processes();
 
    return NPERR_NO_ERROR;
 }

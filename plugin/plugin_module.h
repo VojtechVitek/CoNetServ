@@ -19,14 +19,17 @@ typedef struct _process {
    bool            running;
 
    void (*destroy)(struct _process *p);
-   void (*read)(struct _process *p, NPVariant *result);
-   void (*stop)(struct _process *p);
+   bool (*read)(struct _process *p, NPVariant *result);
+   bool (*stop)(struct _process *p);
 
 } process;
 
 /** Plugin processes - list */
 typedef struct _process_list {
    struct _process *first;
+
+   NPIdentifier    read;
+   NPIdentifier    stop;
 
    void (*destroy)(struct _process_list *l);
 
@@ -50,14 +53,16 @@ typedef struct _module {
 
    void (*destroy)(struct _module *m);
    process * (*start)(const struct _module *m, const NPVariant *args, const uint32_t argc);
-   bool (*hasProperty)(const NPIdentifier propertyName);
-   bool (*getProperty)(const NPIdentifier propertyName, NPVariant *result);
+   bool (*hasProperty)(const struct _module *m, const NPIdentifier propertyName);
+   bool (*getProperty)(const struct _module *m, const NPIdentifier propertyName, NPVariant *result);
 
 } module;
 
 /** Plugin module list - struct */
 typedef struct _module_list {
    struct _module *first;
+
+   NPIdentifier    start;
 
    void (*destroy)(struct _module_list *l);
 

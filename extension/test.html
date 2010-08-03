@@ -1,0 +1,32 @@
+<html>
+<script type="text/javascript">
+function test()
+{
+   var plugin = document.getElementById("conetserv");
+
+   //document.getElementById("data").value = plugin.version + "\n";
+
+   if (plugin.ping) {
+      var ping = plugin.ping.start("www.seznam.cz");
+
+      var data;
+      for(;;) {
+         data = ping.read();
+         if (data == false)
+            break;
+         document.getElementById("data").value += data;
+      }
+
+      ping.stop();
+
+   }
+
+}
+</script>
+<body onload="test();">
+Data:
+<textarea id="data">
+
+</textarea>
+<object id="conetserv" type="application/x-conetserv"></object>
+</html>

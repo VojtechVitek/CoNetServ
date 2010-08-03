@@ -20,19 +20,19 @@ start(const module *ping, const NPVariant *args, const uint32_t argc)
    }
    */
 
-   char * argv[2] = {ping->path, "-n"};
+   char *argv[2] = {ping->path, "-n"};
 
    return shell->run(argv);
 }
 
 static bool
-hasProperty(const NPIdentifier property)
+hasProperty(const module *m, const NPIdentifier property)
 {
    return false;
 }
 
 static bool
-getProperty(const NPIdentifier property, NPVariant *result)
+getProperty(const module *m, const NPIdentifier property, NPVariant *result)
 {
    return false;
 }
@@ -41,8 +41,8 @@ static void
 destroy(module *ping)
 {
    DEBUG_STR("ping->destroy()");
-   npnfuncs->memfree(ping);
    npnfuncs->releaseobject(ping->obj);
+   npnfuncs->memfree(ping);
 }
 
 module *
@@ -57,6 +57,8 @@ init_module_ping()
 
    ping->next = NULL;
    ping->obj = npnfuncs->createobject(instance, &npclass);
+   //FIXME: retain?
+   //npnfuncs->retainobject(ping->obj);
    ping->identifier = npnfuncs->getstringidentifier("ping");
    ping->found = false;
    if (shell) {

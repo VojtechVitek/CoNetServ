@@ -113,7 +113,7 @@ static char* find_program_path(char *program)
    }
 }
 
-static void
+static bool
 process_stop(process *p)
 {
    /* kill the process, if running */
@@ -129,10 +129,13 @@ process_stop(process *p)
       } else {
          p->running = false;
       }
+
+      return true;
    }
+   return false;
 }
 
-static void
+static bool
 process_read(process *p, NPVariant *result)
 {
    int len;
@@ -188,6 +191,8 @@ process_read(process *p, NPVariant *result)
 
    result->type = NPVariantType_String;
    result->value.stringValue = str;
+
+   return true;
 }
 
 
@@ -195,8 +200,8 @@ static void
 process_destroy(process *p)
 {
    DEBUG_STR("process->destroy()");
-   npnfuncs->memfree(p);
    npnfuncs->releaseobject(p->obj);
+   npnfuncs->memfree(p);
 }
 
 process *
@@ -206,6 +211,8 @@ process_init()
 
    if ((p = (process *)npnfuncs->memalloc(sizeof(process))) == NULL)
       return NULL;
+
+   p->next = NULL;
 
    p->pid = 0;
    p->running = false;
@@ -229,29 +236,30 @@ run_command(char *argv[])
    /* create pipe for communication */
    if (pipe(p->pipe) == -1) {
       DEBUG_STR("shell->run(): pipe() error\n");
-      npnfuncs->setexception(NULL, "shell->run(): pipe() error\n");
+      npnfuncs->setexception(NULL, "shell->run(): pipe() error");
+      p->destroy(p);
       return NULL;
    }
 
    /* fork the process */
    if ((p->pid = vfork()) == 0) {
       /* child */
-      DEBUG_STR("startCommand(): vfork() - child\n");
+      DEBUG_STR("shell->run(): vfork() child\n");
 
       /* close read end of pipe */
       close(p->pipe[0]);
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(p->pipe[1], 1) == -1 || dup2(p->pipe[1], 2) == -1) {
-         DEBUG_STR("startCommand(): dup2() - error\n");
-         npnfuncs->setexception(NULL, "startCommand(): dup2() - error\n");
+         DEBUG_STR("shell->run(): dup2() error\n");
+         npnfuncs->setexception(NULL, "startCommand(): dup2() error");
          _exit(1);
       }
 
       /* execute command */
       if (execv(argv[0], argv) == -1) {
          DEBUG_STR("shell->run(): execv() error\n");
-         npnfuncs->setexception(NULL, "shell->run(): execv() error\n");
+         npnfuncs->setexception(NULL, "shell->run(): execv() error");
          _exit(1);
       }
 
@@ -261,14 +269,13 @@ run_command(char *argv[])
       /* error - can't fork the parent process */
 
       DEBUG_STR("shell->run(): vfork() error\n");
-      npnfuncs->setexception(NULL, "shell->run(): vfork() error\n");
-
-      p->pid = 0;
+      npnfuncs->setexception(NULL, "shell->run(): vfork() error");
+      p->destroy(p);
       return NULL;
 
    } else {
       /* parent */
-      DEBUG_STR("shell->run(): vfork() parent\n");
+      DEBUG_STR("shell->run(): vfork() parent");
 
       /* close write end of pipe */
       close(p->pipe[1]);
@@ -276,15 +283,17 @@ run_command(char *argv[])
       /* make read end of pipe non-blocking */
       int flags;
       if ((flags = fcntl(p->pipe[0], F_GETFL)) == -1) {
-         DEBUG_STR("shell->run(): fcntl(F_GETFL) error\n");
-         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_GETFL) error\n");
+         DEBUG_STR("shell->run(): fcntl(F_GETFL) error");
+         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_GETFL) error");
          close(p->pipe[0]);
+         p->destroy(p);
          return NULL;
       }
       if (fcntl(p->pipe[0], F_SETFL, flags | O_NONBLOCK) == -1) {
-         DEBUG_STR("shell->run(): fcntl(F_SETFL) error\n");
-         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_SETFL) error\n");
+         DEBUG_STR("shell->run(): fcntl(F_SETFL) error");
+         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_SETFL) error");
          close(p->pipe[0]);
+         p->destroy(p);
          return NULL;
       }
 
