@@ -307,7 +307,7 @@ Conetserv.Url = {
    punycodeUtfTld: /^(?:бг|рф|укр)$/i,
 
    // Get domain from hostname
-   domainFromHostname: /^.*?([^.]+\.[^.]+)$/i,
+   domainFromHostname: /^.*?([^.]+\.(?:(com|co|org|gov|net|)\.)?[^.]+)$/i,
 
    // parsed values
    hostname: '', // www.example.com or 127.0.0.1
