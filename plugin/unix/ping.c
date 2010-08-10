@@ -14,13 +14,19 @@ start(const module *ping, const NPVariant *args, const uint32_t argc)
    if (!ping->found)
       return NULL;
 
+   if (argc < 1)
+      return NULL;
+
+   if (args[0].type != NPVariantType_String)
+      return NULL;
+
    /*
-   for (i = 0; i < argc; ++i) {
+   for (i = 1; i < argc; ++i) {
 
    }
    */
 
-   char *argv[4] = {"ping", "-n", "www.seznam.cz", NULL};
+   char *argv[4] = {"ping", "-n", STRING_UTF8CHARACTERS(args[0].value.stringValue), NULL};
 
    return shell->run(ping->path, argv);
 }
