@@ -1,30 +1,36 @@
 <html>
 <script type="text/javascript">
 var time1, time2;
-var plugin, ping;
+var plugin, ping1, ping2;
 
 function stop()
 {
    window.clearInterval(time1)
-   ping.stop();
+   ping1.stop();
+   ping2.stop();
 }
 
 function read()
 {
-   document.getElementById("data").value += ping.read();
+   document.getElementById("data1").value += ping1.read();
+   document.getElementById("data2").value += ping2.read();
 }
 
 function test()
 {
-   plugin = document.getElementById("conetserv");
-
-   document.getElementById("data").value = plugin.version + "\n";
+   plugin = document.getElementById("plugin1");
+   var plugin_tst = document.getElementById("plugin2");
 
    if (plugin.ping) {
       try {
-         ping = plugin.ping.start("www.seznam.cz");
+         ping1 = plugin.ping.start("www.seznam.cz");
       } catch (e) {
-         document.getElementById("data").value = e + "\n";
+         document.getElementById("data1").value = e + "\n";
+      }
+      try {
+         ping2 = plugin.ping.start("www.gmail.com");
+      } catch (e) {
+         document.getElementById("data2").value = e + "\n";
       }
       time1 = window.setInterval("read()", 1000);
       time2 = window.setTimeout("stop()", 10000);
@@ -34,8 +40,11 @@ function test()
 </script>
 <body onload="test();">
 Data:
-<textarea id="data" cols="50" rows="50">
-
+<textarea id="data1" cols="60" rows="30">
 </textarea>
-<object id="conetserv" type="application/x-conetserv"></object>
+<textarea id="data2" cols="60" rows="30">
+</textarea>
+<br />
+<object id="plugin1" type="application/x-conetserv"></object>
+<object id="plugin2" type="application/x-conetserv"></object>
 </html>
