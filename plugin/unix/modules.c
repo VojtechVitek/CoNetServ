@@ -18,10 +18,10 @@ destroy(module_list *modules)
       del = it;
       it = it->next;
       del->destroy(del);
-      npnfuncs->memfree(del);
+      browser->memfree(del);
    }
 
-   npnfuncs->memfree(modules);
+   browser->memfree(modules);
 }
 
 module_list *
@@ -34,12 +34,12 @@ init_modules()
 
    shell = init_shell();
 
-   modules = npnfuncs->memalloc(sizeof(struct _module_list));
+   modules = browser->memalloc(sizeof(struct _module_list));
    modules->first = NULL;
    it = &(modules->first);
 
    /* TODO: Try freeing these */
-   modules->start = npnfuncs->getstringidentifier("start");
+   modules->start = browser->getstringidentifier("start");
 
    modules->destroy = destroy;
 
@@ -63,10 +63,10 @@ destroy_processes(process_list *processes)
       del = it;
       it = it->next;
       del->destroy(del);
-      npnfuncs->memfree(del);
+      browser->memfree(del);
    }
 
-   npnfuncs->memfree(processes);
+   browser->memfree(processes);
 }
 
 process_list *
@@ -76,12 +76,12 @@ init_processes()
 
    DEBUG_STR("processes->init()");
 
-   processes = npnfuncs->memalloc(sizeof(struct _process_list));
+   processes = browser->memalloc(sizeof(struct _process_list));
    processes->first = NULL;
 
    /* TODO: Try freeing these */
-   processes->read = npnfuncs->getstringidentifier("read");
-   processes->stop = npnfuncs->getstringidentifier("stop");
+   processes->read = browser->getstringidentifier("read");
+   processes->stop = browser->getstringidentifier("stop");
 
    processes->destroy = destroy_processes;
 

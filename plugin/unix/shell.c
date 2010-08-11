@@ -100,7 +100,7 @@ static char* find_program_path(char *program)
          buffer[i] = '\0';
          len = i;
 
-         path = npnfuncs->memalloc((len + 1) * sizeof(char));
+         path = browser->memalloc((len + 1) * sizeof(char));
          memcpy(path, buffer, len + 1);
       }
 
@@ -184,7 +184,7 @@ process_read(process *p, NPVariant *result)
    buffer[len] = '\0';
 
    /* fill the result string */
-   chars = npnfuncs->memalloc((len + 1) * sizeof(NPUTF8));
+   chars = browser->memalloc((len + 1) * sizeof(NPUTF8));
    memcpy(chars, buffer, len);
    STRING_UTF8CHARACTERS(str) = chars;
    STRING_UTF8LENGTH(str) = len;
@@ -200,8 +200,8 @@ static void
 process_destroy(process *p)
 {
    DEBUG_STR("process->destroy()");
-   npnfuncs->releaseobject(p->obj);
-   npnfuncs->memfree(p);
+   browser->releaseobject(p->obj);
+   browser->memfree(p);
 }
 
 process *
@@ -209,7 +209,7 @@ process_init()
 {
    process *p;
 
-   if ((p = (process *)npnfuncs->memalloc(sizeof(process))) == NULL)
+   if ((p = (process *)browser->memalloc(sizeof(process))) == NULL)
       return NULL;
 
    p->next = NULL;
@@ -234,7 +234,7 @@ run_command(const char *path, char *const argv[])
    /* create pipe for communication */
    if (pipe(p->pipe) == -1) {
       DEBUG_STR("shell->run(): pipe() error");
-      npnfuncs->setexception(NULL, "shell->run(): pipe() error");
+      browser->setexception(NULL, "shell->run(): pipe() error");
       p->destroy(p);
       return NULL;
    }
@@ -248,13 +248,13 @@ run_command(const char *path, char *const argv[])
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(p->pipe[1], 1) == -1 || dup2(p->pipe[1], 2) == -1) {
-         npnfuncs->setexception(NULL, "startCommand(): dup2() error");
+         browser->setexception(NULL, "startCommand(): dup2() error");
          _exit(1);
       }
 
       /* execute command */
       if (execv(path, argv) == -1) {
-         npnfuncs->setexception(NULL, "shell->run(): execv() error");
+         browser->setexception(NULL, "shell->run(): execv() error");
          _exit(1);
       }
 
@@ -264,7 +264,7 @@ run_command(const char *path, char *const argv[])
       /* error - can't fork the parent process */
 
       DEBUG_STR("shell->run(): vfork() error");
-      npnfuncs->setexception(NULL, "shell->run(): vfork() error");
+      browser->setexception(NULL, "shell->run(): vfork() error");
       p->destroy(p);
       return NULL;
 
@@ -279,14 +279,14 @@ run_command(const char *path, char *const argv[])
       int flags;
       if ((flags = fcntl(p->pipe[0], F_GETFL)) == -1) {
          DEBUG_STR("shell->run(): fcntl(F_GETFL) error");
-         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_GETFL) error");
+         browser->setexception(NULL, "shell->run(): fcntl(F_GETFL) error");
          close(p->pipe[0]);
          p->destroy(p);
          return NULL;
       }
       if (fcntl(p->pipe[0], F_SETFL, flags | O_NONBLOCK) == -1) {
          DEBUG_STR("shell->run(): fcntl(F_SETFL) error");
-         npnfuncs->setexception(NULL, "shell->run(): fcntl(F_SETFL) error");
+         browser->setexception(NULL, "shell->run(): fcntl(F_SETFL) error");
          close(p->pipe[0]);
          p->destroy(p);
          return NULL;
@@ -305,11 +305,11 @@ destroy()
    DEBUG_STR("shell->destroy()");
 
    if (shell != NULL)
-      npnfuncs->memfree(shell);
+      browser->memfree(shell);
    if (buffer != NULL)
-      npnfuncs->memfree(buffer);
+      browser->memfree(buffer);
    if (which_env[0] != NULL)
-      npnfuncs->memfree(which_env[0]);
+      browser->memfree(which_env[0]);
 }
 
 cmd_shell *
@@ -320,7 +320,7 @@ init_shell()
    DEBUG_STR("shell->init()");
 
    /* Allocate shell object */
-   if ((shell = npnfuncs->memalloc(sizeof(cmd_shell))) == NULL)
+   if ((shell = browser->memalloc(sizeof(cmd_shell))) == NULL)
       return NULL;
 
    shell->destroy = destroy;
@@ -328,7 +328,7 @@ init_shell()
    shell->run = run_command;
 
    /* Allocate buffer */
-   if ((buffer = npnfuncs->memalloc(BUFLEN * sizeof(char))) == NULL)
+   if ((buffer = browser->memalloc(BUFLEN * sizeof(char))) == NULL)
       return NULL;
 
    /* Get user paths from variable PATH */
@@ -336,7 +336,7 @@ init_shell()
       return NULL;
 
    /* Allocate modified PATH variable */
-   if ((which_env[0] = npnfuncs->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
+   if ((which_env[0] = browser->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
       return NULL;
 
    /* Add superuser paths into PATH variable:

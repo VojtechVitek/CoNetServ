@@ -48,11 +48,11 @@ destroy(module *ping)
    DEBUG_STR("ping->destroy()");
 
    if (ping->path != NULL)
-      npnfuncs->memfree(ping->path);
+      browser->memfree(ping->path);
 
-   npnfuncs->releaseobject(ping->obj);
+   browser->releaseobject(ping->obj);
 
-   npnfuncs->memfree(ping);
+   browser->memfree(ping);
 }
 
 module *
@@ -62,12 +62,12 @@ init_module_ping()
 
    DEBUG_STR("ping->init()");
 
-   if ((ping = (module *)npnfuncs->memalloc(sizeof(module))) == NULL)
+   if ((ping = (module *)browser->memalloc(sizeof(module))) == NULL)
       return NULL;
 
    ping->next = NULL;
-   ping->obj = npnfuncs->createobject(instance, &npclass);
-   ping->identifier = npnfuncs->getstringidentifier("ping");
+   ping->obj = browser->createobject(instance, &npclass);
+   ping->identifier = browser->getstringidentifier("ping");
    ping->found = false;
    ping->path = NULL;
    if (shell) {

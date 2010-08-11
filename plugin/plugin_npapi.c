@@ -10,7 +10,7 @@
 
 /*! NPAPI variables */
 NPObject        *plugin   = NULL;
-NPNetscapeFuncs *npnfuncs = NULL;
+NPNetscapeFuncs *browser = NULL;
 NPP              instance = NULL;
 
 /*! Plugin variables */
@@ -73,8 +73,8 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
 
                if ((p = m->start(m, args, argc)) != NULL) {
                   DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
-                  p->obj = npnfuncs->createobject(instance, &npclass);
-                  npnfuncs->retainobject(p->obj);
+                  p->obj = browser->createobject(instance, &npclass);
+                  browser->retainobject(p->obj);
                   OBJECT_TO_NPVARIANT(p->obj, *result);
                   l = &(processes->first);
                   while (*l != NULL)
@@ -214,7 +214,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
          DEBUG_STR("plugin.%s: string", DEBUG_IDENTIFIER(identifier));
 
          len = strlen(VERSION);
-         NPUTF8 *version = npnfuncs->memalloc((len + 1) * sizeof(NPUTF8));
+         NPUTF8 *version = browser->memalloc((len + 1) * sizeof(NPUTF8));
          strcpy(version, VERSION);
          STRING_UTF8CHARACTERS(str) = version;
          STRING_UTF8LENGTH(str) = len;
@@ -233,7 +233,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
                DEBUG_STR("plugin.%s: object", DEBUG_IDENTIFIER(identifier));
 
                OBJECT_TO_NPVARIANT(m->obj, *result);
-               npnfuncs->retainobject(m->obj);
+               browser->retainobject(m->obj);
 
                return true;
             }
@@ -266,14 +266,14 @@ init(const NPMIMEType pluginType, const NPP _instance, const uint16_t mode, int1
    instance = _instance;
 
 #if 0
-   npnfuncs->getvalue(instance, NPNVSupportsWindowless, &value);
+   browser->getvalue(instance, NPNVSupportsWindowless, &value);
    if (value.value.boolValue == true) {
       DEBUG_STR("Windowless = true");
    } else {
       DEBUG_STR("Windowless = false");
    }
 
-   npnfuncs->getvalue(instance, NPNVprivateModeBool, &value);
+   browser->getvalue(instance, NPNVprivateModeBool, &value);
    if (value.value.boolValue == true) {
       DEBUG_STR("Private = true");
    } else {
@@ -291,7 +291,7 @@ destroy(NPP instance, NPSavedData **save)
    DEBUG_STR("destroy()");
 
    if (plugin)
-      npnfuncs->releaseobject(plugin);
+      browser->releaseobject(plugin);
 
    plugin = NULL;
    return NPERR_NO_ERROR;
@@ -312,11 +312,11 @@ getValue(NPP instance, const NPPVariable variable, void *value)
    case NPPVpluginScriptableNPObject:
       DEBUG_STR("getValue(NPPVpluginScriptableNPObject)");
       if(!plugin)
-         plugin = npnfuncs->createobject(instance, &npclass);
+         plugin = browser->createobject(instance, &npclass);
       /* The caller (browser) is responsible to release object (ref_count--).
        * But we need (at least) object ref_count == 1
        */
-      npnfuncs->retainobject(plugin);
+      browser->retainobject(plugin);
       *(NPObject **)value = plugin;
       break;
    case NPPVpluginNeedsXEmbed:
@@ -399,12 +399,12 @@ NP_Initialize(NPNetscapeFuncs *npnf
    if (HIBYTE(npnf->version) > NP_VERSION_MAJOR)
       return NPERR_INCOMPATIBLE_VERSION_ERROR;
 
-   npnfuncs = npnf;
+   browser = npnf;
 #if !defined(_WINDOWS) && !defined(WEBKIT_DARWIN_SDK)
    NP_GetEntryPoints(nppfuncs);
 #endif
 
-   version = npnfuncs->getstringidentifier("version");
+   version = browser->getstringidentifier("version");
 
    modules = init_modules();
 
