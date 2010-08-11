@@ -102,6 +102,7 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
 
          if (obj == p->obj) {
             if (identifier == processes->read) {
+               /* Read data from process */
                if (p->read(p, result)) {
                   DEBUG_STR("process.read(): string");
                   return true;
@@ -111,6 +112,7 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
                   return true;
                }
             } else if (identifier == processes->stop) {
+               /* Stop/kill the process */
                if (p->stop(p)) {
                   DEBUG_STR("process.stop(): true");
                   BOOLEAN_TO_NPVARIANT(true, *result);
@@ -118,15 +120,24 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
                   DEBUG_STR("process.stop(): false");
                   BOOLEAN_TO_NPVARIANT(false, *result);
                }
+               /* Process to be deleted */
                process *del = p;
 
-               if (processes->first == p) {
-                  processes->first = NULL;
+               /* Delete process from process list */
+               p = processes->first;
+               if (del == processes->first) {
+                  /* Process to delete is on the 1st position */
+                  processes->first = p->next;
                } else {
-                  for (p = processes->first; p->next != del; p = p->next);
+                  /* Process to delete is on the 2nd,3rd,.. position */
+                  while (p->next != del)
+                     p = p->next;
                   p->next = del->next;
                }
+
+               /* Destroy the process */
                del->destroy(del);
+
                return true;
             }
          }
@@ -249,9 +260,27 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 static NPError
 init(const NPMIMEType pluginType, const NPP _instance, const uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved)
 {
-   DEBUG_STR("init(instance %d, pluginType %d, mode %d, argc %d)", instance, pluginType, mode, argc);
+   NPVariant value;
+   DEBUG_STR("init(argc %d |%s=%s, %s=%s): instance %d", argc, argn[0], argv[0], argn[1], argv[1], instance);
 
    instance = _instance;
+
+#if 0
+   npnfuncs->getvalue(instance, NPNVSupportsWindowless, &value);
+   if (value.value.boolValue == true) {
+      DEBUG_STR("Windowless = true");
+   } else {
+      DEBUG_STR("Windowless = false");
+   }
+
+   npnfuncs->getvalue(instance, NPNVprivateModeBool, &value);
+   if (value.value.boolValue == true) {
+      DEBUG_STR("Private = true");
+   } else {
+      DEBUG_STR("Private = false");
+   }
+#endif
+
    return NPERR_NO_ERROR;
 }
 
