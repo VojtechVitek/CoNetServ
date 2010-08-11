@@ -27,7 +27,6 @@ start(const module *ping, const NPVariant *args, const uint32_t argc)
    */
 
    char *argv[4] = {"ping", "-n", STRING_UTF8CHARACTERS(args[0].value.stringValue), NULL};
-
    return shell->run(ping->path, argv);
 }
 
@@ -47,7 +46,12 @@ static void
 destroy(module *ping)
 {
    DEBUG_STR("ping->destroy()");
+
+   if (ping->path != NULL)
+      npnfuncs->memfree(ping->path);
+
    npnfuncs->releaseobject(ping->obj);
+
    npnfuncs->memfree(ping);
 }
 
@@ -65,6 +69,7 @@ init_module_ping()
    ping->obj = npnfuncs->createobject(instance, &npclass);
    ping->identifier = npnfuncs->getstringidentifier("ping");
    ping->found = false;
+   ping->path = NULL;
    if (shell) {
       if ((ping->path = shell->find("ping")) != NULL) {
          ping->found = true;

@@ -41,7 +41,9 @@ static char* find_program_path(char *program)
 {
    int pipes[2];
    int pid;
+   int i;
    int len;
+   char *path = NULL;
 
    /* create pipe for communication */
    if (pipe(pipes) == -1)
@@ -93,23 +95,21 @@ static char* find_program_path(char *program)
       } else {
 
          /* be sure to end string by '\0' character */
-         buffer[len] = '\0';
+         /* we need only first line (end with new line) */
+         for (i = 0; i < len && buffer[i] != '\n'; ++i);
+         buffer[i] = '\0';
+         len = i;
 
-         /* we need only first line */
-         for (int i = 0; i < len; i++) {
-            if (buffer[i] == '\n') {
-               buffer[i] = '\0';
-               break;
-            }
-         }
-
-         DEBUG_STR("shell->find(%s): \"%s\"", program, buffer);
+         path = npnfuncs->memalloc((len + 1) * sizeof(char));
+         memcpy(path, buffer, len + 1);
       }
 
       /* clean child's status from process table */
       waitpid(pid, NULL, 0);
 
-      return buffer;
+      DEBUG_STR("shell->find(%s): \"%s\"", program, path);
+
+      return path;
    }
 }
 
@@ -242,7 +242,6 @@ run_command(const char *path, char *const argv[])
    /* fork the process */
    if ((p->pid = vfork()) == 0) {
       /* child */
-      DEBUG_STR("shell->run(): child");
 
       /* close read end of pipe */
       close(p->pipe[0]);
@@ -271,7 +270,7 @@ run_command(const char *path, char *const argv[])
 
    } else {
       /* parent */
-      DEBUG_STR("shell->run(\"%s ...\"): pid %d", path, p->pid);
+      DEBUG_STR("shell->run(\"%s ...\"): child pid %d", path, p->pid);
 
       /* close write end of pipe */
       close(p->pipe[1]);
