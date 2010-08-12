@@ -73,7 +73,7 @@ invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t a
 
                if ((p = m->start(m, args, argc)) != NULL) {
                   DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
-                  p->obj = browser->createobject(instance, &npclass);
+                  p->obj = browser->createobject(instance, &pluginClass);
                   browser->retainobject(p->obj);
                   OBJECT_TO_NPVARIANT(p->obj, *result);
                   l = &(processes->first);
@@ -312,7 +312,7 @@ getValue(NPP instance, const NPPVariable variable, void *value)
    case NPPVpluginScriptableNPObject:
       DEBUG_STR("getValue(NPPVpluginScriptableNPObject)");
       if(!plugin)
-         plugin = browser->createobject(instance, &npclass);
+         plugin = browser->createobject(instance, &pluginClass);
       /* The caller (browser) is responsible to release object (ref_count--).
        * But we need (at least) object ref_count == 1
        */
@@ -437,7 +437,7 @@ NP_GetValue(void *npp, NPPVariable variable, void *value)
    return getValue((NPP)npp, variable, value);
 }
 
-NPClass npclass = {
+NPClass pluginClass = {
    NP_CLASS_STRUCT_VERSION,
    NULL/*allocate*/,
    NULL/*deallocate*/,

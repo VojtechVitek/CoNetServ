@@ -67,7 +67,7 @@ extern JNIEnv *pluginJniEnv;
 extern NPObject        *plugin;
 extern NPNetscapeFuncs *browser;
 extern NPP              instance;
-extern NPClass          npclass;
+extern NPClass          pluginClass;
 
 /*! EXPORT functions */
 #ifdef __cplusplus

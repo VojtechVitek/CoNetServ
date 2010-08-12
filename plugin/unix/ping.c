@@ -66,7 +66,7 @@ init_module_ping()
       return NULL;
 
    ping->next = NULL;
-   ping->obj = browser->createobject(instance, &npclass);
+   ping->obj = browser->createobject(instance, &pluginClass);
    ping->identifier = browser->getstringidentifier("ping");
    ping->found = false;
    ping->path = NULL;
