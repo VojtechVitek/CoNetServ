@@ -65,7 +65,7 @@ extern JNIEnv *pluginJniEnv;
 
 /*! NPAPI variables */
 extern NPObject        *plugin;
-extern NPNetscapeFuncs *npnfuncs;
+extern NPNetscapeFuncs *browser;
 extern NPP              instance;
 extern NPClass          npclass;
 
