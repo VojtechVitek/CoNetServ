@@ -13,6 +13,7 @@ Conetserv.onReady = function() {
    if ($.client.browser == "Firefox") {
       if (window && window.arguments && window.arguments[0] && Conetserv.Url.set(window.arguments[0])) {
          document.getElementById("local-url").value = Conetserv.Url.hostname;
+         document.getElementById("external-url").value = Conetserv.Url.hostname;
       }
    /* init url in Chrome */
    } else if ($.client.browser == "Chrome") {
@@ -45,8 +46,11 @@ Conetserv.onReady = function() {
     });
 
    Conetserv.LocalServices.initialize();
+   Conetserv.ExternalServices.initialize();
    Conetserv.Plot.initialize();
    this.Options.initialize();
+
+   Conetserv.ExternalServices.start();
 };
 
 Conetserv.onLoad = function() {

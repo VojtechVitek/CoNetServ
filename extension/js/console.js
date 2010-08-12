@@ -20,7 +20,7 @@ Conetserv.Console = function(div) {
    this.linux = new Object();
    this.linux.hostname = /([\w\-]+\.)+([a-z]+)/ig //\(([0-9\i]*)\).*/i
    this.linux.ip = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ig
-   this.linux.time = /\d+\.?\d*\s?ms/ig
+   this.linux.time = /\d+\.?\d*\s?ms(ec){0,1}/ig
    
    
    //gets color from string containing number at the begining
@@ -53,7 +53,7 @@ Conetserv.Console = function(div) {
       this.prevData += text;
       var npos = 0;
 
-      while((npos = this.prevData.indexOf("\n")) != -1) {
+      while((npos = this.prevData.indexOf("\n")) != -1 ) {
          this.rowCount++;
          var row = this.colourLine(this.prevData.substr(0, npos+1));
          
@@ -85,7 +85,7 @@ Conetserv.Console = function(div) {
    
    //colours all items in line
    this.colourLine = function(line) {
-      var coloured = line.replace(/\n/g,"<br />");
+      var coloured = line.replace(/(\r)*\n/g,"<br />");
 
       coloured = coloured.replace(this.linux.hostname,"<span class=\"color1\">$&</span>"); 
       coloured = coloured.replace(this.linux.ip,"<span class=\"color2\">$1</span>"); 

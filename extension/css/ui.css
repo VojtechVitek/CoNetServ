@@ -59,8 +59,17 @@ body {
   background: #f8f9fa;
 }
 
+.service-label {
+   height: 15px;
+   margin-bottom: -5px;
+}
+
 .ping .console {
   height: 200px;
+}
+
+.ping .console.quarter {
+   height: 120px;
 }
 
 .ping6 .console {
@@ -295,4 +304,9 @@ div.valueLabel {
    right: 20px;
    bottom: 20px;
    z-index: auto;
+}
+
+pre {
+   font-family: 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+   font-size: 11px;
 }
