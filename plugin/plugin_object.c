@@ -67,7 +67,7 @@ static bool invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args
          if (obj == m->obj) {
             if (identifier == modules->start) {
 
-               if ((p = m->start(m, args, argc)) != NULL) {
+               if ((p = m->start(args, argc)) != NULL) {
                   DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
                   p->obj = browser->createobject(instance, &pluginClass);
                   browser->retainobject(p->obj);
@@ -83,7 +83,7 @@ static bool invoke(NPObject *obj, NPIdentifier identifier, const NPVariant *args
                   return true;
                }
             } else {
-               return m->getProperty(m, identifier, result);
+               return m->getProperty(identifier, result);
             }
          }
 
@@ -241,7 +241,7 @@ static bool getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *resul
 
       for (m = modules->first; m != NULL; m = m->next) {
          if (obj == m->obj)
-            return m->getProperty(m, identifier, result);
+            return m->getProperty(identifier, result);
       }
 
    }

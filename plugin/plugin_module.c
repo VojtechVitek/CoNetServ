@@ -6,7 +6,7 @@
 #include "shell.h"
 
 static void
-destroy(module_list *modules)
+destroy()
 {
    module *it, *del;
 

@@ -6,10 +6,11 @@
 #include "init_modules.h"
 #include "shell.h"
 
-shell_command *cmd;
+static module *m = NULL;
+static shell_command *cmd = NULL;
 
 static process *
-start(const module *m, const NPVariant *args, const uint32_t argc)
+start(const NPVariant *args, const uint32_t argc)
 {
    char *argv[10];
    int i = 0;
@@ -39,19 +40,19 @@ start(const module *m, const NPVariant *args, const uint32_t argc)
 }
 
 static bool
-hasProperty(const module *m, const NPIdentifier property)
+hasProperty(const NPIdentifier property)
 {
    return false;
 }
 
 static bool
-getProperty(const module *m, const NPIdentifier property, NPVariant *result)
+getProperty(const NPIdentifier property, NPVariant *result)
 {
    return false;
 }
 
 static void
-destroy(module *m)
+destroy()
 {
    DEBUG_STR("m->destroy()");
 
@@ -71,8 +72,6 @@ destroy(module *m)
 module *
 init_module_ping()
 {
-   module *m = NULL;
-
    DEBUG_STR("%s->init()", "ping");
 
    /* Module initialization */

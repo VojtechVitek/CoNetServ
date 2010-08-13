@@ -48,10 +48,10 @@ typedef struct _module {
    NPObject       *obj;
    NPIdentifier   *identifier;
 
-   void (*destroy)(struct _module *m);
-   process * (*start)(const struct _module *m, const NPVariant *args, const uint32_t argc);
-   bool (*hasProperty)(const struct _module *m, const NPIdentifier propertyName);
-   bool (*getProperty)(const struct _module *m, const NPIdentifier propertyName, NPVariant *result);
+   void           (*destroy)(struct _module *m);
+   process        *(*start)(const NPVariant *args, const uint32_t argc);
+   bool           (*hasProperty)(const NPIdentifier propertyName);
+   bool           (*getProperty)(const NPIdentifier propertyName, NPVariant *result);
 
 } module;
 
@@ -61,7 +61,7 @@ typedef struct _module_list {
 
    NPIdentifier    start;
 
-   void (*destroy)(struct _module_list *l);
+   void            (*destroy)();
 
 } module_list;
 
