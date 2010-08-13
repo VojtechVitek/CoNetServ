@@ -11,7 +11,7 @@ shell_command *cmd;
 static process *
 start(const module *m, const NPVariant *args, const uint32_t argc)
 {
-   NPUTF8 *argv[10];
+   char *argv[10];
    int i = 0;
 
    if (!cmd || !cmd->found)
@@ -32,7 +32,7 @@ start(const module *m, const NPVariant *args, const uint32_t argc)
    }
    */
 
-   argv[i++] = STRING_UTF8CHARACTERS(args[0].value.stringValue);
+   argv[i++] = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
    argv[i++] = NULL;
 
    return shell->run(cmd->path, argv);
@@ -77,10 +77,11 @@ init_module_ping()
 
    /* Module initialization */
    if ((m = browser->memalloc(sizeof(*m))) == NULL)
-      return NULL;
+      goto err_m_alloc;
 
    m->next = NULL;
-   m->obj = browser->createobject(instance, &pluginClass);
+   if ((m->obj = browser->createobject(instance, &pluginClass)) == NULL)
+      goto err_obj_create;
    m->identifier = browser->getstringidentifier("ping");
 
    m->destroy = destroy;
@@ -102,6 +103,11 @@ init_module_ping()
    return m;
 
 err_cmd_alloc:
+   browser->releaseobject(m->obj);
+
+err_obj_create:
    browser->memfree(m);
+
+err_m_alloc:
    return NULL;
 }
