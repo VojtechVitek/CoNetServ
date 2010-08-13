@@ -2,6 +2,7 @@
 #ifndef _PLUGIN_MODULE_H_
 #define _PLUGIN_MODULE_H_
 
+/* FIXME: Move pid_t to typedef under unix/ directory */
 #include <unistd.h>
 
 #include "plugin_npapi.h"
