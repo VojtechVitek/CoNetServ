@@ -38,7 +38,6 @@ init_modules()
    modules->first = NULL;
    it = &(modules->first);
 
-   /* TODO: Try freeing these */
    modules->start = browser->getstringidentifier("start");
 
    modules->destroy = destroy;
@@ -79,7 +78,6 @@ init_processes()
    processes = browser->memalloc(sizeof(struct _process_list));
    processes->first = NULL;
 
-   /* TODO: Try freeing these */
    processes->read = browser->getstringidentifier("read");
    processes->stop = browser->getstringidentifier("stop");
 

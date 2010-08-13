@@ -5,15 +5,15 @@ include_directories(unix)
 
 set(sources
 	${sources}
-   unix/modules.c
-   unix/shell.c
+	unix/plugin_module.c
+	unix/shell.c
 	unix/ping.c
 )
 
 set(headers
-   ${headers}
-   unix/modules.h
-   unix/shell.h
+	${headers}
+	unix/modules.h
+	unix/shell.h
 )
 
 add_definitions(-std=gnu99)

@@ -7,14 +7,16 @@ configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(sources
-   debug.c
+	debug.c
 	plugin_npapi.c
+	plugin_object.c
 )
 
 set(headers
-   ${CMAKE_BINARY_DIR}/config.h
+	${CMAKE_BINARY_DIR}/config.h
 	plugin_npapi.h
-   plugin_module.h
+	plugin_module.h
+	plugin_object.h
 )
 
 # Platform-specific sources and header files

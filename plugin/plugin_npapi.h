@@ -64,21 +64,16 @@ extern JNIEnv *pluginJniEnv;
 #endif
 
 /*! NPAPI variables */
-extern NPObject        *plugin;
 extern NPNetscapeFuncs *browser;
-extern NPP              instance;
-extern NPClass          pluginClass;
 
 /*! EXPORT functions */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-NPError OSCALL
-NP_GetEntryPoints(NPPluginFuncs *nppfuncs);
+NPError OSCALL NP_GetEntryPoints(NPPluginFuncs *nppfuncs);
 
-NPError OSCALL
-NP_Initialize(NPNetscapeFuncs *npnf
+NPError OSCALL NP_Initialize(NPNetscapeFuncs *npnf
 #if defined(ANDROID)
          , NPPluginFuncs *nppfuncs, JNIEnv *env, jobject plugin_object
 #elif !defined(_WINDOWS) && !defined(WEBKIT_DARWIN_SDK)
@@ -86,11 +81,9 @@ NP_Initialize(NPNetscapeFuncs *npnf
 #endif
          );
 
-NPError OSCALL
-NP_Shutdown();
+NPError OSCALL NP_Shutdown();
 
-NPError OSCALL
-NP_GetValue(void *npp, NPPVariable variable, void *value);
+NPError OSCALL NP_GetValue(void *npp, NPPVariable variable, void *value);
 
 #ifdef __cplusplus
 }

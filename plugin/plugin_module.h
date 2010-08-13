@@ -5,6 +5,7 @@
 #include <unistd.h>
 
 #include "plugin_npapi.h"
+#include "plugin_object.h"
 
 /** Plugin process - struct */
 typedef struct _process {
@@ -46,7 +47,6 @@ typedef struct _module {
    NPObject       *obj;
    NPIdentifier   *identifier;
    NPUTF8         *path;
-   NPUTF8         *version;
 
    bool           found;
    int            err;
@@ -70,5 +70,6 @@ typedef struct _module_list {
 
 /** Plugin modules */
 extern module_list *modules;
+extern NPClass      moduleClass;
 
 #endif /*_PLUGIN_MODULE_H_*/
