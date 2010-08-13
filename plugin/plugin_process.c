@@ -80,9 +80,6 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
                   p->next = del->next;
                }
 
-               /* Destroy the process */
-               del->destroy(del);
-
                return true;
             }
          }
@@ -90,7 +87,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       }
    }
 
-   DEBUG_STR("plugin.invoke(): false");
+   DEBUG_STR("process.invoke(): false");
 
    return false;
 }
@@ -102,7 +99,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 
    /* Plugin version */
    if (identifier == version) {
-      DEBUG_STR("plugin.hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("process.hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
 
       return true;
    }
@@ -112,7 +109,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 
       for (m = modules->first; m != NULL; m = m->next) {
          if (identifier == m->identifier) {
-            DEBUG_STR("plugin.hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+            DEBUG_STR("process.hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
 
             return true;
          }
@@ -120,7 +117,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 
    }
 
-   DEBUG_STR("plugin.hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("process.hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
 
    return false;
 }
@@ -135,7 +132,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    /* Plugin version */
    if (identifier == version) {
 
-      DEBUG_STR("plugin.%s: string", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("process.%s: string", DEBUG_IDENTIFIER(identifier));
 
       len = strlen(VERSION);
       NPUTF8 *version = browser->memalloc((len + 1) * sizeof(NPUTF8));
@@ -157,15 +154,14 @@ destroy(process_list *processes)
 {
    process *it, *del;
 
-   DEBUG_STR("processs->destroy()");
+   DEBUG_STR("processes->destroy()");
 
    shell->destroy();
 
-   for (it = processes->first; it != NULL; ) {
+   it = processes->first;
+   while (it != NULL) {
       del = it;
       it = it->next;
-      del->destroy(del);
-      browser->memfree(del);
    }
 
    browser->memfree(processes);
@@ -189,10 +185,55 @@ init_processes()
    return processes;
 }
 
+static void
+process_destroy(process *p)
+{
+   DEBUG_STR("process->destroy()");
+   browser->releaseobject(p->obj);
+   browser->memfree(p);
+}
+
+process *
+process_init()
+{
+   process *p;
+
+   if ((p = (process *)browser->memalloc(sizeof(process))) == NULL)
+      return NULL;
+
+   p->next = NULL;
+
+   p->pid = 0;
+   p->running = false;
+
+   p->read = process_read;
+   p->stop = process_stop;
+
+   return p;
+}
+
+void deallocate(NPObject *obj)
+{
+   process *it, *del;
+
+   DEBUG_STR("processes->deallocate(%ld)", (long int)obj);
+
+   it = processes->first;
+   while (it != NULL) {
+      if (it->obj == obj) {
+         del = it;
+         it = it->next;
+         browser->memfree(obj);
+         break;
+      }
+   }
+
+}
+
 NPClass processClass = {
    NP_CLASS_STRUCT_VERSION,
    NULL/*allocate*/,
-   NULL/*deallocate*/,
+   deallocate,
    NULL/*invalidate*/,
    hasMethod,
    invokeMethod,

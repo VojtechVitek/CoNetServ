@@ -195,34 +195,6 @@ process_read(process *p, NPVariant *result)
    return true;
 }
 
-
-static void
-process_destroy(process *p)
-{
-   DEBUG_STR("process->destroy()");
-   browser->releaseobject(p->obj);
-   browser->memfree(p);
-}
-
-process *
-process_init()
-{
-   process *p;
-
-   if ((p = (process *)browser->memalloc(sizeof(process))) == NULL)
-      return NULL;
-
-   p->next = NULL;
-
-   p->pid = 0;
-   p->running = false;
-
-   p->destroy = process_destroy;
-   p->read = process_read;
-   p->stop = process_stop;
-
-}
-
 static process *
 run_command(const char *path, char *const argv[])
 {

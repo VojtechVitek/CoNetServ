@@ -11,7 +11,7 @@ module_list     *modules = NULL;
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
-   DEBUG_STR("module.invokeDefault()");
+   DEBUG_STR("module.invokeDefault(): false");
    return false;
 }
 

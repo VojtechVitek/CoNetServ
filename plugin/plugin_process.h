@@ -21,7 +21,6 @@ typedef struct _process {
 
    bool            running;
 
-   void (*destroy)(struct _process *p);
    bool (*read)(struct _process *p, NPVariant *result);
    bool (*stop)(struct _process *p);
 
