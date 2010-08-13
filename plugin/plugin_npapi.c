@@ -7,7 +7,7 @@
 #include "plugin_npapi.h"
 #include "plugin_object.h"
 #include "plugin_module.h"
-#include "modules.h"
+#include "init_modules.h"
 
 /*! NPAPI variables */
 NPNetscapeFuncs *browser = NULL;
