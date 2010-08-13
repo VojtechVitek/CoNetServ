@@ -6,12 +6,15 @@
 #include "init_modules.h"
 #include "shell.h"
 
-static process *
-start(const module *ping, const NPVariant *args, const uint32_t argc)
-{
-   int i;
+shell_command *cmd;
 
-   if (!ping->found)
+static process *
+start(const module *m, const NPVariant *args, const uint32_t argc)
+{
+   NPUTF8 *argv[10];
+   int i = 0;
+
+   if (!cmd || !cmd->found)
       return NULL;
 
    if (argc < 1)
@@ -20,14 +23,19 @@ start(const module *ping, const NPVariant *args, const uint32_t argc)
    if (args[0].type != NPVariantType_String)
       return NULL;
 
+   argv[i++] = "ping";
+   argv[i++] = "-n";
+
    /*
-   for (i = 1; i < argc; ++i) {
+   while (i < argc) {
 
    }
    */
 
-   char *argv[4] = {"ping", "-n", STRING_UTF8CHARACTERS(args[0].value.stringValue), NULL};
-   return shell->run(ping->path, argv);
+   argv[i++] = STRING_UTF8CHARACTERS(args[0].value.stringValue);
+   argv[i++] = NULL;
+
+   return shell->run(cmd->path, argv);
 }
 
 static bool
@@ -43,43 +51,57 @@ getProperty(const module *m, const NPIdentifier property, NPVariant *result)
 }
 
 static void
-destroy(module *ping)
+destroy(module *m)
 {
-   DEBUG_STR("ping->destroy()");
+   DEBUG_STR("m->destroy()");
 
-   if (ping->path != NULL)
-      browser->memfree(ping->path);
+   if (cmd) {
+      if (cmd->path != NULL)
+         browser->memfree(cmd->path);
+      browser->memfree(cmd);
+   }
 
-   browser->releaseobject(ping->obj);
-
-   browser->memfree(ping);
+   if (m) {
+      if (m->obj)
+         browser->releaseobject(m->obj);
+      browser->memfree(m);
+   }
 }
 
 module *
 init_module_ping()
 {
-   module *ping;
+   module *m = NULL;
 
-   DEBUG_STR("ping->init()");
+   DEBUG_STR("%s->init()", "ping");
 
-   if ((ping = (module *)browser->memalloc(sizeof(module))) == NULL)
+   /* Module initialization */
+   if ((m = browser->memalloc(sizeof(*m))) == NULL)
       return NULL;
 
-   ping->next = NULL;
-   ping->obj = browser->createobject(instance, &pluginClass);
-   ping->identifier = browser->getstringidentifier("ping");
-   ping->found = false;
-   ping->path = NULL;
-   if (shell) {
-      if ((ping->path = shell->find("ping")) != NULL) {
-         ping->found = true;
-      }
+   m->next = NULL;
+   m->obj = browser->createobject(instance, &pluginClass);
+   m->identifier = browser->getstringidentifier("ping");
+
+   m->destroy = destroy;
+   m->start = start;
+
+   m->hasProperty = hasProperty;
+   m->getProperty = getProperty;
+
+   /* Shell command initialization */
+   if ((cmd = browser->memalloc(sizeof(*cmd))) == NULL)
+      goto err_cmd_alloc;
+
+   cmd->path = NULL;
+   cmd->found = false;
+   if (shell && (cmd->path = shell->find("ping")) != NULL) {
+      cmd->found = true;
    }
-   ping->destroy = destroy;
-   ping->start = start;
 
-   ping->hasProperty = hasProperty;
-   ping->getProperty = getProperty;
+   return m;
 
-   return ping;
+err_cmd_alloc:
+   browser->memfree(m);
+   return NULL;
 }

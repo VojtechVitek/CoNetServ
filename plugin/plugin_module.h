@@ -47,10 +47,6 @@ typedef struct _module {
 
    NPObject       *obj;
    NPIdentifier   *identifier;
-   NPUTF8         *path;
-
-   bool           found;
-   int            err;
 
    void (*destroy)(struct _module *m);
    process * (*start)(const struct _module *m, const NPVariant *args, const uint32_t argc);
