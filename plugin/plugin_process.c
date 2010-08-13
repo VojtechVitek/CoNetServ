@@ -6,26 +6,23 @@
 #include "debug.h"
 #include "plugin_npapi.h"
 #include "plugin_object.h"
+#include "plugin_process.h"
 #include "plugin_module.h"
+#include "shell.h"
 
-/*! Plugin variables */
-NPObject        *plugin   = NULL;
-NPP              instance = NULL;
-NPIdentifier     version;
+/** Plugin processes */
+process_list    *processes = NULL;
 
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
-   DEBUG_STR("plugin.invokeDefault()");
+   DEBUG_STR("process.invokeDefault()");
    return false;
 }
 
 static bool
 hasMethod(NPObject *obj, NPIdentifier identifier)
 {
-   DEBUG_STR("plugin.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
-   return false;
-
    /* Processess */
    if (processes) {
       if (identifier == processes->read || identifier == processes->stop)
@@ -33,7 +30,7 @@ hasMethod(NPObject *obj, NPIdentifier identifier)
          return true;
    }
 
-   DEBUG_STR("module/process.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("process.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
 
    return false;
 }
@@ -155,7 +152,44 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    return false;
 }
 
-NPClass pluginClass = {
+static void
+destroy(process_list *processes)
+{
+   process *it, *del;
+
+   DEBUG_STR("processs->destroy()");
+
+   shell->destroy();
+
+   for (it = processes->first; it != NULL; ) {
+      del = it;
+      it = it->next;
+      del->destroy(del);
+      browser->memfree(del);
+   }
+
+   browser->memfree(processes);
+}
+
+process_list *
+init_processes()
+{
+   struct _process_list* processes;
+
+   DEBUG_STR("processes->init()");
+
+   processes = browser->memalloc(sizeof(struct _process_list));
+   processes->first = NULL;
+
+   processes->read = browser->getstringidentifier("read");
+   processes->stop = browser->getstringidentifier("stop");
+
+   processes->destroy = destroy;
+
+   return processes;
+}
+
+NPClass processClass = {
    NP_CLASS_STRUCT_VERSION,
    NULL/*allocate*/,
    NULL/*deallocate*/,

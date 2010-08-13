@@ -11,13 +11,15 @@ set(sources
 	plugin_npapi.c
 	plugin_object.c
 	plugin_module.c
+	plugin_process.c
 )
 
 set(headers
 	${CMAKE_BINARY_DIR}/config.h
 	plugin_npapi.h
-	plugin_module.h
 	plugin_object.h
+	plugin_module.h
+	plugin_process.h
 )
 
 # Platform-specific sources and header files

@@ -2,44 +2,9 @@
 #ifndef _PLUGIN_MODULE_H_
 #define _PLUGIN_MODULE_H_
 
-/* FIXME: Move pid_t to typedef under unix/ directory */
-#include <unistd.h>
-
 #include "plugin_npapi.h"
 #include "plugin_object.h"
-
-/** Plugin process - struct */
-typedef struct _process {
-   struct _process *next;
-
-   NPObject        *obj;
-   NPP             instance;
-
-   pid_t           pid;
-   int             pipe[2];
-
-   bool            running;
-
-   void (*destroy)(struct _process *p);
-   bool (*read)(struct _process *p, NPVariant *result);
-   bool (*stop)(struct _process *p);
-
-} process;
-
-/** Plugin processes - list */
-typedef struct _process_list {
-   struct _process *first;
-
-   NPIdentifier    read;
-   NPIdentifier    stop;
-
-   void (*destroy)(struct _process_list *l);
-
-} process_list;
-
-/** Plugin processes */
-extern process_list *processes;
-
+#include "plugin_process.h"
 
 /** Plugin module - struct */
 typedef struct _module {
@@ -67,6 +32,6 @@ typedef struct _module_list {
 
 /** Plugin modules */
 extern module_list *modules;
-extern NPClass      moduleClass;
+extern NPClass     moduleClass;
 
 #endif /*_PLUGIN_MODULE_H_*/
