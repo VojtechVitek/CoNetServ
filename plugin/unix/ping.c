@@ -79,7 +79,7 @@ init_module_ping()
       goto err_m_alloc;
 
    m->next = NULL;
-   if ((m->obj = browser->createobject(instance, &pluginClass)) == NULL)
+   if ((m->obj = browser->createobject(instance, &moduleClass)) == NULL)
       goto err_obj_create;
    m->identifier = browser->getstringidentifier("ping");
 

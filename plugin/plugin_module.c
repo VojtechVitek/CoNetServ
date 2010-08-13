@@ -44,7 +44,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
                if ((p = m->start(args, argc)) != NULL) {
                   DEBUG_STR("%s.%s(): process", DEBUG_IDENTIFIER(m->identifier), DEBUG_IDENTIFIER(identifier));
-                  p->obj = browser->createobject(instance, &pluginClass);
+                  p->obj = browser->createobject(instance, &processClass);
                   browser->retainobject(p->obj);
                   OBJECT_TO_NPVARIANT(p->obj, *result);
                   l = &(processes->first);

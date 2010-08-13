@@ -16,7 +16,7 @@ process_list    *processes = NULL;
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
-   DEBUG_STR("process.invokeDefault()");
+   DEBUG_STR("process.invokeDefault(): false");
    return false;
 }
 

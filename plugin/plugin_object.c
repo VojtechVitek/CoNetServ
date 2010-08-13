@@ -16,7 +16,7 @@ NPIdentifier     version;
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
-   DEBUG_STR("plugin.invokeDefault()");
+   DEBUG_STR("plugin.invokeDefault(): false");
    return false;
 }
 
@@ -25,76 +25,12 @@ hasMethod(NPObject *obj, NPIdentifier identifier)
 {
    DEBUG_STR("plugin.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
-
-   /* Processess */
-   if (processes) {
-      if (identifier == processes->read || identifier == processes->stop)
-         DEBUG_STR("process.hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
-         return true;
-   }
-
-   DEBUG_STR("module/process.hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
-
-   return false;
 }
 
 static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
-   process *p;
-
-   /* Module objects (running processes) */
-   if (processes && processes->first) {
-
-      for (p = processes->first; p != NULL; p = p->next) {
-
-         if (obj == p->obj) {
-            if (identifier == processes->read) {
-               /* Read data from process */
-               if (p->read(p, result)) {
-                  DEBUG_STR("process.read(): string");
-                  return true;
-               } else {
-                  DEBUG_STR("process.read(): false");
-                  BOOLEAN_TO_NPVARIANT(false, *result);
-                  return true;
-               }
-            } else if (identifier == processes->stop) {
-               /* Stop/kill the process */
-               if (p->stop(p)) {
-                  DEBUG_STR("process.stop(): true");
-                  BOOLEAN_TO_NPVARIANT(true, *result);
-               } else {
-                  DEBUG_STR("process.stop(): false");
-                  BOOLEAN_TO_NPVARIANT(false, *result);
-               }
-               /* Process to be deleted */
-               process *del = p;
-
-               /* Delete process from process list */
-               p = processes->first;
-               if (del == processes->first) {
-                  /* Process to delete is on the 1st position */
-                  processes->first = p->next;
-               } else {
-                  /* Process to delete is on the 2nd,3rd,.. position */
-                  while (p->next != del)
-                     p = p->next;
-                  p->next = del->next;
-               }
-
-               /* Destroy the process */
-               del->destroy(del);
-
-               return true;
-            }
-         }
-
-      }
-   }
-
    DEBUG_STR("plugin.invoke(): false");
-
    return false;
 }
 
@@ -131,9 +67,9 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
-   process *p;
-   NPString str;
    int len;
+   NPString str;
+   module *m;
 
    /* Plugin version */
    if (identifier == version) {
@@ -151,6 +87,22 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 
       return true;
    }
+
+   /* Plugin modules */
+   if (modules && modules->first) {
+      for (m = modules->first; m != NULL; m = m->next) {
+         if (identifier == m->identifier) {
+
+            DEBUG_STR("plugin.%s: object", DEBUG_IDENTIFIER(identifier));
+
+            browser->retainobject(m->obj);
+            OBJECT_TO_NPVARIANT(m->obj, *result);
+            return true;
+         }
+      }
+   }
+
+   DEBUG_STR("plugin.%s: false", DEBUG_IDENTIFIER(identifier));
 
    return false;
 }

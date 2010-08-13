@@ -40,6 +40,6 @@ typedef struct _process_list {
 
 /** Plugin processes */
 extern process_list *processes;
-extern NPClass      moduleClass;
+extern NPClass      processClass;
 
 #endif /*_PLUGIN_PROCESS_H_*/
