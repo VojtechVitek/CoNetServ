@@ -10,6 +10,7 @@ set(sources
 	debug.c
 	plugin_npapi.c
 	plugin_object.c
+	plugin_module.c
 )
 
 set(headers

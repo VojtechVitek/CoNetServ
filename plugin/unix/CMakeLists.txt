@@ -5,14 +5,13 @@ include_directories(unix)
 
 set(sources
 	${sources}
-	unix/plugin_module.c
 	unix/shell.c
 	unix/ping.c
 )
 
 set(headers
 	${headers}
-	unix/modules.h
+	unix/init_modules.h
 	unix/shell.h
 )
 

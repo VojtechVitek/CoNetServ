@@ -2,7 +2,7 @@
 
 #include "debug.h"
 #include "plugin_npapi.h"
-#include "modules.h"
+#include "init_modules.h"
 #include "shell.h"
 
 static void
@@ -42,9 +42,9 @@ init_modules()
 
    modules->destroy = destroy;
 
-   /* Initialize modules */
-   *it = init_module_ping();
-   it = &((*it)->next);
+   /* Platform-specific module initialization */
+   /* (Macro using iterator it) */
+   platform_init_modules(it);
 
    return modules;
 }
