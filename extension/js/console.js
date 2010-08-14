@@ -52,10 +52,18 @@ Conetserv.Console = function(div) {
    this.add = function(text){
       this.prevData += text;
       var npos = 0;
+      this.prevData = this.prevData.replace(/(\r?\n)+/gi, "\n");
 
       while((npos = this.prevData.indexOf("\n")) != -1 ) {
          this.rowCount++;
          var row = this.colourLine(this.prevData.substr(0, npos+1));
+
+         /* In case of first line being only \n skip it */
+         if(this.rowCount == 1 && row == "<br />"){
+            this.rowCount--;
+             this.prevData = (this.prevData.substr(npos+1));
+            continue;
+         }
          
          if(this.direction) { //writing to the begining of container
             this.rows.unshift(row);
@@ -85,7 +93,7 @@ Conetserv.Console = function(div) {
    
    //colours all items in line
    this.colourLine = function(line) {
-      var coloured = line.replace(/(\r)*\n/g,"<br />");
+      var coloured = line.replace(/((\r)*\n)+/g,"<br />");
 
       coloured = coloured.replace(this.linux.hostname,"<span class=\"color1\">$&</span>"); 
       coloured = coloured.replace(this.linux.ip,"<span class=\"color2\">$1</span>"); 

@@ -76,6 +76,10 @@ body {
   height: 200px;
 }
 
+.ping6 .console.quarter {
+   height: 120px;
+}
+
 .tracert .console {
   height: 200px;
 }

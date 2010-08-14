@@ -12,7 +12,6 @@
       <script type="text/javascript" src="js/jquery/jquery.client.js"></script>
       <script type="text/javascript" src="js/conetserv.js"></script>
       <script type="text/javascript" src="js/externalservices.js"></script>
-      <script type="text/javascript" src="js/googleanalytics.js"></script>
       <script type="text/javascript" src="js/localservices.js"></script>
       <script type="text/javascript" src="js/externalinfo.js"></script>
       <script type="text/javascript" src="js/services.js"></script>
@@ -24,8 +23,24 @@
       <script type="text/javascript" src="js/map.js"></script>
       <script type="text/javascript" src="js/ui.js"></script>
       <script type="text/javascript" src="js/lg.js"></script>
+      <script type="text/javascript" src="js/ga.js"></script>
    </head>
    <body>
+      <script>
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-16884739-1']);
+         _gaq.push(['_trackPageview']);
+
+          /*$(".radio-tab-label").click(function() {
+            _gaq.push(['_trackEvent', 'button' + this.id, 'clicked']);
+         });
+
+         $(".tab-header-button").click(function() {
+            _gaq.push(['_trackEvent', 'button' + this.parentNode.id, 'clicked']);
+         });*/
+
+
+      </script>
       <div id="tabs">
          <ul>
             <li id="local-services-header"><a class="tab-header-button" href="#local-services">Local services</a></li>
@@ -105,7 +120,7 @@
                   <label id="external-nslookup-label" class= "radio-tab-label nslookup"for="external-nslookup-input">NSlookup</label>
                </div>
             </form>
-             <div id="external-ping-div" class="content ping">
+            <div id="external-ping-div" class="content ping">
                <div id="external-ping-service-1" class="service-label"></div>
                <div id="external-ping-console-1" class="ui-widget ui-widget-content console quarter ui-corner-all"></div>
                <div id="external-ping-service-2" class="service-label"></div>
@@ -114,8 +129,12 @@
                <div id="external-ping-console-3" class="ui-widget ui-widget-content console quarter ui-corner-all"></div>
             </div>
             <div id="external-ping6-div" class="content ping6">
-               <div id="external-ping6-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
-               <div id="external-ping6-placeholder" class="plot-placeholder"></div>
+               <div id="external-ping6-service-1" class="service-label"></div>
+               <div id="external-ping6-console-1" class="ui-widget ui-widget-content console quarter ui-corner-all"></div>
+               <div id="external-ping6-service-2" class="service-label"></div>
+               <div id="external-ping6-console-2" class="ui-widget ui-widget-content console quarter ui-corner-all"></div>
+               <div id="external-ping6-service-3" class="service-label"></div>
+               <div id="external-ping6-console-3" class="ui-widget ui-widget-content console quarter ui-corner-all"></div>
             </div>
             <div id="external-tracert-div" class="content tracert">
                <div id="external-tracert-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
@@ -141,10 +160,10 @@
                   <label id="local-ip-label" for="local-ip-input">IP settings</label>
                </div>
             </form>
-             <div id="local-neighbours-div" class="content neighbours">
+            <div id="local-neighbours-div" class="content neighbours">
                <div id="local-neighbours-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
             </div>
-             <div id="local-ip-div" class="content ip">
+            <div id="local-ip-div" class="content ip">
                <div id="local-ip-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
                <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
             </div>
@@ -249,13 +268,13 @@
 
                   <div id="settings-general-toolbox-div" class="group">
                      <input type="checkbox" id="settings-general-toolbox" class="single-line"/>
-                        <label class="single-line" for="settings-general-toolbox">Show button in toolbox?</label>
+                     <label class="single-line" for="settings-general-toolbox">Show button in toolbox?</label>
                   </div>
                   <div id="settings-general-autostart-div" class="group">
                      <input type="checkbox" id="settings-general-autostart" class="single-line"/>
-                        <label class="single-line" for="settings-general-autostart">Automaticaly start default service?</label>
+                     <label class="single-line" for="settings-general-autostart">Automaticaly start default service?</label>
                   </div>
-                  
+
                </form>
             </div>
             <div id="settings-services-div" class="content servies">
