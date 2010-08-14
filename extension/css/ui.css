@@ -64,28 +64,21 @@ body {
    margin-bottom: -5px;
 }
 
-.ping .console {
-  height: 200px;
-}
-
-.ping .console.quarter {
-   height: 120px;
-}
-
-.ping6 .console {
-  height: 200px;
-}
-
-.ping6 .console.quarter {
-   height: 120px;
-}
-
-.tracert .console {
-  height: 200px;
-}
-
+.ping .console,
+.ping6 .console,
+.tracert .console
 .tracert6 .console {
   height: 200px;
+}
+
+.ping .console.third,
+.ping6 .console.third {
+   height: 120px;
+}
+
+.tracert .console.half,
+.tracert6 .console.half {
+  height: 190px;
 }
 
 .plot-placeholder {
