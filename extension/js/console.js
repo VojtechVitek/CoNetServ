@@ -20,7 +20,7 @@ Conetserv.Console = function(div) {
    this.linux = new Object();
    this.linux.hostname = /([\w\-]+\.)+([a-z]+)/ig //\(([0-9\i]*)\).*/i
    this.linux.ip = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ig
-   this.linux.time = /\d+\.?\d*\s?ms(ec){0,1}/ig
+   this.linux.time = /(?:\/?(\d+\.?\d*))+\s?ms(ec){0,1}/ig  // format: xx.yy/zz.yy ms
    
    
    //gets color from string containing number at the begining
@@ -29,18 +29,30 @@ Conetserv.Console = function(div) {
    this.getColor = function(input){
       var color;
       // 0.2 = 100(percent)/500(maxvalue)
-      var percent = parseFloat(input)*0.2;
-      if (percent <= 50) {
-         color = parseInt(percent/50*196);
+      var numberR = /\d+\.?\d*/g;
+      var result = input.match(numberR);
+      var finished = [];
+      
+      for (var key in result) {
+         var nb = result[key];
+         
+         var percent = parseFloat(nb)*0.2;
+         if (percent <= 50) {
+            color = parseInt(percent/50*196);
 
-         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "B000";
+            color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "B000";
+         }
+         else if(percent<100)
+            color = "#B0" + (parseInt(196-(percent-50)/50*196)).toString(16) + "00";
+         else 
+            color = "#B00000";
+
+          if(!finished[nb]) {
+             input = input.replace(nb, '<span style="color:' + color + '">' + nb + '</span>');
+             finished[nb] = true;
+          }
       }
-      else if(percent<100)
-         color = "#B0" + (parseInt(196-(percent-50)/50*196)).toString(16) + "00";
-      else 
-         color = "#B00000";
-
-      return '<span style="color:' + color + '">' + input + '</span>';
+      return input;
    }
    
    //sets div for output - accepts name of div
