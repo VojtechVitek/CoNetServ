@@ -4,10 +4,10 @@
 
 #include "config.h"
 #include "debug.h"
-#include "plugin_npapi.h"
-#include "plugin_object.h"
-#include "plugin_process.h"
-#include "plugin_module.h"
+#include "npapi.h"
+#include "plugin.h"
+#include "process.h"
+#include "module.h"
 #include "shell.h"
 
 /** Plugin processes */

@@ -5,8 +5,8 @@
 /* FIXME: pid_t - see FIXME bellow */
 #include <unistd.h>
 
-#include "plugin_npapi.h"
-#include "plugin_object.h"
+#include "npapi.h"
+#include "plugin.h"
 
 /** Plugin process - struct */
 typedef struct _process {

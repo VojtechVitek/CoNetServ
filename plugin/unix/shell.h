@@ -2,8 +2,8 @@
 #ifndef _SHELL_H_
 #define _SHELL_H_
 
-#include "plugin_npapi.h"
-#include "plugin_module.h"
+#include "npapi.h"
+#include "module.h"
 
 #define BUFLEN 1024
 

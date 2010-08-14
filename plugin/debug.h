@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "config.h"
-#include "plugin_npapi.h"
+#include "npapi.h"
 
 #if defined(DEBUG)
 

@@ -2,9 +2,9 @@
 #ifndef _PLUGIN_MODULE_H_
 #define _PLUGIN_MODULE_H_
 
-#include "plugin_npapi.h"
-#include "plugin_object.h"
-#include "plugin_process.h"
+#include "npapi.h"
+#include "plugin.h"
+#include "process.h"
 
 /** Plugin module - struct */
 typedef struct _module {

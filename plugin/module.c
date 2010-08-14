@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "debug.h"
-#include "plugin_npapi.h"
+#include "npapi.h"
 #include "init_modules.h"
 #include "shell.h"
 

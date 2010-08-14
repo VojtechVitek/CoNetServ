@@ -3,7 +3,7 @@
 
 #include "config.h"
 #include "debug.h"
-#include "plugin_npapi.h"
+#include "npapi.h"
 
 #if defined(DEBUG)
 

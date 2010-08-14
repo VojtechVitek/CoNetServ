@@ -8,18 +8,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(sources
 	debug.c
-	plugin_npapi.c
-	plugin_object.c
-	plugin_module.c
-	plugin_process.c
+	npapi.c
+	plugin.c
+	module.c
+	process.c
 )
 
 set(headers
 	${CMAKE_BINARY_DIR}/config.h
-	plugin_npapi.h
-	plugin_object.h
-	plugin_module.h
-	plugin_process.h
+	npapi.h
+	plugin.h
+	module.h
+	process.h
 )
 
 # Platform-specific sources and header files

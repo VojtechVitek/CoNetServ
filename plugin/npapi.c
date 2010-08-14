@@ -4,9 +4,9 @@
 
 #include "config.h"
 #include "debug.h"
-#include "plugin_npapi.h"
-#include "plugin_object.h"
-#include "plugin_module.h"
+#include "npapi.h"
+#include "plugin.h"
+#include "module.h"
 #include "init_modules.h"
 
 /*! NPAPI variables */

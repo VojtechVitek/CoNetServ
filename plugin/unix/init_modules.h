@@ -2,7 +2,7 @@
 #ifndef _INIT_MODULES_H_
 #define _INIT_MODULES_H_
 
-#include "plugin_module.h"
+#include "module.h"
 
 struct _module_list* init_modules();
 struct _process_list* init_processes();
