@@ -14,11 +14,15 @@
 static bool
 hasMethod(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->read)
+   if (identifier == identifiers->read) {
+      DEBUG_STR("process->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
+   }
 
-   if (identifier == identifiers->stop)
+   if (identifier == identifiers->stop) {
+      DEBUG_STR("process->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
+   }
 
    DEBUG_STR("process->hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
@@ -30,9 +34,9 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    /* Read data from process */
    if (identifier == identifiers->read) {
 
-      if (shell->read((process *)obj, result)) {
-         DEBUG_STR("process->invokeMethod(read): string");
-      } else {
+      DEBUG_STR("process->invokeMethod(read)")
+
+      if (!shell->read((process *)obj, result)) {
          DEBUG_STR("process->invokeMethod(read): false");
          BOOLEAN_TO_NPVARIANT(false, *result);
       }
@@ -43,8 +47,9 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    /* Stop/kill the process */
    if (identifier == identifiers->stop) {
 
+      DEBUG_STR("process->invokeMethod(stop)");
+
       if (shell->stop((process *)obj)) {
-         DEBUG_STR("process->invokeMethod(stop): true");
          BOOLEAN_TO_NPVARIANT(true, *result);
       } else {
          DEBUG_STR("process->invokeMethod(stop): false");

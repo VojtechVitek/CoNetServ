@@ -13,7 +13,6 @@
 /*! NPAPI variables */
 NPNetscapeFuncs *browser = NULL;
 
-/* NPP */
 static NPError
 init(const NPMIMEType pluginType, const NPP _instance, const uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved)
 {
@@ -77,7 +76,7 @@ NP_GetEntryPoints(NPPluginFuncs *nppfuncs)
 {
    DEBUG_STR("NP_GetEntryPoints()");
    nppfuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
-   nppfuncs->size          = sizeof(nppfuncs);
+   nppfuncs->size          = sizeof(*nppfuncs);
    nppfuncs->newp          = init;
    nppfuncs->destroy       = destroy;
    nppfuncs->getvalue      = getValue;
@@ -94,7 +93,7 @@ NP_GetEntryPoints(NPPluginFuncs *nppfuncs)
    //pluginFuncs->event      = NewNPP_HandleEventProc(Private_HandleEvent);
 #ifdef OJI
    //pluginFuncs->javaClass  = Private_GetJavaClass();
-#endif*/
+#endif
    return NPERR_NO_ERROR;
 }
 
