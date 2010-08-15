@@ -49,7 +49,6 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 #endif
 
    DEBUG_STR("plugin->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
-
    return false;
 }
 
@@ -61,7 +60,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    NPUTF8 *version;
 
    /* Plugin version */
-   if (identifier == version) {
+   if (identifier == identifiers->version) {
 
       DEBUG_STR("plugin->getProperty(%s): string", DEBUG_IDENTIFIER(identifier));
 
