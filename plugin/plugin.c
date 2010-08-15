@@ -108,10 +108,17 @@ allocate(NPP instance, NPClass *class)
    return (NPObject *)obj;
 }
 
+static void
+deallocate(NPObject *obj)
+{
+   DEBUG_STR("plugin->deallocate()");
+   browser->memfree(obj);
+}
+
 NPClass pluginClass = {
    NP_CLASS_STRUCT_VERSION,
    allocate,
-   NULL/*deallocate*/,
+   deallocate,
    NULL/*invalidate*/,
    hasMethod,
    invokeMethod,

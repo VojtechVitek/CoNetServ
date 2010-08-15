@@ -126,10 +126,9 @@ process_stop(process *p)
          p->pid = 0;
          close(p->pipe[0]);
          close(p->pipe[1]);
-      } else {
-         p->running = false;
       }
 
+      p->running = false;
       return true;
    }
    return false;
