@@ -11,8 +11,8 @@
 
 #include "debug.h"
 #include "shell.h"
-#include "plugin_npapi.h"
-#include "plugin_module.h"
+#include "npapi.h"
+#include "module.h"
 
 /*
 EXECVPE() WORKAROUND
@@ -195,20 +195,14 @@ process_read(process *p, NPVariant *result)
    return true;
 }
 
-static process *
-run_command(const char *path, char *const argv[])
+static bool
+run_command(process *p, const char *path, char *const argv[])
 {
-   process *p;
-
-   if ((p = process_init()) == NULL)
-      return NULL;
-
    /* create pipe for communication */
    if (pipe(p->pipe) == -1) {
       DEBUG_STR("shell->run(): pipe() error");
       browser->setexception(NULL, "shell->run(): pipe() error");
-      p->destroy(p);
-      return NULL;
+      goto err_pipe;
    }
 
    /* fork the process */
@@ -237,8 +231,7 @@ run_command(const char *path, char *const argv[])
 
       DEBUG_STR("shell->run(): vfork() error");
       browser->setexception(NULL, "shell->run(): vfork() error");
-      p->destroy(p);
-      return NULL;
+      goto err_fork;
 
    } else {
       /* parent */
@@ -252,22 +245,28 @@ run_command(const char *path, char *const argv[])
       if ((flags = fcntl(p->pipe[0], F_GETFL)) == -1) {
          DEBUG_STR("shell->run(): fcntl(F_GETFL) error");
          browser->setexception(NULL, "shell->run(): fcntl(F_GETFL) error");
-         close(p->pipe[0]);
-         p->destroy(p);
-         return NULL;
+         goto err_fcntl;
       }
       if (fcntl(p->pipe[0], F_SETFL, flags | O_NONBLOCK) == -1) {
          DEBUG_STR("shell->run(): fcntl(F_SETFL) error");
          browser->setexception(NULL, "shell->run(): fcntl(F_SETFL) error");
-         close(p->pipe[0]);
-         p->destroy(p);
-         return NULL;
+         goto err_fcntl;
       }
 
       p->running = true;
    }
 
-   return p;
+   return true;
+
+err_fork:
+   close(p->pipe[0]);
+
+err_fcntl:
+   close(p->pipe[1]);
+
+err_pipe:
+   browser->memfree(p);
+   return false;
 }
 
 
@@ -284,6 +283,25 @@ destroy()
       browser->memfree(which_env[0]);
 }
 
+shell_module *
+init_shell_module()
+{
+   shell_module *m;
+
+   m = browser->memalloc(sizeof(*m));
+   if (!m)
+      return NULL;
+
+   m->found = true;
+   m->path = shell->find("ping");
+
+   if (!m->path)
+      m->found = false;
+
+   return m;
+}
+
+
 cmd_shell *
 init_shell()
 {
@@ -298,6 +316,9 @@ init_shell()
    shell->destroy = destroy;
    shell->find = find_program_path;
    shell->run = run_command;
+   shell->module = init_shell_module;
+   shell->stop = process_stop;
+   shell->read = process_read;
 
    /* Allocate buffer */
    if ((buffer = browser->memalloc(BUFLEN * sizeof(char))) == NULL)

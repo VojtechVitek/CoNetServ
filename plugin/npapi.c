@@ -7,6 +7,7 @@
 #include "npapi.h"
 #include "plugin.h"
 #include "module.h"
+#include "identifier.h"
 #include "init_modules.h"
 
 /*! NPAPI variables */
@@ -16,40 +17,12 @@ NPNetscapeFuncs *browser = NULL;
 static NPError
 init(const NPMIMEType pluginType, const NPP _instance, const uint16_t mode, int16_t argc, char *argn[], char *argv[], NPSavedData *saved)
 {
-   NPVariant value;
-   DEBUG_STR("init(argc %d |%s=%s, %s=%s): instance %d", argc, argn[0], argv[0], argn[1], argv[1], instance);
-
-   instance = _instance;
-
-#if 0
-   browser->getvalue(instance, NPNVSupportsWindowless, &value);
-   if (value.value.boolValue == true) {
-      DEBUG_STR("Windowless = true");
-   } else {
-      DEBUG_STR("Windowless = false");
-   }
-
-   browser->getvalue(instance, NPNVprivateModeBool, &value);
-   if (value.value.boolValue == true) {
-      DEBUG_STR("Private = true");
-   } else {
-      DEBUG_STR("Private = false");
-   }
-#endif
-
    return NPERR_NO_ERROR;
 }
 
 static NPError
 destroy(NPP instance, NPSavedData **save)
 {
-   /* Stop possibly running processes. */
-   DEBUG_STR("destroy()");
-
-   if (plugin)
-      browser->releaseobject(plugin);
-
-   plugin = NULL;
    return NPERR_NO_ERROR;
 }
 
@@ -67,13 +40,7 @@ getValue(NPP instance, const NPPVariable variable, void *value)
       break;
    case NPPVpluginScriptableNPObject:
       DEBUG_STR("getValue(NPPVpluginScriptableNPObject)");
-      if(!plugin)
-         plugin = browser->createobject(instance, &pluginClass);
-      /* The caller (browser) is responsible to release object (ref_count--).
-       * But we need (at least) object ref_count == 1
-       */
-      browser->retainobject(plugin);
-      *(NPObject **)value = plugin;
+      *(NPObject **)value = browser->createobject(instance, &pluginClass);
       break;
    case NPPVpluginNeedsXEmbed:
       DEBUG_STR("getValue(NPPVpluginNeedsXEmbed)");
@@ -146,9 +113,8 @@ NP_Initialize(NPNetscapeFuncs *npnf
 #endif
          )
 {
-   module *it;
-
    DEBUG_STR("NP_Initialize()");
+
    if (npnf == NULL)
       return NPERR_INVALID_FUNCTABLE_ERROR;
 
@@ -160,11 +126,8 @@ NP_Initialize(NPNetscapeFuncs *npnf
    NP_GetEntryPoints(nppfuncs);
 #endif
 
-   version = browser->getstringidentifier("version");
-
-   modules = init_modules();
-
-   processes = init_processes();
+   if (init_identifiers())
+      return NPERR_MODULE_LOAD_FAILED_ERROR ;
 
    return NPERR_NO_ERROR;
 }
@@ -174,7 +137,8 @@ NP_Shutdown()
 {
    DEBUG_STR("NP_Shutdown()");
 
-   modules->destroy(modules);
+   if (identifiers)
+      identifiers->destroy();
 
    return NPERR_NO_ERROR;
 }

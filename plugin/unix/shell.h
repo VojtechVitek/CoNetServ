@@ -4,19 +4,24 @@
 
 #include "npapi.h"
 #include "module.h"
+#include "process.h"
 
 #define BUFLEN 1024
 
-typedef struct _shell_command {
-   NPUTF8  *path;
-   bool    found;
-   int     err;
-} shell_command;
+typedef struct _shell_module {
+   module       m;
+   NPUTF8       *path;
+   bool         found;
+   int          err;
+} shell_module;
 
 typedef struct _cmd_shell {
-   void    (*destroy)();
-   char    *(*find)(char *program_name);
-   process *(*run)(const char *path, char *const argv[]);
+   char         *(*find)(char *program_name);
+   shell_module *(*module)(const char* name);
+   bool         (*run)(process *p, const char *path, char *const argv[]);
+   bool         (*read)(process *p, NPVariant *result);
+   bool         (*stop)(process *p);
+   void         (*destroy)();
 } cmd_shell;
 
 cmd_shell *init_shell();
