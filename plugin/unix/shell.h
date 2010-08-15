@@ -10,14 +10,15 @@
 
 typedef struct _shell_module {
    module       m;
-   NPUTF8       *path;
+   char         *path;
    bool         found;
    int          err;
 } shell_module;
 
 typedef struct _cmd_shell {
-   char         *(*find)(char *program_name);
-   shell_module *(*module)(const char* name);
+   char         *(*find)(const char *program);
+   shell_module *(*init_module)(const char* name);
+   void         (*destroy_module)(shell_module *m);
    bool         (*run)(process *p, const char *path, char *const argv[]);
    bool         (*read)(process *p, NPVariant *result);
    bool         (*stop)(process *p);

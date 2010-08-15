@@ -11,10 +11,12 @@ typedef struct _module {
    NPClass        class;
    NPIdentifier   *identifier;
 
-   void           *(*destroy)();
+   void           (*destroy)();
 } module;
 
 bool init_modules();
+
+extern module *modules;
 
 NPClass moduleClass;
 

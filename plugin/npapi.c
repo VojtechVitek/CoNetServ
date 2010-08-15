@@ -133,6 +133,9 @@ NP_Shutdown()
 {
    DEBUG_STR("NP_Shutdown()");
 
+   if (modules)
+      modules->destroy();
+
    if (identifiers)
       identifiers->destroy();
 

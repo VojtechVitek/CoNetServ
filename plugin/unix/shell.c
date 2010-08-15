@@ -37,7 +37,8 @@ char       *which_env[] = { NULL, NULL };
 char       *user_paths = NULL;
 const char *root_paths = ":/usr/sbin:/sbin/";
 
-static char* find_program_path(char *program)
+static char *
+find_program_path(const char *program)
 {
    int pipes[2];
    int pid;
@@ -268,9 +269,36 @@ err_pipe:
    return false;
 }
 
+static void
+destroy_shell_module(shell_module *m)
+{
+   if (m) {
+      if (m->path)
+         browser->memfree(m->path);
+      browser->memfree(m);
+   }
+}
+
+shell_module *
+init_shell_module(const char *program)
+{
+   shell_module *m;
+
+   m = browser->memalloc(sizeof(*m));
+   if (!m)
+      return NULL;
+
+   m->path = shell->find(program);
+   if (m->path)
+      m->found = true;
+   else
+      m->found = false;
+
+   return m;
+}
 
 static void
-destroy()
+destroy_shell()
 {
    DEBUG_STR("shell->destroy()");
 
@@ -282,24 +310,6 @@ destroy()
       browser->memfree(which_env[0]);
 }
 
-shell_module *
-init_shell_module()
-{
-   shell_module *m;
-
-   m = browser->memalloc(sizeof(*m));
-   if (!m)
-      return NULL;
-
-   m->found = true;
-   m->path = shell->find("ping");
-
-   if (!m->path)
-      m->found = false;
-
-   return m;
-}
-
 bool
 init_shell()
 {
@@ -309,10 +319,11 @@ init_shell()
    if ((shell = browser->memalloc(sizeof(cmd_shell))) == NULL)
       goto err_sh_alloc;
 
-   shell->destroy = destroy;
+   shell->destroy = destroy_shell;
    shell->find = find_program_path;
    shell->run = run_command;
-   shell->module = init_shell_module;
+   shell->init_module = init_shell_module;
+   shell->destroy_module = destroy_shell_module;
    shell->stop = process_stop;
    shell->read = process_read;
 

@@ -27,7 +27,7 @@ hasMethod(NPObject *obj, NPIdentifier identifier)
 static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
-   DEBUG_STR("plugin->invoke(): false");
+   DEBUG_STR("plugin->invokeMethod(): false");
    return false;
 }
 
@@ -66,7 +66,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
       DEBUG_STR("plugin->getProperty(%s): string", DEBUG_IDENTIFIER(identifier));
 
       len = strlen(VERSION);
-      version = browser->memalloc((len + 1) * sizeof(NPUTF8));
+      version = browser->memalloc((len + 1) * sizeof(*version));
       strcpy(version, VERSION);
       STRING_UTF8CHARACTERS(str) = version;
       STRING_UTF8LENGTH(str) = len;

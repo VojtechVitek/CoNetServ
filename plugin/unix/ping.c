@@ -58,10 +58,20 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    return false;
 }
 
+static void
+destroy()
+{
+   DEBUG_STR("ping->destroy()");
+   shell->destroy_module((shell_module *)ping);
+}
+
+
 bool
 init_module_ping()
 {
-   ping = (module *)shell->module("ping");
+   DEBUG_STR("ping->init()");
+   ping = (module *)shell->init_module("ping");
+   ping->destroy = destroy;
    ping->class = moduleClass;
    ping->class.hasMethod =   hasMethod;
    ping->class.invoke =      invokeMethod;
