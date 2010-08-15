@@ -77,29 +77,23 @@ NP_GetEntryPoints(NPPluginFuncs *nppfuncs)
 {
    DEBUG_STR("NP_GetEntryPoints()");
    nppfuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
-   //nppfuncs->size          = sizeof(NPPPluginFuncs);
+   nppfuncs->size          = sizeof(nppfuncs);
    nppfuncs->newp          = init;
    nppfuncs->destroy       = destroy;
    nppfuncs->getvalue      = getValue;
-   nppfuncs->event         = handleEvent;
+   //nppfuncs->event         = handleEvent;
    //nppfuncs->setwindow     = setWindow;
-/*
-   pluginFuncs->version    = (NP_VERSION_MAJOR << 8) + NP_VERSION_MINOR;
-   pluginFuncs->size       = sizeof(NPPluginFuncs);
-   pluginFuncs->newp       = NewNPP_NewProc(Private_New);
-   pluginFuncs->destroy    = NewNPP_DestroyProc(Private_Destroy);
-   pluginFuncs->setwindow  = NewNPP_SetWindowProc(Private_SetWindow);
-   pluginFuncs->newstream  = NewNPP_NewStreamProc(Private_NewStream);
-   pluginFuncs->destroystream = NewNPP_DestroyStreamProc(Private_DestroyStream);
-   pluginFuncs->asfile     = NewNPP_StreamAsFileProc(Private_StreamAsFile);
-   pluginFuncs->writeready = NewNPP_WriteReadyProc(Private_WriteReady);
-   pluginFuncs->write      = NewNPP_WriteProc(Private_Write);
-   pluginFuncs->print      = NewNPP_PrintProc(Private_Print);
-   pluginFuncs->urlnotify  = NewNPP_URLNotifyProc(Private_URLNotify);
-   pluginFuncs->getvalue   = NewNPP_GetValueProc(Private_GetValue);
-   pluginFuncs->event      = NewNPP_HandleEventProc(Private_HandleEvent);
+   //pluginFuncs->newstream  = NewNPP_NewStreamProc(Private_NewStream);
+   //pluginFuncs->destroystream = NewNPP_DestroyStreamProc(Private_DestroyStream);
+   //pluginFuncs->asfile     = NewNPP_StreamAsFileProc(Private_StreamAsFile);
+   //pluginFuncs->writeready = NewNPP_WriteReadyProc(Private_WriteReady);
+   //pluginFuncs->write      = NewNPP_WriteProc(Private_Write);
+   //pluginFuncs->print      = NewNPP_PrintProc(Private_Print);
+   //pluginFuncs->urlnotify  = NewNPP_URLNotifyProc(Private_URLNotify);
+   //pluginFuncs->getvalue   = NewNPP_GetValueProc(Private_GetValue);
+   //pluginFuncs->event      = NewNPP_HandleEventProc(Private_HandleEvent);
 #ifdef OJI
-        pluginFuncs->javaClass  = Private_GetJavaClass();
+   //pluginFuncs->javaClass  = Private_GetJavaClass();
 #endif*/
    return NPERR_NO_ERROR;
 }
@@ -126,8 +120,11 @@ NP_Initialize(NPNetscapeFuncs *npnf
    NP_GetEntryPoints(nppfuncs);
 #endif
 
-   if (init_identifiers())
-      return NPERR_MODULE_LOAD_FAILED_ERROR ;
+   if (!init_identifiers())
+      return NPERR_MODULE_LOAD_FAILED_ERROR;
+
+   if (!init_modules())
+      return NPERR_MODULE_LOAD_FAILED_ERROR;
 
    return NPERR_NO_ERROR;
 }

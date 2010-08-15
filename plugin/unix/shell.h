@@ -24,7 +24,7 @@ typedef struct _cmd_shell {
    void         (*destroy)();
 } cmd_shell;
 
-cmd_shell *init_shell();
+bool init_shell();
 
 extern cmd_shell *shell;
 

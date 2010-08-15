@@ -25,7 +25,7 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    if (identifier == identifiers->start) {
-      DEBUG_STR("ping->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("ping->getMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       char *argv[10];
       int i = 0;
 
@@ -47,33 +47,36 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       argv[i++] = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
       argv[i++] = NULL;
 
-      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping->class)), *result);
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
       if (shell->run((process *)result->value.objectValue, ((shell_module *)ping)->path, argv))
          return true;
       else
          return false;
    }
+
    DEBUG_STR("ping->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 
 static bool
-hasProperty(const NPIdentifier property)
+hasProperty(NPObject *obj, NPIdentifier identifier)
 {
+   DEBUG_STR("ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 static bool
-getProperty(const NPIdentifier property, NPVariant *result)
+getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
+   DEBUG_STR("ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 static void
 destroy()
 {
-   DEBUG_STR("m->destroy()");
+   DEBUG_STR("ping->destroy()");
 
    if (ping) {
       ping->destroy();
@@ -85,7 +88,10 @@ init_module_ping()
 {
    ping = (module *)shell->module("ping");
    ping->class = moduleClass;
-
+   ping->class.hasMethod =   hasMethod;
+   ping->class.invoke =      invokeMethod;
+   ping->class.hasProperty = hasProperty;
+   ping->class.getProperty = getProperty;
 
    return true;
 }

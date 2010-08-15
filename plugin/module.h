@@ -14,6 +14,8 @@ typedef struct _module {
    void           *(*destroy)();
 } module;
 
+bool init_modules();
+
 NPClass moduleClass;
 
 #endif /*_PLUGIN_MODULE_H_*/

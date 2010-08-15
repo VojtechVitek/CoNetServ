@@ -301,17 +301,14 @@ init_shell_module()
    return m;
 }
 
-
-cmd_shell *
+bool
 init_shell()
 {
-   cmd_shell *shell;
-
    DEBUG_STR("shell->init()");
 
    /* Allocate shell object */
    if ((shell = browser->memalloc(sizeof(cmd_shell))) == NULL)
-      return NULL;
+      goto err_sh_alloc;
 
    shell->destroy = destroy;
    shell->find = find_program_path;
@@ -322,15 +319,15 @@ init_shell()
 
    /* Allocate buffer */
    if ((buffer = browser->memalloc(BUFLEN * sizeof(char))) == NULL)
-      return NULL;
+      goto err_buf_alloc;
 
    /* Get user paths from variable PATH */
    if ((user_paths = getenv("PATH")) == NULL)
-      return NULL;
+      goto err_getenv;
 
    /* Allocate modified PATH variable */
    if ((which_env[0] = browser->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
-      return NULL;
+      goto err_env_alloc;
 
    /* Add superuser paths into PATH variable:
       PATH="$PATH:/usr/sbin/:/sbin/"
@@ -339,5 +336,17 @@ init_shell()
    memcpy(which_env[0] + strlen("PATH="), user_paths, strlen(user_paths));
    strncpy(which_env[0] + strlen("PATH=") + strlen(user_paths), root_paths, strlen(root_paths));
 
-   return shell;
+   return true;
+
+err_env_alloc:
+err_getenv:
+   free(buffer);
+   buffer = NULL;
+
+err_buf_alloc:
+   free(shell);
+   shell = NULL;
+
+err_sh_alloc:
+   return false;
 }

@@ -5,6 +5,7 @@
 #include "config.h"
 #include "debug.h"
 #include "identifier.h"
+#include "init_modules.h"
 #include "npapi.h"
 #include "plugin.h"
 #include "module.h"
@@ -84,7 +85,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #ifdef MODULE_PING
    if (identifier == identifiers->ping) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
-      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(((module *)ping)->class)), *result);
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping->class)), *result);
       return true;
    }
 #endif
