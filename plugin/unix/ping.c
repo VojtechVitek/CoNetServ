@@ -58,6 +58,43 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    return false;
 }
 
+static bool
+invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
+{
+   DEBUG_STR("ping->invokeDefault(): false");
+   return false;
+}
+
+static bool
+hasProperty(NPObject *obj, NPIdentifier identifier)
+{
+   DEBUG_STR("ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+static bool
+getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
+{
+   DEBUG_STR("ping->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+NPClass class = {
+   NP_CLASS_STRUCT_VERSION,
+   NULL/*allocate*/,
+   NULL/*deallocate*/,
+   NULL/*invalidate*/,
+   hasMethod,
+   invokeMethod,
+   invokeDefault,
+   hasProperty,
+   getProperty,
+   NULL/*setProperty*/,
+   NULL/*removeProperty*/,
+   NULL/*enumerate*/,
+   NULL/*construct*/
+};
+
 static void
 destroy()
 {
@@ -65,18 +102,13 @@ destroy()
    shell->destroy_module((shell_module *)ping);
 }
 
-
 bool
 init_module_ping()
 {
    DEBUG_STR("ping->init()");
    ping = (module *)shell->init_module("ping");
    ping->destroy = destroy;
-   ping->class = moduleClass;
-   ping->class.hasMethod =   hasMethod;
-   ping->class.invoke =      invokeMethod;
-   ping->class.hasProperty = NULL;
-   ping->class.getProperty = NULL;
+   ping->class = class;
 
    return true;
 }

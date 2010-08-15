@@ -11,13 +11,6 @@
 #include "module.h"
 
 static bool
-invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
-{
-   DEBUG_STR("plugin->invokeDefault(): false");
-   return false;
-}
-
-static bool
 hasMethod(NPObject *obj, NPIdentifier identifier)
 {
    DEBUG_STR("plugin->hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
@@ -28,6 +21,13 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    DEBUG_STR("plugin->invokeMethod(): false");
+   return false;
+}
+
+static bool
+invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
+{
+   DEBUG_STR("plugin->invokeDefault(): false");
    return false;
 }
 

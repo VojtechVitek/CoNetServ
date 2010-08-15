@@ -64,6 +64,13 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 }
 
 static bool
+invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
+{
+   DEBUG_STR("process->invokeDefault(): false");
+   return false;
+}
+
+static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
    if (identifier == identifiers->running) {
@@ -121,7 +128,7 @@ NPClass processClass = {
    NULL/*invalidate*/,
    hasMethod,
    invokeMethod,
-   NULL/*invokeDefault*/,
+   invokeDefault,
    hasProperty,
    getProperty,
    NULL/*setProperty*/,
