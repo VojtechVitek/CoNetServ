@@ -48,10 +48,12 @@ destroy()
 
    DEBUG_STR("modules->destroy()");
 
-   shell->destroy();
+   if (shell)
+      shell->destroy();
 
 #ifdef MODULE_PING
-   ping->destroy();
+   if (ping)
+      ping->destroy();
 #endif
 
 }

@@ -58,31 +58,6 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    return false;
 }
 
-
-static bool
-hasProperty(NPObject *obj, NPIdentifier identifier)
-{
-   DEBUG_STR("ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
-   return false;
-}
-
-static bool
-getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
-{
-   DEBUG_STR("ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
-   return false;
-}
-
-static void
-destroy()
-{
-   DEBUG_STR("ping->destroy()");
-
-   if (ping) {
-      ping->destroy();
-   }
-}
-
 bool
 init_module_ping()
 {
@@ -90,8 +65,8 @@ init_module_ping()
    ping->class = moduleClass;
    ping->class.hasMethod =   hasMethod;
    ping->class.invoke =      invokeMethod;
-   ping->class.hasProperty = hasProperty;
-   ping->class.getProperty = getProperty;
+   ping->class.hasProperty = NULL;
+   ping->class.getProperty = NULL;
 
    return true;
 }
