@@ -120,31 +120,31 @@ Conetserv.LocalServices = {
 }
 
 Conetserv.LocalServices.Ping = {
-   interval : -1,    //reading loop interval
-   console : 0,     //text console
-   object : 'Conetserv.LocalServices.Ping',                //object full name -- !! IMPORTANT
-   cls : '.ping',                                                              //class for icons
-   name: 'ping',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
+   interval : -1,                            //reading loop interval
+   console : 0,                              //text console
+   object : 'Conetserv.LocalServices.Ping',  //object full name -- !! IMPORTANT
+   cls : '.ping',                            //class for icons
+   name: 'ping',                             //name for calling npapi functions
+   argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
-   before_begin : function() {                                  //extra commands to be executed before service is started
+   before_begin : function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localPingData.reset();
    },
 
-   after_read : function(received) {                        //extra commands to be done in the end of read function
+   after_read : function(received) {         //extra commands to be done in the end of read function
       Conetserv.Plot.plotPing(received, 4);
    }
 }
 
 Conetserv.LocalServices.Ping6 = {
-   interval : -1,    //reading loop interval
-   console : 0,     //text console
-   object : 'Conetserv.LocalServices.Ping6',                //object full name -- !! IMPORTANT
-   cls : '.ping6',                                                              //class for icons
-   name: 'ping6',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
+   interval : -1,                            //reading loop interval
+   console : 0,                              //text console
+   object : 'Conetserv.LocalServices.Ping6', //object full name -- !! IMPORTANT
+   cls : '.ping6',                           //class for icons
+   name: 'ping6',                            //name for calling npapi functions
+   argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
-   before_begin : function() {                                  //extra commands to be executed before service is started
+   before_begin : function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localPing6Data.reset();
    },
 
@@ -154,14 +154,14 @@ Conetserv.LocalServices.Ping6 = {
 }
 
 Conetserv.LocalServices.Traceroute = {
-   interval : -1,    //reading loop interval
-   console : 0,     //text console
-   object : 'Conetserv.LocalServices.Traceroute',                //object full name -- !! IMPORTANT
-   cls : '.tracert',                                                              //class for icons
-   name: 'traceroute',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
+   interval : -1,                            //reading loop interval
+   console : 0,                              //text console
+   object : 'Conetserv.LocalServices.Traceroute', //object full name -- !! IMPORTANT
+   cls : '.tracert',                         //class for icons
+   name: 'traceroute',                       //name for calling npapi functions
+   argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
-   before_begin : function() {                                  //extra commands to be executed before service is started
+   before_begin : function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localTraceData.reset();
    },
 
@@ -171,14 +171,14 @@ Conetserv.LocalServices.Traceroute = {
 }
 
 Conetserv.LocalServices.Traceroute6 = {
-   interval : -1,    //reading loop interval
-   console : 0,     //text console
-   object : 'Conetserv.LocalServices.Traceroute6',                //object full name -- !! IMPORTANT
-   cls : '.tracert6',                                                              //class for icons
-   name: 'traceroute6',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
+   interval : -1,                            //reading loop interval
+   console : 0,                              //text console
+   object : 'Conetserv.LocalServices.Traceroute6',  //object full name -- !! IMPORTANT
+   cls : '.tracert6',                        //class for icons
+   name: 'traceroute6',                      //name for calling npapi functions
+   argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
-   before_begin : function() {                                  //extra commands to be executed before service is started
+   before_begin : function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localTrace6Data.reset();
    },
 
@@ -188,14 +188,14 @@ Conetserv.LocalServices.Traceroute6 = {
 }
 
 Conetserv.LocalServices.Nslookup = {
-   interval : -1,    //reading loop interval
-   console : 0,     //text console
-   object : 'Conetserv.LocalServices.Nslookup',                //object full name -- !! IMPORTANT
-   cls : '.nslookup',                                                              //class for icons
-   name: 'nslookup',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',                        //parameter to be passed to npapi functions
+   interval : -1,                           //reading loop interval
+   console : 0,                             //text console
+   object : 'Conetserv.LocalServices.Nslookup', //object full name -- !! IMPORTANT
+   cls : '.nslookup',                       //class for icons
+   name: 'nslookup',                        //name for calling npapi functions
+   argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
 
-   before_begin : function() {                                  //extra commands to be executed before service is started
+   before_begin : function() {              //extra commands to be executed before service is started
    },
 
    after_read : function(received) {
@@ -203,14 +203,14 @@ Conetserv.LocalServices.Nslookup = {
 }
 
 Conetserv.LocalServices.Whois = {
-   interval : -1,    //reading loop interval
-   console : 0,     //text console
-   object : 'Conetserv.LocalServices.Whois',                //object full name -- !! IMPORTANT
-   cls : '.whois',                                                              //class for icons
-   name: 'nslookup',                                                            //name for calling npapi functions
-   argument:'Conetserv.Url.domain',                        //parameter to be passed to npapi functions
+   interval : -1,                           //reading loop interval
+   console : 0,                             //text console
+   object : 'Conetserv.LocalServices.Whois', //object full name -- !! IMPORTANT
+   cls : '.whois',                          //class for icons
+   name: 'nslookup',                        //name for calling npapi functions
+   argument:'Conetserv.Url.domain',         //parameter to be passed to npapi functions
 
-   before_begin : function() {                                  //extra commands to be executed before service is started
+   before_begin : function() {              //extra commands to be executed before service is started
    },
 
    after_read : function(received) {
@@ -220,4 +220,4 @@ Conetserv.LocalServices.Whois = {
 
 Conetserv.LocalServices.Nmap = {
 
-   }
+}
