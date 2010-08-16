@@ -14,7 +14,7 @@
    do { \
       fprintf(stderr, "%s(%16s:%03d): " fmt "\n", PLUGIN_NAME, (strlen(__FILE__) > 16 ? __FILE__ + strlen(__FILE__) - 16 : __FILE__), __LINE__, ## __VA_ARGS__); \
       while (debug_identifier_ptr) { \
-         browser->memfree(debug_identifier_str[debug_identifier_ptr--]); \
+         browser->memfree(debug_identifier_str[--debug_identifier_ptr]); \
       } \
    } while (0);
 
