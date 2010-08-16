@@ -34,70 +34,55 @@ Conetserv.LocalServices = {
       this.stop(this.Whois);
    },
 
-
-   //@TODO Domain x hostname
    start : function (service) {
       if (service.interval == -1) {
          service.before_begin();
          try {
             service.console.clear();
             // Create function from service details and evaluate it
-            if (eval("Conetserv.LocalServices.plugin." + service.name + ".start(" + service.argument + ")")) {
-               service.interval = window.setInterval("Conetserv.LocalServices.read(" + service.object + ")", 500);
+            if (eval("service.process = Conetserv.LocalServices.plugin." + service.identifier + ".start(" + service.argument + ")")) {
+               service.interval = window.setInterval(this.read, 500, service);
+               Conetserv.Ui.addIcons(".local", service.cls, "Conetserv.LocalServices.stop(" + service + ")");
                this.read(service);
-
-               Conetserv.Ui.addIcons(".local", service.cls, "Conetserv.LocalServices.stop(" + service.object + ")");
-            }
-            else {
+            } else {
                service.interval = -1;
             }
-         }
-         catch(e) {
+         } catch(e) {
             service.console.add(e);
             service.interval = -1;
          }
       }
    },
 
-   /**
-   * Read output of PING command
-   * \return String data if successful (could be zero length),
-   *         false otherwise (false indicates not yet started or stopped process)
-   */
-
    read : function(service) {
       var received;
       try {
          // Create function from service details and evaluate it
-         received = eval("Conetserv.LocalServices.plugin." + service.name + ".read()");
-      }
-      catch(e) {
+         received = service.process.read();
+      } catch(e) {
          service.console.add(e);
       }
 
-      //@TODO fix after v-teq commits new core!!
-      if (0) {
-         Conetserv.Ui.removeIcons(".local", service.cls);
-         window.clearInterval(service.interval);
-         service.interval = -1;
-         return;
+      if (typeof(received) == 'string') {
+         service.console.add(received);
+         service.after_read(received);
+      } else {
+         if (!service.process.running) {
+            this.stop(service);
+         }
       }
-      service.console.add(received);
-
-      service.after_read(received);
-
    },
 
    stop : function (service) {
       if (service.interval != -1) {
          try {
-            eval("Conetserv.LocalServices.plugin." + service.name + ".stop()")
+            service.process.stop();
          }
          catch(e) {
             service.console.add(e);
          }
-
          Conetserv.Ui.removeIcons(".local", service.cls);
+         delete service.process;
          window.clearInterval(service.interval);
          service.interval = -1;
       }
@@ -122,9 +107,9 @@ Conetserv.LocalServices = {
 Conetserv.LocalServices.Ping = {
    interval : -1,                            //reading loop interval
    console : 0,                              //text console
-   object : 'Conetserv.LocalServices.Ping',  //object full name -- !! IMPORTANT
+   process : false,                          //running process to read data from
    cls : '.ping',                            //class for icons
-   name: 'ping',                             //name for calling npapi functions
+   identifier: 'ping',                       //name for calling npapi functions
    argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin : function() {               //extra commands to be executed before service is started
@@ -139,9 +124,9 @@ Conetserv.LocalServices.Ping = {
 Conetserv.LocalServices.Ping6 = {
    interval : -1,                            //reading loop interval
    console : 0,                              //text console
-   object : 'Conetserv.LocalServices.Ping6', //object full name -- !! IMPORTANT
+   process : false,                          //running process to read data from
    cls : '.ping6',                           //class for icons
-   name: 'ping6',                            //name for calling npapi functions
+   identifier: 'ping6',                            //name for calling npapi functions
    argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin : function() {               //extra commands to be executed before service is started
@@ -156,9 +141,9 @@ Conetserv.LocalServices.Ping6 = {
 Conetserv.LocalServices.Traceroute = {
    interval : -1,                            //reading loop interval
    console : 0,                              //text console
-   object : 'Conetserv.LocalServices.Traceroute', //object full name -- !! IMPORTANT
+   process : false,                          //running process to read data from
    cls : '.tracert',                         //class for icons
-   name: 'traceroute',                       //name for calling npapi functions
+   identifier: 'traceroute',                 //name for calling npapi functions
    argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin : function() {               //extra commands to be executed before service is started
@@ -173,9 +158,9 @@ Conetserv.LocalServices.Traceroute = {
 Conetserv.LocalServices.Traceroute6 = {
    interval : -1,                            //reading loop interval
    console : 0,                              //text console
-   object : 'Conetserv.LocalServices.Traceroute6',  //object full name -- !! IMPORTANT
+   process : false,                          //running process to read data from
    cls : '.tracert6',                        //class for icons
-   name: 'traceroute6',                      //name for calling npapi functions
+   identifier: 'traceroute6',                //name for calling npapi functions
    argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin : function() {               //extra commands to be executed before service is started
@@ -190,9 +175,9 @@ Conetserv.LocalServices.Traceroute6 = {
 Conetserv.LocalServices.Nslookup = {
    interval : -1,                           //reading loop interval
    console : 0,                             //text console
-   object : 'Conetserv.LocalServices.Nslookup', //object full name -- !! IMPORTANT
+   process : false,                          //running process to read data from
    cls : '.nslookup',                       //class for icons
-   name: 'nslookup',                        //name for calling npapi functions
+   identifier: 'nslookup',                  //name for calling npapi functions
    argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
 
    before_begin : function() {              //extra commands to be executed before service is started
@@ -205,9 +190,9 @@ Conetserv.LocalServices.Nslookup = {
 Conetserv.LocalServices.Whois = {
    interval : -1,                           //reading loop interval
    console : 0,                             //text console
-   object : 'Conetserv.LocalServices.Whois', //object full name -- !! IMPORTANT
+   process : false,                          //running process to read data from
    cls : '.whois',                          //class for icons
-   name: 'nslookup',                        //name for calling npapi functions
+   identifier: 'nslookup',                  //name for calling npapi functions
    argument:'Conetserv.Url.domain',         //parameter to be passed to npapi functions
 
    before_begin : function() {              //extra commands to be executed before service is started
