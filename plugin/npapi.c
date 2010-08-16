@@ -51,7 +51,7 @@ getValue(NPP instance, const NPPVariable variable, void *value)
       *((bool *)value) = true;
       break;
    default:
-      DEBUG_STR("getValue(default) - ERROR");
+      DEBUG_STR("getValue(%d) - ERROR", variable);
       return NPERR_GENERIC_ERROR;
    }
    return NPERR_NO_ERROR;

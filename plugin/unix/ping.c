@@ -25,15 +25,14 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    if (identifier == identifiers->start) {
-      DEBUG_STR("ping->getMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       char *argv[10];
       int i = 0;
 
       if (argc < 1)
-         return NULL;
+         return false;
 
       if (args[0].type != NPVariantType_String)
-         return NULL;
+         return false;
 
       argv[i++] = "ping";
       argv[i++] = "-n";
@@ -48,6 +47,8 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       argv[i++] = NULL;
 
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
+      DEBUG_STR("ping->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+
       if (shell->run((process *)result->value.objectValue, ((shell_module *)ping)->path, argv))
          return true;
       else
@@ -79,10 +80,31 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    return false;
 }
 
+static NPObject *
+allocate(NPP instance, NPClass *class)
+{
+   object *obj;
+
+   DEBUG_STR("ping->allocate()");
+
+   obj = browser->memalloc(sizeof(*obj));
+   obj->instance = instance;
+
+   return (NPObject *)obj;
+}
+
+static void
+deallocate(NPObject *obj)
+{
+   DEBUG_STR("ping->deallocate()");
+   browser->memfree(obj);
+}
+
+
 NPClass class = {
    NP_CLASS_STRUCT_VERSION,
-   NULL/*allocate*/,
-   NULL/*deallocate*/,
+   allocate,
+   deallocate,
    NULL/*invalidate*/,
    hasMethod,
    invokeMethod,

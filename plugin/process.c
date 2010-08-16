@@ -103,7 +103,6 @@ allocate(NPP instance, NPClass *class)
    DEBUG_STR("process->allocate()");
 
    p = browser->memalloc(sizeof(*p));
-   //p->instance = inst;
    p->running = false;
 
    return (NPObject *)p;

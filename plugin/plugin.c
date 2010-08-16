@@ -99,7 +99,7 @@ allocate(NPP instance, NPClass *class)
 {
    object *obj;
 
-   DEBUG_STR("plugin->allocate()", (long int)obj);
+   DEBUG_STR("plugin->allocate()");
 
    obj = browser->memalloc(sizeof(*obj));
    obj->instance = instance;
