@@ -13,11 +13,11 @@ static bool
 hasMethod(NPObject *obj, NPIdentifier identifier)
 {
    if (identifier == identifiers->start) {
-      DEBUG_STR("ping->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->ping->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 
-   DEBUG_STR("ping->hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->ping->hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
@@ -47,7 +47,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       argv[i++] = NULL;
 
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
-      DEBUG_STR("ping->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->ping->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 
       if (shell->run((process *)result->value.objectValue, ((shell_module *)ping)->path, argv))
          return true;
@@ -55,28 +55,28 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
          return false;
    }
 
-   DEBUG_STR("ping->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->ping->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 static bool
 invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
 {
-   DEBUG_STR("ping->invokeDefault(): false");
+   DEBUG_STR("plugin->ping->invokeDefault(): false");
    return false;
 }
 
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   DEBUG_STR("ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
-   DEBUG_STR("ping->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->ping->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
@@ -85,7 +85,7 @@ allocate(NPP instance, NPClass *class)
 {
    object *obj;
 
-   DEBUG_STR("ping->allocate()");
+   DEBUG_STR("plugin->ping->allocate()");
 
    obj = browser->memalloc(sizeof(*obj));
    obj->instance = instance;
@@ -96,7 +96,7 @@ allocate(NPP instance, NPClass *class)
 static void
 deallocate(NPObject *obj)
 {
-   DEBUG_STR("ping->deallocate()");
+   DEBUG_STR("plugin->ping->deallocate()");
    browser->memfree(obj);
 }
 

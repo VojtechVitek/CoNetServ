@@ -111,11 +111,11 @@ allocate(NPP instance, NPClass *class)
 static void
 deallocate(NPObject *obj)
 {
+   DEBUG_STR("process->deallocate()");
+
    /* Process is still running */
    if (((process *)obj)->running)
       shell->stop((process *)obj);
-
-   DEBUG_STR("process->deallocate()");
 
    browser->memfree(obj);
 }

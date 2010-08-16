@@ -90,7 +90,6 @@ find_program_path(const char *program)
          /* Error or zero length*/
 
          DEBUG_STR("shell->find(%s): NULL", program);
-
          return NULL;
 
       } else {
@@ -121,15 +120,13 @@ process_stop(process *p)
    if (p->running) {
       DEBUG_STR("process->stop(pid %d)", p->pid);
 
-      if (p->pid) {
-         kill(p->pid, 9);
-         waitpid(p->pid, NULL, 0);
-         p->pid = 0;
-         close(p->pipe[0]);
-         close(p->pipe[1]);
-      }
+      kill(p->pid, 9);
+      waitpid(p->pid, NULL, 0);
+
+      close(p->pipe[0]);
 
       p->running = false;
+
       return true;
    }
    return false;
@@ -143,6 +140,8 @@ process_read(process *p, NPVariant *result)
    NPString str;
    NPUTF8 *chars;
 
+   DEBUG_STR("shell->read()");
+
    /* check if the process is {still,already} running */
    if (p->running) {
 
@@ -152,14 +151,15 @@ process_read(process *p, NPVariant *result)
          if (errno == EAGAIN || errno == EWOULDBLOCK) {
             /* non-blocking reading */
 
-            len = 0;
+            BOOLEAN_TO_NPVARIANT(false, *result);
+            return true;
 
          } else {
             /* error */
 
             p->running = false;
-            //p->error = errno;
-
+            BOOLEAN_TO_NPVARIANT(false, *result);
+            return true;
          }
 
       } else if (len == 0) {
@@ -173,18 +173,21 @@ process_read(process *p, NPVariant *result)
             p->running = false;
          }
 
+         BOOLEAN_TO_NPVARIANT(false, *result);
+         return true;
       }
 
    } else {
 
-      len = 0;
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
 
    }
 
    buffer[len] = '\0';
 
    /* fill the result string */
-   chars = browser->memalloc((len + 1) * sizeof(NPUTF8));
+   chars = browser->memalloc((len + 1) * sizeof(*chars));
    memcpy(chars, buffer, len);
    STRING_UTF8CHARACTERS(str) = chars;
    STRING_UTF8LENGTH(str) = len;
@@ -302,12 +305,13 @@ destroy_shell()
 {
    DEBUG_STR("shell->destroy()");
 
-   if (shell != NULL)
-      browser->memfree(shell);
    if (buffer != NULL)
       browser->memfree(buffer);
    if (which_env[0] != NULL)
       browser->memfree(which_env[0]);
+   if (shell != NULL)
+      browser->memfree(shell);
+
 }
 
 bool
