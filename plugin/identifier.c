@@ -29,6 +29,7 @@ init_identifiers()
 
 #ifdef MODULE_PING
    identifiers->ping = browser->getstringidentifier("ping");
+   identifiers->ping6 = browser->getstringidentifier("ping6");
 #endif
 
    identifiers->destroy = destroy;

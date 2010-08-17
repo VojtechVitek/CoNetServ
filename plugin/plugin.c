@@ -42,7 +42,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 
    /* Plugin modules */
 #ifdef MODULE_PING
-   if (identifier == identifiers->ping) {
+   if (identifier == identifiers->ping || identifier == identifiers->ping6) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -85,6 +85,11 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    if (identifier == identifiers->ping) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping->class)), *result);
+      return true;
+   }
+   if (identifier == identifiers->ping6) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping6->class)), *result);
       return true;
    }
 #endif

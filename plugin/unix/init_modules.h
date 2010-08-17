@@ -6,7 +6,7 @@
 #include "shell.h"
 
 #define MODULE_PING
-module *ping;
+module *ping, *ping6;
 bool init_module_ping();
 
 #endif /*_INIT_MODULES_H_*/
