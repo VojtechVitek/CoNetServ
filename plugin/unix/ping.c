@@ -16,18 +16,6 @@ typedef struct _object_ping {
 } object_ping;
 
 static bool
-hasMethod(NPObject *obj, NPIdentifier identifier)
-{
-   if (identifier == identifiers->start) {
-      DEBUG_STR("plugin->pingX->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
-      return true;
-   }
-
-   DEBUG_STR("plugin->pingX->hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
-   return false;
-}
-
-static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    char *argv[10];
@@ -71,43 +59,6 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    DEBUG_STR("plugin->pingX->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
-
-static bool
-invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
-{
-   DEBUG_STR("plugin->pingX->invokeDefault(): false");
-   return false;
-}
-
-static bool
-hasProperty(NPObject *obj, NPIdentifier identifier)
-{
-   DEBUG_STR("plugin->pingX->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
-   return false;
-}
-
-static bool
-getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
-{
-   DEBUG_STR("plugin->pingX->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
-   return false;
-}
-
-NPClass class = {
-   NP_CLASS_STRUCT_VERSION,
-   NULL/*allocate*/, /* Set in init_module_ping() */
-   NULL/*deallocate*/,
-   NULL/*invalidate*/,
-   hasMethod,
-   invokeMethod,
-   invokeDefault,
-   hasProperty,
-   getProperty,
-   NULL/*setProperty*/,
-   NULL/*removeProperty*/,
-   NULL/*enumerate*/,
-   NULL/*construct*/
-};
 
 static void
 destroy()
@@ -156,14 +107,16 @@ init_module_ping()
    DEBUG_STR("ping->init()");
    ping = (module *)shell->init_module("ping");
    ping->destroy = destroy;
-   ping->class = class;
+   ping->class = modules->class;
    ping->class.allocate = allocate_ping;
+   ping->class.invoke = invokeMethod;
 
    DEBUG_STR("ping6->init()");
    ping6 = (module *)shell->init_module("ping6");
    ping6->destroy = destroy;
-   ping6->class = class;
+   ping6->class = modules->class;
    ping6->class.allocate = allocate_ping6;
+   ping6->class.invoke = invokeMethod;
 
    return true;
 }

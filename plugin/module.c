@@ -8,6 +8,62 @@
 
 module *modules = NULL;
 
+static bool
+hasMethod(NPObject *obj, NPIdentifier identifier)
+{
+   if (identifier == identifiers->start) {
+      DEBUG_STR("plugin->module->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+
+   DEBUG_STR("plugin->module->hasMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+static bool
+invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
+{
+   DEBUG_STR("plugin->module->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+static bool
+invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPVariant *result)
+{
+   DEBUG_STR("plugin->module->invokeDefault(): false");
+   return false;
+}
+
+static bool
+hasProperty(NPObject *obj, NPIdentifier identifier)
+{
+   DEBUG_STR("plugin->module->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+static bool
+getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
+{
+   DEBUG_STR("plugin->module->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+NPClass class = {
+   NP_CLASS_STRUCT_VERSION,
+   NULL/*allocate*/,
+   NULL/*deallocate*/,
+   NULL/*invalidate*/,
+   hasMethod,
+   invokeMethod,
+   invokeDefault,
+   hasProperty,
+   getProperty,
+   NULL/*setProperty*/,
+   NULL/*removeProperty*/,
+   NULL/*enumerate*/,
+   NULL/*construct*/
+};
+
 static void
 destroy()
 {
@@ -23,7 +79,6 @@ destroy()
 
    if (shell)
       shell->destroy();
-
 }
 
 bool
@@ -37,6 +92,8 @@ init_modules()
    modules = browser->memalloc(sizeof(*modules));
    if (!modules)
       return false;
+
+   modules->class = class;
    modules->destroy = destroy;
 
 #ifdef MODULE_PING
