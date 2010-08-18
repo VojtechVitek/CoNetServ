@@ -2,9 +2,9 @@
 
 #include "debug.h"
 #include "identifier.h"
-#include "npapi.h"
-#include "module.h"
 #include "init_modules.h"
+#include "module.h"
+#include "npapi.h"
 #include "shell.h"
 
 module *ping = NULL;
@@ -19,36 +19,51 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    char *argv[10];
-   int i = 0;
+   int i, j;
+   char *ptr;
    shell_module *program;
 
    if (identifier == identifiers->start) {
 
+      DEBUG_STR("plugin->pingX->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+
       if (argc < 1)
          return false;
 
-      if (args[0].type != NPVariantType_String)
-         return false;
-
-      argv[i++] = "ping";
-      argv[i++] = "-n";
-
       program = ((object_ping *)obj)->program;
-      /*
-      while (i < argc) {
-         if (argv[i] == "-4")
-            program = ping4;
 
-         if (argv[i] == "-6")
-            program = ping6;
+      i = 0;
+      /* First argument must be url */
+      if (args[i].type != NPVariantType_String)
+         return false;
+      argv[i++] = program->path;
+
+      /* Set some arguments automatically */
+      argv[i++] = "-n"; /* Numeric output only */
+      argv[i++] = "-i3"; /* Preload - Send 3 packets without waiting for reply */
+
+
+      j = 1;
+
+/* Parse arguments */
+      while (j < argc) {
+         if (args[j].type == NPVariantType_String && !strcmp(STRING_UTF8CHARACTERS(args[j].value.stringValue), "-4"))
+            program = (shell_module *)ping;
+
+         if (args[j].type == NPVariantType_String && !strcmp(STRING_UTF8CHARACTERS(args[j].value.stringValue), "-6"))
+            program = (shell_module *)ping6;
+
+         /* -c count */
+         /* -i interval */
+         /* -t ttl */
+         /* -s packetsize */
+         j++;
       }
-      */
 
       argv[i++] = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
       argv[i++] = NULL;
 
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
-      DEBUG_STR("plugin->ping->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 
       if (shell->run((process *)result->value.objectValue, program->path, argv))
          return true;
@@ -99,7 +114,6 @@ allocate_ping6(NPP instance, NPClass *class)
 
    return (NPObject *)obj;
 }
-
 
 bool
 init_module_ping()
