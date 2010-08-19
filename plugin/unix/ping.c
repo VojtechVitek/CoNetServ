@@ -40,7 +40,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       /* Set some arguments automatically */
       argv[i++] = "-n"; /* Numeric output only */
-      argv[i++] = "-i3"; /* Preload - Send 3 packets without waiting for reply */
+      argv[i++] = "-l3"; /* Preload - Send 3 packets without waiting for reply */
 
       j = 1;
       /* Parse arguments */
