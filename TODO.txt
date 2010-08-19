@@ -35,6 +35,7 @@ Extension:
 [x] WHOIS: use only first and second domain names
 [x] WHOIS: bug when TLD constists of two parts, eg. *.com.uk
 [x] Console output: improve visibility of time values
+[ ] Console: Implement console.error() method for try-catch blocks instead of console.add().
 [ ] External services: ping and traceroute info from public Looking glass servers
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
 [ ] Possibility to save ping and traceroute plot to a jpg file
