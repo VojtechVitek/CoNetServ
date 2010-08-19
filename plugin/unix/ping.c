@@ -42,10 +42,8 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       argv[i++] = "-n"; /* Numeric output only */
       argv[i++] = "-i3"; /* Preload - Send 3 packets without waiting for reply */
 
-
       j = 1;
-
-/* Parse arguments */
+      /* Parse arguments */
       while (j < argc) {
          if (args[j].type == NPVariantType_String && !strcmp(STRING_UTF8CHARACTERS(args[j].value.stringValue), "-4"))
             program = (shell_module *)ping;
