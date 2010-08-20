@@ -285,20 +285,45 @@ Conetserv.Punycode = new function Punycode() {
  *
  */
 Conetserv.Url = {
-   // proto regexp, eg. https://user:passwd@(hostname):port/dir/index.html
-   // @return hostname                       ^^^^^^^^
+   /**
+    * Protocol regexp
+    * @example https://user:passwd@hostname:port/dir/index.html
+    * @returns true of false (test mode)
+    * @returns hostname string or null string (exec mode)
+    */
    proto: /^(?:(?:(?:http|ftp)s?):\/\/)?(?:[a-z-]+(?:[^@]*)?@)?(?:\[)?([^\[\]\/]*)(?:\])?(?:[:][0-9]+)?(?:\/.*)?$/i,
 
-   // IPv4/IPv6 hostname regexp, eg. 127.0.0.1 or 2001:0db8:85a3:08d3:1319:8a2e:0370:7348
-   // @returns IPv4/IPv6 address
-   ip: /^((?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))$/i,
+   /**
+    * IPv6 address regexp
+    * @example 2001:0db8:85a3:08d3:1319:8a2e:0370:7348
+    * @returns true or false (test mode)
+    * @returns valid address string or null string (exec mode)
+    */
+   ipv6_full: /^([a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})$/i,
+   ipv6_compressed: /^((?!(?:.*[a-f0-9](?::|$)){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)$/i,
+   ipv6_mapped_ipv4_full: /^((?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?))$/i,
+   ipv6_mapped_ipv4_compressed: /^(?:(?!(?:.*[a-f0-9]:){6,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,4})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,4}:)?(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(?:\.(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3})$/i,
 
-   // URL hostname regexp, eg. server.example.com
-   // @returns hostname        ^^^^^^^^^^^^^^^^^^
-   url: /^((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2}))$/i,
+   /**
+    * IPv6 address regexp
+    * @example 127.0.0.1
+    * @returns true or false (test mode)
+    * @returns valid address string or null string (exec mode)
+    */
+   ipv4: /^((?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3})$/i,
 
-   // Punycode URL regexp, eg. www.počítač.háčkyčárky.укр
-   //                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+   /**
+    * URL hostname regexp (Pure ASCII)
+    * @example server.example.com
+    * @returns true or false (test mode)
+    * @returns hostname string or null string (exec mode)
+    */
+   ascii_url: /^((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2}))$/i,
+
+   /**
+    * URL hostname regexp (Punycode)
+    * @example www.počítač.háčkyčárky.укр
+    */
    punycodeAscii: /^(?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])+)$/i,
    punycodeAsciiTld: /^(?:com|edu|biz|gov|in(?:t|fo)|mil|net|org|[a-z]{2})$/i,
    // NOTE: Unicode characters (eg. \X or \P{M}\p{M}*) NOT (YET) IMPLEMENTED IN JAVASCRIPT!?
@@ -306,15 +331,21 @@ Conetserv.Url = {
    // FIXME: Convert to \uXXXX equivalents, it's probably not working in current JavaScript
    punycodeUtfTld: /^(?:бг|рф|укр)$/i,
 
-   // Get domain from hostname
+   /**
+    * Get domain from hostname
+    */
    domainFromHostname: /^.*?([^.]+\.(?:(com|co|org|gov|net|)\.)?[^.]+)$/i,
 
-   // parsed values
+   /*
+    * Parsed values
+    */
    hostname: '', // www.example.com or 127.0.0.1
-   domain: '', // example.com
+   domain: '', // example.com or example.co.uk
 
-   // Test url/ip address and parse it's hostname
-   // @returns true on success, false otherwise
+   /**
+    * Test url/ip address and parse it's hostname
+    * @returns true or false
+    */
    set: function(addr) {
 
       var result;
@@ -327,22 +358,42 @@ Conetserv.Url = {
          addr = this.proto.exec(addr)[1];
       }
 
-      // Regular IPv4/IPv6?
-      if (this.ip.test(addr)) {
-         this.hostname = this.ip.exec(addr)[1];
+      if (this.ipv6_full.test(addr)) {
+         // Full IPv6
+         this.hostname = this.ipv6_full.exec(addr)[1];
          this.domain = this.hostname;
       }
-      // Regular ASCII url?
-      else if (this.url.test(addr)) {
-         this.hostname = this.url.exec(addr)[1];
+      if (this.ipv6_compressed.test(addr)) {
+         // Compressed IPv6
+         this.hostname = this.ipv6_compressed.exec(addr)[1];
+         this.domain = this.hostname;
+      }
+      if (this.ipv6_mapped_ipv4_full.test(addr)) {
+         // Full IPv4 mapped to IPv6
+         this.hostname = this.ipv6_mapped_ipv4_full.exec(addr)[1];
+         this.domain = this.hostname;
+      }
+      if (this.ipv6_mapped_ipv4_compressed.test(addr)) {
+         // Compressed IPv4 mapped to IPv6
+         this.hostname = this.ipv6_mapped_ipv4_compressed.exec(addr)[1];
+         this.domain = this.hostname;
+      }
+      if (this.ipv4.test(addr)) {
+         // IPv4
+         this.hostname = this.ipv4.exec(addr)[1];
+         this.domain = this.hostname;
+      }
+      else if (this.ascii_url.test(addr)) {
+         // ASCII url?
+         this.hostname = this.ascii_url.exec(addr)[1];
          // Parse domain from hostname string
          if (this.domainFromHostname.test(this.hostname)){
             this.domain = this.domainFromHostname.exec(this.hostname)[1];
          }
       }
-      // Regular Punycode url?
-      // -> try to convert to ASCII
       else {
+         // Regular Punycode url?
+         // -> try to convert to ASCII
          var arr = addr.split('.');
          var ascii = '';
          if (arr.length < 2)
