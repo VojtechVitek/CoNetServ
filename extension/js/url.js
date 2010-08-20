@@ -305,12 +305,20 @@ Conetserv.Url = {
    ipv6_mapped_ipv4_compressed: /^(?:(?!(?:.*[a-f0-9]:){6,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,4})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,4}:)?(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(?:\.(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3})$/i,
 
    /**
-    * IPv6 address regexp
+    * IPv4 address regexp
     * @example 127.0.0.1
     * @returns true or false (test mode)
     * @returns valid address string or null string (exec mode)
     */
    ipv4: /^((?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3})$/i,
+
+   /**
+    * Special address regexp
+    * @example localhost
+    * @returns true or false (test mode)
+    * @returns valid address string or null string (exec mode)
+    */
+   special_address: /^(localhost)$/i,
 
    /**
     * URL hostname regexp (Pure ASCII)
@@ -381,6 +389,11 @@ Conetserv.Url = {
       if (this.ipv4.test(addr)) {
          // IPv4
          this.hostname = this.ipv4.exec(addr)[1];
+         this.domain = this.hostname;
+      }
+      if (this.special_address.test(addr)) {
+         // Special address
+         this.hostname = this.special_address.exec(addr)[1];
          this.domain = this.hostname;
       }
       else if (this.ascii_url.test(addr)) {
