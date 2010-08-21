@@ -12,6 +12,7 @@ typedef struct _identifier {
 
    NPIdentifier   running;
    NPIdentifier   version;
+   NPIdentifier   found;
 
 #ifdef MODULE_PING
    NPIdentifier   ping;
