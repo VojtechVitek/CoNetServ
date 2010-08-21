@@ -31,8 +31,8 @@ char* cmd_args[command_t_count] = {
 	"nslookup",
 };
 
-#define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); npnfuncs->setexception(NULL, msg); return 0;}
-#define errorExitChild(msg) {logmsg(msg); npnfuncs->setexception(NULL, msg); ExitProcess(1);}
+#define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); browser->setexception(NULL, msg); return 0;}
+#define errorExitChild(msg) {logmsg(msg); browser->setexception(NULL, msg); ExitProcess(1);}
 
 bool startCommand(command_t cmd, NPUTF8* arg_host)
 {
@@ -169,7 +169,7 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 
 			/* Convert data first to multibyte and then to utf-8 */
 			len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
-			utfstring = (LPWSTR) npnfuncs->memalloc(len * sizeof(WCHAR) + 2);
+			utfstring = (LPWSTR) browser->memalloc(len * sizeof(WCHAR) + 2);
 			utfstring[len] = 0;
 
 			MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);	
@@ -179,7 +179,7 @@ int readCommand(command_t cmd, NPUTF8 *_buf)
 
 			WideCharToMultiByte (CP_UTF8, 0, utfstring, len-1, _buf, len2 - 1, 0, 0);
 
-			npnfuncs->memfree(utfstring);
+			browser->memfree(utfstring);
 		}
 
 		GetExitCodeProcess( pids[cmd], &status );

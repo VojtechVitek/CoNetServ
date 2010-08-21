@@ -9,23 +9,15 @@ configure_file("win/resource.rc.in" "${CMAKE_BINARY_DIR}/resource.rc" IMMEDIATE 
 
 set(sources
 	${sources}
-	win/commands.c
-)
-
-set(library_sources
-	${library_sources}
-	${CMAKE_BINARY_DIR}/dll_export.def
-	${CMAKE_BINARY_DIR}/resource.rc
+   ${CMAKE_BINARY_DIR}/dll_export.def
+   ${CMAKE_BINARY_DIR}/resource.rc
+   win/commands.c
 )
 
 set(headers
 	${headers}
 	win/stdbool.h
-)
-
-set(library_headers
-	${library_headers}
-	win/resource.h
+   win/resource.h
 )
 
 find_package(XULRunnerSDK REQUIRED)

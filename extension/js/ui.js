@@ -133,7 +133,7 @@ Conetserv.Ui = {
       })
       .removeClass("ui-corner-all")
       .addClass("ui-corner-right");
-      
+
 
       Conetserv.Ui.redraw();
    },
@@ -213,7 +213,7 @@ Conetserv.Ui = {
           */
 
          return;
-         
+
          if(!conetserv.ping) {
             this.divError("#local-ping-div", "Ping service has not been found in your system.");
             this.divInstallationSteps("#local-ping-div", "ping");
@@ -296,16 +296,14 @@ If you want to install it, please follow these steps.");
    * @param func Function, which will be called after icon on the right side will
    * be clicked.
    */
-   addIcons : function(parent, selector, func) {
+   addIcons : function(parent, selector, func, arg) {
       // show icons
       $(parent + " input" + selector).button("option", "icons", {
          secondary:'ui-icon-circle-close'
       });
       // register callback function
       if(func){
-         $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){
-            eval(func);
-         });
+         $(parent + " label" + selector + " .ui-button-icon-secondary").click(function(){func(arg);});
       }
    },
    /**

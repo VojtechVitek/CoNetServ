@@ -1,0 +1,60 @@
+<html>
+<script type="text/javascript">
+var time;
+var plugin1, plugin2;
+var ping1, ping2;
+
+function stop()
+{
+   window.clearInterval(time)
+   ping1.stop();
+   ping2.stop();
+}
+
+function read()
+{
+   try {
+      document.getElementById("data1").value += ping1.read();
+   } catch (e) {
+      document.getElementById("data1").value += e + "\n";
+   }
+   try {
+      document.getElementById("data2").value += ping2.read();
+   } catch (e) {
+      document.getElementById("data2").value += e + "\n";
+   }
+}
+
+function start()
+{
+   plugin1 = document.getElementById("plugin1");
+   plugin2 = document.getElementById("plugin2");
+
+   if (plugin1.ping) {
+      try {
+         ping1 = plugin1.ping.start("www.seznam.cz");
+      } catch (e) {
+         document.getElementById("data1").value = e + "\n";
+      }
+      try {
+         ping2 = plugin1.ping.start("www.gmail.com");
+      } catch (e) {
+         document.getElementById("data2").value = e + "\n";
+      }
+      time = window.setInterval("read()", 1000);
+   }
+}
+
+</script>
+<body onload="start()">
+Data:
+<textarea id="data1" cols="60" rows="30">
+</textarea>
+<textarea id="data2" cols="60" rows="30">
+</textarea>
+<br />
+<object id="plugin1" type="application/x-conetserv"></object>
+<object id="plugin2" type="application/x-conetserv"></object>
+<button onclick="start()">START</button>
+<button onclick="stop()">STOP</button>
+</html>

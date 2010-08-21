@@ -7,16 +7,22 @@ configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(sources
-	plugin.c
-)
-
-set(debug_sources
 	debug.c
+	identifier.c
+	npapi.c
+	plugin.c
+	module.c
+	process.c
 )
 
 set(headers
-	plugin.h
 	${CMAKE_BINARY_DIR}/config.h
+	debug.h
+	identifier.h
+	npapi.h
+	plugin.h
+	module.h
+	process.h
 )
 
 # Platform-specific sources and header files
@@ -29,7 +35,7 @@ else()
 endif()
 
 # Create shared library
-add_library(CoNetServ SHARED ${library_sources} ${sources} ${library_headers} ${headers})
+add_library(CoNetServ SHARED ${sources} ${headers})
 set_target_properties(CoNetServ PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(CoNetServ PROPERTIES PREFIX "np")
 set_target_properties(CoNetServ PROPERTIES VERSION ${VERSION})
@@ -87,8 +93,5 @@ else()
 	add_custom_target(PluginCopy ALL
 		DEPENDS ${DEBUG_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}
 	)
-
-	# Create debug program
-	add_executable(Debug ${debug_sources} ${sources} ${debug_headers} ${headers})
 
 endif()

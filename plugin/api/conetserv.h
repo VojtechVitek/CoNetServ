@@ -1,117 +1,206 @@
-/**
+/*!
+ * \brief CoNetServ object
+ *
  * CoNetServ plugin should be loaded into (X)HTML document using object tag:
  * <object id="conetserv" type="application/x-conetserv" width="0" height="0">
  *   Plugin FAILED to load
  * </object>
  *
- * To access the embedded object you can use this JavaScript code:
+ * Getting JavaScript variable from object tag:
  * var conetserv = document.getElementById("conetserv");
  *
- * Now, you can access it's methods. For example:
- * conetserv.startPing();
  */
-object conetserv;
+class conetserv {
 
-/**
- * Read output of PING6 command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
- */
-function readPing();
+   /*!
+    * \brief Plugin version
+    */
+   string version = "2.0.0";
 
-/**
- * Read output of PING6 command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
- */
-function readPing6();
+   /*!
+    * \brief PING command
+    */
+   class ping {
 
-/**
- * Read output of TRACEROUTE command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
- */
-function readTraceroute();
+      /*!
+       * \brief Start ping command
+       * @return bool True if success, false otherwise.
+       */
+      bool start() {
+         /* Native code */
+      };
 
-/**
- * Read output of TRACEROUTE6 command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
- */
-function readTraceroute6();
+      /*!
+       * \brief Stop ping command
+       * @return bool True if success, false otherwise.
+       */
+      bool stop() {
+         /* Native code */
+      };
 
-/**
- * Read output of WHOIS command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
- */
-function readWhois();
+      /*!
+       * \breaf Read ping command output
+       * @return string Data output.
+       */
+      string read() {
+         /* Native code */
+      };
 
-/**
- * Read output of NSLOOKUP command
- * \return String data if successful (could be zero length),
- *         false otherwise (false indicates not yet started or stopped process)
- */
-function readNslookup();
+   };
 
+   /*!
+    * \brief PING6 comand
+    */
+   class ping6 {
 
-/**
- * Start PING command
- */
-function startPing();
+      /*!
+       * \brief Start ping6 command
+       * @return bool True if success, false otherwise.
+       */
+      bool start() {
+         /* Native code */
+      };
 
-/**
- * Start PING6 command
- */
-function startPing6();
+      /*!
+       * \brief Stop ping6 command
+       * @return bool True if success, false otherwise.
+       */
+      bool stop() {
+         /* Native code */
+      };
 
-/**
- * Start TRACEROUTE command
- */
-function startTraceroute();
+      /*!
+       * \breaf Read ping6 command output
+       * @return string Data output.
+       */
+      string read() {
+         /* Native code */
+      };
 
-/**
- * Start TRACEROUTE6 command
- */
-function startTraceroute6();
+   };
 
-/**
- * Start WHOIS command
- */
-function startWhois();
+   /**
+    * \brief TRACEROUTE command
+    */
+   class traceroute {
 
-/**
- * Start NSLOOKUP command
- */
-function startNslookup();
+      /*!
+       * \brief Start traceroute command
+       * @return bool True if success, false otherwise.
+       */
+      bool start() {
+         /* Native code */
+      };
 
+      /*!
+       * \brief Stop traceroute command
+       * @return bool True if success, false otherwise.
+       */
+      bool stop() {
+         /* Native code */
+      };
 
-/**
- * Stop PING command
- */
-function stopPing();
+      /*!
+       * \breaf Read traceroute command output
+       * @return string Data output.
+       */
+      string read() {
+         /* Native code */
+      };
 
-/**
- * Stop PING6 command
- */
-function stopPing6();
+   };
 
-/**
- * Stop TRACEROUTE command
- */
-function stopTraceroute();
+   /**
+    * \brief TRACEROUTE6 command
+    */
+   class traceroute6 {
 
-/**
- * Stop TRACEROUTE6 command
- */
-function stopTraceroute6();
+      /*!
+       * \brief Start traceroute6 command
+       * @return bool True if success, false otherwise.
+       */
+      bool start() {
+         /* Native code */
+      };
 
-/**
- * Stop WHOIS command
- */
-function stopWhois();
+      /*!
+       * \brief Stop traceroute6 command
+       * @return bool True if success, false otherwise.
+       */
+      bool stop() {
+         /* Native code */
+      };
 
-/**
- * Stop NSLOOKUP command
- */
-function startNslookup();
+      /*!
+       * \breaf Read traceroute6 command output
+       * @return string Data output.
+       */
+      string read() {
+         /* Native code */
+      };
+
+   };
+
+   /**
+    * \brief WHOIS command
+    */
+   class whois {
+
+      /*!
+       * \brief Start whois command
+       * @return bool True if success, false otherwise.
+       */
+      bool start() {
+         /* Native code */
+      };
+
+      /*!
+       * \brief Stop whois command
+       * @return bool True if success, false otherwise.
+       */
+      bool stop() {
+         /* Native code */
+      };
+
+      /*!
+       * \breaf Read whois command output
+       * @return string Data output.
+       */
+      string read() {
+         /* Native code */
+      };
+
+   };
+
+   /**
+    * \brief NSLOOKUP command
+    */
+   class nslookup {
+
+      /*!
+       * \brief Start nslookup command
+       * @return bool True if success, false otherwise.
+       */
+      bool start() {
+         /* Native code */
+      };
+
+      /*!
+       * \brief Stop nslookup command
+       * @return bool True if success, false otherwise.
+       */
+      bool stop() {
+         /* Native code */
+      };
+
+      /*!
+       * \breaf Read nslookup command output
+       * @return string Data output.
+       */
+      string read() {
+         /* Native code */
+      };
+
+   };
+
+};
