@@ -11,6 +11,7 @@ Conetserv.onReady = function() {
 
    $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
 
+   /* Inicialize conetserv plugin */
    this.plugin = document.getElementById("conetserv");
 
    /* init Conetserv.Url in Firefox */

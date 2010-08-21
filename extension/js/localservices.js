@@ -3,9 +3,6 @@ if(!Conetserv) var Conetserv = {};
 
 /* LocalServices object */
 Conetserv.LocalServices = {
-   /* CoNetServ NPAPI plugin to interact native code with */
-   plugin: false,
-
    /**
    * Start all commands available at once.
    */
@@ -45,7 +42,7 @@ Conetserv.LocalServices = {
             }
             */
             // Create function from service details and evaluate it
-            if (eval("service.process = Conetserv.LocalServices.plugin." + service.identifier + ".start(" + service.argument + ")")) {
+            if (eval("service.process = Conetserv.plugin." + service.identifier + ".start(" + service.argument + ")")) {
                service.interval = window.setInterval(this.read, 500, service);
                Conetserv.Ui.addIcons(".local", service.class, this.stop, service);
                this.read(service);
@@ -93,9 +90,6 @@ Conetserv.LocalServices = {
    },
 
    initialize: function() {
-      /* CoNetServ object - NPAPI plugin */
-      this.plugin = document.getElementById("conetserv");
-
       /* console text-boxes */
       this.Ping.console = new Conetserv.Console("local-ping-console");
       this.Ping.console.maxRows = 15;
