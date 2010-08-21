@@ -1,6 +1,8 @@
 /* Check CoNetServ object */
 if(!Conetserv) var Conetserv = {};
 
+Conetserv.plugin = false;
+
 Conetserv.onReady = function() {
 
    /* Toggle tabs with opacity effect */
@@ -8,6 +10,8 @@ Conetserv.onReady = function() {
    //$("#tabs").tabs({ fx: { opacity: 'toggle' } });
 
    $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
+
+   this.plugin = document.getElementById("conetserv");
 
    /* init Conetserv.Url in Firefox */
    if ($.client.browser == "Firefox") {
