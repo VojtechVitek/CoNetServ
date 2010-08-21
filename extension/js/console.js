@@ -8,6 +8,7 @@ if(!Conetserv) var Conetserv = {};
 Conetserv.Console = function(div) {
    this.div = document.getElementById(div);   //pointer to div which object takes care of
    this.code = "";            //container for data to be shown in element
+   this.err = "";             //error data show in the top of console
 
    this.prevData = "";            //used for making sure whole line is being written
    this.direction = 0;            //direction of output 0 = downwards 1 = upwards
@@ -80,7 +81,20 @@ Conetserv.Console = function(div) {
       return;
       */  
       
-      this.div.innerHTML = this.code;
+      this.repaint();
+   }
+
+   // sets error in the console
+   this.setErr = function(text) {
+      this.err = '<div class="ui-state-highlight ui-corner-all" style="padding: 0.2em; margin-top:5px;"> \
+         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>'+text+'</p></div>';
+
+      this.repaint();
+   }
+
+   this.clearErr = function() {
+      this.err = "";
+      this.repaint();
    }
    
    //colours all items in line
@@ -96,6 +110,7 @@ Conetserv.Console = function(div) {
 
    //clears console
    this.clear = function(){
+      this.err = "";
       this.code = "";
       this.prevData = "";
       this.rows = [];
@@ -105,7 +120,7 @@ Conetserv.Console = function(div) {
    
    //repaints whole console
    this.repaint = function(){
-      this.div.innerHTML = this.code;
+      this.div.innerHTML = this.err + this.code;
    }
 
 }

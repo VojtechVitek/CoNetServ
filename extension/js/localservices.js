@@ -50,7 +50,7 @@ Conetserv.LocalServices = {
                service.interval = -1;
             }
          } catch(e) {
-            service.console.add(e);
+            service.console.setErr(e);
             service.interval = -1;
          }
       }
@@ -62,7 +62,7 @@ Conetserv.LocalServices = {
       try {
          received = service.process.read();
       } catch(e) {
-         service.console.add(e);
+         service.console.setErr(e);
       }
 
       if (typeof(received) == 'string') {
@@ -81,7 +81,7 @@ Conetserv.LocalServices = {
             delete service.process;
          }
          catch(e) {
-            service.console.add(e);
+            service.console.setErr(e);
          }
          Conetserv.Ui.removeIcons(".local", service.class);
          window.clearInterval(service.interval);
