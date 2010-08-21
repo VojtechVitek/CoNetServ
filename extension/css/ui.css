@@ -61,12 +61,13 @@ body {
 
 .service-label {
    height: 15px;
+   font-weight: bold;
    margin-bottom: -5px;
 }
 
 .ping .console,
 .ping6 .console,
-.tracert .console
+.tracert .console,
 .tracert6 .console {
   height: 200px;
 }
