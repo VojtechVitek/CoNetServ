@@ -71,7 +71,10 @@ Conetserv.ExternalServices = {
 
       this.isRunning = 1;
 
-      Conetserv.Map.setElementId("map-placeholder");
+      Conetserv.Ui.addIcons(".external", ".ping", '', '', 'ui-icon-clock');
+      Conetserv.Ui.addIcons(".external", ".ping6", '', '', 'ui-icon-clock');
+      Conetserv.Ui.addIcons(".external", ".tracert", '', '', 'ui-icon-clock');
+      Conetserv.Ui.addIcons(".external", ".tracert6", '', '', 'ui-icon-clock');
 
       /* Start external info services */
       Conetserv.LookingGlass.start(
@@ -85,12 +88,18 @@ Conetserv.ExternalServices = {
                   if(Conetserv.ExternalServices.Ping.next > Conetserv.ExternalServices.Ping.max) {
                      return;
                   }
+                  if(Conetserv.ExternalServices.Ping.next == Conetserv.ExternalServices.Ping.max) {
+                     Conetserv.Ui.removeIcons(".external", ".ping");
+                  }
                   $("#external-ping-service-" + Conetserv.ExternalServices.Ping.next).html(service.name);
                   Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].add(result + '\n');
                   break;
                 case 'PING6':
                   if(Conetserv.ExternalServices.Ping6.next > Conetserv.ExternalServices.Ping6.max) {
                      return;
+                  }
+                  if(Conetserv.ExternalServices.Ping6.next == Conetserv.ExternalServices.Ping6.max) {
+                     Conetserv.Ui.removeIcons(".external", ".ping6");
                   }
                   $("#external-ping6-service-" + Conetserv.ExternalServices.Ping6.next).html(service.name);
                   Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].add(result + '\n');
@@ -99,12 +108,18 @@ Conetserv.ExternalServices = {
                   if(Conetserv.ExternalServices.Tracert.next > Conetserv.ExternalServices.Tracert.max) {
                      return;
                   }
+                  if(Conetserv.ExternalServices.Tracert.next == Conetserv.ExternalServices.Tracert.max) {
+                     Conetserv.Ui.removeIcons(".external", ".tracert");
+                  }
                   $("#external-tracert-service-" + Conetserv.ExternalServices.Tracert.next).html(service.name);
                   Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].add(result + '\n');
                   break;
                case 'TRACE6':
                   if(Conetserv.ExternalServices.Tracert6.next > Conetserv.ExternalServices.Tracert6.max) {
                      return;
+                  }
+                  if(Conetserv.ExternalServices.Tracert6.next == Conetserv.ExternalServices.Tracert6.max) {
+                     Conetserv.Ui.removeIcons(".external", ".tracert6");
                   }
                   $("#external-tracert6-service-" + Conetserv.ExternalServices.Tracert6.next).html(service.name);
                   Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].add(result + '\n');

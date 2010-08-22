@@ -48,7 +48,7 @@ Conetserv.LocalServices = {
             // Create function from service details and evaluate it
             if (eval("service.process = Conetserv.plugin." + service.identifier + ".start(" + service.argument + ")")) {
                service.interval = window.setInterval(this.read, 500, service);
-               Conetserv.Ui.addIcons(".local", service.class, this.stop, service);
+               Conetserv.Ui.addIcons(".local", service.class, this.stop, service, 'ui-icon-circle-close');
                this.read(service);
             } else {
                service.interval = -1;

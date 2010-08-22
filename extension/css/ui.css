@@ -44,6 +44,8 @@ body {
    padding: 0.4em 2em 0.4em 1em;
 }
 
+
+.ui-icon-clock,
 .ui-icon-circle-close {
    position: absolute;
    right: 3px;

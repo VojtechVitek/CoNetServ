@@ -325,12 +325,13 @@ Conetserv.Ui = {
    * @param parent Is DOM element, which is parent of input and label items
    * @param selector Defines which radio buttons will be effected
    * @param func Function, which will be called after icon on the right side will
+   * @param arg Argument to be passed to the function
    * be clicked.
    */
-   addIcons : function(parent, selector, func, arg) {
+   addIcons : function(parent, selector, func, arg, icon) {
       // show icons
       $(parent + " input" + selector).button("option", "icons", {
-         secondary:'ui-icon-circle-close'
+         secondary: icon
       });
       // register callback function
       if(func){
