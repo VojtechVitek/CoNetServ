@@ -279,6 +279,28 @@ Conetserv.Ui = {
             }
          }
 
+         if(!Conetserv.plugin.nmap) {
+            $(".local .nmap").remove();
+         }
+         else {
+            if(!Conetserv.plugin.nmap.found) {
+               this.divError("#local-nmap-div", "Nmap service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-nmap-div", "nmap");
+            }
+         }
+
+         if(!Conetserv.plugin.dig) {
+            $(".local .dig").remove();
+         }
+         else {
+            if(!Conetserv.plugin.nslookup.found) {
+               this.divError("#local-dig-div", "Dig service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-dig-div", "nslookup");
+            }
+         }
+
          //refresh visibility of buttons
          $("#local-services-form").buttonset("refresh");
       }
