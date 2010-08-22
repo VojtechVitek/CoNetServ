@@ -7,11 +7,13 @@ Conetserv.LocalServices = {
    * Start all commands available at once.
    */
    startCommands: function() {
-      //set value for commands
+      /*
+       * Set URL value or show red bar around url field
+       */
       if(!Conetserv.Url.set(document.getElementById("local-url").value)) {
          document.getElementById("local-url").style.color="red";
          document.getElementById("local-url").focus();
-         return;
+         return false;
       }
 
       this.start(this.Ping);
@@ -20,6 +22,8 @@ Conetserv.LocalServices = {
       this.start(this.Traceroute6);
       this.start(this.Nslookup);
       this.start(this.Whois);
+
+      return true;
    },
 
    stopCommands: function() {

@@ -54,8 +54,21 @@ Conetserv.ExternalServices = {
    },
 
    start : function ()  {
+      /*
+       * Check if start is possible
+       */
       if(this.isRunning)
-         return;
+         return false;
+
+      /*
+       * Set URL value or show red bar around url field
+       */
+      if(!Conetserv.Url.set(document.getElementById("external-url").value)) {
+         document.getElementById("external-url").style.color="red";
+         document.getElementById("external-url").focus();
+         return false;
+      }
+
       this.isRunning = 1;
 
       Conetserv.Map.setElementId("map-placeholder");
@@ -105,6 +118,7 @@ Conetserv.ExternalServices = {
             this.isRunning = 0;
          }
       )
+      return true;
    }
 }
 

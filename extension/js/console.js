@@ -140,7 +140,8 @@ Conetserv.Console = function(div) {
    
    //repaints whole console
    this.repaint = function(){
-      this.div.innerHTML = this.err + this.code;
+      if(this.div)
+         this.div.innerHTML = this.err + this.code;
    }
 
 }

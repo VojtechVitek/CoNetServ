@@ -41,6 +41,15 @@ Conetserv.onReady = function() {
    $("#local-url-start").click(function() {
       Conetserv.LocalServices.stopCommands();
       Conetserv.LocalServices.startCommands();
+      return false;
+   });
+
+   /*
+    * Bind start button to start external services
+    */
+   $("#external-url-start").click(function() {
+      //Conetserv.ExternalServices.start();
+      return false;
    });
 
    /*
@@ -55,7 +64,6 @@ Conetserv.onReady = function() {
    Conetserv.Plot.initialize();
    this.Options.initialize();
 
-   Conetserv.ExternalServices.start();
 };
 
 Conetserv.onLoad = function() {
@@ -63,13 +71,23 @@ Conetserv.onLoad = function() {
     * Check autostart - on true start services
     */
    if(this.Options.autostart) {
+      /*
+       * Start services on main page
+       */
+      if(this.Options.frontPageParent == "local-services") {
+         setTimeout("Conetserv.LocalServices.startCommands()", 250);
+      }
+      else if(this.Options.frontPageParent == "external-services") {
+         setTimeout("Conetserv.ExternalServices.start()",250);
+      }
+      else if(this.Options.frontPageParent == "external-info") {
+         setTimeout("Conetserv.ExternalInfo.start()",250);
+      }
+      else if(this.Options.frontPageParent == "local-info") {
+      }
+
       Conetserv.LocalServices.startCommands();
    }
 
-   /*
-    * If main page is eternal info, start them
-    */
-   if(this.Options.frontPageParent == "external-info") {
-       setTimeout("startExternalInfo()",250);
-   }
+   
 }
