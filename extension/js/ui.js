@@ -198,9 +198,9 @@ Conetserv.Ui = {
        * check for plugin - if not available, disable all dependend parts of
        * CoNetServ
        */
-      if(!conetserv) {
+      if(!Conetserv.plugin) {
          var errStr = "CoNetServ plugin for your browser has not \
-            been correctly loaded. Local services will not be available. <br /><br />\
+            been correctly loaded. <br /> <br/>Local services and local info will not be available. <br /><br />\
             Please, refer to readme for correct installation steps.";
          this.divError("#local-services", errStr)
 
@@ -212,62 +212,93 @@ Conetserv.Ui = {
           * first check for general availability in system - if not, don even display
           */
 
-         return;
-
-         if(!conetserv.ping) {
-            this.divError("#local-ping-div", "Ping service has not been found in your system.");
-            this.divInstallationSteps("#local-ping-div", "ping");
-         }
-
-         if(!conetserv.ping6) {
+         if(!Conetserv.plugin.ping) {
             $(".local .ping6").remove();
          }
+         else {
+            if(!Conetserv.plugin.ping.found) {
+               this.divError("#local-ping-div", "Ping service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-ping-div", "ping");
+            }
+         }
 
-         if(!conetserv.tracert) {
+         if(!Conetserv.plugin.ping6) {
+            $(".local .ping6").remove();
+         }
+         else {
+            if(!Conetserv.plugin.ping6.found) {
+               this.divError("#local-ping6-div", "Ping IPv6 service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-ping6-div", "ping6");
+            }
+         }
+         
+
+         if(!Conetserv.plugin.tracert) {
             $(".local .tracert").remove();
          }
+         else {
+            if(!Conetserv.plugin.tracert.found) {
+               this.divError("#local-tracert-div", "Traceroute service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-tracert-div", "tracert");
+            }
+         }
 
-         if(!conetserv.tracert6) {
+         if(!Conetserv.plugin.tracert6) {
             $(".local .tracert6").remove();
          }
+         else {
+            if(!Conetserv.plugin.tracert6.found) {
+               this.divError("#local-tracert6-div", "Traceroute IPv6 service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-tracert6-div", "tracert6");
+            }
+         }
 
-         if(!conetserv.whois) {
+         if(!Conetserv.plugin.whois) {
             $(".local .whois").remove();
          }
+         else {
+            if(!Conetserv.plugin.whois.found) {
+               this.divError("#local-whois-div", "Whois service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-whois-div", "whois");
+            }
+         }
 
-         if(!conetserv.nslookup) {
+         if(!Conetserv.plugin.nslookup) {
             $(".local .nslookup").remove();
          }
-
-         // now check for installed state and if not, show message about installation
-         if(!conetserv.ping_test) {
-            this.divError("#local-ping-div", "Ping service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
+         else {
+            if(!Conetserv.plugin.nslookup.found) {
+               this.divError("#local-nslookup-div", "Nslookup service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-nslookup-div", "nslookup");
+            }
          }
 
-         if(!conetserv.ping6_test) {
-            this.divError("#local-ping6-div", "Ping IPv6 service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
+         if(!Conetserv.plugin.nmap) {
+            $(".local .nmap").remove();
+         }
+         else {
+            if(!Conetserv.plugin.nmap.found) {
+               this.divError("#local-nmap-div", "Nmap service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-nmap-div", "nmap");
+            }
          }
 
-         if(!conetserv.tracert_test) {
-            this.divError("#local-tracert-div", "Traceroute service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
+         if(!Conetserv.plugin.dig) {
+            $(".local .dig").remove();
          }
-
-         if(!conetserv.tracert6_test) {
-            this.divError("#local-tracert6-div", "Traceroute IPv6 service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.whois_test) {
-            this.divError("#local-whois-div", "Whois service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
-         }
-
-         if(!conetserv.nslookup_test) {
-            this.divError("#local-nslookup-div", "NSlookup service has not been found in your system. \n\
-If you want to install it, please follow these steps.");
+         else {
+            if(!Conetserv.plugin.nslookup.found) {
+               this.divError("#local-dig-div", "Dig service has not been found in your system. \n\
+               If you want to install it, please follow these steps.");
+               this.divInstallationSteps("#local-dig-div", "nslookup");
+            }
          }
 
          //refresh visibility of buttons

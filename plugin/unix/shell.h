@@ -10,9 +10,8 @@
 
 typedef struct _shell_module {
    module       m;
-   char         *path;
    bool         found;
-   int          err;
+   char         *path;
 } shell_module;
 
 typedef struct _cmd_shell {

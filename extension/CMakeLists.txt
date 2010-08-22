@@ -106,7 +106,7 @@ if(UNIX)
 		DEPENDS ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Opera.wgt
 	)
 
-	add_custom_target(Packages ALL
+	add_custom_target(Packages 
 	)
 	add_dependencies(Packages ChromeExtension FirefoxAddOn OperaWidget)
 

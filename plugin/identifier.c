@@ -26,6 +26,7 @@ init_identifiers()
    identifiers->start = browser->getstringidentifier("start");
    identifiers->stop = browser->getstringidentifier("stop");
    identifiers->version = browser->getstringidentifier("version");
+   identifiers->found = browser->getstringidentifier("found");
 
 #ifdef MODULE_PING
    identifiers->ping = browser->getstringidentifier("ping");

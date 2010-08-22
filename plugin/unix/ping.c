@@ -73,6 +73,29 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    return false;
 }
 
+static bool
+hasProperty(NPObject *obj, NPIdentifier identifier)
+{
+   if (identifier == identifiers->found) {
+      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+   DEBUG_STR("plugin->ping->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
+static bool
+getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
+{
+   if (identifier == identifiers->found) {
+      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      BOOLEAN_TO_NPVARIANT(((object_ping *)obj)->program->found, *result);
+      return true;
+   }
+   DEBUG_STR("plugin->ping->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   return false;
+}
+
 static void
 destroy()
 {
@@ -122,6 +145,8 @@ init_module_ping()
    ping->class = modules->class;
    ping->class.allocate = allocate_ping;
    ping->class.invoke = invokeMethod;
+   ping->class.hasProperty = hasProperty;
+   ping->class.getProperty = getProperty;
 
    DEBUG_STR("ping6->init()");
    ping6 = (module *)shell->init_module("ping6");
@@ -129,6 +154,8 @@ init_module_ping()
    ping6->class = modules->class;
    ping6->class.allocate = allocate_ping6;
    ping6->class.invoke = invokeMethod;
+   ping6->class.hasProperty = hasProperty;
+   ping6->class.getProperty = getProperty;
 
    return true;
 }
