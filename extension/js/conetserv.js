@@ -48,7 +48,7 @@ Conetserv.onReady = function() {
     * Bind start button to start external services
     */
    $("#external-url-start").click(function() {
-      //Conetserv.ExternalServices.start();
+      Conetserv.ExternalServices.start();
       return false;
    });
 
@@ -85,8 +85,6 @@ Conetserv.onLoad = function() {
       }
       else if(this.Options.frontPageParent == "local-info") {
       }
-
-      Conetserv.LocalServices.startCommands();
    }
 
    
