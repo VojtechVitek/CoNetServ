@@ -97,14 +97,7 @@ find_program_path(const char *program)
       close(pipes[1]);
 
       /* read child data from the pipe */
-      if ((len = read(pipes[0], buffer, BUFLEN - 1)) == -1 || len == 0) {
-         /* Error or zero length*/
-
-         DEBUG_STR("shell->find(%s): NULL", program);
-         return NULL;
-
-      } else {
-
+      if ((len = read(pipes[0], buffer, BUFLEN - 1)) > 0) {
          /* be sure to end string by '\0' character */
          /* we need only first line (end with new line) */
          for (i = 0; i < len && buffer[i] != '\n'; ++i);
@@ -113,6 +106,11 @@ find_program_path(const char *program)
 
          path = browser->memalloc((len + 1) * sizeof(char));
          memcpy(path, buffer, len + 1);
+      } else {
+         /* error or zero length */
+
+         DEBUG_STR("shell->find(%s): NULL", program);
+         return NULL;
       }
 
       /* clean child's status from process table */
@@ -133,20 +131,22 @@ find_program_path(const char *program)
 static bool
 process_stop(process *p)
 {
-   /* kill the process, if running */
-   if (p->running) {
-      DEBUG_STR("process->stop(pid %d)", p->pid);
-
-      kill(p->pid, 9);
-      waitpid(p->pid, NULL, 0);
-
-      close(p->pipe[0]);
-
-      p->running = false;
-
-      return true;
+   /* return if the process is not running */
+   if (!p->running) {
+      DEBUG_STR("process->stop(pid %d): false (not running)", p->pid);
+      return false;
    }
-   return false;
+
+   /* kill the process */
+   kill(p->pid, 9);
+   waitpid(p->pid, NULL, 0);
+
+   close(p->pipe[0]);
+   p->running = false;
+
+   DEBUG_STR("process->stop(pid %d): true", p->pid);
+
+   return true;
 }
 
 /**
@@ -154,7 +154,7 @@ process_stop(process *p)
  *
  * @param p Process to read data from
  * @param result Result string on success, false otherwise
- * @return Allways true (result is stored in given variable)
+ * @return True on success, false otherwise
  */
 static bool
 process_read(process *p, NPVariant *result)
@@ -164,62 +164,78 @@ process_read(process *p, NPVariant *result)
    NPString str;
    NPUTF8 *chars;
 
-   DEBUG_STR("shell->read()");
+   /* return if the process is not running */
+   if (!p->running) {
+      DEBUG_STR("shell->read(): false (not running)");
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
+   }
 
-   /* check if the process is {still,already} running */
-   if (p->running) {
+   /* read from pipe */
+   if ((len = read(p->pipe[0], buffer, BUFLEN - 1)) > 0) {
+      /* data read successfully */
 
-      /* read from pipe */
-      if ((len = read(p->pipe[0], buffer, BUFLEN - 1)) == -1) {
+      /* be sure to terminate string by null-character */
+      buffer[len] = '\0';
 
-         if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            /* non-blocking reading */
+      /* fill the result string */
+      chars = browser->memalloc((len + 1) * sizeof(*chars));
+      memcpy(chars, buffer, len);
+      STRING_UTF8CHARACTERS(str) = chars;
+      STRING_UTF8LENGTH(str) = len;
 
-            BOOLEAN_TO_NPVARIANT(false, *result);
-            return true;
+      result->type = NPVariantType_String;
+      result->value.stringValue = str;
 
-         } else {
-            /* error */
+      DEBUG_STR("shell->read(): string");
 
-            p->running = false;
-            BOOLEAN_TO_NPVARIANT(false, *result);
-            return true;
-         }
+      return true;
 
-      } else if (len == 0) {
-         /* no data - test if child became a zombie */
+   } else if (len == -1) {
+      /* error */
 
-         waitpid(p->pid, &status, WNOHANG);
+      if (errno == EAGAIN || errno == EWOULDBLOCK) {
+         /* non-blocking reading, continue */
 
-         if (WIFEXITED(status)) {
-            /* child finished, clean it's status from process table */
-            waitpid(p->pid, NULL, 0);
-            p->running = false;
-         }
+         DEBUG_STR("shell->read(): false (no data, continue)");
 
          BOOLEAN_TO_NPVARIANT(false, *result);
          return true;
+
+      } else {
+         /* error */
+
+         p->running = false;
+
+         DEBUG_STR("shell->read(): false (read error %d)", errno);
+
+         BOOLEAN_TO_NPVARIANT(false, *result);
+         return false;
       }
 
-   } else {
+   } else if (len == 0) {
+      /* no data available */
+
+      DEBUG_STR("shell->read(): false (end of file) ");
+
+      /* test if child became a zombie */
+      waitpid(p->pid, &status, WNOHANG);
+
+      if (WIFEXITED(status)) {
+         /* child has finished */
+
+         p->running = false;
+
+         DEBUG_STR("shell->read(): false (process has finished) ");
+
+         /* clean it's status from process table */
+         waitpid(p->pid, NULL, 0);
+
+      }
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
-
    }
-
-   buffer[len] = '\0';
-
-   /* fill the result string */
-   chars = browser->memalloc((len + 1) * sizeof(*chars));
-   memcpy(chars, buffer, len);
-   STRING_UTF8CHARACTERS(str) = chars;
-   STRING_UTF8LENGTH(str) = len;
-
-   result->type = NPVariantType_String;
-   result->value.stringValue = str;
-
-   return true;
 }
 
 /**
@@ -233,6 +249,14 @@ process_read(process *p, NPVariant *result)
 static bool
 run_command(process *p, const char *path, char *const argv[])
 {
+   int flags;
+
+   /* return if the process is already running */
+   if (p->running) {
+      DEBUG_STR("shell->run(): false (process already running)");
+      return false;
+   }
+
    /* create pipe for communication */
    if (pipe(p->pipe) == -1) {
       DEBUG_STR("shell->run(): pipe() error");
@@ -270,13 +294,12 @@ run_command(process *p, const char *path, char *const argv[])
 
    } else {
       /* parent */
-      DEBUG_STR("shell->run(\"%s ...\"): child pid %d", path, p->pid);
+      DEBUG_STR("shell->run(\"%s, ...\"): child pid %d", path, p->pid);
 
       /* close write end of pipe */
       close(p->pipe[1]);
 
       /* make read end of pipe non-blocking */
-      int flags;
       if ((flags = fcntl(p->pipe[0], F_GETFL)) == -1) {
          DEBUG_STR("shell->run(): fcntl(F_GETFL) error");
          browser->setexception(NULL, "shell->run(): fcntl(F_GETFL) error");
