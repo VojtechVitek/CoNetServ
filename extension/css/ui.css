@@ -222,6 +222,14 @@ div.valueLabel {
    clear: left;
 }
 
+#settings-external-services-div .ui-widget {
+   padding: 0px 10px 10px 10px;
+}
+
+#settings-external-services-div .center {
+   text-align: center;
+}
+
 /**************************************************************************
  * external-info tab
  **************************************************************************/
