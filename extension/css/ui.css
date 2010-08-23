@@ -44,6 +44,8 @@ body {
    padding: 0.4em 2em 0.4em 1em;
 }
 
+
+.ui-icon-clock,
 .ui-icon-circle-close {
    position: absolute;
    right: 3px;
@@ -59,20 +61,27 @@ body {
   background: #f8f9fa;
 }
 
-.ping .console {
-  height: 200px;
+.service-label {
+   height: 15px;
+   font-weight: bold;
+   margin-bottom: -5px;
 }
 
-.ping6 .console {
-  height: 200px;
-}
-
-.tracert .console {
-  height: 200px;
-}
-
+.ping .console,
+.ping6 .console,
+.tracert .console,
 .tracert6 .console {
   height: 200px;
+}
+
+.ping .console.third,
+.ping6 .console.third {
+   height: 120px;
+}
+
+.tracert .console.half,
+.tracert6 .console.half {
+  height: 190px;
 }
 
 .plot-placeholder {
@@ -295,4 +304,9 @@ div.valueLabel {
    right: 20px;
    bottom: 20px;
    z-index: auto;
+}
+
+pre {
+   font-family: 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+   font-size: 11px;
 }

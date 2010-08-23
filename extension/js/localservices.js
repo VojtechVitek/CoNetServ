@@ -3,18 +3,17 @@ if(!Conetserv) var Conetserv = {};
 
 /* LocalServices object */
 Conetserv.LocalServices = {
-   /* CoNetServ NPAPI plugin to interact native code with */
-   plugin: false,
-
    /**
    * Start all commands available at once.
    */
    startCommands: function() {
-      //set value for commands
+      /*
+       * Set URL value or show red bar around url field
+       */
       if(!Conetserv.Url.set(document.getElementById("local-url").value)) {
          document.getElementById("local-url").style.color="red";
          document.getElementById("local-url").focus();
-         return;
+         return false;
       }
 
       this.start(this.Ping);
@@ -23,6 +22,8 @@ Conetserv.LocalServices = {
       this.start(this.Traceroute6);
       this.start(this.Nslookup);
       this.start(this.Whois);
+
+      return true;
    },
 
    stopCommands: function() {
@@ -45,15 +46,15 @@ Conetserv.LocalServices = {
             }
             */
             // Create function from service details and evaluate it
-            if (eval("service.process = Conetserv.LocalServices.plugin." + service.identifier + ".start(" + service.argument + ")")) {
+            if (eval("service.process = Conetserv.plugin." + service.identifier + ".start(" + service.argument + ")")) {
                service.interval = window.setInterval(this.read, 500, service);
-               Conetserv.Ui.addIcons(".local", service.class, this.stop, service);
+               Conetserv.Ui.addIcons(".local", service.class, this.stop, service, 'ui-icon-circle-close');
                this.read(service);
             } else {
                service.interval = -1;
             }
          } catch(e) {
-            service.console.add(e);
+            service.console.setErr(e);
             service.interval = -1;
          }
       }
@@ -65,7 +66,7 @@ Conetserv.LocalServices = {
       try {
          received = service.process.read();
       } catch(e) {
-         service.console.add(e);
+         service.console.setErr(e);
       }
 
       if (typeof(received) == 'string') {
@@ -84,7 +85,7 @@ Conetserv.LocalServices = {
             delete service.process;
          }
          catch(e) {
-            service.console.add(e);
+            service.console.setErr(e);
          }
          Conetserv.Ui.removeIcons(".local", service.class);
          window.clearInterval(service.interval);
@@ -93,9 +94,6 @@ Conetserv.LocalServices = {
    },
 
    initialize: function() {
-      /* CoNetServ object - NPAPI plugin */
-      this.plugin = document.getElementById("conetserv");
-
       /* console text-boxes */
       this.Ping.console = new Conetserv.Console("local-ping-console");
       this.Ping.console.maxRows = 15;

@@ -8,6 +8,7 @@ if(!Conetserv) var Conetserv = {};
 Conetserv.Console = function(div) {
    this.div = document.getElementById(div);   //pointer to div which object takes care of
    this.code = "";            //container for data to be shown in element
+   this.err = "";             //error data show in the top of console
 
    this.prevData = "";            //used for making sure whole line is being written
    this.direction = 0;            //direction of output 0 = downwards 1 = upwards
@@ -20,7 +21,7 @@ Conetserv.Console = function(div) {
    this.linux = new Object();
    this.linux.hostname = /([\w\-]+\.)+([a-z]+)/ig //\(([0-9\i]*)\).*/i
    this.linux.ip = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ig
-   this.linux.time = /\d+\.?\d*\s?ms/ig
+   this.linux.time = /(?:\/?(\d+\.?\d*))+\s?ms(ec){0,1}/ig  // format: xx.yy/zz.yy ms
    
    
    //gets color from string containing number at the begining
@@ -29,18 +30,30 @@ Conetserv.Console = function(div) {
    this.getColor = function(input){
       var color;
       // 0.2 = 100(percent)/500(maxvalue)
-      var percent = parseFloat(input)*0.2;
-      if (percent <= 50) {
-         color = parseInt(percent/50*196);
+      var numberR = /\d+\.?\d*/g;
+      var result = input.match(numberR);
+      var finished = [];
+      
+      for (var key in result) {
+         var nb = result[key];
+         
+         var percent = parseFloat(nb)*0.2;
+         if (percent <= 50) {
+            color = parseInt(percent/50*196);
 
-         color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "B000";
+            color = (color<16.0 ? "#0" : "#") + (color).toString(16) + "B000";
+         }
+         else if(percent<100)
+            color = "#B0" + (parseInt(196-(percent-50)/50*196)).toString(16) + "00";
+         else 
+            color = "#B00000";
+
+          if(!finished[nb]) {
+             input = input.replace(nb, '<span style="color:' + color + '">' + nb + '</span>');
+             finished[nb] = true;
+          }
       }
-      else if(percent<100)
-         color = "#B0" + (parseInt(196-(percent-50)/50*196)).toString(16) + "00";
-      else 
-         color = "#B00000";
-
-      return '<span style="color:' + color + '">' + input + '</span>';
+      return input;
    }
    
    //sets div for output - accepts name of div
@@ -52,10 +65,18 @@ Conetserv.Console = function(div) {
    this.add = function(text){
       this.prevData += text;
       var npos = 0;
+      this.prevData = this.prevData.replace(/(\r?\n)+/gi, "\n");
 
-      while((npos = this.prevData.indexOf("\n")) != -1) {
+      while((npos = this.prevData.indexOf("\n")) != -1 ) {
          this.rowCount++;
          var row = this.colourLine(this.prevData.substr(0, npos+1));
+
+         /* In case of first line being only \n skip it */
+         if(this.rowCount == 1 && row == "<br />"){
+            this.rowCount--;
+             this.prevData = (this.prevData.substr(npos+1));
+            continue;
+         }
          
          if(this.direction) { //writing to the begining of container
             this.rows.unshift(row);
@@ -80,12 +101,25 @@ Conetserv.Console = function(div) {
       return;
       */  
       
-      this.div.innerHTML = this.code;
+      this.repaint();
+   }
+
+   // sets error in the console
+   this.setErr = function(text) {
+      this.err = '<div class="ui-state-highlight ui-corner-all" style="padding: 0.2em; margin-top:5px;"> \
+         <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>'+text+'</p></div>';
+
+      this.repaint();
+   }
+
+   this.clearErr = function() {
+      this.err = "";
+      this.repaint();
    }
    
    //colours all items in line
    this.colourLine = function(line) {
-      var coloured = line.replace(/\n/g,"<br />");
+      var coloured = line.replace(/((\r)*\n)+/g,"<br />");
 
       coloured = coloured.replace(this.linux.hostname,"<span class=\"color1\">$&</span>"); 
       coloured = coloured.replace(this.linux.ip,"<span class=\"color2\">$1</span>"); 
@@ -96,6 +130,7 @@ Conetserv.Console = function(div) {
 
    //clears console
    this.clear = function(){
+      this.err = "";
       this.code = "";
       this.prevData = "";
       this.rows = [];
@@ -105,7 +140,8 @@ Conetserv.Console = function(div) {
    
    //repaints whole console
    this.repaint = function(){
-      this.div.innerHTML = this.code;
+      if(this.div)
+         this.div.innerHTML = this.err + this.code;
    }
 
 }

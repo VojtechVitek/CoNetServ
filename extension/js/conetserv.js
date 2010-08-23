@@ -1,6 +1,8 @@
 /* Check CoNetServ object */
 if(!Conetserv) var Conetserv = {};
 
+Conetserv.plugin = false;
+
 Conetserv.onReady = function() {
 
    /* Toggle tabs with opacity effect */
@@ -9,10 +11,14 @@ Conetserv.onReady = function() {
 
    $('#plugin-placeholder').append('<object id="conetserv" type="application/x-conetserv"></object>');
 
+   /* Inicialize conetserv plugin */
+   this.plugin = document.getElementById("conetserv");
+
    /* init Conetserv.Url in Firefox */
    if ($.client.browser == "Firefox") {
       if (window && window.arguments && window.arguments[0] && Conetserv.Url.set(window.arguments[0])) {
          document.getElementById("local-url").value = Conetserv.Url.hostname;
+         document.getElementById("external-url").value = Conetserv.Url.hostname;
       }
    /* init url in Chrome */
    } else if ($.client.browser == "Chrome") {
@@ -35,6 +41,15 @@ Conetserv.onReady = function() {
    $("#local-url-start").click(function() {
       Conetserv.LocalServices.stopCommands();
       Conetserv.LocalServices.startCommands();
+      return false;
+   });
+
+   /*
+    * Bind start button to start external services
+    */
+   $("#external-url-start").click(function() {
+      Conetserv.ExternalServices.start();
+      return false;
    });
 
    /*
@@ -45,8 +60,10 @@ Conetserv.onReady = function() {
     });
 
    Conetserv.LocalServices.initialize();
+   Conetserv.ExternalServices.initialize();
    Conetserv.Plot.initialize();
    this.Options.initialize();
+
 };
 
 Conetserv.onLoad = function() {
@@ -54,13 +71,21 @@ Conetserv.onLoad = function() {
     * Check autostart - on true start services
     */
    if(this.Options.autostart) {
-      Conetserv.LocalServices.startCommands();
+      /*
+       * Start services on main page
+       */
+      if(this.Options.frontPageParent == "local-services") {
+         setTimeout("Conetserv.LocalServices.startCommands()", 250);
+      }
+      else if(this.Options.frontPageParent == "external-services") {
+         setTimeout("Conetserv.ExternalServices.start()",250);
+      }
+      else if(this.Options.frontPageParent == "external-info") {
+         setTimeout("Conetserv.ExternalInfo.start()",250);
+      }
+      else if(this.Options.frontPageParent == "local-info") {
+      }
    }
 
-   /*
-    * If main page is eternal info, start them
-    */
-   if(this.Options.frontPageParent == "external-info") {
-       setTimeout("startExternalInfo()",250);
-   }
+   
 }
