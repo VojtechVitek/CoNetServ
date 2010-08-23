@@ -97,12 +97,16 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 }
 
 static void
-destroy()
+destroy_ping()
 {
    DEBUG_STR("ping->destroy()");
    if (ping)
       shell->destroy_module((shell_module *)ping);
+}
 
+static void
+destroy_ping6()
+{
    DEBUG_STR("ping6->destroy()");
    if (ping6)
       shell->destroy_module((shell_module *)ping6);
@@ -141,7 +145,7 @@ init_module_ping()
 {
    DEBUG_STR("ping->init()");
    ping = (module *)shell->init_module("ping");
-   ping->destroy = destroy;
+   ping->destroy = destroy_ping;
    ping->class = modules->class;
    ping->class.allocate = allocate_ping;
    ping->class.invoke = invokeMethod;
@@ -150,7 +154,7 @@ init_module_ping()
 
    DEBUG_STR("ping6->init()");
    ping6 = (module *)shell->init_module("ping6");
-   ping6->destroy = destroy;
+   ping6->destroy = destroy_ping;
    ping6->class = modules->class;
    ping6->class.allocate = allocate_ping6;
    ping6->class.invoke = invokeMethod;

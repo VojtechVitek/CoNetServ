@@ -17,26 +17,37 @@
 /*
 EXECVPE() WORKAROUND
 
-This should work from glibc 2.11, where execvpe() is implemented:
+The following should work as of glibc 2.11:
+char* args[] = { "traceroute", "example.com", NULL };
 char* env[] = { "PATH=$PATH:/usr/sbin:/sbin/", NULL };
-args[cmd][1] = addr;
-execvpe(args[cmd][0], args[cmd], env);
+execvpe(args[0], args, env);
 
-But as for now (Feb 2010), we must run `which <cmd>` as work-around:
-$ PATH="$PATH:/usr/sbin/:/sbin/" which <cmd>
-/usr/sbin/<cmd>
+But because of backward compatibility (as for Feb 2010),
+we must run `which traceroute' first (as a work-around
+to get absolute path of command's executable file):
+$ PATH="$PATH:/usr/sbin/:/sbin/" which traceroute
+/usr/sbin/traceroute
 
--- V-Teq
+And then we can finally run:
+execv("/usr/sbin/traceroute", args);
 */
 
-cmd_shell *shell = NULL;
+cmd_shell  *shell = NULL;                                            /**< Shell abstraction */
+char       *buffer = NULL;                                           /**< Buffer for pipes I/O */
+char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL }; /**< Arguments for which command */
+char       *which_env[] = { NULL/*variables*/, NULL };               /**< Environment for which command */
+char       *user_paths = NULL;                                       /**< User paths */
+const char *root_paths = ":/usr/sbin:/sbin/";                        /**< Super-user binary paths */
 
-char       *buffer = NULL;
-char       *which_argv[] = { "/usr/bin/which", NULL, NULL};
-char       *which_env[] = { NULL, NULL };
-char       *user_paths = NULL;
-const char *root_paths = ":/usr/sbin:/sbin/";
-
+/**
+ * Find Unix program path
+ *
+ * Finds program in user's environment paths, /usr/sbin and /sbin
+ *
+ * @param program Program name
+ * @return String path (dynamically allocated, needs to be freed) on success
+ *         NULL on error
+ */
 static char *
 find_program_path(const char *program)
 {
@@ -86,14 +97,7 @@ find_program_path(const char *program)
       close(pipes[1]);
 
       /* read child data from the pipe */
-      if ((len = read(pipes[0], buffer, BUFLEN - 1)) == -1 || len == 0) {
-         /* Error or zero length*/
-
-         DEBUG_STR("shell->find(%s): NULL", program);
-         return NULL;
-
-      } else {
-
+      if ((len = read(pipes[0], buffer, BUFLEN - 1)) > 0) {
          /* be sure to end string by '\0' character */
          /* we need only first line (end with new line) */
          for (i = 0; i < len && buffer[i] != '\n'; ++i);
@@ -102,6 +106,11 @@ find_program_path(const char *program)
 
          path = browser->memalloc((len + 1) * sizeof(char));
          memcpy(path, buffer, len + 1);
+      } else {
+         /* error or zero length */
+
+         DEBUG_STR("shell->find(%s): NULL", program);
+         return NULL;
       }
 
       /* clean child's status from process table */
@@ -113,25 +122,40 @@ find_program_path(const char *program)
    }
 }
 
+/**
+ * Stop running process
+ *
+ * @param p Process to be stopped
+ * @return True on success, false otherwise
+ */
 static bool
 process_stop(process *p)
 {
-   /* kill the process, if running */
-   if (p->running) {
-      DEBUG_STR("process->stop(pid %d)", p->pid);
-
-      kill(p->pid, 9);
-      waitpid(p->pid, NULL, 0);
-
-      close(p->pipe[0]);
-
-      p->running = false;
-
-      return true;
+   /* return if the process is not running */
+   if (!p->running) {
+      DEBUG_STR("process->stop(pid %d): false (not running)", p->pid);
+      return false;
    }
-   return false;
+
+   /* kill the process */
+   kill(p->pid, 9);
+   waitpid(p->pid, NULL, 0);
+
+   close(p->pipe[0]);
+   p->running = false;
+
+   DEBUG_STR("process->stop(pid %d): true", p->pid);
+
+   return true;
 }
 
+/**
+ * Read process output data
+ *
+ * @param p Process to read data from
+ * @param result Result string on success, false otherwise
+ * @return True on success, false otherwise
+ */
 static bool
 process_read(process *p, NPVariant *result)
 {
@@ -140,67 +164,99 @@ process_read(process *p, NPVariant *result)
    NPString str;
    NPUTF8 *chars;
 
-   DEBUG_STR("shell->read()");
+   /* return if the process is not running */
+   if (!p->running) {
+      DEBUG_STR("shell->read(): false (not running)");
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
+   }
 
-   /* check if the process is {still,already} running */
-   if (p->running) {
+   /* read from pipe */
+   if ((len = read(p->pipe[0], buffer, BUFLEN - 1)) > 0) {
+      /* data read successfully */
 
-      /* read from pipe */
-      if ((len = read(p->pipe[0], buffer, BUFLEN - 1)) == -1) {
+      /* be sure to terminate string by null-character */
+      buffer[len] = '\0';
 
-         if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            /* non-blocking reading */
+      /* fill the result string */
+      chars = browser->memalloc((len + 1) * sizeof(*chars));
+      memcpy(chars, buffer, len);
+      STRING_UTF8CHARACTERS(str) = chars;
+      STRING_UTF8LENGTH(str) = len;
 
-            BOOLEAN_TO_NPVARIANT(false, *result);
-            return true;
+      result->type = NPVariantType_String;
+      result->value.stringValue = str;
 
-         } else {
-            /* error */
+      DEBUG_STR("shell->read(): string(len=%d)", len);
 
-            p->running = false;
-            BOOLEAN_TO_NPVARIANT(false, *result);
-            return true;
-         }
+      return true;
 
-      } else if (len == 0) {
-         /* no data - test if child became a zombie */
+   } else if (len == -1) {
+      /* error */
 
-         waitpid(p->pid, &status, WNOHANG);
+      if (errno == EAGAIN || errno == EWOULDBLOCK) {
+         /* non-blocking reading, continue */
 
-         if (WIFEXITED(status)) {
-            /* child finished, clean it's status from process table */
-            waitpid(p->pid, NULL, 0);
-            p->running = false;
-         }
+         DEBUG_STR("shell->read(): false (no data, continue)");
 
          BOOLEAN_TO_NPVARIANT(false, *result);
          return true;
+
+      } else {
+         /* error */
+
+         p->running = false;
+
+         DEBUG_STR("shell->read(): false (read error %d)", errno);
+
+         BOOLEAN_TO_NPVARIANT(false, *result);
+         return false;
       }
 
-   } else {
+   } else if (len == 0) {
+      /* no data available */
+
+      DEBUG_STR("shell->read(): false (end of file) ");
+
+      /* test if child became a zombie */
+      waitpid(p->pid, &status, WNOHANG);
+
+      if (WIFEXITED(status)) {
+         /* child has finished */
+
+         p->running = false;
+
+         DEBUG_STR("shell->read(): false (process has finished) ");
+
+         /* clean it's status from process table */
+         waitpid(p->pid, NULL, 0);
+
+      }
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
-
    }
-
-   buffer[len] = '\0';
-
-   /* fill the result string */
-   chars = browser->memalloc((len + 1) * sizeof(*chars));
-   memcpy(chars, buffer, len);
-   STRING_UTF8CHARACTERS(str) = chars;
-   STRING_UTF8LENGTH(str) = len;
-
-   result->type = NPVariantType_String;
-   result->value.stringValue = str;
-
-   return true;
 }
 
+/**
+ * Run command
+ *
+ * @param p Variable to store process data to
+ * @param path Absolute path to the command
+ * @param argv Arguments for running process, execv()-style
+ * @return True on success, false otherwise
+ */
 static bool
 run_command(process *p, const char *path, char *const argv[])
 {
+   int flags;
+
+   /* return if the process is already running */
+   if (p->running) {
+      DEBUG_STR("shell->run(): false (process already running)");
+      return false;
+   }
+
    /* create pipe for communication */
    if (pipe(p->pipe) == -1) {
       DEBUG_STR("shell->run(): pipe() error");
@@ -238,13 +294,12 @@ run_command(process *p, const char *path, char *const argv[])
 
    } else {
       /* parent */
-      DEBUG_STR("shell->run(\"%s ...\"): child pid %d", path, p->pid);
+      DEBUG_STR("shell->run(\"%s, ...\"): child pid %d", path, p->pid);
 
       /* close write end of pipe */
       close(p->pipe[1]);
 
       /* make read end of pipe non-blocking */
-      int flags;
       if ((flags = fcntl(p->pipe[0], F_GETFL)) == -1) {
          DEBUG_STR("shell->run(): fcntl(F_GETFL) error");
          browser->setexception(NULL, "shell->run(): fcntl(F_GETFL) error");
@@ -272,6 +327,11 @@ err_pipe:
    return false;
 }
 
+/**
+ * Shell_module destructor
+ *
+ * @param m Shell module to be destroyed
+ */
 static void
 destroy_shell_module(shell_module *m)
 {
@@ -282,15 +342,23 @@ destroy_shell_module(shell_module *m)
    }
 }
 
+/**
+ * Shell_module constructor
+ *
+ * @param program Command to be run
+ * @return Initialized shell_module on success, NULL otherwise
+ */
 shell_module *
 init_shell_module(const char *program)
 {
    shell_module *m;
 
+   /* allocate shell module */
    m = browser->memalloc(sizeof(*m));
    if (!m)
       return NULL;
 
+   /* find program Unix path in system */
    m->path = shell->find(program);
    if (m->path)
       m->found = true;
@@ -300,6 +368,10 @@ init_shell_module(const char *program)
    return m;
 }
 
+/**
+ * Shell destructor
+ *
+ */
 static void
 destroy_shell()
 {
@@ -311,15 +383,19 @@ destroy_shell()
       browser->memfree(which_env[0]);
    if (shell != NULL)
       browser->memfree(shell);
-
 }
 
+/**
+ * Shell constructor
+ *
+ * @return True on success, false otherwise
+ */
 bool
 init_shell()
 {
    DEBUG_STR("shell->init()");
 
-   /* Allocate shell object */
+   /* allocate shell object */
    if ((shell = browser->memalloc(sizeof(cmd_shell))) == NULL)
       goto err_sh_alloc;
 
@@ -331,19 +407,19 @@ init_shell()
    shell->stop = process_stop;
    shell->read = process_read;
 
-   /* Allocate buffer */
+   /* allocate buffer */
    if ((buffer = browser->memalloc(BUFLEN * sizeof(char))) == NULL)
       goto err_buf_alloc;
 
-   /* Get user paths from variable PATH */
+   /* get user paths from variable PATH */
    if ((user_paths = getenv("PATH")) == NULL)
       goto err_getenv;
 
-   /* Allocate modified PATH variable */
+   /* allocate modified PATH variable */
    if ((which_env[0] = browser->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
       goto err_env_alloc;
 
-   /* Add superuser paths into PATH variable:
+   /* add superuser paths into PATH variable:
       PATH="$PATH:/usr/sbin/:/sbin/"
    */
    memcpy(which_env[0], "PATH=", strlen("PATH="));

@@ -22,7 +22,6 @@ set(headers
 	npapi.h
 	plugin.h
 	module.h
-	process.h
 )
 
 # Platform-specific sources and header files

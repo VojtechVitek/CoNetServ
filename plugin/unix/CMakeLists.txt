@@ -12,6 +12,7 @@ set(sources
 set(headers
 	${headers}
 	unix/init_modules.h
+	unix/process.h
 	unix/shell.h
 )
 
