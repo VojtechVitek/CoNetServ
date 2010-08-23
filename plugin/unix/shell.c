@@ -32,14 +32,22 @@ And then we can finally run:
 execv("/usr/sbin/traceroute", args);
 */
 
-cmd_shell *shell = NULL;
+cmd_shell  *shell = NULL;                                            /**< Shell abstraction */
+char       *buffer = NULL;                                           /**< Buffer for pipes I/O */
+char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL }; /**< Arguments for which command */
+char       *which_env[] = { NULL/*variables*/, NULL };               /**< Environment for which command */
+char       *user_paths = NULL;                                       /**< User paths */
+const char *root_paths = ":/usr/sbin:/sbin/";                        /**< Super-user binary paths */
 
-char       *buffer = NULL;
-char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL };
-char       *which_env[] = { NULL/*variables*/, NULL };
-char       *user_paths = NULL;
-const char *root_paths = ":/usr/sbin:/sbin/"; /**< Super-user binary paths */
-
+/**
+ * Find Unix program path
+ *
+ * Finds program in user's environment paths, /usr/sbin and /sbin
+ *
+ * @param program Program name
+ * @return String path (dynamically allocated, needs to be freed) on success
+ *         NULL on error
+ */
 static char *
 find_program_path(const char *program)
 {
@@ -116,6 +124,12 @@ find_program_path(const char *program)
    }
 }
 
+/**
+ * Stop running process
+ *
+ * @param p Process to be stopped
+ * @return True on success, false otherwise
+ */
 static bool
 process_stop(process *p)
 {
@@ -135,6 +149,13 @@ process_stop(process *p)
    return false;
 }
 
+/**
+ * Read process output data
+ *
+ * @param p Process to read data from
+ * @param result Result string on success, false otherwise
+ * @return Allways true (result is stored in given variable)
+ */
 static bool
 process_read(process *p, NPVariant *result)
 {
@@ -201,6 +222,14 @@ process_read(process *p, NPVariant *result)
    return true;
 }
 
+/**
+ * Run command
+ *
+ * @param p Variable to store process data to
+ * @param path Absolute path to the command
+ * @param argv Arguments for running process, execv()-style
+ * @return True on success, false otherwise
+ */
 static bool
 run_command(process *p, const char *path, char *const argv[])
 {
@@ -275,6 +304,11 @@ err_pipe:
    return false;
 }
 
+/**
+ * Shell_module destructor
+ *
+ * @param m Shell module to be destroyed
+ */
 static void
 destroy_shell_module(shell_module *m)
 {
@@ -285,15 +319,23 @@ destroy_shell_module(shell_module *m)
    }
 }
 
+/**
+ * Shell_module constructor
+ *
+ * @param program Command to be run
+ * @return Initialized shell_module on success, NULL otherwise
+ */
 shell_module *
 init_shell_module(const char *program)
 {
    shell_module *m;
 
+   /* allocate shell module */
    m = browser->memalloc(sizeof(*m));
    if (!m)
       return NULL;
 
+   /* find program Unix path in system */
    m->path = shell->find(program);
    if (m->path)
       m->found = true;
@@ -303,6 +345,10 @@ init_shell_module(const char *program)
    return m;
 }
 
+/**
+ * Shell destructor
+ *
+ */
 static void
 destroy_shell()
 {
@@ -314,15 +360,19 @@ destroy_shell()
       browser->memfree(which_env[0]);
    if (shell != NULL)
       browser->memfree(shell);
-
 }
 
+/**
+ * Shell constructor
+ *
+ * @return True on success, false otherwise
+ */
 bool
 init_shell()
 {
    DEBUG_STR("shell->init()");
 
-   /* Allocate shell object */
+   /* allocate shell object */
    if ((shell = browser->memalloc(sizeof(cmd_shell))) == NULL)
       goto err_sh_alloc;
 
@@ -334,19 +384,19 @@ init_shell()
    shell->stop = process_stop;
    shell->read = process_read;
 
-   /* Allocate buffer */
+   /* allocate buffer */
    if ((buffer = browser->memalloc(BUFLEN * sizeof(char))) == NULL)
       goto err_buf_alloc;
 
-   /* Get user paths from variable PATH */
+   /* get user paths from variable PATH */
    if ((user_paths = getenv("PATH")) == NULL)
       goto err_getenv;
 
-   /* Allocate modified PATH variable */
+   /* allocate modified PATH variable */
    if ((which_env[0] = browser->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
       goto err_env_alloc;
 
-   /* Add superuser paths into PATH variable:
+   /* add superuser paths into PATH variable:
       PATH="$PATH:/usr/sbin/:/sbin/"
    */
    memcpy(which_env[0], "PATH=", strlen("PATH="));
