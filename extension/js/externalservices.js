@@ -7,28 +7,28 @@ Conetserv.ExternalServices = {
 
    Ping : {
       next: 1,
-      max: 3,  // number of fields to draw services to
+      max: 0,  // number of active services, increased by LookingGlass object when starting them
 
       console: false
    },
 
    Ping6 : {
       next: 1,
-      max: 3,  // number of fields to draw services to
+      max: 0,  // number of active services
 
       console: false
    },
 
    Tracert : {
       next: 1,
-      max: 2,  // number of fields to draw services to
+      max: 0,  // number of active services
 
       console: false
    },
 
    Tracert6 : {
       next: 1,
-      max: 2,  // number of fields to draw services to
+      max: 0,  // number of active services
 
       console: false
    },
@@ -71,15 +71,42 @@ Conetserv.ExternalServices = {
 
       this.isRunning = 1;
 
-      Conetserv.Ui.addIcons(".external", ".ping", '', '', 'ui-icon-clock');
-      Conetserv.Ui.addIcons(".external", ".ping6", '', '', 'ui-icon-clock');
-      Conetserv.Ui.addIcons(".external", ".tracert", '', '', 'ui-icon-clock');
-      Conetserv.Ui.addIcons(".external", ".tracert6", '', '', 'ui-icon-clock');
 
       /* Start external info services */
       Conetserv.LookingGlass.start(
          /* started */
          function() {
+            /* check, if any of services has been allowed in options
+             * if none, output error into console
+             */
+            if(Conetserv.ExternalServices.Ping.max) {
+               Conetserv.Ui.addIcons(".external", ".ping", '', '', 'ui-icon-clock');
+            }
+            else {
+              Conetserv.ExternalServices.Ping.console[1].setErr("<strong>You have deactivated all Ping IPv4 external services in options.</strong> <br/><br/>\
+                  To allow them again, please go to Options -> External services page.") ;
+            }
+            if(Conetserv.ExternalServices.Ping6.max) {
+               Conetserv.Ui.addIcons(".external", ".ping6", '', '', 'ui-icon-clock');
+            }
+            else {
+              Conetserv.ExternalServices.Ping6.console[1].setErr("<strong>You have deactivated all Ping IPv6 external services in options.</strong> <br/><br/>\
+                  To allow them again, please go to Options -> External services page.") ;
+            }
+            if(Conetserv.ExternalServices.Tracert.max) {
+               Conetserv.Ui.addIcons(".external", ".tracert", '', '', 'ui-icon-clock');
+            }
+            else {
+              Conetserv.ExternalServices.Tracert.console[1].setErr("<strong>You have deactivated all Traceroute IPv4 external services in options.</strong> <br/><br/>\
+                  To allow them again, please go to Options -> External services page.") ;
+            }
+            if(Conetserv.ExternalServices.Tracert6.max) {
+               Conetserv.Ui.addIcons(".external", ".tracert6", '', '', 'ui-icon-clock');
+            }
+            else {
+              Conetserv.ExternalServices.Tracert6.console[1].setErr("<strong>You have deactivated all Traceroute IPv6 external services in options.</strong> <br/><br/>\
+                  To allow them again, please go to Options -> External services page.") ;
+            }
          },
          /* service results */
          function(service, result) {

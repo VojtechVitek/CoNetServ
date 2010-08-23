@@ -8,6 +8,7 @@
 
 body {
    font-size: 62.5%;
+   overflow: hidden;
 }
 
 #tabs {
@@ -220,6 +221,14 @@ div.valueLabel {
    margin: 0 10px 10px 0;
    padding: 10px;
    clear: left;
+}
+
+#settings-external-services-div .ui-widget {
+   padding: 0px 10px 10px 10px;
+}
+
+#settings-external-services-div .center {
+   text-align: center;
 }
 
 /**************************************************************************

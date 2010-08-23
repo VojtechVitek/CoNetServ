@@ -214,6 +214,8 @@
                <div id="settings-form">
                   <input type="radio" id="settings-general" class="radio-tab" name="settings-form" value="settings-general-div" checked="checked"/>
                   <label for="settings-general">General</label>
+                  <input type="radio" id="settings-external-services" class="radio-tab" name="settings-form" value="settings-external-services-div" />
+                  <label for="settings-external-services">External Services</label>
                   <input type="radio" id="settings-services" class="radio-tab" name="settings-form" value="settings-services-div" />
                   <label for="settings-services">Services</label>
                </div>
@@ -276,7 +278,120 @@
 
                </form>
             </div>
-            <div id="settings-services-div" class="content servies">
+
+            <div id="settings-external-services-div" class="content external-services">
+               <form id="settings-external-services-form" action="">
+                  <h2>Choose looking glass providers and routers</h2>
+                  <span>Choose maximum of three servers for ping and two servers for traceroute in both IPv4 and IPv6</span>
+                  <h3>IPv4</h3>
+
+                  <table id="settings-external-services-ipv4-table" class="ui-corner-all ui-widget-content ui-widget">
+                     <tr>
+                        <th>Tracert</th><th>Ping</th><th>Server</th><th>Router</th>
+                     </tr>
+                     <tr>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv4-tracert" class="tracert" value="20"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv4-ping" class="ping" value="0"/></td>
+                        <td><label>CERN looking glass</label></td>
+                        <td><select id="settings-external-services-cern-ipv4-router">
+                           <option value="r01ext"> r01ext
+                           <option value="r02ext"> r02ext
+                           <option value="r03ext"> r03ext
+                           <option value="r01lcg"> r01lcg
+                           <option value="r02lcg"> r02lcg
+                        </select></td>
+                     </tr>
+
+                     <tr>
+                        <td class="center"><input type="checkbox" id="settings-external-services-sparkle-ipv4-tracert" class="tracert" value="23"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-sparkle-ipv4-ping" class="ping" value="3"/></td>
+                        <td><label>Telecom Italia Sparkle's Looking Glass</label></td>
+                        <td><select id="settings-external-services-sparkle-ipv4-router">
+                           <option value = Amsterdam> Amsterdam
+                           <option value = Ashburn> Ashburn
+                           <option value = Atlanta> Atlanta
+                           <option value = Athens> Athens
+                           <option value = Bucharest> Bucharest
+                           <option value = BuenosAires> BuenosAires
+                           <option value = Chicago> Chicago
+                           <option value = Dallas> Dallas
+                           <option value = Frankfurt> Frankfurt
+                           <option value = Hamburg> Hamburg
+                           <option value = Istanbul> Istanbul
+                           <option value = Lima> Lima
+                           <option value = London> London
+                           <option value = LosAngeles> LosAngeles
+                           <option value = Madrid> Madrid
+                           <option value = Marseille> Marseille
+                           <option value = Miami> Miami
+                           <option value = Milano> Milano
+                           <option value = NewYork> NewYork
+                           <option value = Palermo> Palermo
+                           <option value = PaloAlto> PaloAlto
+                           <option value = Paris> Paris
+                           <option value = Rome> Rome
+                           <option value = SaoPaulo> SaoPaulo
+                           <option value = Santiago> Santiago
+                           <option value = Singapore> Singapore
+                           <option value = Wien> Wien
+                           <option value = GRX> GRX
+                        </select></td>
+                     </tr>
+
+                     <tr>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-tracert" class="tracert" value="21"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-ping" class="ping" value="1"/></td>
+                        <td><label>ATMAN Looking Glass</label></td>
+                        <td><select id="settings-external-services-atman-ipv4-router">
+                           <OPTION VALUE="bgp-isp"> Business.Internet [AS 15694]
+                           <OPTION VALUE="open-peering"> OpenPeering.PL [AS 24748]
+                        </select></td>
+                     </tr>
+                  
+                     <tr>
+                        <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-tracert" class="tracert" value="22"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-ping" class="ping" value="2"/></td>
+                        <td><label>ILAN Looking Glass</label></td>
+                        <td><select id="settings-external-services-ilan-ipv4-router">
+                           <option value="GP1">tel-aviv-gp.ilan.net.il
+                           <option value="GP0">gp0.ilan.net.il
+                           <option value="SH">mcast.ilan.net.il
+                        </select></td>
+                     </tr>
+                  </table>
+
+                  <h3>IPv6</h3>
+                  <table id="settings-external-services-ipv4-table" class="ui-corner-all ui-widget-content ui-widget">
+                     <tr>
+                        <th>Tracert</th><th>Ping</th><th>Server</th><th>Router</th>
+                     </tr>
+                     
+                     <tr>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-tracert" class="tracert6" value="30"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-ping" class="ping6" value="10"/></td>
+                        <td><label>CERN looking glass</label>
+                        <td><select id="settings-external-services-cern-ipv6-router">
+                           <option value="r01ext"> r01ext
+                           <option value="r02ext"> r02ext
+                           <option value="r03ext"> r03ext
+                           <option value="r01lcg"> r01lcg
+                           <option value="r02lcg"> r02lcg
+                        </select></td>
+                     </tr>
+
+                     <tr>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv6-tracert" class="tracert6" value ="31"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv6-ping" class="ping6" value="11"/></td>
+                        <td><label>ATMAN Looking Glass</label></td>
+                        <td><select id="settings-external-services-atman-ipv6-router">
+                           <option value="bgp-isp"> Business.Internet [AS 15694]
+                        </select></td>
+                     </tr>
+                  </table>
+               </form>
+            </div>
+
+            <div id="settings-services-div" class="content services">
                <form id="settings-services-form" action="">
                   <h4>Ping</h4>
                   <input id="settings-services-ping-number" class="ui-corner-all ui-widget ui-widget-content" type="text" size="5"/>
@@ -285,8 +400,11 @@
 
             </div>
 
+
          </div>
 
+      </div>
+      <div id="dialog" title="Alert!">
       </div>
       <div id="plugin-placeholder"></div>
    </body>

@@ -67,6 +67,16 @@ Conetserv.Ui = {
          Conetserv.Options.save(Conetserv.Options.enums.AUTOSTART);
       });
 
+      $("#settings-external-services-form input").change(function(){
+         if(!Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES))
+            $(this).attr("checked", false);
+      });
+
+      $("#settings-external-services-form select").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES_ROUTER);
+      });
+
+
       /**
       * reimplement behaviour when different tab is selected
       */
@@ -134,6 +144,19 @@ Conetserv.Ui = {
       .removeClass("ui-corner-all")
       .addClass("ui-corner-right");
 
+      /**
+       * style alert dialog
+       */
+      $('#dialog').dialog({
+			autoOpen: false,
+			show: 'blind',
+			modal: true,
+         buttons: {
+				Ok: function() {
+					$(this).dialog('close');
+				}
+			}
+		});
 
       Conetserv.Ui.redraw();
    },

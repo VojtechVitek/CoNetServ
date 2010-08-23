@@ -11,6 +11,8 @@ Conetserv.Options = {
    frontPageParent : false,
    frontPageChild : false,
    skin: false,
+   ext_services: false,
+   ext_services_router: false,
 
    //enums for easier argument passing to functions
    enums : {
@@ -18,7 +20,9 @@ Conetserv.Options = {
       AUTOSTART :             1,
       FRONTPAGE_PARENT :      2,
       FRONTPAGE_CHILD :       3,
-      SKIN :                  4
+      SKIN :                  4,
+      EXT_SERVICES :          5,
+      EXT_SERVICES_ROUTER :   6
    },
 
    /**
@@ -39,6 +43,13 @@ Conetserv.Options = {
       else {
          this.storage = false;
          return;
+      }
+
+      /* Check, if storage has been not initialized before, if so, initialize it */
+      if(!this.storage['conetserv-settings-initialized']) {
+         this.storage['conetserv-settings-initialized'] = true;
+         this.storage["conetserv-settings-external-services_router"] = "";
+
       }
 
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
@@ -69,6 +80,45 @@ Conetserv.Options = {
          this.skin = $("#settings-general-skin input").val();
       }
       $("#settings-general-skin input[value="+this.skin+"]").attr("checked", true);
+
+      /* external services */
+      this.ext_services = this.storage["conetserv-settings-external-services"] ? 
+         this.storage["conetserv-settings-external-services"].toString().split(";") : [];
+
+      /* set buttons checked on external services page */
+      for(var key in this.ext_services) {
+         if(this.ext_services[key]) {
+            $("#settings-external-services-form input[value="+key+"]").attr("checked", true);
+         }
+      }
+      /* external services router */
+      this.ext_services_router = this.storage["conetserv-settings-external-services_router"] ? 
+         this.storage["conetserv-settings-external-services_router"].toString().split(";") : [];
+
+      for(key in this.ext_services_router) {
+         if(this.ext_services_router[key]) {
+            switch(parseInt(key)) {
+               case Conetserv.LookingGlass.enums.CERN_PING_V4:
+                  $("#settings-external-services-cern-ipv4-router").attr("value", this.ext_services_router[key]);
+                  break;
+               case Conetserv.LookingGlass.enums.SPARKLE_PING_V4:
+                  $("#settings-external-services-sparkle-ipv4-router").attr("value", this.ext_services_router[key]);
+                  break;
+               case Conetserv.LookingGlass.enums.ATMAN_PING_V4:
+                  $("#settings-external-services-atman-ipv4-router").attr("value", this.ext_services_router[key]);
+                  break;
+               case Conetserv.LookingGlass.enums.ILAN_PING_V4:
+                  $("#settings-external-services-ilan-ipv4-router").attr("value", this.ext_services_router[key]);
+                  break;
+              case Conetserv.LookingGlass.enums.CERN_PING_V6:
+                  $("#settings-external-services-cern-ipv6-router").attr("value", this.ext_services_router[key]);
+                  break;
+              case Conetserv.LookingGlass.enums.ATMAN_PING_V4:
+                  $("#settings-external-services-atman-ipv6-router").attr("value", this.ext_services_router[key]);
+                  break;
+            }
+         }
+      }
    },
 
    /**
@@ -77,38 +127,102 @@ Conetserv.Options = {
    save : function(option) {
       if(!this.storage)
          return false;
-
       switch(option) {
          case this.enums.TOOLBAR_BUTTON:
             this.toolbarButton = $("#settings-general-toolbox").is(":checked");
             this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
             break;
          case this.enums.AUTOSTART:
+            this.autostart = $("#settings-general-autostart").is(":checked");
+            this.storage["conetserv-settings-general-autostart"] = this.autostart;
             break;
          case this.enums.FRONTPAGE_PARENT:
+            this.frontPageParent = $("#settings-general-frontpage input:checked").val();
+            this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
             break;
          case this.enums.FRONTPAGE_CHILD:
+            this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
+            this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
             break;
          case this.enums.SKIN:
+            this.skin = $("#settings-general-skin input:checked").val();
+            this.storage["conetserv-settings-general-skin"] = this.skin;
+            Conetserv.Ui.reloadSkin();
             break;
+         case this.enums.EXT_SERVICES:
+            /* clean ext_services and fill them depending on checked services */
+            this.ext_services = [];
+            
+            /* variables for storing number of active services */
+            var ping = 0;
+            var ping6 = 0;
+            var tracert = 0;
+            var tracert6 = 0;
+
+            $("#settings-external-services-form input:checked").each(function(){
+               /* check for type of service and check maximum allowed count of running services */
+               switch($(this).attr("class")){
+                  case "ping":
+                     ++ping;
+                     break;
+                  case "ping6":
+                     ++ping6;
+                     break;
+                  case "tracert":
+                     ++tracert;
+                     break;
+                  case "tracert6":
+                     ++tracert6;
+                     break;
+               }
+               Conetserv.Options.ext_services[$(this).attr("value")] = true;
+            });
+
+            /* if maximum alowed services has already been reached, return false */
+            if(ping > 3 || ping6 > 3 || tracert > 2 || tracert6 > 2) {
+               $('#dialog').html("You can allow only 3 ping services and 2 traceroute services in both IPv4 and IPv6.")
+               $('#dialog').dialog('open');
+               return false;
+            }
+
+            /* join array and save to storage */
+            this.storage["conetserv-settings-external-services"] = this.ext_services.join(";");
+            break;
+         case this.enums.EXT_SERVICES_ROUTER:
+            $("#settings-external-services-form select").each(function(){
+               switch($(this).attr("id")) {
+                  case "settings-external-services-cern-ipv4-router":
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V4] = $(this).attr("value");
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V4] = $(this).attr("value");
+                     break;
+                  case "settings-external-services-sparkle-ipv4-router":
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_PING_V4] = $(this).attr("value");
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4] = $(this).attr("value");
+                     break;
+                  case "settings-external-services-atman-ipv4-router":
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4] = $(this).attr("value");
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4] = $(this).attr("value");
+                     break;
+                  case "settings-external-services-ilan-ipv4-router": 
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4] = $(this).attr("value");
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4] = $(this).attr("value");
+                     break;
+                  case "settings-external-services-cern-ipv6-router":
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V6] = $(this).attr("value");
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V6] = $(this).attr("value");
+                     break;
+                  case "settings-external-services-atman-ipv6-router":
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V6] = $(this).attr("value");
+                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6] = $(this).attr("value");
+                     break;
+               }
+            });
+            this.storage["conetserv-settings-external-services_router"] = this.ext_services_router.join(";");
+            break;
+
       }
-      
-      
 
-      this.autostart = $("#settings-general-autostart").is(":checked");
-      this.storage["conetserv-settings-general-autostart"] = this.autostart;
-
-      /* frontpage */
-      this.frontPageParent = $("#settings-general-frontpage input:checked").val();
-      this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
-      this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
-      this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
-
-      /* skin */
-      this.skin = $("#settings-general-skin input:checked").val();
-      this.storage["conetserv-settings-general-skin"] = this.skin;
-      Conetserv.Ui.reloadSkin();
-
+      return true;
    },
 
    /**
