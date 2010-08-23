@@ -68,7 +68,8 @@ Conetserv.Ui = {
       });
 
       $("#settings-external-services-form input").change(function(){
-         Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES);
+         if(!Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES))
+            $(this).attr("checked", false);
       });
 
       /**
@@ -138,6 +139,19 @@ Conetserv.Ui = {
       .removeClass("ui-corner-all")
       .addClass("ui-corner-right");
 
+      /**
+       * style alert dialog
+       */
+      $('#dialog').dialog({
+			autoOpen: false,
+			show: 'blind',
+			modal: true,
+         buttons: {
+				Ok: function() {
+					$(this).dialog('close');
+				}
+			}
+		});
 
       Conetserv.Ui.redraw();
    },

@@ -119,11 +119,41 @@ Conetserv.Options = {
          case this.enums.EXT_SERVICES:
             /* clean ext_services and fill them depending on checked services */
             this.ext_services = [];
+            
+            /* variables for storing number of active services */
+            var ping = 0;
+            var ping6 = 0;
+            var tracert = 0;
+            var tracert6 = 0;
+
             $("#settings-external-services-form input:checked").each(function(){
+               /* check for type of service and check maximum allowed count of running services */
+               switch($(this).attr("class")){
+                  case "ping":
+                     ++ping;
+                     break;
+                  case "ping6":
+                     ++ping6;
+                     break;
+                  case "tracert":
+                     ++tracert;
+                     break;
+                  case "tracert6":
+                     ++tracert6;
+                     break;
+               }
                Conetserv.Options.ext_services[$(this).attr("value")] = true;
             });
+
+            if(ping > 3 || ping6 > 3 || tracert > 2 || tracert6 > 2) {
+               $('#dialog').html("You can allow only 3 ping and 2 traceroute services.")
+               $('#dialog').dialog('open');
+               return false;
+            }
+
             /* join array and save to storage */
             this.storage["conetserv-settings-external-services"] = this.ext_services.join(";");
+            //alert(this.storage["conetserv-settings-external-services"]);
             break;
       }
 

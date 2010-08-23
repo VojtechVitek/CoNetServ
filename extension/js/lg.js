@@ -541,10 +541,10 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
             case 'PING6':
                Conetserv.ExternalServices.Ping6.max++;
                break;
-            case 'TRACERT':
+            case 'TRACE':
                Conetserv.ExternalServices.Tracert.max++;
                break;
-            case 'TRACERT6':
+            case 'TRACE6':
                Conetserv.ExternalServices.Tracert6.max++;
                break;
          }
