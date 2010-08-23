@@ -67,6 +67,10 @@ Conetserv.Ui = {
          Conetserv.Options.save(Conetserv.Options.enums.AUTOSTART);
       });
 
+      $("#settings-external-services-form input").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES);
+      });
+
       /**
       * reimplement behaviour when different tab is selected
       */

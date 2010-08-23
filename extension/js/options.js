@@ -11,6 +11,7 @@ Conetserv.Options = {
    frontPageParent : false,
    frontPageChild : false,
    skin: false,
+   ext_services: false,
 
    //enums for easier argument passing to functions
    enums : {
@@ -18,7 +19,8 @@ Conetserv.Options = {
       AUTOSTART :             1,
       FRONTPAGE_PARENT :      2,
       FRONTPAGE_CHILD :       3,
-      SKIN :                  4
+      SKIN :                  4,
+      EXT_SERVICES :          5,
    },
 
    /**
@@ -39,6 +41,11 @@ Conetserv.Options = {
       else {
          this.storage = false;
          return;
+      }
+
+      /* Check, if storage has been not initialized before, if so, initialize it */
+      if(!this.storage['conetserv-settings-initialized']) {
+         this.storage['conetserv-settings-initialized'] = true;
       }
 
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
@@ -69,6 +76,16 @@ Conetserv.Options = {
          this.skin = $("#settings-general-skin input").val();
       }
       $("#settings-general-skin input[value="+this.skin+"]").attr("checked", true);
+
+      /* external services */
+      this.ext_services = this.storage["conetserv-settings-external-services"].toString().split(";");
+
+      /* set buttons checked on external services page */
+      for(var key in this.ext_services) {
+         if(this.ext_services[key]) {
+            $("#settings-external-services-form input[value="+key+"]").attr("checked", true);
+         }
+      }
    },
 
    /**
@@ -77,38 +94,40 @@ Conetserv.Options = {
    save : function(option) {
       if(!this.storage)
          return false;
-
       switch(option) {
          case this.enums.TOOLBAR_BUTTON:
             this.toolbarButton = $("#settings-general-toolbox").is(":checked");
             this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
             break;
          case this.enums.AUTOSTART:
+            this.autostart = $("#settings-general-autostart").is(":checked");
+            this.storage["conetserv-settings-general-autostart"] = this.autostart;
             break;
          case this.enums.FRONTPAGE_PARENT:
+            this.frontPageParent = $("#settings-general-frontpage input:checked").val();
+            this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
             break;
          case this.enums.FRONTPAGE_CHILD:
+            this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
+            this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
             break;
          case this.enums.SKIN:
+            this.skin = $("#settings-general-skin input:checked").val();
+            this.storage["conetserv-settings-general-skin"] = this.skin;
+            Conetserv.Ui.reloadSkin();
+            break;
+         case this.enums.EXT_SERVICES:
+            /* clean ext_services and fill them depending on checked services */
+            this.ext_services = [];
+            $("#settings-external-services-form input:checked").each(function(){
+               Conetserv.Options.ext_services[$(this).attr("value")] = true;
+            });
+            /* join array and save to storage */
+            this.storage["conetserv-settings-external-services"] = this.ext_services.join(";");
             break;
       }
-      
-      
 
-      this.autostart = $("#settings-general-autostart").is(":checked");
-      this.storage["conetserv-settings-general-autostart"] = this.autostart;
-
-      /* frontpage */
-      this.frontPageParent = $("#settings-general-frontpage input:checked").val();
-      this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
-      this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
-      this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
-
-      /* skin */
-      this.skin = $("#settings-general-skin input:checked").val();
-      this.storage["conetserv-settings-general-skin"] = this.skin;
-      Conetserv.Ui.reloadSkin();
-
+      return true;
    },
 
    /**

@@ -280,7 +280,7 @@
             </div>
 
             <div id="settings-external-services-div" class="content external-services">
-               <form id="settings-services-form" action="">
+               <form id="settings-external-services-form" action="">
                   <h2>Choose looking glass providers and routers</h2>
                   <span>Choose maximum of three servers for ping and two servers for traceroute in both IPv4 and IPv6</span>
                   <h3>IPv4</h3>
@@ -290,8 +290,8 @@
                         <th>Tracert</th><th>Ping</th><th>Server</th><th>Router</th>
                      </tr>
                      <tr>
-                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv4-tracert"/></td>
-                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv4-ping"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv4-tracert" class="tracert" value="20"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv4-ping" class="ping" value="0"/></td>
                         <td><label>CERN looking glass</label></td>
                         <td><select>
                            <option value="r01ext"> r01ext
@@ -303,8 +303,8 @@
                      </tr>
 
                      <tr>
-                        <td class="center"><input type="checkbox" id="settings-external-services-sparkle-ipv4-tracert"/></td>
-                        <td class="center"><input type="checkbox" id="settings-external-services-sparkle-ipv4-ping"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-sparkle-ipv4-tracert" class="tracert" value="sparkle"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-sparkle-ipv4-ping" class="ping" value="sparkle"/></td>
                         <td><label>Telecom Italia Sparkle's Looking Glass</label></td>
                         <td><select>
                            <option value = Amsterdam> Amsterdam
@@ -339,8 +339,8 @@
                      </tr>
 
                      <tr>
-                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-tracert"/></td>
-                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-ping"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-tracert" class="tracert" value="21"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-ping" class="ping" value="1"/></td>
                         <td><label>ATMAN Looking Glass</label></td>
                         <td><select id="settings-external-services-atman-ipv4-router">
                            <OPTION VALUE="bgp-isp"> Business.Internet [AS 15694]
@@ -349,8 +349,8 @@
                      </tr>
                   
                      <tr>
-                        <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-tracert"/></td>
-                        <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-ping"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-tracert" class="tracert" value="22"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-ping" class="ping" value="2"/></td>
                         <td><label>ILAN Looking Glass</label></td>
                         <td><select>
                            <option value="GP1">tel-aviv-gp.ilan.net.il
@@ -367,8 +367,8 @@
                      </tr>
                      
                      <tr>
-                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-tracert"/></td>
-                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-ping"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-tracert" class="tracert" value="30"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-ping" class="ping" value="10"/></td>
                         <td><label>CERN looking glass</label>
                         <td><select>
                            <option value="r01ext"> r01ext
@@ -380,8 +380,8 @@
                      </tr>
 
                      <tr>
-                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv6-tracert"/></td>
-                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv6-ping"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv6-tracert" class="tracert" value ="31"/></td>
+                        <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv6-ping" class="ping" value="11"/></td>
                         <td><label>ATMAN Looking Glass</label></td>
                         <td><select>
                            <option value="bgp-isp"> Business.Internet [AS 15694]

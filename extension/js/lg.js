@@ -3,6 +3,23 @@ if(!Conetserv) var Conetserv = {};
 
 Conetserv.LookingGlass = new Object();
 
+/* enums for storing ids of looking glass services for selecting and starting them*/
+Conetserv.LookingGlass.enums = {
+  CERN_PING_V4 : 0,
+  ATMAN_PING_V4 : 1,
+  ILAN_PING_V4 : 2,  
+
+  CERN_PING_V6 : 10,
+  ATMAN_PING_V6 : 11,
+
+  CERN_TRACERT_V4 : 20,
+  ATMAN_TRACERT_V4 : 21,
+  ILAN_TRACERT_V4 : 22,
+
+  CERN_TRACERT_V6 : 30,
+  ATMAN_TRACERT_V6 : 31
+};
+
 /* services parsers */
 Conetserv.LookingGlass.service = new Array();
 
@@ -11,6 +28,8 @@ Conetserv.LookingGlass.service = new Array();
 
    name: 'Name of parsed service',
    link: 'URL to service',
+
+   id_enum: 'Enum from LookingGlass.enums',
 
    service: 'PING', //'TRACE'
 
@@ -72,6 +91,8 @@ Conetserv.LookingGlass.service.push({
    name: 'ILAN Looking Glass',
    link: 'http://noc.ilan.net.il/LG/',
 
+   id_enum: Conetserv.LookingGlass.enums.ILAN_PING_V4,
+
    stable: '2010-08-12',
 
    service: 'PING',
@@ -108,6 +129,8 @@ Conetserv.LookingGlass.service.push({
 
    name: 'CERN Looking glass server',
    link: 'http://lg.cern.ch/lg/',
+
+   id_enum: Conetserv.LookingGlass.enums.CERN_PING_V4,
 
    stable: '2010-08-12',
 
@@ -149,6 +172,8 @@ Conetserv.LookingGlass.service.push({
    name: 'ATMAN Looking glass',
    link: 'http://lg.atman.pl/',
 
+   id_enum: Conetserv.LookingGlass.enums.ATMAN_PING_V4,
+
    stable: '2010-08-12',
 
    service: 'PING',
@@ -185,6 +210,8 @@ Conetserv.LookingGlass.service.push({
 
    name: 'CERN Looking glass server',
    link: 'http://lg.cern.ch/lg/',
+
+   id_enum: Conetserv.LookingGlass.enums.CERN_PING_V6,
 
    stable: '2010-08-12',
 
@@ -226,6 +253,8 @@ Conetserv.LookingGlass.service.push({
    name: 'ATMAN Looking glass',
    link: 'http://lg.atman.pl/',
 
+   id_enum: Conetserv.LookingGlass.enums.ATMAN_PING_V6,
+
    stable: '2010-08-12',
 
    service: 'PING6',
@@ -263,6 +292,8 @@ Conetserv.LookingGlass.service.push({
    name: 'ATMAN Looking glass',
    link: 'http://lg.atman.pl/',
 
+   id_enum: Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4,
+
    stable: '2010-08-12',
 
    service: 'TRACE',
@@ -298,6 +329,8 @@ Conetserv.LookingGlass.service.push({
 
    name: 'CERN Looking glass server',
    link: 'http://lg.cern.ch/lg/',
+
+   id_enum: Conetserv.LookingGlass.enums.CERN_TRACERT_V4,
 
    stable: '2010-08-12',
 
@@ -341,6 +374,8 @@ Conetserv.LookingGlass.service.push({
    name: 'ATMAN Looking glass',
    link: 'http://lg.atman.pl/',
 
+   id_enum: Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6,
+
    stable: '2010-08-12',
 
    service: 'TRACE6',
@@ -376,6 +411,8 @@ Conetserv.LookingGlass.service.push({
 
    name: 'CERN Looking glass server',
    link: 'http://lg.cern.ch/lg/',
+
+   id_enum: Conetserv.LookingGlass.enums.CERN_TRACERT_V6,
 
    stable: '2010-08-12',
 
@@ -486,7 +523,6 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
    }
 
    /* callback functions init, throw started */
-   started_callback();
    this.result_callback = result_callback;
    this.stopped_callback = stopped_callback;
 
@@ -495,13 +531,34 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
 
    /* foreach services and it's requests */
    for (var i = 0; i < this.service.length; ++i) {
-      for (var j = 0; j < this.service[i].request.length; ++j) {
-         if (!this.service[i].result)
-            this.service[i].result = {};
-         this.service[i].request[j].ServiceId = i;
-         this.queue.push(this.service[i].request[j]);
+      /* check, if service is allowed in options */
+      if(Conetserv.Options.ext_services && Conetserv.Options.ext_services[this.service[i].id_enum]) {
+         /* increase number of running services in externalservices object */
+         switch(this.service[i].service) {
+            case 'PING':
+               Conetserv.ExternalServices.Ping.max++;
+               break;
+            case 'PING6':
+               Conetserv.ExternalServices.Ping6.max++;
+               break;
+            case 'TRACERT':
+               Conetserv.ExternalServices.Tracert.max++;
+               break;
+            case 'TRACERT6':
+               Conetserv.ExternalServices.Tracert6.max++;
+               break;
+         }
+
+         for (var j = 0; j < this.service[i].request.length; ++j) {
+            if (!this.service[i].result)
+               this.service[i].result = {};
+            this.service[i].request[j].ServiceId = i;
+            this.queue.push(this.service[i].request[j]);
+         }
       }
    }
+
+   started_callback();
 
    /* try to run services from the queue */
    this.run();
