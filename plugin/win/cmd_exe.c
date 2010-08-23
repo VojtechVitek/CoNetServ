@@ -3,8 +3,12 @@
 #include <ctype.h>
 #include <windows.h>
 
-#include "plugin.h"
+#include "debug.h"
+#include "cmd_exe.h"
+#include "npapi.h"
+#include "module.h"
 
+/* FIXME: Move these magic definitions to special header file: */
 #define DEBUGCON 0
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
@@ -15,191 +19,196 @@
 # define inline __inline
 #endif
 
-/* Pipe recources 0 for read 1 for write*/
-HANDLE pipes[command_t_count][2];
-/* process handles */
-HANDLE pids[command_t_count];
-/* defines if process is running */
-bool isRunning[command_t_count] = {0};
+cmd_exe *cmd_line = NULL; /**< Shell abstraction */
+char    *buffer = NULL;   /**< Buffer for pipes I/O */
 
-char* cmd_args[command_t_count] = {
-	"ping -t",
-	"ping -6 -t",
-	"tracert",
-	"tracert -6",
-	"nslookup",
-	"nslookup",
-};
-
-#define errorExitFunc(msg) {isRunning[cmd]=0; logmsg(msg); browser->setexception(NULL, msg); return 0;}
-#define errorExitChild(msg) {logmsg(msg); browser->setexception(NULL, msg); ExitProcess(1);}
-
-bool startCommand(command_t cmd, NPUTF8* arg_host)
+/**
+ * Run system command
+ *
+ * @param p Variable to store process data to
+ * @param path Command name
+ * @param argv String of arguments
+ * @return True on success, false otherwise
+ */
+static bool
+run_command(process *p, const char *cmd, const char argv)
 {
-	char cmdchar[100];
-	SECURITY_ATTRIBUTES saAttr;
-	PROCESS_INFORMATION procInfo;
-	STARTUPINFO startInfo;
-	BOOL success = FALSE;
-	DWORD status;
+   char cmdchar[100];
+   SECURITY_ATTRIBUTES saAttr;
+   PROCESS_INFORMATION procInfo;
+   STARTUPINFO startInfo;
+   BOOL success = FALSE;
+   DWORD status;
 
-	/* check for running state */
-	if (isRunning[cmd])
-	{
-		GetExitCodeProcess( pids[cmd], &status );
-		if( status == STILL_ACTIVE )
-			return false;
-		else
-		{
-			//Close handles
-			CloseHandle(pipes[cmd][0]);
-			CloseHandle(pipes[cmd][1]);
-		}
-	}
+   /* return if the process is already running */
+   if (p->running) {
+      DEBUG_STR("shell->run(): false (process already running)");
+      return false;
+   }
+   GetExitCodeProcess(p->pid, &status);
+   if (status == STILL_ACTIVE) {
+      DEBUG_STR("shell->run(): false (process already running/active)");
+      return false;
+   }
 
-	isRunning[cmd]=1;
+   /*creating command for execution*/
+   sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
 
-	/*creating command for execution*/
-	sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
+   /* Set the bInheritHandle flag so pipe handles are inherited. */
+   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+   saAttr.bInheritHandle = TRUE;
+   saAttr.lpSecurityDescriptor = NULL;
 
-	/* Set the bInheritHandle flag so pipe handles are inherited. */
-	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-	saAttr.bInheritHandle = TRUE;
-	saAttr.lpSecurityDescriptor = NULL;
+   /* Create a pipe for the child process's STDOUT. */
+   if (!CreatePipe(&p->pipe[0], &p->pipe[1], &saAttr, 0)) {
+      p->running = false;
+      logmsg(msg);
+      browser->setexception(NULL, "run_command(): CreatePipe() - error");
+      return 0;
+   (")
+   }
 
-	/* Create a pipe for the child process's STDOUT. */
-	if ( ! CreatePipe(&pipes[cmd][0], &pipes[cmd][1], &saAttr, 0) )
-		errorExitFunc("CoNetServ: startCommand(): CreatePipe() - error\n")
+      /* Ensure the read handle to the pipe for STDOUT is not inherited. */
+      if ( ! SetHandleInformation(p->pipe[0], HANDLE_FLAG_INHERIT, 0) )
+         isRunning[cmd]=0; logmsg(msg); browser->setexception(NULL, msg); return 0;("startCommand(): SetHandleInformation() - error\n")
 
-		/* Ensure the read handle to the pipe for STDOUT is not inherited. */
-		if ( ! SetHandleInformation(pipes[cmd][0], HANDLE_FLAG_INHERIT, 0) )
-			errorExitFunc("CoNetServ: startCommand(): SetHandleInformation() - error\n")
+         /* Create a child process which uses stdout pipe */
 
-			/* Create a child process which uses stdout pipe */
+         /* Prepare structures and set stdout handles */
+         ZeroMemory( &procInfo, sizeof(PROCESS_INFORMATION) );
+   ZeroMemory( &startInfo, sizeof(STARTUPINFO) );
+   startInfo.cb = sizeof(STARTUPINFO);
 
-			/* Prepare structures and set stdout handles */
-			ZeroMemory( &procInfo, sizeof(PROCESS_INFORMATION) );
-	ZeroMemory( &startInfo, sizeof(STARTUPINFO) );
-	startInfo.cb = sizeof(STARTUPINFO);
+   if(!DEBUGCON){
+      startInfo.wShowWindow = SW_HIDE;
+      startInfo.dwFlags |= STARTF_USESHOWWINDOW;
+      startInfo.hStdError = p->pipe[1];
+      startInfo.hStdOutput = p->pipe[1];
+      startInfo.dwFlags |= STARTF_USESTDHANDLES;
+   }
 
-	if(!DEBUGCON){
-		startInfo.wShowWindow = SW_HIDE;
-		startInfo.dwFlags |= STARTF_USESHOWWINDOW;
-		startInfo.hStdError = pipes[cmd][1];
-		startInfo.hStdOutput = pipes[cmd][1];
-		startInfo.dwFlags |= STARTF_USESTDHANDLES;
-	}
+   success = CreateProcess(NULL,
+      cmdchar,         // command line
+      NULL,          // process security attributes
+      NULL,          // primary thread security attributes
+      TRUE,          // handles are inherited
+      0,             // creation flags
+      NULL,          // use parent's environment
+      NULL,          // current directory
+      &startInfo,      // STARTUPINFO pointer
+      &procInfo      // receives PROCESS_INFORMATION
+      );
 
-	success = CreateProcess(NULL,
-		cmdchar,			// command line
-		NULL,          // process security attributes
-		NULL,          // primary thread security attributes
-		TRUE,          // handles are inherited
-		0,             // creation flags
-		NULL,          // use parent's environment
-		NULL,          // current directory
-		&startInfo,		// STARTUPINFO pointer
-		&procInfo		// receives PROCESS_INFORMATION
-		);
-
-	if(!success)
-	{
-		isRunning[cmd] = 0;
-		errorExitFunc("CoNetServ: startCommand(): CreateProcess() - error\n")
-	}
-	else
-	{
-		logmsg("CoNetServ: startCommand(): CreateProcess() - success\n");
-		/* store process handle and close process thread handle */
-		pids[cmd] = procInfo.hProcess;
-		CloseHandle(procInfo.hThread);
-	}
-	return true;
+   if(!success)
+   {
+      isRunning[cmd] = 0;
+      isRunning[cmd]=0; logmsg(msg); browser->setexception(NULL, msg); return 0;("startCommand(): CreateProcess() - error\n")
+   }
+   else
+   {
+      DEBUG_STR("startCommand(): CreateProcess() - success");
+      /* store process handle and close process thread handle */
+      pids[cmd] = procInfo.hProcess;
+      CloseHandle(procInfo.hThread);
+   }
+   return true;
 }
 
-bool stopCommand(command_t cmd)
+/**
+ * Stop running process
+ *
+ * @param p Process to be stopped
+ * @return True on success, false otherwise
+ */
+static bool
+process_stop(process *p)
 {
-	logmsg("CoNetServ: stopCommand()\n");
+   /* return if the process is not running */
+   if (!p->running) {
+      DEBUG_STR("process->stop(pid %d): false (not running)", p->pid);
+      return false;
+   }
 
-	/* kill the command, if running */
-	if(isRunning[cmd])
-	{
-		TerminateProcess(pids[cmd], 0);
-		CloseHandle(pipes[cmd][0]);
-		CloseHandle(pipes[cmd][1]);
-		isRunning[cmd] = 0;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+   /* kill the process */
+   TerminateProcess(p->pid, 0);
+
+   CloseHandle(p->pipe[0]);
+   p->running = false;
+
+   DEBUG_STR("process->stop(pid %d): true", p->pid);
+
+   return true;
 }
 
-int readCommand(command_t cmd, NPUTF8 *_buf)
+/**
+ * Read process output data
+ *
+ * @param p Process to read data from
+ * @param result Result string on success, false otherwise
+ * @return True on success, false otherwise
+ */
+int
+process_read(process *p, NPVariant *result)
 {
-	char buf[BUFFER_LENGTH];
-	DWORD len = 0;
-	DWORD len2 = 0;
-	DWORD status;
+   DWORD len = 0;
+   DWORD len2 = 0;
+   DWORD status;
 
-	LPWSTR utfstring;
+   LPWSTR utfstring;
 
-	UINT codepage;
+   UINT codepage;
 
+   /* return if the process is not running */
+   if (!p->running) {
+      DEBUG_STR("shell->read(): false (not running)");
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
+   }
 
-	/* check if running */
-	if (isRunning[cmd])
-	{
-		/* check for data on pipes */
-		PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
-		if(status)
-		{
-			if (!ReadFile( pipes[cmd][0], buf, BUFFER_LENGTH/2 - 1, &len, NULL))
-			{
-				len = 0;
-			}
-		}
+   /* read from pipe */
+   PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
+   if(status)
+   {
+      if (!ReadFile( p->pipe[0], buf, BUFLEN / 2 - 1, &len, NULL))
+      {
+         len = 0;
+      }
+   }
 
-		buf[len] = '\0';
+   buf[len] = '\0';
 
-		if(len) {
-			/* Get active codepage id */
-			codepage = GetOEMCP();
+   if(len) {
+      /* Get active codepage id */
+      codepage = GetOEMCP();
 
-			/* Convert data first to multibyte and then to utf-8 */
-			len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
-			utfstring = (LPWSTR) browser->memalloc(len * sizeof(WCHAR) + 2);
-			utfstring[len] = 0;
+      /* Convert data first to multibyte and then to utf-8 */
+      len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
+      utfstring = (LPWSTR) browser->memalloc(len * sizeof(WCHAR) + 2);
+      utfstring[len] = 0;
 
-			MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);	
-			len2 = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
+      MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);
+      len2 = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
 
-			_buf[len2-1] = 0;
+      _buf[len2-1] = 0;
 
-			WideCharToMultiByte (CP_UTF8, 0, utfstring, len-1, _buf, len2 - 1, 0, 0);
+      WideCharToMultiByte (CP_UTF8, 0, utfstring, len-1, _buf, len2 - 1, 0, 0);
 
-			browser->memfree(utfstring);
-		}
+      browser->memfree(utfstring);
+   }
 
-		GetExitCodeProcess( pids[cmd], &status );
-		if(status != STILL_ACTIVE )
-		{
-			/*check for any extra data*/
-			PeekNamedPipe(pipes[cmd][0], NULL, 0, NULL, &status, NULL);
-			if(!status)
-			{
-				/* Close handles */
-				CloseHandle(pipes[cmd][0]);
-				CloseHandle(pipes[cmd][1]);
-				isRunning[cmd] = 0;
-			}
-		}
+   GetExitCodeProcess( pids[cmd], &status );
+   if(status != STILL_ACTIVE )
+   {
+      /*check for any extra data*/
+      PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
+      if(!status)
+      {
+         /* Close handles */
+         CloseHandle(p->pipe[0]);
+         CloseHandle(p->pipe[1]);
+         isRunning[cmd] = 0;
+      }
+   }
 
-		return len2;
-	}
-	else
-	{
-		return -1;
-	}
+   return len2;
 }
