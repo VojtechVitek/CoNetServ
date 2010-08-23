@@ -74,6 +74,11 @@ destroy()
       ping->destroy();
 #endif
 
+#ifdef MODULE_PING6
+   if (ping6)
+      ping6->destroy();
+#endif
+
    if (modules)
       browser->memfree(modules);
 
@@ -98,6 +103,11 @@ init_modules()
 
 #ifdef MODULE_PING
    if (!init_module_ping())
+      return false;
+#endif
+
+#ifdef MODULE_PING6
+   if (!init_module_ping6())
       return false;
 #endif
 
