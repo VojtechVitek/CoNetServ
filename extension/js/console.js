@@ -106,7 +106,7 @@ Conetserv.Console = function(div) {
 
    // sets error in the console
    this.setErr = function(text) {
-      this.err = '<div class="ui-state-highlight ui-corner-all" style="padding: 0.2em; margin-top:5px;"> \
+      this.err = '<div class="ui-state-highlight ui-corner-all" style="padding: 0em 1em; margin-top:5px;"> \
          <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>'+text+'</p></div>';
 
       this.repaint();
@@ -143,5 +143,8 @@ Conetserv.Console = function(div) {
       if(this.div)
          this.div.innerHTML = this.err + this.code;
    }
+
+   
+
 
 }

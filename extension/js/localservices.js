@@ -74,6 +74,12 @@ Conetserv.LocalServices = {
          service.after_read(received);
       } else {
          if (!service.process.running) {
+            if(service.console.rowCount <=1) {
+               var err = service.console.code;
+               service.console.clear();
+               service.console.setErr("<strong>Service has most probably encountered an error with following output: </strong> <br/></br>"
+                  + err);
+            }
             Conetserv.LocalServices.stop(service);
          }
       }
