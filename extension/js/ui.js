@@ -72,6 +72,11 @@ Conetserv.Ui = {
             $(this).attr("checked", false);
       });
 
+      $("#settings-external-services-form select").change(function(){
+         Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES_ROUTER);
+      });
+
+
       /**
       * reimplement behaviour when different tab is selected
       */

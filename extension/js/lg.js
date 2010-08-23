@@ -7,7 +7,8 @@ Conetserv.LookingGlass = new Object();
 Conetserv.LookingGlass.enums = {
   CERN_PING_V4 : 0,
   ATMAN_PING_V4 : 1,
-  ILAN_PING_V4 : 2,  
+  ILAN_PING_V4 : 2,
+  SPARKLE_PING_V4: 3,
 
   CERN_PING_V6 : 10,
   ATMAN_PING_V6 : 11,
@@ -15,6 +16,7 @@ Conetserv.LookingGlass.enums = {
   CERN_TRACERT_V4 : 20,
   ATMAN_TRACERT_V4 : 21,
   ILAN_TRACERT_V4 : 22,
+  SPARKLE_TRACERT_V4: 23,
 
   CERN_TRACERT_V6 : 30,
   ATMAN_TRACERT_V6 : 31
@@ -99,13 +101,14 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?router=GP1&query=ping&parameter=',
+      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?query=ping&',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
-         this.url += Conetserv.Url.hostname;
+         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4];
+         this.url += "&parameter=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
@@ -142,13 +145,13 @@ Conetserv.LookingGlass.service.push({
       data: {
          'query': 'ping', /* prepare */
          'protocol' : 'IPv4',
-         'router' : 'r01ext',
          'Submit': 1
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
+         this.data["router"] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V4];
          return true;
       },
       parse: function(data) {
@@ -160,6 +163,45 @@ Conetserv.LookingGlass.service.push({
             result = arr[2];//.replace(/\r\n/g,"<br />");
          //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
 
+         return result;
+      }
+   }]
+});
+
+/* PING from SPARKLE IPv4 */
+
+Conetserv.LookingGlass.service.push({
+
+   name: 'Telecom Italia Sparkle\'s Looking Glass',
+   link: 'http://gambadilegno.noc.seabone.net/lg/',
+
+   id_enum: Conetserv.LookingGlass.enums.SPARKLE_PING_V4,
+
+   stable: '2010-08-23',
+
+   service: 'PING',
+
+   request: [{
+      type: 'POST',
+      url: 'http://gambadilegno.noc.seabone.net/lg/lg.cgi',
+      data: {
+         'query': 'ping', /* prepare */
+         'Submit': 1
+      },
+      dataType: 'text',
+      dataCharset: 'UTF-8',
+      prepare: function(result) {
+         this.data['addr'] = Conetserv.Url.hostname;
+         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_PING_V4];
+         return true;
+      },
+      parse: function(data) {
+         var result = '';
+         var pattern = /(<PRE>([^<]*))/i;
+         arr = pattern.exec(data);
+         
+         if (arr && arr[2])
+            result = arr[2] + "</Pre>";//.replace(/\r\n/g,"<br />");
          return result;
       }
    }]
@@ -180,13 +222,14 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=ping&protocol=IPv4&router=bgp-isp&addr=',
+      url: 'http://lg.atman.pl/?query=ping&protocol=IPv4&',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
-         this.url += Conetserv.Url.hostname;
+         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4];
+         this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
@@ -223,13 +266,13 @@ Conetserv.LookingGlass.service.push({
       data: {
          'query': 'ping', /* prepare */
          'protocol' : 'IPv6',
-         'router' : 'r01ext',
          'Submit': 1
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
+         this.data["router"] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V6];
          return true;
       },
       parse: function(data) {
@@ -261,13 +304,14 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=ping&protocol=IPv6&router=bgp-isp&addr=',
+      url: 'http://lg.atman.pl/?query=ping&protocol=IPv6&',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
-         this.url += Conetserv.Url.hostname;
+         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V6];
+         this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
@@ -300,13 +344,14 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=trace&protocol=IPv4&router=bgp-isp&addr=',
+      url: 'http://lg.atman.pl/?query=trace&protocol=IPv4&',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
-         this.url += Conetserv.Url.hostname;
+         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4];
+         this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
@@ -342,13 +387,13 @@ Conetserv.LookingGlass.service.push({
       data: {
          'query': 'trace', /* prepare */
          'protocol' : 'IPv4',
-         'router' : 'r01ext',
          'Submit': 1
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
+         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V4];
          return true;
       },
       parse: function(data) {
@@ -360,6 +405,45 @@ Conetserv.LookingGlass.service.push({
             result = arr[2];//.replace(/\r\n/g,"<br />");
          //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
 
+         return result;
+      }
+   }]
+});
+
+/* TRACEROUTE from SPARKLE IPv4 */
+
+Conetserv.LookingGlass.service.push({
+
+   name: 'Telecom Italia Sparkle\'s Looking Glass',
+   link: 'http://gambadilegno.noc.seabone.net/lg/',
+
+   id_enum: Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4,
+
+   stable: '2010-08-23',
+
+   service: 'TRACE',
+
+   request: [{
+      type: 'POST',
+      url: 'http://gambadilegno.noc.seabone.net/lg/lg.cgi',
+      data: {
+         'query': 'trace', /* prepare */
+         'Submit': 1
+      },
+      dataType: 'text',
+      dataCharset: 'UTF-8',
+      prepare: function(result) {
+         this.data['addr'] = Conetserv.Url.hostname;
+         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4];
+         return true;
+      },
+      parse: function(data) {
+         var result = '';
+         var pattern = /(<PRE>([^<]*))/i;
+         arr = pattern.exec(data);
+
+         if (arr && arr[2])
+            result = arr[2] + "</Pre>";//.replace(/\r\n/g,"<br />");
          return result;
       }
    }]
@@ -382,13 +466,14 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=trace&protocol=IPv6&router=bgp-isp&addr=',
+      url: 'http://lg.atman.pl/?query=trace&protocol=IPv6&',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
-         this.url += Conetserv.Url.hostname;
+         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6];
+         this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
@@ -424,13 +509,13 @@ Conetserv.LookingGlass.service.push({
       data: {
          'query': 'trace', /* prepare */
          'protocol' : 'IPv6',
-         'router' : 'r01ext',
          'Submit': 1
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
+         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V6];
          return true;
       },
       parse: function(data) {
