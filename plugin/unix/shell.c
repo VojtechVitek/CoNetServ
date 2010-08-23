@@ -17,25 +17,28 @@
 /*
 EXECVPE() WORKAROUND
 
-This should work from glibc 2.11, where execvpe() is implemented:
+The following should work as of glibc 2.11:
+char* args[] = { "traceroute", "example.com", NULL };
 char* env[] = { "PATH=$PATH:/usr/sbin:/sbin/", NULL };
-args[cmd][1] = addr;
-execvpe(args[cmd][0], args[cmd], env);
+execvpe(args[0], args, env);
 
-But as for now (Feb 2010), we must run `which <cmd>` as work-around:
-$ PATH="$PATH:/usr/sbin/:/sbin/" which <cmd>
-/usr/sbin/<cmd>
+But because of backward compatibility (as for Feb 2010),
+we must run `which traceroute' first (as a work-around
+to get absolute path of command's executable file):
+$ PATH="$PATH:/usr/sbin/:/sbin/" which traceroute
+/usr/sbin/traceroute
 
--- V-Teq
+And then we can finally run:
+execv("/usr/sbin/traceroute", args);
 */
 
 cmd_shell *shell = NULL;
 
 char       *buffer = NULL;
-char       *which_argv[] = { "/usr/bin/which", NULL, NULL};
-char       *which_env[] = { NULL, NULL };
+char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL };
+char       *which_env[] = { NULL/*variables*/, NULL };
 char       *user_paths = NULL;
-const char *root_paths = ":/usr/sbin:/sbin/";
+const char *root_paths = ":/usr/sbin:/sbin/"; /**< Super-user binary paths */
 
 static char *
 find_program_path(const char *program)
