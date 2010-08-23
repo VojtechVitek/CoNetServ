@@ -187,7 +187,7 @@ process_read(process *p, NPVariant *result)
       result->type = NPVariantType_String;
       result->value.stringValue = str;
 
-      DEBUG_STR("shell->read(): string");
+      DEBUG_STR("shell->read(): string(len=%d)", len);
 
       return true;
 
