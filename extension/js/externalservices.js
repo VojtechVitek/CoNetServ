@@ -35,7 +35,7 @@ Conetserv.ExternalServices = {
    },
 
    initialize : function () {
-      if(!enabled)
+      if(!this.enabled)
          return;
 
       this.Ping.console = [];
@@ -61,7 +61,7 @@ Conetserv.ExternalServices = {
       /*
        * Check if start is possible
        */
-      if(!enabled || this.isRunning)
+      if(!this.enabled || this.isRunning)
          return false;
 
       /*
