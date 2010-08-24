@@ -252,7 +252,7 @@ Conetserv.Ui = {
        */
 
       if(!Conetserv.plugin.ping) {
-         $(".local .ping6").remove();
+         $(".local .ping").remove();
       }
       else {
          if(!Conetserv.plugin.ping.found) {
