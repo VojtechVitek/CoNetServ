@@ -2,6 +2,7 @@
 if(!Conetserv) var Conetserv = {};
 
 Conetserv.plugin = false;
+Conetserv.version = false;
 
 Conetserv.onReady = function() {
 
@@ -67,7 +68,7 @@ Conetserv.onReady = function() {
 };
 
 Conetserv.onLoad = function() {
-      /*
+   /*
     * Check autostart - on true start services
     */
    if(this.Options.autostart) {

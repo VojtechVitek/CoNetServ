@@ -3,6 +3,7 @@ if(!Conetserv) var Conetserv = {};
 
 /* LocalServices object */
 Conetserv.ExternalServices = {
+   enabled: true,
    isRunning : 0,
 
    Ping : {
@@ -34,6 +35,9 @@ Conetserv.ExternalServices = {
    },
 
    initialize : function () {
+      if(!enabled)
+         return;
+
       this.Ping.console = [];
       this.Ping.console[1] = new Conetserv.Console("external-ping-console-1");
       this.Ping.console[2] = new Conetserv.Console("external-ping-console-2");
@@ -57,7 +61,7 @@ Conetserv.ExternalServices = {
       /*
        * Check if start is possible
        */
-      if(this.isRunning)
+      if(!enabled || this.isRunning)
          return false;
 
       /*

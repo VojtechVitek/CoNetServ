@@ -3,10 +3,13 @@ if(!Conetserv) var Conetserv = {};
 
 /* LocalServices object */
 Conetserv.LocalServices = {
+   enabled: true,
    /**
    * Start all commands available at once.
    */
    startCommands: function() {
+      if(!this.enabled)
+         return false;
       /*
        * Set URL value or show red bar around url field
        */
@@ -27,6 +30,9 @@ Conetserv.LocalServices = {
    },
 
    stopCommands: function() {
+      if(!this.enabled)
+         return;
+
       this.stop(this.Ping);
       this.stop(this.Ping6);
       this.stop(this.Traceroute);
@@ -100,8 +106,12 @@ Conetserv.LocalServices = {
    },
 
    initialize: function() {
+      if(!this.enabled)
+         return;
+      
       /* console text-boxes */
       this.Ping.console = new Conetserv.Console("local-ping-console");
+      this.Ping.console.inputTimerErr(5, "lampa");
       this.Ping.console.maxRows = 15;
       this.Ping6.console = new Conetserv.Console("local-ping6-console");
       this.Ping6.console.maxRows = 15;

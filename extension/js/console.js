@@ -144,7 +144,14 @@ Conetserv.Console = function(div) {
          this.div.innerHTML = this.err + this.code;
    }
 
-   
+   /*
+    * Checks if any input is written inside, otherwise sets error
+    * @param time seconds after which error message is written inside
+    * @param msg error message to be written inside
+    */
+   this.inputTimerErr = function(time, msg) {
+      setTimeout("this.setErr(" + msg + ")", time * 1000);
+   }
 
 
 }
