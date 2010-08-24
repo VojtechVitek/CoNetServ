@@ -33,7 +33,7 @@ execv("/usr/sbin/traceroute", args);
 */
 
 cmd_shell  *shell = NULL;                                            /**< Shell abstraction */
-char       *buffer = NULL;                                           /**< Buffer for pipes I/O */
+char       *buffer = NULL;                                           /**< Buffer for pipe I/O */
 char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL }; /**< Arguments for which command */
 char       *which_env[] = { NULL/*variables*/, NULL };               /**< Environment for which command */
 char       *user_paths = NULL;                                       /**< User paths */
@@ -104,7 +104,7 @@ find_program_path(const char *program)
          buffer[i] = '\0';
          len = i;
 
-         path = browser->memalloc((len + 1) * sizeof(char));
+         path = browser->memalloc((len + 1) * sizeof(*path));
          memcpy(path, buffer, len + 1);
       } else {
          /* error or zero length */
@@ -396,7 +396,7 @@ init_shell()
    DEBUG_STR("shell->init()");
 
    /* allocate shell object */
-   if ((shell = browser->memalloc(sizeof(cmd_shell))) == NULL)
+   if ((shell = browser->memalloc(sizeof(*shell))) == NULL)
       goto err_sh_alloc;
 
    shell->destroy = destroy_shell;
@@ -408,7 +408,7 @@ init_shell()
    shell->read = process_read;
 
    /* allocate buffer */
-   if ((buffer = browser->memalloc(BUFLEN * sizeof(char))) == NULL)
+   if ((buffer = browser->memalloc(BUFLEN * sizeof(*buffer))) == NULL)
       goto err_buf_alloc;
 
    /* get user paths from variable PATH */
@@ -416,7 +416,7 @@ init_shell()
       goto err_getenv;
 
    /* allocate modified PATH variable */
-   if ((which_env[0] = browser->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(char))) == NULL)
+   if ((which_env[0] = browser->memalloc((strlen(user_paths) + strlen(root_paths) + 1) * sizeof(*which_env))) == NULL)
       goto err_env_alloc;
 
    /* add superuser paths into PATH variable:
