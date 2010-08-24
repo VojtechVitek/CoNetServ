@@ -101,14 +101,14 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?query=ping&',
+      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4];
-         this.url += "&parameter=" + Conetserv.Url.hostname;
+         this.url += "&query=ping&parameter=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
@@ -329,6 +329,46 @@ Conetserv.LookingGlass.service.push({
 });
 
 /************************************** TRACEROUTE V4 *********************************************************/
+/* TRACEROUTE from ILAN IPv4 */
+
+Conetserv.LookingGlass.service.push({
+
+   name: 'ILAN Looking Glass',
+   link: 'http://noc.ilan.net.il/LG/',
+
+   id_enum: Conetserv.LookingGlass.enums.ILAN_TRACERT_V4,
+
+   stable: '2010-08-12',
+
+   service: 'TRACE',
+
+   request: [{
+      type: 'GET',
+      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?',
+      data: {
+      },
+      dataType: 'text',
+      dataCharset: 'UTF-8',
+      prepare: function(result) {
+         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4];
+         this.url += "&query=trace&parameter=" + Conetserv.Url.hostname;
+         return true;
+      },
+      parse: function(data) {
+         var result = '';
+         var pattern = /(<PRE>([^<]*)<\/PRE>)/;
+         arr = pattern.exec(data);
+
+         if (arr && arr[2])
+            result = arr[2];//.replace(/\r\n/g,"<br />");
+
+         //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]/i;
+         
+         return result;
+      }
+   }]
+});
+
 /* TRACEROUTE from ATMAN IPv4 */
 
 Conetserv.LookingGlass.service.push({
