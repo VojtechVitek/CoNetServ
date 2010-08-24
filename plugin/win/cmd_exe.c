@@ -19,8 +19,10 @@
 # define inline __inline
 #endif
 
-cmd_exe *cmd_line = NULL; /**< Shell abstraction */
-char    *buffer = NULL;   /**< Buffer for pipes I/O */
+cmd_exe *cmd_line = NULL;     /**< Command line abstraction */
+char    *buffer = NULL;       /**< Buffer for pipe I/O */
+char    *buffer_wchar = NULL; /**< Buffer for wide chars */
+char    *buffer_utf8 = NULL;  /**< Buffer for utf8 chars */
 
 /**
  * Run system command
@@ -31,55 +33,48 @@ char    *buffer = NULL;   /**< Buffer for pipes I/O */
  * @return True on success, false otherwise
  */
 static bool
-run_command(process *p, const char *cmd, const char argv)
+run_command(process *p, const char *cmd)
 {
-   char cmdchar[100];
    SECURITY_ATTRIBUTES saAttr;
    PROCESS_INFORMATION procInfo;
    STARTUPINFO startInfo;
    BOOL success = FALSE;
    DWORD status;
+   char *command;
 
    /* return if the process is already running */
    if (p->running) {
-      DEBUG_STR("shell->run(): false (process already running)");
+      DEBUG_STR("cmd_exe->run(): false (process already running)");
       return false;
    }
-   GetExitCodeProcess(p->pid, &status);
-   if (status == STILL_ACTIVE) {
-      DEBUG_STR("shell->run(): false (process already running/active)");
-      return false;
-   }
-
-   /*creating command for execution*/
-   sprintf(cmdchar, "cmd.exe /U /C \"%s %s\"", cmd_args[cmd], (char *)arg_host);
 
    /* Set the bInheritHandle flag so pipe handles are inherited. */
-   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+   saAttr.nLength = sizeof(saAttr);
    saAttr.bInheritHandle = TRUE;
    saAttr.lpSecurityDescriptor = NULL;
 
    /* Create a pipe for the child process's STDOUT. */
    if (!CreatePipe(&p->pipe[0], &p->pipe[1], &saAttr, 0)) {
-      p->running = false;
-      logmsg(msg);
-      browser->setexception(NULL, "run_command(): CreatePipe() - error");
+      DEBUG_STR(msg);
+      browser->setexception(NULL, "cmd_exe->run(): CreatePipe() - error");
       return 0;
-   (")
    }
 
-      /* Ensure the read handle to the pipe for STDOUT is not inherited. */
-      if ( ! SetHandleInformation(p->pipe[0], HANDLE_FLAG_INHERIT, 0) )
-         isRunning[cmd]=0; logmsg(msg); browser->setexception(NULL, msg); return 0;("startCommand(): SetHandleInformation() - error\n")
+   /* Ensure the read handle to the pipe for STDOUT is not inherited. */
+   if (!SetHandleInformation(p->pipe[0], HANDLE_FLAG_INHERIT, 0)) {
+      DEBUG_STR("cmd_exe->run(): SetHandleInformation() - error");
+      browser->setexception(NULL, "cmd_exe->run(): SetHandleInformation() - error");
+      return 0;
+   }
 
-         /* Create a child process which uses stdout pipe */
+   /* Create a child process which uses stdout pipe */
 
-         /* Prepare structures and set stdout handles */
-         ZeroMemory( &procInfo, sizeof(PROCESS_INFORMATION) );
-   ZeroMemory( &startInfo, sizeof(STARTUPINFO) );
-   startInfo.cb = sizeof(STARTUPINFO);
+   /* Prepare structures and set stdout handles */
+   ZeroMemory(&procInfo, sizeof(procInfo));
+   ZeroMemory(&startInfo, sizeof(startInfo));
+   startInfo.cb = sizeof(startInfo);
 
-   if(!DEBUGCON){
+   if (!DEBUGCON) {
       startInfo.wShowWindow = SW_HIDE;
       startInfo.dwFlags |= STARTF_USESHOWWINDOW;
       startInfo.hStdError = p->pipe[1];
@@ -87,30 +82,35 @@ run_command(process *p, const char *cmd, const char argv)
       startInfo.dwFlags |= STARTF_USESTDHANDLES;
    }
 
+   /* create command for execution */
+   //strlen + 16
+   sprintf(cmdchar, "cmd.exe /U /C \"%s\"", cmd);
+
    success = CreateProcess(NULL,
-      cmdchar,         // command line
+      cmdchar,       // command line
       NULL,          // process security attributes
       NULL,          // primary thread security attributes
       TRUE,          // handles are inherited
       0,             // creation flags
       NULL,          // use parent's environment
       NULL,          // current directory
-      &startInfo,      // STARTUPINFO pointer
+      &startInfo,    // STARTUPINFO pointer
       &procInfo      // receives PROCESS_INFORMATION
-      );
+   );
 
-   if(!success)
-   {
-      isRunning[cmd] = 0;
-      isRunning[cmd]=0; logmsg(msg); browser->setexception(NULL, msg); return 0;("startCommand(): CreateProcess() - error\n")
+   if (!success) {
+      DEBUG_STR("cmd_exe->run(): CreateProcess() - error");
+      browser->setexception(NULL, "cmd_exe->run(): CreateProcess() - error");
+      return false;
    }
-   else
-   {
-      DEBUG_STR("startCommand(): CreateProcess() - success");
-      /* store process handle and close process thread handle */
-      pids[cmd] = procInfo.hProcess;
-      CloseHandle(procInfo.hThread);
-   }
+
+   DEBUG_STR("cmd_exe->run(): CreateProcess() - success");
+
+   /* store process handle and close process thread handle */
+   p->pid = procInfo.hProcess;
+   p->running = true;
+
+   CloseHandle(procInfo.hThread);
    return true;
 }
 
@@ -132,7 +132,9 @@ process_stop(process *p)
    /* kill the process */
    TerminateProcess(p->pid, 0);
 
+   /* close read pipe */
    CloseHandle(p->pipe[0]);
+
    p->running = false;
 
    DEBUG_STR("process->stop(pid %d): true", p->pid);
@@ -150,65 +152,189 @@ process_stop(process *p)
 int
 process_read(process *p, NPVariant *result)
 {
-   DWORD len = 0;
-   DWORD len2 = 0;
-   DWORD status;
-
+   DWORD len = 0, status;
    LPWSTR utfstring;
-
    UINT codepage;
+   NPString str;
+   NPUTF8 *chars;
 
    /* return if the process is not running */
    if (!p->running) {
-      DEBUG_STR("shell->read(): false (not running)");
+      DEBUG_STR("cmd_exe->read(): false (not running)");
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
+   }
+
+#if 0
+/* AFTER PEAK OR AFTER READ? */
+   GetExitCodeProcess(p->pid, &status);
+   if (status != STILL_ACTIVE) {
+      /*check for any extra data*/
+      PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
+      if (!status) {
+         /* Close handles */
+         CloseHandle(p->pipe[0]);
+         CloseHandle(p->pipe[1]);
+         p->running = false;
+      }
+   }
+#endif
+
+   /* check if data are available */
+   PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
+   if (!status) {
+      DEBUG_STR("cmd_exe->read(): false (no data, continue)", GetLastError());
+
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
    }
 
    /* read from pipe */
-   PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
-   if(status)
-   {
-      if (!ReadFile( p->pipe[0], buf, BUFLEN / 2 - 1, &len, NULL))
-      {
-         len = 0;
-      }
+   if (!ReadFile(p->pipe[0], buffer, BUFLEN - 1, &len, NULL)) {
+
+      DEBUG_STR("cmd_exe->read(): false (error %d)", GetLastError());
+
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
    }
 
-   buf[len] = '\0';
+   if (len <= 0) {
+      DEBUG_STR("cmd_exe->read(): false (string len=0)", GetLastError());
 
-   if(len) {
-      /* Get active codepage id */
-      codepage = GetOEMCP();
-
-      /* Convert data first to multibyte and then to utf-8 */
-      len = MultiByteToWideChar(codepage, 0, buf, -1, NULL, 0);
-      utfstring = (LPWSTR) browser->memalloc(len * sizeof(WCHAR) + 2);
-      utfstring[len] = 0;
-
-      MultiByteToWideChar(codepage, 0, buf, -1, utfstring, len);
-      len2 = WideCharToMultiByte (CP_UTF8, 0, utfstring, len, 0, 0, 0, 0);
-
-      _buf[len2-1] = 0;
-
-      WideCharToMultiByte (CP_UTF8, 0, utfstring, len-1, _buf, len2 - 1, 0, 0);
-
-      browser->memfree(utfstring);
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
    }
 
-   GetExitCodeProcess( pids[cmd], &status );
-   if(status != STILL_ACTIVE )
-   {
-      /*check for any extra data*/
-      PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
-      if(!status)
-      {
-         /* Close handles */
-         CloseHandle(p->pipe[0]);
-         CloseHandle(p->pipe[1]);
-         isRunning[cmd] = 0;
-      }
-   }
+   /* be sure to terminate string by null-character */
+   buffer[len] = '\0';
 
-   return len2;
+   /* get active codepage id */
+   codepage = GetOEMCP();
+
+   /* convert characters to multibyte */
+   len = MultiByteToWideChar(codepage, 0, buffer, -1, buffer_wchar, BUFLEN_WCHAR);
+   buffer_wchar[len] = '\0';
+
+   /* convert characters to utf-8 */
+   len = WideCharToMultiByte(CP_UTF8, 0, buffer_wchar, len, buffer_utf8, BUFLEN_UTF8, 0, 0);
+   buffer_utf8[len] = '\0';
+
+   /* fill the result string */
+   chars = browser->memalloc((len + 1) * sizeof(*chars));
+   memcpy(chars, buffer_utf8, len);
+   STRING_UTF8CHARACTERS(str) = chars;
+   STRING_UTF8LENGTH(str) = len;
+
+   result->type = NPVariantType_String;
+   result->value.stringValue = str;
+
+   DEBUG_STR("shell->read(): string(len=%d)", len);
+
+   return true;
+}
+
+
+/**
+ * CMD_EXE_module destructor
+ *
+ * @param m CMD_EXE_module to be destroyed
+ */
+static void
+destroy_shell_module(cmd_exe_module *m)
+{
+   if (m) {
+      browser->memfree(m);
+   }
+}
+
+/**
+ * CMD_EXE_module constructor
+ *
+ * @param program Command to be run
+ * @return Initialized CMD_EXE_module on success, NULL otherwise
+ */
+shell_module *
+init_shell_module(const char *program)
+{
+   cmd_exe_module *m;
+
+   /* allocate shell module */
+   m = browser->memalloc(sizeof(*m));
+   if (!m)
+      return NULL;
+
+   return m;
+}
+
+/**
+ * Shell destructor
+ *
+ */
+static void
+destroy_shell()
+{
+   DEBUG_STR("shell->destroy()");
+
+   if (buffer != NULL)
+      browser->memfree(buffer);
+
+   if (buffer_wchar != NULL)
+      browser->memfree(buffer_wchar);
+
+   if (buffer_utf8 != NULL)
+      browser->memfree(buffer_utf8);
+
+   if (cmd_line != NULL)
+      browser->memfree(cmd_line);
+}
+
+/**
+ * Shell constructor
+ *
+ * @return True on success, false otherwise
+ */
+bool
+init_shell()
+{
+   DEBUG_STR("shell->init()");
+
+   /* allocate shell object */
+   if ((cmd_exe = browser->memalloc(sizeof(*cmd_exe))) == NULL)
+      goto err_cmd_alloc;
+
+   shell->destroy = destroy_shell;
+   shell->run = run_command;
+   shell->init_module = init_shell_module;
+   shell->destroy_module = destroy_shell_module;
+   shell->stop = process_stop;
+   shell->read = process_read;
+
+   /* allocate buffer */
+   if ((buffer = browser->memalloc(BUFLEN * sizeof(*buffer))) == NULL)
+      goto err_buf_alloc;
+
+   /* allocate buffer for wide chars */
+   if ((buffer_wchar = browser->memalloc(BUFLEN_WCHAR * sizeof(*buffer_wchar))) == NULL)
+      goto err_buf_wchar_alloc;
+
+   /* allocate buffer for utf8 chars */
+   if ((buffer_utf8 = browser->memalloc(BUFLEN_UTF8 * sizeof(*buffer_utf8))) == NULL)
+      goto err_buf_utf8_alloc;
+
+   return true;
+
+err_buf_utf8_alloc:
+   free(buffer_wchar);
+   buffer_wchar = NULL;
+
+err_buf_wchar_alloc:
+   free(buffer);
+   buffer = NULL;
+
+err_buf_alloc:
+   free(cmd_exe);
+   cmd_exe = NULL;
+
+err_cmd_alloc:
+   return false;
 }

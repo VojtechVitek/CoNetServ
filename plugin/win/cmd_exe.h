@@ -2,10 +2,13 @@
 #ifndef _CMD_EXE_H_
 #define _CMD_EXE_H_
 
+#define BUFLEN       1024
+#define BUFLEN_WCHAR (4 * BUFLEN)
+#define BUFLEN_UTF8  (4 * BUFLEN)
+
 typedef struct _cmd_exe_module {
    module       m;
    bool         found;
-   //char         *path;
 } cmd_exe_module;
 
 typedef struct _cmd_exe {
@@ -19,6 +22,6 @@ typedef struct _cmd_exe {
 
 bool init_cmd_exe();
 
-extern cmd_shell *shell;
+extern cmd_exe *cmd_line;
 
 #endif /*_CMD_EXE_H_*/
