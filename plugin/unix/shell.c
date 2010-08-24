@@ -239,7 +239,7 @@ process_read(process *p, NPVariant *result)
 }
 
 /**
- * Run command
+ * Run system command
  *
  * @param p Variable to store process data to
  * @param path Absolute path to the command

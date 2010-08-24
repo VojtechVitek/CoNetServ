@@ -9,7 +9,6 @@ typedef struct _cmd_exe_module {
 } cmd_exe_module;
 
 typedef struct _cmd_exe {
-   char           *(*find)(const char *program);
    cmd_exe_module *(*init_module)(const char* name);
    void           (*destroy_module)(cmd_exe_module *m);
    bool           (*run)(process *p, const char *path, char *const argv[]);
@@ -19,5 +18,7 @@ typedef struct _cmd_exe {
 } cmd_exe;
 
 bool init_cmd_exe();
+
+extern cmd_shell *shell;
 
 #endif /*_CMD_EXE_H_*/
