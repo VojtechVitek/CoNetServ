@@ -152,6 +152,12 @@ init_module_ping()
    ping->class.hasProperty = hasProperty;
    ping->class.getProperty = getProperty;
 
+   return true;
+}
+
+bool
+init_module_ping6()
+{
    DEBUG_STR("ping6->init()");
    ping6 = (module *)shell->init_module("ping6");
    ping6->destroy = destroy_ping;
