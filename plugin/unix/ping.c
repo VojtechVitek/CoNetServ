@@ -160,7 +160,7 @@ init_module_ping6()
 {
    DEBUG_STR("ping6->init()");
    ping6 = (module *)shell->init_module("ping6");
-   ping6->destroy = destroy_ping;
+   ping6->destroy = destroy_ping6;
    ping6->class = modules->class;
    ping6->class.allocate = allocate_ping6;
    ping6->class.invoke = invokeMethod;
