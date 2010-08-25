@@ -41,6 +41,7 @@ run_command(process *p, const char *cmd)
    BOOL success = FALSE;
    DWORD status;
    char *command;
+   int len;
 
    /* return if the process is already running */
    if (p->running) {
@@ -83,11 +84,12 @@ run_command(process *p, const char *cmd)
    }
 
    /* create command for execution */
-   //strlen + 16
-   sprintf(cmdchar, "cmd.exe /U /C \"%s\"", cmd);
+   len = strlen(cmd);
+   command = browser->memalloc(sizeof(*command) * (len + 16/*len of bellow cmd*/ + 1));
+   sprintf(command, "cmd.exe /U /C \"%s\"", cmd);
 
    success = CreateProcess(NULL,
-      cmdchar,       // command line
+      command,       // command line
       NULL,          // process security attributes
       NULL,          // primary thread security attributes
       TRUE,          // handles are inherited
