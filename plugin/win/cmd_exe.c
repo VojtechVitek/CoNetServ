@@ -45,7 +45,7 @@ run_command(process *p, const char *cmd)
 
    /* return if the process is already running */
    if (p->running) {
-      DEBUG_STR("cmd_exe->run(): false (process already running)");
+      DEBUG_STR("cmd_line->run(): false (process already running)");
       return false;
    }
 
@@ -56,15 +56,15 @@ run_command(process *p, const char *cmd)
 
    /* Create a pipe for the child process's STDOUT. */
    if (!CreatePipe(&p->pipe[0], &p->pipe[1], &saAttr, 0)) {
-      DEBUG_STR(msg);
-      browser->setexception(NULL, "cmd_exe->run(): CreatePipe() - error");
+      DEBUG_STR("cmd_line->run(): CreatePipe() - error");
+      browser->setexception(NULL, "cmd_line->run(): CreatePipe() - error");
       return 0;
    }
 
    /* Ensure the read handle to the pipe for STDOUT is not inherited. */
    if (!SetHandleInformation(p->pipe[0], HANDLE_FLAG_INHERIT, 0)) {
-      DEBUG_STR("cmd_exe->run(): SetHandleInformation() - error");
-      browser->setexception(NULL, "cmd_exe->run(): SetHandleInformation() - error");
+      DEBUG_STR("cmd_line->run(): SetHandleInformation() - error");
+      browser->setexception(NULL, "cmd_line->run(): SetHandleInformation() - error");
       return 0;
    }
 
@@ -101,12 +101,12 @@ run_command(process *p, const char *cmd)
    );
 
    if (!success) {
-      DEBUG_STR("cmd_exe->run(): CreateProcess() - error");
-      browser->setexception(NULL, "cmd_exe->run(): CreateProcess() - error");
+      DEBUG_STR("cmd_line->run(): CreateProcess() - error");
+      browser->setexception(NULL, "cmd_line->run(): CreateProcess() - error");
       return false;
    }
 
-   DEBUG_STR("cmd_exe->run(): CreateProcess() - success");
+   DEBUG_STR("cmd_line->run(): CreateProcess() - success");
 
    /* store process handle and close process thread handle */
    p->pid = procInfo.hProcess;
@@ -151,18 +151,17 @@ process_stop(process *p)
  * @param result Result string on success, false otherwise
  * @return True on success, false otherwise
  */
-int
+static bool
 process_read(process *p, NPVariant *result)
 {
    DWORD len = 0, status;
-   LPWSTR utfstring;
    UINT codepage;
    NPString str;
    NPUTF8 *chars;
 
    /* return if the process is not running */
    if (!p->running) {
-      DEBUG_STR("cmd_exe->read(): false (not running)");
+      DEBUG_STR("cmd_line->read(): false (not running)");
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
    }
@@ -185,7 +184,7 @@ process_read(process *p, NPVariant *result)
    /* check if data are available */
    PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
    if (!status) {
-      DEBUG_STR("cmd_exe->read(): false (no data, continue)", GetLastError());
+      DEBUG_STR("cmd_line->read(): false (no data, continue)", GetLastError());
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
@@ -194,14 +193,14 @@ process_read(process *p, NPVariant *result)
    /* read from pipe */
    if (!ReadFile(p->pipe[0], buffer, BUFLEN - 1, &len, NULL)) {
 
-      DEBUG_STR("cmd_exe->read(): false (error %d)", GetLastError());
+      DEBUG_STR("cmd_line->read(): false (error %d)", GetLastError());
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
    }
 
    if (len <= 0) {
-      DEBUG_STR("cmd_exe->read(): false (string len=0)", GetLastError());
+      DEBUG_STR("cmd_line->read(): false (string len=0)", GetLastError());
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
@@ -230,7 +229,7 @@ process_read(process *p, NPVariant *result)
    result->type = NPVariantType_String;
    result->value.stringValue = str;
 
-   DEBUG_STR("shell->read(): string(len=%d)", len);
+   DEBUG_STR("cmd_line->read(): string(len=%d)", len);
 
    return true;
 }
@@ -242,7 +241,7 @@ process_read(process *p, NPVariant *result)
  * @param m CMD_EXE_module to be destroyed
  */
 static void
-destroy_shell_module(cmd_exe_module *m)
+destroy_cmd_line_module(cmd_exe_module *m)
 {
    if (m) {
       browser->memfree(m);
@@ -255,12 +254,12 @@ destroy_shell_module(cmd_exe_module *m)
  * @param program Command to be run
  * @return Initialized CMD_EXE_module on success, NULL otherwise
  */
-shell_module *
-init_shell_module(const char *program)
+cmd_exe_module *
+init_cmd_line_module(const char *program)
 {
    cmd_exe_module *m;
 
-   /* allocate shell module */
+   /* allocate cmd_exe module */
    m = browser->memalloc(sizeof(*m));
    if (!m)
       return NULL;
@@ -269,13 +268,13 @@ init_shell_module(const char *program)
 }
 
 /**
- * Shell destructor
+ * cmd_exe destructor
  *
  */
 static void
-destroy_shell()
+destroy_cmd_line()
 {
-   DEBUG_STR("shell->destroy()");
+   DEBUG_STR("cmd_line->destroy()");
 
    if (buffer != NULL)
       browser->memfree(buffer);
@@ -291,25 +290,25 @@ destroy_shell()
 }
 
 /**
- * Shell constructor
+ * CMD_EXE constructor
  *
  * @return True on success, false otherwise
  */
 bool
-init_shell()
+init_cmd_line()
 {
-   DEBUG_STR("shell->init()");
+   DEBUG_STR("cmd_line->init()");
 
-   /* allocate shell object */
-   if ((cmd_exe = browser->memalloc(sizeof(*cmd_exe))) == NULL)
+   /* allocate cmd_exe object */
+   if ((cmd_line = browser->memalloc(sizeof(*cmd_line))) == NULL)
       goto err_cmd_alloc;
 
-   shell->destroy = destroy_shell;
-   shell->run = run_command;
-   shell->init_module = init_shell_module;
-   shell->destroy_module = destroy_shell_module;
-   shell->stop = process_stop;
-   shell->read = process_read;
+   cmd_line->destroy = destroy_cmd_line;
+   cmd_line->run = run_command;
+   cmd_line->init_module = init_cmd_line_module;
+   cmd_line->destroy_module = destroy_cmd_line_module;
+   cmd_line->stop = process_stop;
+   cmd_line->read = process_read;
 
    /* allocate buffer */
    if ((buffer = browser->memalloc(BUFLEN * sizeof(*buffer))) == NULL)
@@ -334,8 +333,8 @@ err_buf_wchar_alloc:
    buffer = NULL;
 
 err_buf_alloc:
-   free(cmd_exe);
-   cmd_exe = NULL;
+   free(cmd_line);
+   cmd_line = NULL;
 
 err_cmd_alloc:
    return false;
