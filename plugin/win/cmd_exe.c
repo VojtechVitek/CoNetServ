@@ -13,10 +13,12 @@
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
 
+/* Disable deprecation messages */
+#define _CRT_SECURE_NO_WARNINGS
 #define LOCALEDIR "."
 
 #if _MSC_VER && !__cplusplus
-# define inline __inline
+#define inline __inline
 #endif
 
 cmd_exe *cmd_line = NULL;     /**< Command line abstraction */
@@ -100,17 +102,20 @@ run_command(process *p, const char *cmd)
       &procInfo      // receives PROCESS_INFORMATION
    );
 
+   /* free executed command string */
+   browser->memfree(command);
+
    if (!success) {
       DEBUG_STR("cmd_line->run(): CreateProcess() - error");
       browser->setexception(NULL, "cmd_line->run(): CreateProcess() - error");
       return false;
    }
 
-   DEBUG_STR("cmd_line->run(): CreateProcess() - success");
-
    /* store process handle and close process thread handle */
    p->pid = procInfo.hProcess;
    p->running = true;
+
+   DEBUG_STR("cmd_line->run(): CreateProcess(): PID %d", p->pid);
 
    CloseHandle(procInfo.hThread);
    return true;

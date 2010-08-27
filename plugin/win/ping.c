@@ -32,7 +32,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       program = ((object_ping *)obj)->program;
 
-	  i = 0;
+      i = 0;
       /* First argument must be url */
       if (args[i].type != NPVariantType_String)
          return false;

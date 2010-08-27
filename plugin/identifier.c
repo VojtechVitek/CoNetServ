@@ -30,6 +30,8 @@ init_identifiers()
 
 #ifdef MODULE_PING
    identifiers->ping = browser->getstringidentifier("ping");
+#endif
+#ifdef MODULE_PING6
    identifiers->ping6 = browser->getstringidentifier("ping6");
 #endif
 
