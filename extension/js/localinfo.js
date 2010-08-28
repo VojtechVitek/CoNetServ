@@ -3,10 +3,11 @@ if(!Conetserv) var Conetserv = {};
 
 /* External info object */
 Conetserv.LocalInfo = {
+   enabled: true,
 
 }
 
-Conetserv.Locallinfo.Nmap = {
+Conetserv.Localinfo.Nmap = {
    addData : function () {
 
    }
