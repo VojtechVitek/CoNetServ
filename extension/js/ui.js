@@ -240,7 +240,7 @@ Conetserv.Ui = {
             There might be severe problems with functionality - please reinstall your CoNetServ extension."
 
          Conetserv.LocalServices.enabled = false;
-         Conetserv.ExternalServices.enabled = false;
+         Conetserv.LocalInfo.enabled = false;
          this.divError("#local-services", errStr);
          this.divError("#local-info", errStr);
          return;
