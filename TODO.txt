@@ -16,8 +16,8 @@ General:
 
 Plugin:
 [x] Windows: reimplement locale support
-[ ] Extension API: rewrite NPAPI invokes into OOP (objects with properties and methods)
-[ ] Plugin API: third-party availability, version system
+[x] Extension API: rewrite NPAPI invokes into OOP (objects with properties and methods)
+[x] Plugin API: third-party availability, version system
 [ ] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
 [ ] Local Network Info: nmap to show neighboaring computers
 [x] Fix IPv6 colons as valid address
@@ -59,17 +59,17 @@ FUTURE PLANS
 CoNetServ v2.0+
 * Object-oriented API to JS (availability for 3rd party)
 * Independent objects to run programs and commands with options
-* User-friendly error messages
+* External services (Ping, Traceroute, Whois etc. from public servers)
 * Installation guides for missing programs (OS, platform, distro)
+* User-friendly error messages
 
 CoNetServ v3.0+
+* Nmap (list computers in local network)
 * Translations (JavaScript based, option in settings)
-* External services (Ping, Traceroute, Whois etc. from public servers)
 * Local info (list local interfaces and it's MAC address, IPv4/IPv6 adress, mask, default route, gateway, ..)
 * Ping/Traceroute through specified interface (ethernet, wifi, ..)
 
 CoNetServ v4.0+
-* Nmap (list computers in local network)
 * Distance graph of neighboaring computers (using canvas, nmap and auto-ping)
 * Download/upload data transfer meter with plots, current speed (public servers / local tools)
 * Release as Safari 5+ extension

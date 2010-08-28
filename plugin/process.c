@@ -34,7 +34,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    /* Read data from process */
    if (identifier == identifiers->read) {
 
-      DEBUG_STR("process->invokeMethod(read)")
+      DEBUG_STR("process->invokeMethod(read)");
 
       if (!shell->read((process *)obj, result)) {
          DEBUG_STR("process->invokeMethod(read): false");

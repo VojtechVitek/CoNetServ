@@ -1,8 +1,8 @@
 # CoNetServ (Complex Network Services) project
 project("CoNetServ")
 set(MAJOR_VERSION 1)
-set(MINOR_VERSION 3)
-set(PATCH_VERSION 6)
+set(MINOR_VERSION 9)
+set(PATCH_VERSION 0)
 
 # CMake
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
