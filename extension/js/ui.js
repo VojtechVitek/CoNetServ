@@ -235,12 +235,12 @@ Conetserv.Ui = {
       /* Check plugin version */
       var version = Conetserv.plugin.version ? Conetserv.plugin.version.split('.') : false;
 
-      if(parseInt(version[0]) != 1 || parseInt(version[1]) != 9) {
+      if(!version || parseInt(version[0]) != 1 || parseInt(version[1]) != 9) {
          var errStr = "<strong>CoNetServ extension is incompatible with currently installed plugin.</strong><br/><br/>\
             There might be severe problems with functionality - please reinstall your CoNetServ extension."
 
          Conetserv.LocalServices.enabled = false;
-         Conetserv.ExternalServices.enabled = false;
+         Conetserv.LocalInfo.enabled = false;
          this.divError("#local-services", errStr);
          this.divError("#local-info", errStr);
          return;
@@ -251,7 +251,7 @@ Conetserv.Ui = {
        */
 
       if(!Conetserv.plugin.ping) {
-         $(".local .ping6").remove();
+         $(".local .ping").remove();
       }
       else {
          if(!Conetserv.plugin.ping.found) {

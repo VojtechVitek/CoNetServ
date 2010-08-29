@@ -61,8 +61,9 @@ Conetserv.ExternalServices = {
       /*
        * Check if start is possible
        */
-      if(!this.enabled || this.isRunning)
+      if(!this.enabled || this.isRunning) {
          return false;
+      }
 
       /*
        * Set URL value or show red bar around url field
