@@ -18,6 +18,7 @@ endif()
 
 # Test header file and set final variable if found
 if(XULRunnerSDK_INCLUDE_DIR AND EXISTS "${XULRunnerSDK_INCLUDE_DIR}/npapi.h")
+   set(NPAPI_INCLUDE_DIR ${XULRunnerSDK_INCLUDE_DIR})
 	set(XULRunnerSDK_FOUND "YES")
 else()
 	message(FATAL_ERROR "Be sure to specify ABSOLUTE path of INCLUDE directory of XULRunnerSDK.")

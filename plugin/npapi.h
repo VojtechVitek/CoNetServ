@@ -51,11 +51,8 @@ extern JNIEnv *pluginJniEnv;
 #define HIBYTE(x) ((((uint32_t)(x)) & 0xff00) >> 8)
 #endif
 
-/* WebKIT and XULRunner differs in struct _NPString member names */
-#if defined(WEBKIT_DARWIN_SDK)
-#define STRING_UTF8CHARACTERS(_v) (_v).UTF8Characters
-#define STRING_UTF8LENGTH(_v)     (_v).UTF8Length
-#elif defined(_WINDOWS)
+/* NPAPI headers can have different struct _NPString members */
+#ifdef HAVE_NPAPI_NPSTRING_CAMEL_CASE_MEMBERS
 #define STRING_UTF8CHARACTERS(_v) (_v).UTF8Characters
 #define STRING_UTF8LENGTH(_v)     (_v).UTF8Length
 #else
