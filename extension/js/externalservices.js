@@ -62,6 +62,7 @@ Conetserv.ExternalServices = {
        * Check if start is possible
        */
       if(!this.enabled || this.isRunning) {
+         Conetserv.LookingGlass.stop();
          return false;
       }
 
@@ -115,6 +116,12 @@ Conetserv.ExternalServices = {
          },
          /* service results */
          function(service, result) {
+            var noDataErr = "<strong> Server has not returned any data. </strong> <br /><br /> This might have been caused by incompatibility with internet protocol version \
+               or internal server error.";
+            var err = "<strong> Server has encountered an error and returned following string: </strong> <br /> <br />";
+
+            var errRegExp = /%.*/i
+
             switch(service.service) {
                case 'PING':
                   if(Conetserv.ExternalServices.Ping.next > Conetserv.ExternalServices.Ping.max) {
@@ -124,7 +131,15 @@ Conetserv.ExternalServices = {
                      Conetserv.Ui.removeIcons(".external", ".ping");
                   }
                   $("#external-ping-service-" + Conetserv.ExternalServices.Ping.next).html(service.name);
-                  Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].add(result + '\n');
+                  if(result == "") {
+                     Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].setErr(noDataErr);
+                  }
+                  else if(errRegExp.exec(result)){
+                     Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].setErr(err + result);
+                  }
+                  else {
+                     Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].add(result + '\n');
+                  }
                   break;
                 case 'PING6':
                   if(Conetserv.ExternalServices.Ping6.next > Conetserv.ExternalServices.Ping6.max) {
@@ -134,7 +149,16 @@ Conetserv.ExternalServices = {
                      Conetserv.Ui.removeIcons(".external", ".ping6");
                   }
                   $("#external-ping6-service-" + Conetserv.ExternalServices.Ping6.next).html(service.name);
-                  Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].add(result + '\n');
+                  alert(errRegExp.test(result));
+                  if(result == "") {
+                     Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].setErr(noDataErr);
+                  }
+                  else if(errRegExp.test(result)){
+                     Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].setErr(err + result);
+                  }
+                  else {
+                     Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].add(result + '\n');
+                  }
                   break;
                case 'TRACE':
                   if(Conetserv.ExternalServices.Tracert.next > Conetserv.ExternalServices.Tracert.max) {
@@ -144,7 +168,12 @@ Conetserv.ExternalServices = {
                      Conetserv.Ui.removeIcons(".external", ".tracert");
                   }
                   $("#external-tracert-service-" + Conetserv.ExternalServices.Tracert.next).html(service.name);
-                  Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].add(result + '\n');
+                  if(result == "") {
+                     Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].setErr(noDataErr);
+                  }
+                  else {
+                     Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].add(result + '\n');
+                  }
                   break;
                case 'TRACE6':
                   if(Conetserv.ExternalServices.Tracert6.next > Conetserv.ExternalServices.Tracert6.max) {
@@ -154,7 +183,12 @@ Conetserv.ExternalServices = {
                      Conetserv.Ui.removeIcons(".external", ".tracert6");
                   }
                   $("#external-tracert6-service-" + Conetserv.ExternalServices.Tracert6.next).html(service.name);
-                  Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].add(result + '\n');
+                  if(result == "" ) {
+                     Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].setErr(noDataErr);
+                  }
+                  else {
+                     Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].add(result + '\n');
+                  }
                   break;
                default:
                   break;
