@@ -46,12 +46,24 @@ Conetserv.Options = {
       }
 
       /* Check, if storage has been not initialized before, if so, initialize it */
-      if(!this.storage['conetserv-settings-initialized']) {
+      if(!this.storage['conetserv-settings-initialized'] || this.storage['conetserv-settings-initialized'].toString() == "") {
+         alert("ahoj");
          this.storage['conetserv-settings-initialized'] = true;
          this.storage["conetserv-settings-external-services_router"] = "";
 
-      }
+         this.storage['conetserv-settings-general-toolbox'] = false;
+         this.storage['conetserv-settings-general-autostart'] = false;
 
+         this.storage['conetserv-settings-general-frontpage'] = "local-services";
+         this.storage['conetserv-settings-general-frontpage-child'] = "local-ping-input";
+
+         this.storage['conetserv-settings-general-skin'] = $("#settings-general-skin input").val();
+
+         this.storage["conetserv-settings-external-services"] = "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true";
+         this.storage["conetserv-settings-external-services_router"] = "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
+         
+      }
+      
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
       $("#settings-general-toolbox").attr("checked", this.toolbarButton);
 
@@ -60,9 +72,7 @@ Conetserv.Options = {
 
       /* redraw options page */
       this.frontPageParent = this.storage['conetserv-settings-general-frontpage'];
-      if(!this.frontPageParent) {
-         this.frontPageParent = "local-services";
-      }
+
       this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
       $("#frontpage-" + this.frontPageParent).attr("checked", true);
       Conetserv.Ui.redrawOptions();
@@ -76,9 +86,6 @@ Conetserv.Options = {
 
       /* skin options */
       this.skin = this.storage['conetserv-settings-general-skin'];
-      if(!this.skin) {
-         this.skin = $("#settings-general-skin input").val();
-      }
       $("#settings-general-skin input[value="+this.skin+"]").attr("checked", true);
 
       /* external services */
@@ -203,7 +210,7 @@ Conetserv.Options = {
                      Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4] = $(this).attr("value");
                      Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4] = $(this).attr("value");
                      break;
-                  case "settings-external-services-ilan-ipv4-router": 
+                  case "settings-external-services-ilan-ipv4-router":
                      Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4] = $(this).attr("value");
                      Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4] = $(this).attr("value");
                      break;

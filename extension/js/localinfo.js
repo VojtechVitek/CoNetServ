@@ -7,7 +7,7 @@ Conetserv.LocalInfo = {
 
 }
 
-Conetserv.Localinfo.Nmap = {
+Conetserv.LocalInfo.Nmap = {
    addData : function () {
 
    }
