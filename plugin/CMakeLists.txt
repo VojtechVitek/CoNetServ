@@ -33,11 +33,6 @@ endif()
 
 # Check NPAPI NPString members
 include(${CMAKE_MODULE_PATH}/NPAPI_NPString_members.cmake)
-if("${HAVE_NPAPI_NPSTRING_CAMEL_CASE_MEMBERS}")
-   set(HAVE_NPAPI_NPSTRING_WHAT_CASE_MEMBERS "HAVE_NPAPI_NPSTRING_CAMEL_CASE_MEMBERS")
-else()
-   set(HAVE_NPAPI_NPSTRING_WHAT_CASE_MEMBERS "HAVE_NPAPI_NPSTRING_LOWER_CASE_MEMBERS")
-endif()
 
 # Configure header file
 configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h)
