@@ -149,8 +149,11 @@ Conetserv.Ui = {
        * Bind start button to start local services
        */
       $("#local-url-start").click(function() {
-         Conetserv.LocalServices.stopCommands();
-         Conetserv.LocalServices.startCommands();
+         if(Conetserv.LocalServices.running) {
+            Conetserv.LocalServices.stopCommands();
+         } else {
+            Conetserv.LocalServices.startCommands();
+         }
          return false;
       });
 
@@ -159,16 +162,8 @@ Conetserv.Ui = {
        */
       $("#external-url-start").click(function() {
          if(Conetserv.ExternalServices.isRunning) {
-            $("#external-url-start").button("option", "icons", {
-              primary: 'ui-icon-play'
-            });
-            $("#external-url-start span").html("Start");
             Conetserv.ExternalServices.stop();
          } else {
-            $("#external-url-start").button("option", "icons", {
-              primary: 'ui-icon-stop'
-            });
-            $("#external-url-start span").html("Stop");
             Conetserv.ExternalServices.start();
          }
          return false;

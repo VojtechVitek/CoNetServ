@@ -4,11 +4,12 @@ if(!Conetserv) var Conetserv = {};
 /* LocalServices object */
 Conetserv.LocalServices = {
    enabled: true,
+   running: 0,
    /**
    * Start all commands available at once.
    */
    startCommands: function() {
-      if(!this.enabled)
+      if(!this.enabled || this.running)
          return false;
       /*
        * Set URL value or show red bar around url field
@@ -18,6 +19,14 @@ Conetserv.LocalServices = {
          document.getElementById("local-url").focus();
          return false;
       }
+
+      /*
+       * change button icon and text
+       */
+      $("#local-url-start").button("option", "icons", {
+        primary: 'ui-icon-stop'
+      });
+      $("#local-url-start span").html("Stop");
 
       this.start(this.Ping);
       this.start(this.Ping6);
@@ -33,16 +42,28 @@ Conetserv.LocalServices = {
       if(!this.enabled)
          return;
 
+      /*
+       * change button icon and text
+       */
+      $("#local-url-start").button("option", "icons", {
+        primary: 'ui-icon-play'
+      });
+      $("#local-url-start span").html("Start");
+
       this.stop(this.Ping);
       this.stop(this.Ping6);
       this.stop(this.Traceroute);
       this.stop(this.Traceroute6);
       this.stop(this.Nslookup);
       this.stop(this.Whois);
+
+      this.running = 0;
    },
 
    start: function(service) {
       if (service.interval == -1) {
+         this.running++;
+
          service.before_begin();
          try {
             service.console.clear();
@@ -102,6 +123,11 @@ Conetserv.LocalServices = {
          Conetserv.Ui.removeIcons(".local", service.class);
          window.clearInterval(service.interval);
          service.interval = -1;
+
+         if(--this.running == 0)
+         {
+            this.stopCommands();
+         }
       }
    },
 

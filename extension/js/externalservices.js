@@ -76,6 +76,12 @@ Conetserv.ExternalServices = {
 
       this.isRunning = 1;
 
+      /* Change button icon */
+      $("#external-url-start").button("option", "icons", {
+        primary: 'ui-icon-stop'
+      });
+      $("#external-url-start span").html("Stop");
+
       /* Restart service values */
       this.Ping.next = this.Ping6.next = this.Tracert.next = this.Tracert6.next = 1;
       this.Ping.max = this.Ping6.max = this.Tracert.max = this.Tracert6.max = 0;
@@ -238,6 +244,14 @@ Conetserv.ExternalServices = {
       Conetserv.Ui.removeIcons(".external", ".ping6");
       Conetserv.Ui.removeIcons(".external", ".tracert");
       Conetserv.Ui.removeIcons(".external", ".tracert6");
+
+      /*
+       * change button icon
+       */
+      $("#external-url-start").button("option", "icons", {
+        primary: 'ui-icon-play'
+      });
+      $("#external-url-start span").html("Start");
       
       this.isRunning = 0;
 
