@@ -582,6 +582,9 @@ Conetserv.LookingGlass.result = new Object();
 /* number of running services */
 Conetserv.LookingGlass.running = 0;
 
+/* XMLHttpRequest objects returned by ajax request */
+Conetserv.LookingGlass.runningServices = new Array();
+
 /* try to run services from the queue */
 Conetserv.LookingGlass.run = function() {
 
@@ -601,8 +604,8 @@ Conetserv.LookingGlass.run = function() {
 
       ++this.running;
 
-      /* Make ajax request */
-      $.ajax({
+      /* Make ajax request and store object it returns */
+      this.runningServices.push($.ajax({
          /* context */
          This: this,
          Request: Request,
@@ -616,8 +619,9 @@ Conetserv.LookingGlass.run = function() {
             var result = this.Request.parse(data);
             $.extend(Conetserv.LookingGlass.result, result);
             this.This.result_callback(this.This.service[this.Request.ServiceId], result);
-            if (--this.This.running == 0)
+            if (--Conetserv.LookingGlass.running == 0) {
                this.This.stopped_callback();
+            }
             else
                Conetserv.LookingGlass.run();
          },
@@ -626,7 +630,7 @@ Conetserv.LookingGlass.run = function() {
             if (--this.This.running == 0)
                this.This.stopped_callback();
          }
-      });
+      }));
    }
 
    this.queue = wait_queue;
@@ -646,6 +650,8 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
       document.getElementById("external-url").focus();
       return;
    }
+   
+   this.runningServices = [];
 
    /* callback functions init, throw started */
    this.result_callback = result_callback;
@@ -675,8 +681,7 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
          }
 
          for (var j = 0; j < this.service[i].request.length; ++j) {
-            if (!this.service[i].result)
-               this.service[i].result = {};
+            this.service[i].result = {};
             this.service[i].request[j].ServiceId = i;
             this.queue.push(this.service[i].request[j]);
          }
@@ -688,3 +693,12 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
    /* try to run services from the queue */
    this.run();
 };
+
+/* Stop all running services */
+Conetserv.LookingGlass.stop = function() {
+   for(var key in this.runningServices) {
+      this.runningServices[key].abort();
+   }
+
+   this.running = 0;
+}

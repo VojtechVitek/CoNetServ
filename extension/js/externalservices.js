@@ -62,7 +62,6 @@ Conetserv.ExternalServices = {
        * Check if start is possible
        */
       if(!this.enabled || this.isRunning) {
-         Conetserv.LookingGlass.stop();
          return false;
       }
 
@@ -76,6 +75,24 @@ Conetserv.ExternalServices = {
       }
 
       this.isRunning = 1;
+
+      /* Restart service values */
+      this.Ping.next = this.Ping6.next = this.Tracert.next = this.Tracert6.next = 1;
+      this.Ping.max = this.Ping6.max = this.Tracert.max = this.Tracert6.max = 0;
+
+      /* Clean consoles */
+      for(var i=1; i<=3; i++) {
+         this.Ping.console[i].clear();
+         this.Ping6.console[i].clear();
+         $("#external-ping-service-" + i).html("");
+         $("#external-ping6-service-" + i).html("");
+      }
+      for(i=1; i<=2; i++) {
+         this.Tracert.console[i].clear();
+         this.Tracert6.console[i].clear();
+         $("#external-tracert-service-" + i).html("");
+         $("#external-tracert6-service-" + i).html("");
+      }
 
 
       /* Start external info services */
@@ -120,7 +137,7 @@ Conetserv.ExternalServices = {
                or internal server error.";
             var err = "<strong> Server has encountered an error and returned following string: </strong> <br /> <br />";
 
-            var errRegExp = /%.*/i
+            var errRegExp = /^%.*/i
 
             switch(service.service) {
                case 'PING':
@@ -149,7 +166,6 @@ Conetserv.ExternalServices = {
                      Conetserv.Ui.removeIcons(".external", ".ping6");
                   }
                   $("#external-ping6-service-" + Conetserv.ExternalServices.Ping6.next).html(service.name);
-                  alert(errRegExp.test(result));
                   if(result == "") {
                      Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].setErr(noDataErr);
                   }
@@ -196,9 +212,35 @@ Conetserv.ExternalServices = {
          },
          /* stopped */
          function() {
-            this.isRunning = 0;
+            Conetserv.ExternalServices.stop();
          }
       )
+      return true;
+   },
+
+   stop: function () {
+      /*
+       * Check if stop is possible
+       */
+      if(!this.enabled || !this.isRunning) {
+         return false;
+      }
+
+      /*
+       * Stop looking glass
+       */
+      Conetserv.LookingGlass.stop();
+
+      /*
+       * remove ui icons
+       */
+      Conetserv.Ui.removeIcons(".external", ".ping");
+      Conetserv.Ui.removeIcons(".external", ".ping6");
+      Conetserv.Ui.removeIcons(".external", ".tracert");
+      Conetserv.Ui.removeIcons(".external", ".tracert6");
+      
+      this.isRunning = 0;
+
       return true;
    }
 }

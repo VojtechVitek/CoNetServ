@@ -36,30 +36,6 @@ Conetserv.onReady = function() {
    this.Ui.checkAvailability();
    this.Ui.redraw();
 
-   /*
-    * Bind start button to start local services
-    */
-   $("#local-url-start").click(function() {
-      Conetserv.LocalServices.stopCommands();
-      Conetserv.LocalServices.startCommands();
-      return false;
-   });
-
-   /*
-    * Bind start button to start external services
-    */
-   $("#external-url-start").click(function() {
-      Conetserv.ExternalServices.start();
-      return false;
-   });
-
-   /*
-    * Start services on menuitem clicked
-    */
-    $('#external-info-header a').click(function(){
-       Conetserv.ExternalInfo.start();
-    });
-
    Conetserv.LocalServices.initialize();
    Conetserv.ExternalServices.initialize();
    Conetserv.Plot.initialize();
