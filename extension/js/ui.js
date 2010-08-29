@@ -235,8 +235,6 @@ Conetserv.Ui = {
       /* Check plugin version */
       var version = Conetserv.plugin.version ? Conetserv.plugin.version.split('.') : false;
 
-      alert(Conetserv.plugin.version);
-
       if(!version || parseInt(version[0]) != 1 || parseInt(version[1]) != 9) {
          var errStr = "<strong>CoNetServ extension is incompatible with currently installed plugin.</strong><br/><br/>\
             There might be severe problems with functionality - please reinstall your CoNetServ extension."
