@@ -4,6 +4,7 @@ set(CMAKE_REQUIRED_INCLUDES ${NPAPI_INCLUDE_DIR})
 
 CHECK_C_SOURCE_COMPILES("
 #include <npapi.h>
+#include <nptypes.h>
 #include <npruntime.h>
 int main()
 {
@@ -17,6 +18,7 @@ int main()
 
 CHECK_C_SOURCE_COMPILES("
 #include <npapi.h>
+#include <nptypes.h>
 #include <npruntime.h>
 int main()
 {
