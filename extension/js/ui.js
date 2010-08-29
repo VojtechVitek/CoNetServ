@@ -222,8 +222,8 @@ Conetserv.Ui = {
        * CoNetServ
        */
       if(!Conetserv.plugin) {
-         var errStr = "CoNetServ plugin for your browser has not \
-            been correctly loaded. <br /> <br/>Local services and local info will not be available. <br /><br />\
+         var errStr = "<strong>CoNetServ plugin for your browser has not \
+            been correctly loaded. </strong><br /> <br/>Local services and local info will not be available. <br /><br />\
             Please, refer to readme for correct installation steps.";
 
          Conetserv.LocalServices.enabled = false;

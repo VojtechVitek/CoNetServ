@@ -42,12 +42,22 @@ Conetserv.Options = {
       }
       else {
          this.storage = false;
+      }
+
+      if(!this.storage) {
+         this.skin = $("#settings-general-skin input").val();
+         ext_services: "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true";
+         ext_services_router: "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
+
+         Conetserv.Ui.divError("#settings", "<strong>Local storage initialization has failed.\
+            </strong> <br /><br />\
+            Please make sure you are using supported web browser.");
+         
          return;
       }
 
       /* Check, if storage has been not initialized before, if so, initialize it */
       if(!this.storage['conetserv-settings-initialized'] || this.storage['conetserv-settings-initialized'].toString() == "") {
-         alert("ahoj");
          this.storage['conetserv-settings-initialized'] = true;
          this.storage["conetserv-settings-external-services_router"] = "";
 
