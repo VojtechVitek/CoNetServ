@@ -366,37 +366,32 @@ Conetserv.Url = {
          addr = this.proto.exec(addr)[1];
       }
 
+      // comment - parse horse name
       if (this.ipv6_full.test(addr)) {
          // Full IPv6
          this.hostname = this.ipv6_full.exec(addr)[1];
          this.domain = this.hostname;
-      }
-      if (this.ipv6_compressed.test(addr)) {
+      } else if (this.ipv6_compressed.test(addr)) {
          // Compressed IPv6
          this.hostname = this.ipv6_compressed.exec(addr)[1];
          this.domain = this.hostname;
-      }
-      if (this.ipv6_mapped_ipv4_full.test(addr)) {
+      } else if (this.ipv6_mapped_ipv4_full.test(addr)) {
          // Full IPv4 mapped to IPv6
          this.hostname = this.ipv6_mapped_ipv4_full.exec(addr)[1];
          this.domain = this.hostname;
-      }
-      if (this.ipv6_mapped_ipv4_compressed.test(addr)) {
+      } else if (this.ipv6_mapped_ipv4_compressed.test(addr)) {
          // Compressed IPv4 mapped to IPv6
          this.hostname = this.ipv6_mapped_ipv4_compressed.exec(addr)[1];
          this.domain = this.hostname;
-      }
-      if (this.ipv4.test(addr)) {
+      } else if (this.ipv4.test(addr)) {
          // IPv4
          this.hostname = this.ipv4.exec(addr)[1];
          this.domain = this.hostname;
-      }
-      if (this.special_address.test(addr)) {
+      } else if (this.special_address.test(addr)) {
          // Special address
          this.hostname = this.special_address.exec(addr)[1];
          this.domain = this.hostname;
-      }
-      else if (this.ascii_url.test(addr)) {
+      } else if (this.ascii_url.test(addr)) {
          // ASCII url?
          this.hostname = this.ascii_url.exec(addr)[1];
          // Parse domain from hostname string
