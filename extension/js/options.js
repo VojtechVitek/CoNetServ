@@ -56,8 +56,8 @@ Conetserv.Options = {
          return;
       }
 
-      /* Check, if storage has been not initialized before, if so, initialize it */
-      if(!this.storage['conetserv-settings-version'] || this.storage['conetserv-settings-version'] != Conetserv.version) {
+      /* Check, if version stored in local storage is compatible with current version */
+      if(!this.storage['conetserv-settings-version'] || this.storage['conetserv-settings-version'].toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
          this.storage['conetserv-settings-version'] = Conetserv.version;
          this.storage["conetserv-settings-external-services_router"] = "";
 
