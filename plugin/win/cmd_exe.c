@@ -86,7 +86,6 @@ run_command(process *p, const char *cmd)
    }
 
    /* create command for execution */
-   DEBUG_STR("cmd_line->run(%s)", cmd);
    len = strlen(cmd);
    command = browser->memalloc(sizeof(*command) * (len + 16/*len of bellow cmd*/ + 1));
    sprintf(command, "cmd.exe /U /C \"%s\"", cmd);
@@ -116,7 +115,7 @@ run_command(process *p, const char *cmd)
    p->pid = procInfo.hProcess;
    p->running = true;
 
-   DEBUG_STR("cmd_line->run(): CreateProcess(): PID %d", p->pid);
+   DEBUG_STR("cmd_line->run(\"%s\"): PID %d", cmd, p->pid);
 
    CloseHandle(procInfo.hThread);
    return true;
@@ -142,7 +141,6 @@ process_stop(process *p)
 
    /* close read pipe */
    CloseHandle(p->pipe[0]);
-
    p->running = false;
 
    DEBUG_STR("process->stop(pid %d): true", p->pid);
@@ -172,26 +170,33 @@ process_read(process *p, NPVariant *result)
       return true;
    }
 
-/* TODO: Process have terminated? */
-/* AFTER PEAK OR AFTER READ? */
-#if 0
-   GetExitCodeProcess(p->pid, &status);
-   if (status != STILL_ACTIVE) {
-      /*check for any extra data*/
-      PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
-      if (!status) {
-         /* Close handles */
-         CloseHandle(p->pipe[0]);
-         CloseHandle(p->pipe[1]);
-         p->running = false;
-      }
-   }
-#endif
+   /* peek - check if data are available */
+   if (!PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL)) {
 
-   /* check if data are available */
-   PeekNamedPipe(p->pipe[0], NULL, 0, NULL, &status, NULL);
+      DEBUG_STR("cmd_line->read(): false (peek error %d)", GetLastError());
+
+      BOOLEAN_TO_NPVARIANT(false, *result);
+      return true;
+
+   }
+
+   /* can't peek */
    if (!status) {
-      DEBUG_STR("cmd_line->read(): false (no data, continue)", GetLastError());
+
+      GetExitCodeProcess(p->pid, &status);
+      if (status != STILL_ACTIVE) {
+
+         DEBUG_STR("cmd_line->read(): false (process has finished) ");
+
+         /* close read pipe */
+         CloseHandle(p->pipe[0]);
+         p->running = false;
+
+      } else {
+
+         DEBUG_STR("cmd_line->read(): false (no data, continue)", GetLastError());
+
+      }
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
@@ -200,7 +205,7 @@ process_read(process *p, NPVariant *result)
    /* read from pipe */
    if (!ReadFile(p->pipe[0], buffer, BUFLEN - 1, &len, NULL)) {
 
-      DEBUG_STR("cmd_line->read(): false (error %d)", GetLastError());
+      DEBUG_STR("cmd_line->read(): false (read error %d)", GetLastError());
 
       BOOLEAN_TO_NPVARIANT(false, *result);
       return true;
