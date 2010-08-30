@@ -243,12 +243,14 @@ Conetserv.Ui = {
       }
       else if($.client.os == "Linux") {
          output += '<strong>For installation please run following command depending on your linux distribution:</strong><br/><br/> \
-            Ubuntu/Debian: $ sudo apt-get install ' + service + '<br/> \
-            SUSE/OpenSUSE: $ sudo zypper install ' + service + '<br/> \
-            Fedora/Yellow Dog Linux: $ sudo yum install ' + service + '<br/> \
-            RedHat/CentOS: $ up2date ' + service + '<br/> \
-            Gentoo: $ emerge ' + service + '<br/> \
-            Mandriva: $ urpmi ' + service + '<br/> \
+            Use your package manager to find out in which package ' + service + ' is located and then execute following\\n\
+            command: <br/><br/> \
+            Ubuntu/Debian: # apt-get install [package]<br/> \
+            SUSE/OpenSUSE: # zypper install [package]<br/> \
+            Fedora/Yellow Dog Linux: $ yum install [package]<br/> \
+            RedHat/CentOS: # up2date [package]<br/> \
+            Gentoo: # emerge [package]<br/> \
+            Mandriva: # urpmi [package]<br/> \
             <br/>\
             If your distribution is not listed, use your package installation program instead of listed ones.';
       }
