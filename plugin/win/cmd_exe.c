@@ -273,6 +273,9 @@ init_cmd_line_module(const char *program)
    if (!m)
       return NULL;
 
+   /* TODO: Try command in CMD.EXE */
+   m->found = true;
+
    return m;
 }
 
