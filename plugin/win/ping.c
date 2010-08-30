@@ -21,8 +21,7 @@ invokeMethod(NPObject *, NPIdentifier, const NPVariant *, uint32_t, NPVariant *)
 static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
-   char argv[100];
-   int i;
+   char argv[200];
    char *ptr;
    cmd_exe_module *program;
 
@@ -33,8 +32,11 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       if (argc < 1)
          return false;
 
-      i = 0; /* position in arguments passed from JavaScript */
       ptr = argv; /* position in command string we are creating */
+
+      /* Just the URL argument can be passed from JavaScript */
+      if (argc != 1 || args[0].type != NPVariantType_String)
+         return false;
 
       /* Choose program (ping or ping6) */
       program = ((object_ping *)obj)->program;
@@ -46,24 +48,32 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
          ptr += strlen("ping ");
       }
 
-      /* Get first argument - the url */
-      if (args[i].type != NPVariantType_String)
-         return false;
+      /* Set user-defined arguments */
+      if (settings.count > 0) {
+         ptr += _snprintf(ptr, 20, "-n %d ", settings.count);
+      } else if (settings.count == 0) {
+         ptr += _snprintf(ptr, 20, "-t ");
+      }
+      if (settings.packetsize > 0) {
+         ptr += _snprintf(ptr, 20, "-l %d ", settings.packetsize);
+      }
+      if (settings.timeout > 0) {
+         ptr += _snprintf(ptr, 20, "-w %d ", settings.timeout);
+      }
+      if (settings.ttl > 0) {
+         ptr += _snprintf(ptr, 20, "-i %d ", settings.ttl);
+      }
 
-      /* Copy URL to command string */
-      /* FIXME: Switch char argv[100] to dynamic-allocated array
-                and fix this MAGIC constraint
-       */
-      if (STRING_UTF8LENGTH(args[i].value.stringValue) > 80)
+      /* Set the URL as the last argument */
+      if (STRING_UTF8LENGTH(args[0].value.stringValue) > 100)
          return false;
       memcpy(ptr,
-             (char *)STRING_UTF8CHARACTERS(args[i].value.stringValue),
-             STRING_UTF8LENGTH(args[i].value.stringValue));
-      ptr += STRING_UTF8LENGTH(args[i].value.stringValue);
+             (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue),
+             STRING_UTF8LENGTH(args[0].value.stringValue));
+      ptr += STRING_UTF8LENGTH(args[0].value.stringValue);
 
+      /* Set NULL-terminating character */
       *ptr = '\0';
-
-      /* PARSE ARGUMENTS HERE */
 
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
 
