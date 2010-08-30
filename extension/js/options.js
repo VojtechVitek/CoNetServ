@@ -57,17 +57,27 @@ Conetserv.Options = {
          return;
       }
 
+      var reinitialize = false;
+
       /* Conetserv is run for the first time */
       if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString() == '') {
+         reinitialize = true;
          setTimeout('Conetserv.Ui.showDialog("<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.")', 500);
       }
       /* Conetserv has been updated */
       else if(this.storage['conetserv-version'] != Conetserv.version){
          setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 500);
+         /* check, if mayor version change has occured */
+         if(this.storage['conetserv-version'].toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
+            reinitialize = true;
+         }
+         /* Otherwise just set new version */
+         else {
+            this.storage['conetserv-version'] = Conetserv.version;
+         }
       }
       
-      /* Check, if version stored in local storage is compatible with current version */
-      if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
+      if(reinitialize) {
          this.storage['conetserv-version'] = Conetserv.version;
          this.storage["conetserv-settings-external-services_router"] = "";
 
@@ -81,7 +91,6 @@ Conetserv.Options = {
 
          this.storage["conetserv-settings-external-services"] = "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true";
          this.storage["conetserv-settings-external-services_router"] = "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
-         
       }
       
       this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
