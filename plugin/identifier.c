@@ -38,7 +38,7 @@ init_identifiers()
 
 #if defined(MODULE_PING) || defined(MODULE_PING6)
    identifiers->count = browser->getstringidentifier("count");
-   identifiers->interval = browser->getstringidentifier("interval");
+   identifiers->timeout = browser->getstringidentifier("timeout");
    identifiers->packetsize = browser->getstringidentifier("packetsize");
    identifiers->ttl = browser->getstringidentifier("ttl");
 #endif

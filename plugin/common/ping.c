@@ -17,7 +17,7 @@ typedef struct _object_ping {
  */
 struct {
    int count;
-   int interval;
+   int timeout;
    int packetsize;
    int ttl;
 } settings = {0};
@@ -33,7 +33,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->interval) {
+   if (identifier == identifiers->timeout) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -62,9 +62,9 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
       INT32_TO_NPVARIANT(settings.count, *value);
       return true;
    }
-   if (identifier == identifiers->interval) {
+   if (identifier == identifiers->timeout) {
       DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
-      INT32_TO_NPVARIANT(settings.interval, *value);
+      INT32_TO_NPVARIANT(settings.timeout, *value);
       return true;
    }
    if (identifier == identifiers->packetsize) {
@@ -89,9 +89,9 @@ setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
       settings.count = NPVARIANT_TO_INT32(*value);
       return true;
    }
-   if (identifier == identifiers->interval) {
+   if (identifier == identifiers->timeout) {
       DEBUG_STR("plugin->ping->setProperty(%s): true", DEBUG_IDENTIFIER(identifier));
-      settings.interval = NPVARIANT_TO_INT32(*value);
+      settings.timeout = NPVARIANT_TO_INT32(*value);
       return true;
    }
    if (identifier == identifiers->packetsize) {

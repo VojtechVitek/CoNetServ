@@ -24,7 +24,7 @@ typedef struct _identifier {
 
 #if defined(MODULE_PING) || defined(MODULE_PING6)
    NPIdentifier   count;
-   NPIdentifier   interval;
+   NPIdentifier   timeout;
    NPIdentifier   packetsize;
    NPIdentifier   ttl;
 #endif
