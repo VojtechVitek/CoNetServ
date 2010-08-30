@@ -170,10 +170,18 @@ Conetserv.LocalServices.Ping = {
       Conetserv.Plot.localPingData.reset();
 
       /* set service parameters */
-      Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count;
-      Conetserv.plugin.ping.interval = Conetserv.Options.LocalServices.ping_interval;
-      Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl;
-      Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packetsize;
+      if(Conetserv.Options.LocalServices.ping_packet_count) {
+         Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count;
+      }
+      if(Conetserv.Options.LocalServices.ping_interval) {
+         Conetserv.plugin.ping.interval = Conetserv.Options.LocalServices.ping_interval;
+      }
+      if(Conetserv.Options.LocalServices.ping_ttl) {
+         Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl;
+      }
+      if(Conetserv.Options.LocalServices.ping_packet_size) {
+         Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packet_size;
+      }
 
    },
 
