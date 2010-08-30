@@ -13,6 +13,7 @@ Conetserv.Options = {
    skin: false,
    ext_services: false,
    ext_services_router: false,
+   version: false,
 
    //enums for easier argument passing to functions
    enums : {
@@ -56,9 +57,18 @@ Conetserv.Options = {
          return;
       }
 
+      /* Conetserv is run for the first time */
+      if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString() == '') {
+         setTimeout('Conetserv.Ui.showDialog("<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.")', 500);
+      }
+      /* Conetserv has been updated */
+      else if(this.storage['conetserv-version'] != Conetserv.version){
+         setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 500);
+      }
+      
       /* Check, if version stored in local storage is compatible with current version */
-      if(!this.storage['conetserv-settings-version'] || this.storage['conetserv-settings-version'].toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
-         this.storage['conetserv-settings-version'] = Conetserv.version;
+      if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
+         this.storage['conetserv-version'] = Conetserv.version;
          this.storage["conetserv-settings-external-services_router"] = "";
 
          this.storage['conetserv-settings-general-toolbox'] = false;
@@ -136,6 +146,8 @@ Conetserv.Options = {
             }
          }
       }
+
+      this.version = this.storage["conetserv-version"];
    },
 
    /**
@@ -197,8 +209,7 @@ Conetserv.Options = {
 
             /* if maximum alowed services has already been reached, return false */
             if(ping > 3 || ping6 > 3 || tracert > 2 || tracert6 > 2) {
-               $('#dialog').html("You can allow only 3 ping services and 2 traceroute services in both IPv4 and IPv6.")
-               $('#dialog').dialog('open');
+               Conetserv.Ui.showDialog("Warning!", "You can allow only 3 ping services and 2 traceroute services in both IPv4 and IPv6.");
                return false;
             }
 

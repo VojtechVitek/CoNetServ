@@ -202,6 +202,17 @@ Conetserv.Ui = {
    },
 
    /**
+    * Shows jquery dialog
+    * @param title defines dialog title
+    * @param msg defines message to be shown in dialog
+    */
+   showDialog : function(title, msg) {
+      $("#dialog").dialog("option", "title", title);
+      $('#dialog').html(msg);
+      $('#dialog').dialog('open');
+   },
+
+   /**
    * removes any DOM children in div and instead writes error message by jquery
    * @param div Which divs in DOM should the error should be set to.
    * @param msg Error message.

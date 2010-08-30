@@ -3,6 +3,10 @@ if(!Conetserv) var Conetserv = {};
 
 Conetserv.plugin = false;
 Conetserv.version = "1.9.9";
+Conetserv.changelog = "* Object-oriented API to JS (availability for 3rd party) <br/>\
+* Independent objects to run programs and commands with options <br/>\
+* User-friendly error messages <br/>\
+* Installation guides for missing programs (OS, platform, distro)"
 
 Conetserv.onReady = function() {
 
@@ -63,7 +67,5 @@ Conetserv.onLoad = function() {
       }
       else if(this.Options.frontPageParent == "local-info") {
       }
-   }
-
-   
+   }   
 }
