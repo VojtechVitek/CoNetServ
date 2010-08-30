@@ -10,7 +10,13 @@ Operating systems [arch] support:
 Plugin:
  * CMake - automatic recognition of NPAPI NPString members (CamelCase or lowercase)
 Extension:
-
+ * Ping and Traceroute from looking glass
+ * Selectable looking glass providers and servers
+ * User friendly messages, errors and dialogs
+ * Message, when no service output is comming for long time
+ * Local service's presence checking and eventual installation steps  
+ * Everything is now in Conetserv object (namespace)
+ * Added local settings options
 
 Version 1.3 (2010-06-12)
 ========================
