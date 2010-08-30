@@ -17,7 +17,7 @@ Conetserv.Options = {
 
    LocalServices: {
       ping_packet_count : false,
-      ping_interval : false,
+      ping_timeout : false,
       ping_ttl : false,
       ping_packet_size : false,
    },
@@ -168,8 +168,8 @@ Conetserv.Options = {
       if((this.LocalServices.ping_packet_count = this.storage["conetserv-settings-local-services-ping-packet-count"])){
          $("#settings-local-services-ping-count").val(this.LocalServices.ping_packet_count);
       }
-      if((this.LocalServices.ping_interval = this.storage["conetserv-settings-local-services-ping-interval"])){
-         $("#settings-local-services-ping-interval").val(this.LocalServices.ping_interval);
+      if((this.LocalServices.ping_timeout = this.storage["conetserv-settings-local-services-ping-timeout"])){
+         $("#settings-local-services-ping-timeout").val(this.LocalServices.ping_timeout);
       }
       if((this.LocalServices.ping_ttl = this.storage["conetserv-settings-local-services-ping-ttl"])){
          $("#settings-local-services-ping-ttl").val(this.LocalServices.ping_ttl);
@@ -291,14 +291,14 @@ Conetserv.Options = {
                }
             }
 
-            if((this.LocalServices.ping_interval = $("#settings-local-services-ping-interval").val())) {
-               if(!(this.LocalServices.ping_interval = parseInt(this.LocalServices.ping_interval))) {
-                  Conetserv.Ui.showDialog("Warning!", "Ping interval can only be set by a numeric value.");
-                  this.storage.removeItem("conetserv-settings-local-services-ping-interval");
+            if((this.LocalServices.ping_timeout = $("#settings-local-services-ping-timeout").val())) {
+               if(!(this.LocalServices.ping_timeout = parseInt(this.LocalServices.ping_timeout))) {
+                  Conetserv.Ui.showDialog("Warning!", "Ping timeout can only be set by a numeric value.");
+                  this.storage.removeItem("conetserv-settings-local-services-ping-timeout");
                   return false;
                }
                else {
-                  this.storage["conetserv-settings-local-services-ping-interval"] = this.LocalServices.ping_interval;
+                  this.storage["conetserv-settings-local-services-ping-timeout"] = this.LocalServices.ping_timeout;
                }
             }
 

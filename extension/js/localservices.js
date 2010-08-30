@@ -173,8 +173,8 @@ Conetserv.LocalServices.Ping = {
       if(Conetserv.Options.LocalServices.ping_packet_count) {
          Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count;
       }
-      if(Conetserv.Options.LocalServices.ping_interval) {
-         Conetserv.plugin.ping.interval = Conetserv.Options.LocalServices.ping_interval;
+      if(Conetserv.Options.LocalServices.ping_timeout) {
+         Conetserv.plugin.ping.timeout = Conetserv.Options.LocalServices.ping_timeout;
       }
       if(Conetserv.Options.LocalServices.ping_ttl) {
          Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl;
