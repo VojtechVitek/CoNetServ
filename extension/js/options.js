@@ -95,7 +95,7 @@ Conetserv.Options = {
       });
 
       /* skin options */
-      this.skin = this.storage['conetserv-settings-general-skin'];
+      this.skin = this.storage['conetserv-settings-general-skin'] ? this.storage['conetserv-settings-general-skin'] : $("#settings-general-skin input").val();
       $("#settings-general-skin input[value="+this.skin+"]").attr("checked", true);
 
       /* external services */
