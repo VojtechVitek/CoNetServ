@@ -179,7 +179,7 @@ process_read(process *p, NPVariant *result)
       /* be sure to terminate string by null-character */
       buffer[len] = '\0';
 
-      /* fill the result string */
+      /* allocate fill the result string */
       chars = browser->memalloc((len + 1) * sizeof(*chars));
       memcpy(chars, buffer, len + 1);
       STRING_UTF8CHARACTERS(str) = chars;

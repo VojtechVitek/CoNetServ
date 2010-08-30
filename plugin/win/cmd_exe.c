@@ -126,16 +126,16 @@ process_read(process *p, NPVariant *result)
    /* get active codepage id */
    codepage = GetOEMCP();
 
-   /* convert characters to multibyte */
+   /* convert multibyte characters (of current codepage) to widechar characters */
    len = MultiByteToWideChar(codepage, 0, buffer, len, buffer_wchar, BUFLEN_WCHAR);
 
-   /* convert characters to utf-8 */
+   /* convert widechar characters to utf-8 */
    len = WideCharToMultiByte(CP_UTF8, 0, buffer_wchar, len, buffer_utf8, BUFLEN_UTF8, 0, 0);
 
    /* be sure to terminate string by null-character */
    buffer_utf8[len] = '\0';
 
-   /* fill the result string */
+   /* allocate and fill the result string */
    chars = browser->memalloc((len + 1) * sizeof(*chars));
    memcpy(chars, buffer_utf8, len + 1);
    STRING_UTF8CHARACTERS(str) = chars;
