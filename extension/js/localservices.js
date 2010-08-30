@@ -59,6 +59,8 @@ Conetserv.LocalServices = {
          Conetserv.LocalServices.running++;
 
          service.before_begin();
+
+         service.finished = false;
          try {
             service.console.clear();
 
@@ -103,6 +105,7 @@ Conetserv.LocalServices = {
                service.console.setErr("<strong>Service has most probably encountered an error with following output: </strong> <br/></br>"
                   + err);
             }
+            service.finished = true;
             Conetserv.LocalServices.stop(service);
          }
       }
@@ -120,6 +123,13 @@ Conetserv.LocalServices = {
          }
          
          Conetserv.Ui.removeIcons(".local", service.class);
+
+         service.console.touched = true;
+         /* if service has been stopped manually, set error to console */
+         if(!service.finished) {
+            service.console.setErr("<strong>Service has been terminated before it's finish.</strong>");
+         }
+
          window.clearInterval(service.interval);
          service.interval = -1;
          if(--Conetserv.LocalServices.running == 0)
@@ -148,6 +158,7 @@ Conetserv.LocalServices = {
 Conetserv.LocalServices.Ping = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.ping',                          //class for icons
@@ -174,6 +185,7 @@ Conetserv.LocalServices.Ping = {
 Conetserv.LocalServices.Ping6 = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.ping6',                         //class for icons
@@ -193,6 +205,7 @@ Conetserv.LocalServices.Ping6 = {
 Conetserv.LocalServices.Traceroute = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.tracert',                       //class for icons
@@ -212,6 +225,7 @@ Conetserv.LocalServices.Traceroute = {
 Conetserv.LocalServices.Traceroute6 = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.tracert6',                      //class for icons
@@ -231,6 +245,7 @@ Conetserv.LocalServices.Traceroute6 = {
 Conetserv.LocalServices.Nslookup = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.nslookup',                     //class for icons
@@ -248,6 +263,7 @@ Conetserv.LocalServices.Nslookup = {
 Conetserv.LocalServices.Whois = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.whois',                        //class for icons
@@ -266,6 +282,7 @@ Conetserv.LocalServices.Whois = {
 Conetserv.LocalServices.Nmap = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.nmap',                        //class for icons
@@ -283,6 +300,7 @@ Conetserv.LocalServices.Nmap = {
 Conetserv.LocalServices.Dig = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
+   finished: false,                         //saying, if service has finished its run
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.dig',                        //class for icons
