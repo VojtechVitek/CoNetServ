@@ -22,6 +22,11 @@ Conetserv.Console = function(div) {
    this.linux.hostname = /([\w\-]+\.)+([a-z]+)/ig //\(([0-9\i]*)\).*/i
    this.linux.ip = /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ig
    this.linux.time = /(?:\/?(\d+\.?\d*))+\s?ms(ec){0,1}/ig  // format: xx.yy/zz.yy ms
+
+   /* for inputTimerErr */
+   this.touched = true;
+   this.timedErr = false;
+   this.timer = false;
    
    
    //gets color from string containing number at the begining
@@ -63,6 +68,12 @@ Conetserv.Console = function(div) {
 
    //adds text to console, automaticaly stylizes for ping, traceroute, etc
    this.add = function(text){
+      /* set touched to true and clear timed error if present */
+      this.touched = true;
+      if(this.timedErr) {
+         this.clearErr();
+      }
+
       this.prevData += text;
       var npos = 0;
       this.prevData = this.prevData.replace(/(\r?\n)+/gi, "\n");
@@ -130,6 +141,9 @@ Conetserv.Console = function(div) {
 
    //clears console
    this.clear = function(){
+      /* clear timer of inputTimerErr */
+      clearTimeout(this.timer);
+      
       this.err = "";
       this.code = "";
       this.prevData = "";
@@ -146,11 +160,26 @@ Conetserv.Console = function(div) {
 
    /*
     * Checks if any input is written inside, otherwise sets error
+    * Object must be same as parameter object
+    * @param object defines which console will be setErr run in
     * @param time seconds after which error message is written inside
     * @param msg error message to be written inside
     */
-   this.inputTimerErr = function(time, msg) {
-      setTimeout("this.setErr(" + msg + ")", time * 1000);
+   this.inputTimerErr = function(object, time, msg) {
+      this.touched = 0;
+      this.timer = setTimeout(object + '._inputTimerSetErr("' + msg + '")', time * 1000);
+   },
+
+   /*
+    * Private function to be called by inputTimerErr, which checks if
+    * console has been changed since start of timer
+    * @param msg msg to be shown in console
+    */
+   this._inputTimerSetErr = function(msg) {
+      if(!this.touched) {
+         this.setErr(msg);
+         this.timedErr = true;
+      }
    }
 
 

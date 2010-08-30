@@ -23,10 +23,7 @@ Conetserv.LocalServices = {
       /*
        * change button icon and text
        */
-      $("#local-url-start").button("option", "icons", {
-        primary: 'ui-icon-stop'
-      });
-      $("#local-url-start span").html("Stop");
+      Conetserv.Ui.startToStop("#local-url-start");
 
       this.start(this.Ping);
       this.start(this.Ping6);
@@ -45,10 +42,7 @@ Conetserv.LocalServices = {
       /*
        * change button icon and text
        */
-      $("#local-url-start").button("option", "icons", {
-        primary: 'ui-icon-play'
-      });
-      $("#local-url-start span").html("Start");
+      Conetserv.Ui.stopToStart("#local-url-start");
 
       this.stop(this.Ping);
       this.stop(this.Ping6);
@@ -61,12 +55,14 @@ Conetserv.LocalServices = {
    },
 
    start: function(service) {
-      if (service.interval == -1) {
-         this.running++;
+      if (service.enabled && service.interval == -1) {
+         Conetserv.LocalServices.running++;
 
          service.before_begin();
          try {
             service.console.clear();
+
+            service.console.inputTimerErr(service.object + ".console", 3, "<strong>Service has not returned any output yet.</strong> ");
             /*
             for( var i = 0; i < arguments.length; i++ ) {
                alert(arguments[i]);
@@ -113,20 +109,22 @@ Conetserv.LocalServices = {
    },
 
    stop: function(service) {
-      if (service.interval != -1) {
+
+      if (service.enabled && service.interval != -1) {
+         
          try {
             delete service.process;
          }
          catch(e) {
             service.console.setErr(e);
          }
+         
          Conetserv.Ui.removeIcons(".local", service.class);
          window.clearInterval(service.interval);
          service.interval = -1;
-
-         if(--this.running == 0)
+         if(--Conetserv.LocalServices.running == 0)
          {
-            this.stopCommands();
+            Conetserv.Ui.stopToStart("#local-url-start");
          }
       }
    },
@@ -137,7 +135,6 @@ Conetserv.LocalServices = {
       
       /* console text-boxes */
       this.Ping.console = new Conetserv.Console("local-ping-console");
-      this.Ping.console.inputTimerErr(5, "lampa");
       this.Ping.console.maxRows = 15;
       this.Ping6.console = new Conetserv.Console("local-ping6-console");
       this.Ping6.console.maxRows = 15;
@@ -149,10 +146,12 @@ Conetserv.LocalServices = {
 }
 
 Conetserv.LocalServices.Ping = {
+   enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.ping',                          //class for icons
+   object: 'Conetserv.LocalServices.Ping',  //object name
    identifier: 'ping',                      //name for calling npapi functions
    argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
 
@@ -166,10 +165,12 @@ Conetserv.LocalServices.Ping = {
 }
 
 Conetserv.LocalServices.Ping6 = {
+   enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.ping6',                         //class for icons
+   object: 'Conetserv.LocalServices.Ping6', //object name
    identifier: 'ping6',                     //name for calling npapi functions
    argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
 
@@ -183,10 +184,12 @@ Conetserv.LocalServices.Ping6 = {
 }
 
 Conetserv.LocalServices.Traceroute = {
+   enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.tracert',                       //class for icons
+   object: 'Conetserv.LocalServices.Traceroute', //object name
    identifier: 'traceroute',                //name for calling npapi functions
    argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
 
@@ -200,10 +203,12 @@ Conetserv.LocalServices.Traceroute = {
 }
 
 Conetserv.LocalServices.Traceroute6 = {
+   enabled: true,                              //defines, if service will be started
    interval: -1,                            //reading loop interval
    console: false,                          //text console
    process: false,                          //running process to read data from
    class: '.tracert6',                      //class for icons
+   object: 'Conetserv.LocalServices.Traceroute6', //object name
    identifier: 'traceroute6',               //name for calling npapi functions
    argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
 
@@ -217,10 +222,12 @@ Conetserv.LocalServices.Traceroute6 = {
 }
 
 Conetserv.LocalServices.Nslookup = {
+   enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.nslookup',                     //class for icons
+   object: 'Conetserv.LocalServices.Nslookup', //object name
    identifier: 'nslookup',                 //name for calling npapi functions
    argument:'Conetserv.Url.hostname',      //parameter to be passed to npapi functions
 
@@ -232,10 +239,12 @@ Conetserv.LocalServices.Nslookup = {
 }
 
 Conetserv.LocalServices.Whois = {
+   enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.whois',                        //class for icons
+   object: 'Conetserv.LocalServices.Whois', //object name
    identifier: 'nslookup',                 //name for calling npapi functions
    argument:'Conetserv.Url.domain',        //parameter to be passed to npapi functions
 
@@ -248,5 +257,35 @@ Conetserv.LocalServices.Whois = {
 }
 
 Conetserv.LocalServices.Nmap = {
+   enabled: true,                              //defines, if service will be started
+   interval: -1,                           //reading loop interval
+   console: false,                         //text console
+   process: false,                         //running process to read data from
+   class: '.nmap',                        //class for icons
+   object: 'Conetserv.LocalServices.Nmap', //object name
+   identifier: 'nmap',                 //name for calling npapi functions
+   argument:'Conetserv.Url.domain',        //parameter to be passed to npapi functions
 
+   before_begin: function() {              //extra commands to be executed before service is started
+   },
+
+   after_read: function(received) {
+   }
+}
+
+Conetserv.LocalServices.Dig = {
+   enabled: true,                              //defines, if service will be started
+   interval: -1,                           //reading loop interval
+   console: false,                         //text console
+   process: false,                         //running process to read data from
+   class: '.dig',                        //class for icons
+   object: 'Conetserv.LocalServices.Dig', //object name
+   identifier: 'dig',                 //name for calling npapi functions
+   argument:'Conetserv.Url.domain',        //parameter to be passed to npapi functions
+
+   before_begin: function() {              //extra commands to be executed before service is started
+   },
+
+   after_read: function(received) {
+   }
 }

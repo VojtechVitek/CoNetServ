@@ -77,10 +77,7 @@ Conetserv.ExternalServices = {
       this.isRunning = 1;
 
       /* Change button icon */
-      $("#external-url-start").button("option", "icons", {
-        primary: 'ui-icon-stop'
-      });
-      $("#external-url-start span").html("Stop");
+      Conetserv.Ui.startToStop("#external-url-start");
 
       /* Restart service values */
       this.Ping.next = this.Ping6.next = this.Tracert.next = this.Tracert6.next = 1;
@@ -248,10 +245,7 @@ Conetserv.ExternalServices = {
       /*
        * change button icon
        */
-      $("#external-url-start").button("option", "icons", {
-        primary: 'ui-icon-play'
-      });
-      $("#external-url-start span").html("Start");
+      Conetserv.Ui.stopToStart("#external-url-start");
       
       this.isRunning = 0;
 
