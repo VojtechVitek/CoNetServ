@@ -3,6 +3,10 @@ if(!Conetserv) var Conetserv = {};
 
 Conetserv.plugin = false;
 Conetserv.version = "1.9.9";
+Conetserv.changelog = "* Object-oriented API to JS (availability for 3rd party) <br/>\
+* Independent objects to run programs and commands with options <br/>\
+* User-friendly error messages <br/>\
+* Installation guides for missing programs (OS, platform, distro)"
 
 Conetserv.onReady = function() {
 
@@ -18,16 +22,26 @@ Conetserv.onReady = function() {
    /* init Conetserv.Url in Firefox */
    if ($.client.browser == "Firefox") {
       if (window && window.arguments && window.arguments[0] && Conetserv.Url.set(window.arguments[0])) {
-         document.getElementById("local-url").value = Conetserv.Url.hostname;
-         document.getElementById("external-url").value = Conetserv.Url.hostname;
+         if(Conetserv.LocalServices.enabled) {
+            document.getElementById("local-url").value = Conetserv.Url.hostname;
+         }
+         if(Conetserv.ExternalServices.enabled) {
+            document.getElementById("external-url").value = Conetserv.Url.hostname;
+         }
       }
    /* init url in Chrome */
    } else if ($.client.browser == "Chrome") {
       if (chrome && chrome.tabs && chrome.tabs.getSelected) {
          chrome.tabs.getSelected(null, function(tab) {
             Conetserv.Url.set(tab.url);
-            document.getElementById("local-url").value = Conetserv.Url.hostname;
-            document.getElementById("external-url").value = Conetserv.Url.hostname;
+            if(Conetserv.LocalServices.enabled) {
+               alert("ahoj");
+               document.getElementById("local-url").value = Conetserv.Url.hostname;
+            }
+            if(Conetserv.ExternalServices.enabled) {
+               
+               document.getElementById("external-url").value = Conetserv.Url.hostname;
+            }
          });
       }
    }
@@ -63,7 +77,5 @@ Conetserv.onLoad = function() {
       }
       else if(this.Options.frontPageParent == "local-info") {
       }
-   }
-
-   
+   }   
 }

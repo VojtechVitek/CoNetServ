@@ -202,6 +202,17 @@ Conetserv.Ui = {
    },
 
    /**
+    * Shows jquery dialog
+    * @param title defines dialog title
+    * @param msg defines message to be shown in dialog
+    */
+   showDialog : function(title, msg) {
+      $("#dialog").dialog("option", "title", title);
+      $('#dialog').html(msg);
+      $('#dialog').dialog('open');
+   },
+
+   /**
    * removes any DOM children in div and instead writes error message by jquery
    * @param div Which divs in DOM should the error should be set to.
    * @param msg Error message.
@@ -284,9 +295,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.ping) {
          $(".local .ping").remove();
+         Conetserv.LocalServices.Ping.enabled = false;
       }
       else {
          if(!Conetserv.plugin.ping.found) {
+            Conetserv.LocalServices.Ping.enabled = false;
             this.divError("#local-ping-div", "Ping service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-ping-div", "ping");
@@ -295,9 +308,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.ping6) {
          $(".local .ping6").remove();
+         Conetserv.LocalServices.Ping6.enabled = false;
       }
       else {
          if(!Conetserv.plugin.ping6.found) {
+            Conetserv.LocalServices.Ping6.enabled = false;
             this.divError("#local-ping6-div", "Ping IPv6 service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-ping6-div", "ping6");
@@ -307,9 +322,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.tracert) {
          $(".local .tracert").remove();
+         Conetserv.LocalServices.Traceroute.enabled = false;
       }
       else {
          if(!Conetserv.plugin.tracert.found) {
+            Conetserv.LocalServices.Traceroute.enabled = false;
             this.divError("#local-tracert-div", "Traceroute service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-tracert-div", "tracert");
@@ -318,9 +335,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.tracert6) {
          $(".local .tracert6").remove();
+         Conetserv.LocalServices.Traceroute6.enabled = false;
       }
       else {
          if(!Conetserv.plugin.tracert6.found) {
+            Conetserv.LocalServices.Traceroute6.enabled = false;
             this.divError("#local-tracert6-div", "Traceroute IPv6 service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-tracert6-div", "tracert6");
@@ -329,9 +348,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.whois) {
          $(".local .whois").remove();
+         Conetserv.LocalServices.Whois.enabled = false;
       }
       else {
          if(!Conetserv.plugin.whois.found) {
+            Conetserv.LocalServices.Whois.enabled = false;
             this.divError("#local-whois-div", "Whois service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-whois-div", "whois");
@@ -340,9 +361,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.nslookup) {
          $(".local .nslookup").remove();
+         Conetserv.LocalServices.Nslookup.enabled = false;
       }
       else {
          if(!Conetserv.plugin.nslookup.found) {
+            Conetserv.LocalServices.Nslookup.enabled = false;
             this.divError("#local-nslookup-div", "Nslookup service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-nslookup-div", "nslookup");
@@ -351,9 +374,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.nmap) {
          $(".local .nmap").remove();
+         Conetserv.LocalServices.Nmap.enabled = false;
       }
       else {
          if(!Conetserv.plugin.nmap.found) {
+            Conetserv.LocalServices.Nmap.enabled = false;
             this.divError("#local-nmap-div", "Nmap service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-nmap-div", "nmap");
@@ -362,9 +387,11 @@ Conetserv.Ui = {
 
       if(!Conetserv.plugin.dig) {
          $(".local .dig").remove();
+         Conetserv.LocalServices.Dig.enabled = false;
       }
       else {
          if(!Conetserv.plugin.nslookup.found) {
+            Conetserv.LocalServices.Dig.enabled = false;
             this.divError("#local-dig-div", "Dig service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-dig-div", "nslookup");
@@ -416,6 +443,28 @@ Conetserv.Ui = {
       $(parent + " input" + selector).button("option", "icons", false);
       $(parent + " label" + selector).removeClass("ui-button-text-icon");
    //!!TODO remove empty space after icons are deleted
+   },
+
+   /**
+    * Changes Stop button into Start button
+    * @param selector id of object to be changed
+    */
+   startToStop : function(selector) {
+      $(selector).button("option", "icons", {
+        primary: 'ui-icon-stop'
+      });
+      $(selector + " span").html("Stop");
+   },
+
+   /**
+    * Changes Stop button into Start button
+    * @param selector id of object to be changed
+    */
+   stopToStart : function(selector) {
+      $(selector).button("option", "icons", {
+        primary: 'ui-icon-play'
+      });
+      $(selector + " span").html("Start");
    },
 
    /**
