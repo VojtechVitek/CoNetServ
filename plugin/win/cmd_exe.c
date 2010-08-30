@@ -27,101 +27,6 @@ char    *buffer_wchar = NULL; /**< Buffer for wide chars */
 char    *buffer_utf8 = NULL;  /**< Buffer for utf8 chars */
 
 /**
- * Run system command
- *
- * @param p Variable to store process data to
- * @param path Command name
- * @param argv String of arguments
- * @return True on success, false otherwise
- */
-static bool
-run_command(process *p, const char *cmd)
-{
-   SECURITY_ATTRIBUTES saAttr;
-   PROCESS_INFORMATION procInfo;
-   STARTUPINFO startInfo;
-   BOOL success = FALSE;
-   DWORD status;
-   char *command;
-   int len;
-
-   /* return if the process is already running */
-   if (p->running) {
-      DEBUG_STR("cmd_line->run(): false (process already running)");
-      return false;
-   }
-
-   /* Set the bInheritHandle flag so pipe handles are inherited. */
-   saAttr.nLength = sizeof(saAttr);
-   saAttr.bInheritHandle = TRUE;
-   saAttr.lpSecurityDescriptor = NULL;
-
-   /* Create a pipe for the child process's STDOUT. */
-   if (!CreatePipe(&p->pipe[0], &p->pipe[1], &saAttr, 0)) {
-      DEBUG_STR("cmd_line->run(): CreatePipe() - error");
-      browser->setexception(NULL, "cmd_line->run(): CreatePipe() - error");
-      return 0;
-   }
-
-   /* Ensure the read handle to the pipe for STDOUT is not inherited. */
-   if (!SetHandleInformation(p->pipe[0], HANDLE_FLAG_INHERIT, 0)) {
-      DEBUG_STR("cmd_line->run(): SetHandleInformation() - error");
-      browser->setexception(NULL, "cmd_line->run(): SetHandleInformation() - error");
-      return 0;
-   }
-
-   /* Create a child process which uses stdout pipe */
-
-   /* Prepare structures and set stdout handles */
-   ZeroMemory(&procInfo, sizeof(procInfo));
-   ZeroMemory(&startInfo, sizeof(startInfo));
-   startInfo.cb = sizeof(startInfo);
-
-   if (!DEBUGCON) {
-      startInfo.wShowWindow = SW_HIDE;
-      startInfo.dwFlags |= STARTF_USESHOWWINDOW;
-      startInfo.hStdError = p->pipe[1];
-      startInfo.hStdOutput = p->pipe[1];
-      startInfo.dwFlags |= STARTF_USESTDHANDLES;
-   }
-
-   /* create command for execution */
-   len = strlen(cmd);
-   command = browser->memalloc(sizeof(*command) * (len + 16/*len of bellow cmd*/ + 1));
-   sprintf(command, "cmd.exe /U /C \"%s\"", cmd);
-
-   success = CreateProcess(NULL,
-      command,       // command line
-      NULL,          // process security attributes
-      NULL,          // primary thread security attributes
-      TRUE,          // handles are inherited
-      0,             // creation flags
-      NULL,          // use parent's environment
-      NULL,          // current directory
-      &startInfo,    // STARTUPINFO pointer
-      &procInfo      // receives PROCESS_INFORMATION
-   );
-
-   /* free executed command string */
-   browser->memfree(command);
-
-   if (!success) {
-      DEBUG_STR("cmd_line->run(): CreateProcess() - error");
-      browser->setexception(NULL, "cmd_line->run(): CreateProcess() - error");
-      return false;
-   }
-
-   /* store process handle and close process thread handle */
-   p->pid = procInfo.hProcess;
-   p->running = true;
-
-   DEBUG_STR("cmd_line->run(\"%s\"): PID %d", cmd, p->pid);
-
-   CloseHandle(procInfo.hThread);
-   return true;
-}
-
-/**
  * Stop running process
  *
  * @param p Process to be stopped
@@ -246,6 +151,100 @@ process_read(process *p, NPVariant *result)
    return true;
 }
 
+/**
+ * Run system command
+ *
+ * @param p Variable to store process data to
+ * @param path Command name
+ * @param argv String of arguments
+ * @return True on success, false otherwise
+ */
+static bool
+run_command(process *p, const char *cmd)
+{
+   SECURITY_ATTRIBUTES saAttr;
+   PROCESS_INFORMATION procInfo;
+   STARTUPINFO startInfo;
+   BOOL success = FALSE;
+   DWORD status;
+   char *command;
+   int len;
+
+   /* return if the process is already running */
+   if (p->running) {
+      DEBUG_STR("cmd_line->run(): false (process already running)");
+      return false;
+   }
+
+   /* Set the bInheritHandle flag so pipe handles are inherited. */
+   saAttr.nLength = sizeof(saAttr);
+   saAttr.bInheritHandle = TRUE;
+   saAttr.lpSecurityDescriptor = NULL;
+
+   /* Create a pipe for the child process's STDOUT. */
+   if (!CreatePipe(&p->pipe[0], &p->pipe[1], &saAttr, 0)) {
+      DEBUG_STR("cmd_line->run(): CreatePipe() - error");
+      browser->setexception(NULL, "cmd_line->run(): CreatePipe() - error");
+      return 0;
+   }
+
+   /* Ensure the read handle to the pipe for STDOUT is not inherited. */
+   if (!SetHandleInformation(p->pipe[0], HANDLE_FLAG_INHERIT, 0)) {
+      DEBUG_STR("cmd_line->run(): SetHandleInformation() - error");
+      browser->setexception(NULL, "cmd_line->run(): SetHandleInformation() - error");
+      return 0;
+   }
+
+   /* Create a child process which uses stdout pipe */
+
+   /* Prepare structures and set stdout handles */
+   ZeroMemory(&procInfo, sizeof(procInfo));
+   ZeroMemory(&startInfo, sizeof(startInfo));
+   startInfo.cb = sizeof(startInfo);
+
+   if (!DEBUGCON) {
+      startInfo.wShowWindow = SW_HIDE;
+      startInfo.dwFlags |= STARTF_USESHOWWINDOW;
+      startInfo.hStdError = p->pipe[1];
+      startInfo.hStdOutput = p->pipe[1];
+      startInfo.dwFlags |= STARTF_USESTDHANDLES;
+   }
+
+   /* create command for execution */
+   len = strlen(cmd);
+   command = browser->memalloc(sizeof(*command) * (len + 16/*len of bellow cmd*/ + 1));
+   sprintf(command, "cmd.exe /U /C \"%s\"", cmd);
+
+   success = CreateProcess(NULL,
+      command,       // command line
+      NULL,          // process security attributes
+      NULL,          // primary thread security attributes
+      TRUE,          // handles are inherited
+      0,             // creation flags
+      NULL,          // use parent's environment
+      NULL,          // current directory
+      &startInfo,    // STARTUPINFO pointer
+      &procInfo      // receives PROCESS_INFORMATION
+   );
+
+   /* free executed command string */
+   browser->memfree(command);
+
+   if (!success) {
+      DEBUG_STR("cmd_line->run(): CreateProcess() - error");
+      browser->setexception(NULL, "cmd_line->run(): CreateProcess() - error");
+      return false;
+   }
+
+   /* store process handle and close process thread handle */
+   p->pid = procInfo.hProcess;
+   p->running = true;
+
+   DEBUG_STR("cmd_line->run(\"%s\"): PID %d", cmd, p->pid);
+
+   CloseHandle(procInfo.hThread);
+   return true;
+}
 
 /**
  * CMD_EXE_module destructor
