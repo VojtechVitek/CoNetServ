@@ -16,7 +16,17 @@ typedef struct _identifier {
 
 #ifdef MODULE_PING
    NPIdentifier   ping;
+#endif
+
+#ifdef MODULE_PING6
    NPIdentifier   ping6;
+#endif
+
+#if defined(MODULE_PING) || defined(MODULE_PING6)
+   NPIdentifier   count;
+   NPIdentifier   interval;
+   NPIdentifier   packetsize;
+   NPIdentifier   ttl;
 #endif
 
    void           (*destroy)();

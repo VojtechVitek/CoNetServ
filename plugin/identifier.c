@@ -31,8 +31,16 @@ init_identifiers()
 #ifdef MODULE_PING
    identifiers->ping = browser->getstringidentifier("ping");
 #endif
+
 #ifdef MODULE_PING6
    identifiers->ping6 = browser->getstringidentifier("ping6");
+#endif
+
+#if defined(MODULE_PING) || defined(MODULE_PING6)
+   identifiers->count = browser->getstringidentifier("count");
+   identifiers->interval = browser->getstringidentifier("interval");
+   identifiers->packetsize = browser->getstringidentifier("packetsize");
+   identifiers->ttl = browser->getstringidentifier("ttl");
 #endif
 
    identifiers->destroy = destroy;
