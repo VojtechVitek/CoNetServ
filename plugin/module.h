@@ -6,7 +6,7 @@
 #include "plugin.h"
 #include "process.h"
 
-/** Plugin module - struct */
+/** Plugin module */
 typedef struct _module {
    NPClass        class;
    NPIdentifier   *identifier;
