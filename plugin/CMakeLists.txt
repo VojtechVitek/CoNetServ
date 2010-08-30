@@ -2,8 +2,6 @@
 
 # Sources and header files
 include_directories(${CMAKE_BINARY_DIR})
-
-configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(sources
@@ -32,6 +30,12 @@ elseif(WIN32)
 else()
 	message(FATAL_ERROR "Sorry, your operating system is not supported.")
 endif()
+
+# Check NPAPI NPString members
+include(${CMAKE_MODULE_PATH}/NPAPI_NPString_members.cmake)
+
+# Configure header file
+configure_file(config.h.in ${CMAKE_BINARY_DIR}/config.h)
 
 # Create shared library
 add_library(CoNetServ SHARED ${sources} ${headers})
