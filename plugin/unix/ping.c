@@ -21,7 +21,7 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    char *argv[20];
-   char count[20], interval[20], packetsize[20], ttl[20];
+   char count[20], timeout[20], packetsize[20], ttl[20];
    int i;
    char *ptr;
    shell_module *program;
@@ -49,13 +49,13 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
          if (snprintf(count, 20, "-c %d", settings.count))
             argv[i++] = count;
       }
-      if (settings.interval > 0) {
-         if (snprintf(interval, 20, "-i %d", settings.interval))
-            argv[i++] = interval;
-      }
       if (settings.packetsize > 0) {
          if (snprintf(packetsize, 20, "-s %d", settings.packetsize))
             argv[i++] = packetsize;
+      }
+      if (settings.timeout > 0) {
+         if (snprintf(timeout, 20, "-W %d", settings.timeout))
+            argv[i++] = timeout;
       }
       if (settings.ttl > 0) {
          if (snprintf(ttl, 20, "-t %d", settings.ttl))
