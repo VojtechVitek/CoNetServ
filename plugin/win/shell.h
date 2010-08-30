@@ -9,7 +9,7 @@
 #include "cmd_exe.h"
 
 #define init_shell init_cmd_line
-#define shell_module cmd_line_module
+#define shell_module cmd_exe_module
 
 #define shell cmd_line
 
