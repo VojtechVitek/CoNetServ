@@ -199,10 +199,10 @@
                <div id="settings-form">
                   <input type="radio" id="settings-general" class="radio-tab" name="settings-form" value="settings-general-div" checked="checked"/>
                   <label for="settings-general">General</label>
+                  <input type="radio" id="settings-local-services" class="radio-tab" name="settings-form" value="settings-local-services-div" />
+                  <label for="settings-local-services">Local Services</label>
                   <input type="radio" id="settings-external-services" class="radio-tab" name="settings-form" value="settings-external-services-div" />
                   <label for="settings-external-services">External Services</label>
-                  <input type="radio" id="settings-services" class="radio-tab" name="settings-form" value="settings-services-div" />
-                  <label for="settings-services">Services</label>
                </div>
             </form>
             <div id="settings-general-div" class="content geneal">
@@ -376,11 +376,28 @@
                </form>
             </div>
 
-            <div id="settings-services-div" class="content services">
-               <form id="settings-services-form" action="">
-                  <h4>Ping</h4>
-                  <input id="settings-services-ping-number" class="ui-corner-all ui-widget ui-widget-content" type="text" size="5"/>
-                  <label for="settings-services-ping-number">Number of packets</label>
+            <div id="settings-local-services-div" class="content services">
+               <form id="settings-local-services-form" action="">
+                  <div id="settings-local-services-ping-div" class="ui-widget ui-widget-content ui-corner-all">
+                     <h4>Ping</h4>
+                     <div>
+                        <input id="settings-local-services-ping-count" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-ping-count">Number of packets</label>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-ping-interval" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-ping-interval">Interval</label>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-ping-ttl" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-ping-ttl">Time to live</label>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-ping-packet-size" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-ping-packet_size">Packet size</label>
+                     </div>
+                  </div>
+                  
                </form>
             </div>
          </div>

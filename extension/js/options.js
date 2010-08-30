@@ -15,6 +15,13 @@ Conetserv.Options = {
    ext_services_router: false,
    version: false,
 
+   LocalServices: {
+      ping_packet_count : false,
+      ping_interval : false,
+      ping_ttl : false,
+      ping_packet_size : false,
+   },
+
    //enums for easier argument passing to functions
    enums : {
       TOOLBAR_BUTTON :        0,
@@ -23,7 +30,8 @@ Conetserv.Options = {
       FRONTPAGE_CHILD :       3,
       SKIN :                  4,
       EXT_SERVICES :          5,
-      EXT_SERVICES_ROUTER :   6
+      EXT_SERVICES_ROUTER :   6,
+      LOC_SERVICES_PING :     7,
    },
 
    /**
@@ -62,7 +70,7 @@ Conetserv.Options = {
       /* Conetserv is run for the first time */
       if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString() == '') {
          reinitialize = true;
-         setTimeout('Conetserv.Ui.showDialog("<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.")', 500);
+         Conetserv.LocalServices.Ping.console.setErr('<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.');
       }
       /* Conetserv has been updated */
       else if(this.storage['conetserv-version'] != Conetserv.version){
@@ -155,6 +163,21 @@ Conetserv.Options = {
             }
          }
       }
+
+      /* local services */
+      if((this.LocalServices.ping_packet_count = this.storage["conetserv-settings-local-services-ping-packet-count"])){
+         $("#settings-local-services-ping-count").val(this.LocalServices.ping_packet_count);
+      }
+      if((this.LocalServices.ping_interval = this.storage["conetserv-settings-local-services-ping-interval"])){
+         $("#settings-local-services-ping-interval").val(this.LocalServices.ping_interval);
+      }
+      if((this.LocalServices.ping_ttl = this.storage["conetserv-settings-local-services-ping-ttl"])){
+         $("#settings-local-services-ping-ttl").val(this.LocalServices.ping_ttl);
+      }
+      if((this.LocalServices.ping_packet_size = this.storage["conetserv-settings-local-services-ping-packet-size"])){
+         $("#settings-local-services-ping-packet-size").val(this.LocalServices.ping_packet_size);
+      }
+
 
       this.version = this.storage["conetserv-version"];
    },
@@ -255,6 +278,52 @@ Conetserv.Options = {
                }
             });
             this.storage["conetserv-settings-external-services_router"] = this.ext_services_router.join(";");
+            break;
+         case this.enums.LOC_SERVICES_PING:
+            if((this.LocalServices.ping_packet_count = $("#settings-local-services-ping-count").val())) {
+               if(!(this.LocalServices.ping_packet_count = parseInt(this.LocalServices.ping_packet_count))) {
+                  Conetserv.Ui.showDialog("Warning!", "Number of packets can only be set by a numeric value.");
+                  this.storage.removeItem("conetserv-settings-local-services-ping-packet-count");
+                  return false;
+               }
+               else {
+                  this.storage["conetserv-settings-local-services-ping-packet-count"] = this.LocalServices.ping_packet_count;
+               }
+            }
+
+            if((this.LocalServices.ping_interval = $("#settings-local-services-ping-interval").val())) {
+               if(!(this.LocalServices.ping_interval = parseInt(this.LocalServices.ping_interval))) {
+                  Conetserv.Ui.showDialog("Warning!", "Ping interval can only be set by a numeric value.");
+                  this.storage.removeItem("conetserv-settings-local-services-ping-interval");
+                  return false;
+               }
+               else {
+                  this.storage["conetserv-settings-local-services-ping-interval"] = this.LocalServices.ping_interval;
+               }
+            }
+
+            if((this.LocalServices.ping_ttl = $("#settings-local-services-ping-ttl").val())) {
+               if(!(this.LocalServices.ping_ttl = parseInt(this.LocalServices.ping_ttl))) {
+                  Conetserv.Ui.showDialog("Warning!", "Ping packet's time to live can only be set by a numeric value.");
+                  this.storage.removeItem("conetserv-settings-local-services-ping-ttl");
+                  return false;
+               }
+               else {
+                  this.storage["conetserv-settings-local-services-ping-ttl"] = this.LocalServices.ping_ttl;
+               }
+            }
+
+            if((this.LocalServices.ping_packet_size = $("#settings-local-services-ping-packet-size").val())) {
+               if(!(this.LocalServices.ping_packet_size = parseInt(this.LocalServices.ping_packet_size))) {
+                  Conetserv.Ui.showDialog("Warning!", "Ping packet size can only be set by a numeric value.");
+                  this.storage.removeItem("conetserv-settings-local-services-ping-packet-size");
+                  return false;
+               }
+               else {
+                  this.storage["conetserv-settings-local-services-ping-packet-size"] = this.LocalServices.ping_packet_size;
+               }
+            }
+            return true;
             break;
 
       }

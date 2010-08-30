@@ -211,6 +211,10 @@ div.valueLabel {
    clear: left;
 }
 
+#settings-local-services-div input.single-line{
+   clear: left;
+}
+
 #settings-general-div h4{
    clear:left;
 }
@@ -221,6 +225,20 @@ div.valueLabel {
    margin: 0 10px 10px 0;
    padding: 10px;
    clear: left;
+}
+
+#settings-local-services-div h4 {
+   padding: 0px;
+   margin: 0 10px 10px 0;
+}
+
+#settings-local-services-div input {
+   margin: 0 10px 10px 0;
+}
+
+#settings-local-services-div .ui-widget {
+   width: 200px;
+   padding: 0px 10px 10px 10px;
 }
 
 #settings-external-services-div .ui-widget {

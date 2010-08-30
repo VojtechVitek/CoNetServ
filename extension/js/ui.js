@@ -76,6 +76,10 @@ Conetserv.Ui = {
          Conetserv.Options.save(Conetserv.Options.enums.EXT_SERVICES_ROUTER);
       });
 
+      $("#settings-local-services-ping-div input").change(function(){
+         if(!Conetserv.Options.save(Conetserv.Options.enums.LOC_SERVICES_PING))
+            $(this).val("");
+      });
 
       /**
       * reimplement behaviour when different tab is selected

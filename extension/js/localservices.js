@@ -153,10 +153,17 @@ Conetserv.LocalServices.Ping = {
    class: '.ping',                          //class for icons
    object: 'Conetserv.LocalServices.Ping',  //object name
    identifier: 'ping',                      //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',       //parameter to be passed to npapi functions
+   argument:'Conetserv.Url.hostname',       //argument to be passed to npapi functions
 
    before_begin: function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localPingData.reset();
+
+      /* set service parameters */
+      Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count;
+      Conetserv.plugin.ping.interval = Conetserv.Options.LocalServices.ping_interval;
+      Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl;
+      Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packetsize;
+
    },
 
    after_read: function(received) {         //extra commands to be done in the end of read function
@@ -229,7 +236,7 @@ Conetserv.LocalServices.Nslookup = {
    class: '.nslookup',                     //class for icons
    object: 'Conetserv.LocalServices.Nslookup', //object name
    identifier: 'nslookup',                 //name for calling npapi functions
-   argument:'Conetserv.Url.hostname',      //parameter to be passed to npapi functions
+   argument: 'Conetserv.Url.hostname',     //parameters to be passed to npapi functions
 
    before_begin: function() {              //extra commands to be executed before service is started
    },
