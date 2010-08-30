@@ -253,7 +253,7 @@ Conetserv.Ui = {
        * check for plugin - if not available, disable all dependend parts of
        * CoNetServ
        */
-      if(!Conetserv.plugin) {
+      if(!Conetserv.plugin.version) {
          var errStr = "<strong>CoNetServ plugin for your browser has not \
             been correctly loaded. </strong><br /> <br/>Local services and local info will not be available. <br /><br />\
             Please, refer to readme for correct installation steps.";

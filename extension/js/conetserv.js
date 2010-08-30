@@ -2,7 +2,7 @@
 if(!Conetserv) var Conetserv = {};
 
 Conetserv.plugin = false;
-Conetserv.version = false;
+Conetserv.version = "1.9.9";
 
 Conetserv.onReady = function() {
 
@@ -27,6 +27,7 @@ Conetserv.onReady = function() {
          chrome.tabs.getSelected(null, function(tab) {
             Conetserv.Url.set(tab.url);
             document.getElementById("local-url").value = Conetserv.Url.hostname;
+            document.getElementById("external-url").value = Conetserv.Url.hostname;
          });
       }
    }
