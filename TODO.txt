@@ -6,7 +6,7 @@ General:
 [x] Release Extension for Google Chrome official repository.
 [ ] Release Widget for Opera official repository.
 [x] Project: Switch to CMake build system
-[ ] Multi-platform support: guarantee run on Windows, Linux and Mac OS on both 32bit and 64bit systems
+[x] Multi-platform support: guarantee run on Windows, Linux and MacOS on both 32bit and 64bit systems
 [ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
 [ ] CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
 [x] CMake: Automatic generation of extension packages for Firefox, Chrome and Opera browser
@@ -28,7 +28,7 @@ Extension:
 [x] Local Info Tab: rename to External Host Info, change layout
 [x] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
-[ ] Network tools: check availability and print additional info (installation, ..)
+[x] Network tools: check availability and print additional info (installation, ..)
 [x] Firefox: automatic icon in toolbar
 [x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
 [ ] TRACEROUTE: improve plotting
