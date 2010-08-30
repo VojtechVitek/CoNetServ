@@ -141,6 +141,7 @@ process_stop(process *p)
    kill(p->pid, 9);
    waitpid(p->pid, NULL, 0);
 
+   /* close read pipe */
    close(p->pipe[0]);
    p->running = false;
 
@@ -205,8 +206,6 @@ process_read(process *p, NPVariant *result)
       } else {
          /* error */
 
-         p->running = false;
-
          DEBUG_STR("shell->read(): false (read error %d)", errno);
 
          BOOLEAN_TO_NPVARIANT(false, *result);
@@ -216,20 +215,24 @@ process_read(process *p, NPVariant *result)
    } else if (len == 0) {
       /* no data available */
 
-      DEBUG_STR("shell->read(): false (end of file) ");
-
       /* test if child became a zombie */
       waitpid(p->pid, &status, WNOHANG);
 
       if (WIFEXITED(status)) {
          /* child has finished */
 
+         /* close read pipe */
+         close(p->pipe[0]);
          p->running = false;
 
          DEBUG_STR("shell->read(): false (process has finished) ");
 
          /* clean it's status from process table */
          waitpid(p->pid, NULL, 0);
+
+      } else {
+
+         DEBUG_STR("shell->read(): false (NOT IMPLEMENTED - end of file) ");
 
       }
 
