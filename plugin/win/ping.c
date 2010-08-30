@@ -19,7 +19,7 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    char argv[100];
-   int i, j;
+   int i;
    char *ptr;
    cmd_exe_module *program;
 
@@ -30,22 +30,47 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       if (argc < 1)
          return false;
 
-      program = ((object_ping *)obj)->program;
+      i = 0; /* position in arguments passed from JavaScript */
+      ptr = argv; /* position in command string we are creating */
 
-      i = 0;
-      /* First argument must be url */
+      /* Choose program (ping or ping6) */
+      program = ((object_ping *)obj)->program;
+      if (((object_ping *)obj)->program == (cmd_exe_module *)ping6) {
+         strcpy(ptr, "ping -6 ");
+         ptr += strlen("ping -6 ");
+      } else {
+         strcpy(ptr, "ping ");
+         ptr += strlen("ping ");
+      }
+
+      /* Get first argument - the url */
       if (args[i].type != NPVariantType_String)
          return false;
 
+      /* Copy URL to command string */
+      /* FIXME: Switch char argv[100] to dynamic-allocated array
+                and fix this MAGIC constraint
+       */
+      if (STRING_UTF8LENGTH(args[i].value.stringValue) > 80)
+         return false;
+      memcpy(ptr,
+             (char *)STRING_UTF8CHARACTERS(args[i].value.stringValue),
+             STRING_UTF8LENGTH(args[i].value.stringValue));
+      ptr += STRING_UTF8LENGTH(args[i].value.stringValue);
+
+      *ptr = '\0';
+
+      /* PARSE ARGUMENTS HERE */
+
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
 
-      if (cmd_line->run((process *)result->value.objectValue, "ping -t github.com"))
+      if (cmd_line->run((process *)result->value.objectValue, argv))
          return true;
       else
          return false;
    }
 
-   DEBUG_STR("plugin->pingX->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->pingX->invokeMethod(s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
@@ -64,8 +89,11 @@ static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
    if (identifier == identifiers->found) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
-      BOOLEAN_TO_NPVARIANT(((object_ping *)obj)->program->found, *result);
+      DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      /* FIXME: Test if available on system:
+         BOOLEAN_TO_NPVARIANT(((object_ping *)obj)->program->found, *result);
+      */
+      BOOLEAN_TO_NPVARIANT(true, *result);
       return true;
    }
    DEBUG_STR("plugin->ping->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
