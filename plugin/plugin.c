@@ -62,13 +62,14 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    /* Plugin version */
    if (identifier == identifiers->version) {
 
-      DEBUG_STR("plugin->getProperty(%s): string", DEBUG_IDENTIFIER(identifier));
-
       len = strlen(VERSION);
       version = browser->memalloc((len + 1) * sizeof(*version));
       strcpy(version, VERSION);
       STRING_UTF8CHARACTERS(str) = version;
       STRING_UTF8LENGTH(str) = len;
+
+      DEBUG_STR("plugin->getProperty(%s): %s", DEBUG_IDENTIFIER(identifier), version);
+
 
       /* msvc can't handle simple macro
        * STRINGN_TO_NPVARIANT(version, len, *result);
