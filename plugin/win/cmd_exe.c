@@ -172,8 +172,9 @@ process_read(process *p, NPVariant *result)
       return true;
    }
 
-#if 0
+/* TODO: Process have terminated? */
 /* AFTER PEAK OR AFTER READ? */
+#if 0
    GetExitCodeProcess(p->pid, &status);
    if (status != STILL_ACTIVE) {
       /*check for any extra data*/
