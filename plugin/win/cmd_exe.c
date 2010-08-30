@@ -86,6 +86,7 @@ run_command(process *p, const char *cmd)
    }
 
    /* create command for execution */
+   DEBUG_STR("cmd_line->run(%s)", cmd);
    len = strlen(cmd);
    command = browser->memalloc(sizeof(*command) * (len + 16/*len of bellow cmd*/ + 1));
    sprintf(command, "cmd.exe /U /C \"%s\"", cmd);

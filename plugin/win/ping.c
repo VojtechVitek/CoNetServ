@@ -35,10 +35,13 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       /* Choose program (ping or ping6) */
       program = ((object_ping *)obj)->program;
-      if (((object_ping *)obj)->program == (cmd_exe_module *)ping6)
-         ptr = strcpy(ptr, "ping -6 ");
-      else
-         ptr = strcpy(ptr, "ping ");
+      if (((object_ping *)obj)->program == (cmd_exe_module *)ping6) {
+         strcpy(ptr, "ping -6 ");
+         ptr += strlen("ping -6 ");
+      } else {
+         strcpy(ptr, "ping ");
+         ptr += strlen("ping ");
+      }
 
       /* Get first argument - the url */
       if (args[i].type != NPVariantType_String)
@@ -50,9 +53,10 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
        */
       if (STRING_UTF8LENGTH(args[i].value.stringValue) > 80)
          return false;
-      ptr = memcpy(ptr,
-                   (char *)STRING_UTF8CHARACTERS(args[i].value.stringValue),
-                   STRING_UTF8LENGTH(args[i].value.stringValue));
+      memcpy(ptr,
+             (char *)STRING_UTF8CHARACTERS(args[i].value.stringValue),
+             STRING_UTF8LENGTH(args[i].value.stringValue));
+      ptr += STRING_UTF8LENGTH(args[i].value.stringValue);
 
       *ptr = '\0';
 
@@ -85,8 +89,11 @@ static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
    if (identifier == identifiers->found) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
-      BOOLEAN_TO_NPVARIANT(((object_ping *)obj)->program->found, *result);
+      DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      /* FIXME: Test if available on system:
+         BOOLEAN_TO_NPVARIANT(((object_ping *)obj)->program->found, *result);
+      */
+      BOOLEAN_TO_NPVARIANT(true, *result);
       return true;
    }
    DEBUG_STR("plugin->ping->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));

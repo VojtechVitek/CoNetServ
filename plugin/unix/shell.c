@@ -273,7 +273,7 @@ run_command(process *p, const char *path, char *const argv[])
 
       /* stdout and stderr to write end of the pipe */
       if (dup2(p->pipe[1], 1) == -1 || dup2(p->pipe[1], 2) == -1) {
-         browser->setexception(NULL, "startCommand(): dup2() error");
+         browser->setexception(NULL, "shell->run(): dup2() error");
          _exit(1);
       }
 
