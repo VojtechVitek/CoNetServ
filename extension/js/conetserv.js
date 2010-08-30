@@ -2,7 +2,7 @@
 if(!Conetserv) var Conetserv = {};
 
 Conetserv.plugin = false;
-Conetserv.version = false;
+Conetserv.version = "1.9.9";
 
 Conetserv.onReady = function() {
 

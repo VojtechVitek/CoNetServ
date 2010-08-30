@@ -57,8 +57,8 @@ Conetserv.Options = {
       }
 
       /* Check, if storage has been not initialized before, if so, initialize it */
-      if(!this.storage['conetserv-settings-initialized'] || this.storage['conetserv-settings-initialized'].toString() == "") {
-         this.storage['conetserv-settings-initialized'] = true;
+      if(!this.storage['conetserv-settings-version'] || this.storage['conetserv-settings-version'] != Conetserv.version) {
+         this.storage['conetserv-settings-version'] = Conetserv.version;
          this.storage["conetserv-settings-external-services_router"] = "";
 
          this.storage['conetserv-settings-general-toolbox'] = false;

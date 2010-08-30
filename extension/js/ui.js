@@ -265,7 +265,6 @@ Conetserv.Ui = {
       }
 
       /* Check plugin version */
-      alert(Conetserv.plugin);
       var version = Conetserv.plugin.version ? Conetserv.plugin.version.split('.') : false;
 
       if(!version || parseInt(version[0]) != 1 || parseInt(version[1]) != 9) {
