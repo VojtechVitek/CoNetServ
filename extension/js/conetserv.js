@@ -35,11 +35,10 @@ Conetserv.onReady = function() {
          chrome.tabs.getSelected(null, function(tab) {
             Conetserv.Url.set(tab.url);
             if(Conetserv.LocalServices.enabled) {
-               alert("ahoj");
                document.getElementById("local-url").value = Conetserv.Url.hostname;
             }
             if(Conetserv.ExternalServices.enabled) {
-               
+
                document.getElementById("external-url").value = Conetserv.Url.hostname;
             }
          });
@@ -77,5 +76,5 @@ Conetserv.onLoad = function() {
       }
       else if(this.Options.frontPageParent == "local-info") {
       }
-   }   
+   }
 }
