@@ -117,6 +117,8 @@ Conetserv.Console = function(div) {
 
    // sets error in the console
    this.setErr = function(text) {
+      if(!(typeof(text) == "string"))
+         return;
       var errText = text.replace(/((\r)*\n)+/g,"<br />");
       this.err = '<div class="ui-state-highlight ui-corner-all" style="padding: 0em 1em; margin-top:5px;"> \
          <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>'+errText+'</p></div>';

@@ -38,18 +38,19 @@ Conetserv.LocalInfo = {
       if (service.enabled && service.interval == -1) {
          Conetserv.LocalInfo.running++;
 
+         
          service.before_begin();
          service.finished = false;
 
+         service.console.clear();
+
+         service.console.inputTimerErr(service.object + ".console", 3, "<strong>Service has not returned any output yet.</strong> ");
+
          try {
-            service.console.clear();
-
-            service.console.inputTimerErr(service.object + ".console", 3, "<strong>Service has not returned any output yet.</strong> ");
-
             // Create function from service details and evaluate it
-            if (eval("service.process = Conetserv.plugin." + service.identifier + ".start(" + service.argument + ")")) {
-               service.interval = window.setInterval(this.read, 500, service);
-               Conetserv.Ui.addIcons(".local", service.cls, '', '', 'ui-icon-circle-clock');
+            if (eval("service.process = Conetserv.plugin." + service.identifier + ".start()")) {
+               service.interval = window.setInterval(this.readService, 500, service);
+               Conetserv.Ui.addIcons(".local", service.cls, '', '', 'ui-icon-clock');
                this.readService(service);
             } else {
                service.interval = -1;
@@ -90,7 +91,7 @@ Conetserv.LocalInfo = {
                   + err);
             }
             service.finished = true;
-            Conetserv.LocalInfo.stop(service);
+            Conetserv.LocalInfo.stopService(service);
          }
       }
 
