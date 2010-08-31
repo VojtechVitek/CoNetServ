@@ -69,6 +69,34 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
    }
 #endif
 
+#ifdef MODULE_NSLOOKUP
+   if (identifier == identifiers->nslookup) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
+#ifdef MODULE_WHOIS
+   if (identifier == identifiers->whois) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
+#ifdef MODULE_DIG
+   if (identifier == identifiers->dig) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
+#ifdef MODULE_NMAP
+   if (identifier == identifiers->nmap) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
    DEBUG_STR("plugin->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
@@ -131,6 +159,38 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    if (identifier == identifiers->traceroute6 || identifier == identifiers->tracert6) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(traceroute6->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_NSLOOKUP
+   if (identifier == identifiers->nslookup) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(nslookup->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_WHOIS
+   if (identifier == identifiers->whois) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(whois->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_DIG
+   if (identifier == identifiers->dig) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(dig->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_NMAP
+   if (identifier == identifiers->nmap) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(nmap->class)), *result);
       return true;
    }
 #endif

@@ -45,6 +45,22 @@ typedef struct _identifier {
    NPIdentifier   iptohostname;
 #endif
 
+#ifdef MODULE_NSLOOKUP
+   NPIdentifier   nslookup;
+#endif
+
+#ifdef MODULE_WHOIS
+   NPIdentifier   whois;
+#endif
+
+#ifdef MODULE_DIG
+   NPIdentifier   dig;
+#endif
+
+#ifdef MODULE_NMAP
+   NPIdentifier   nmap;
+#endif
+
    void           (*destroy)();
 } identifier;
 

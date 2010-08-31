@@ -59,6 +59,22 @@ init_identifiers()
    identifiers->iptohostname = browser->getstringidentifier("iptohostname");
 #endif
 
+#ifdef MODULE_NSLOOKUP
+   identifiers->nslookup = browser->getstringidentifier("nslookup");
+#endif
+
+#ifdef MODULE_WHOIS
+   identifiers->whois = browser->getstringidentifier("whois");
+#endif
+
+#ifdef MODULE_DIG
+   identifiers->dig = browser->getstringidentifier("dig");
+#endif
+
+#ifdef MODULE_NMAP
+   identifiers->nmap = browser->getstringidentifier("nmap");
+#endif
+
    identifiers->destroy = destroy;
 
   return true;
