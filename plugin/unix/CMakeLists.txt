@@ -12,6 +12,7 @@ set(sources
 	unix/whois.c
 	unix/dig.c
 	unix/nmap.c
+	unix/ifconfig.c
 )
 
 set(headers

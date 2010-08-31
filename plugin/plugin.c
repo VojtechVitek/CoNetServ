@@ -97,6 +97,13 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
    }
 #endif
 
+#ifdef MODULE_IPCONFIG
+   if (identifier == identifiers->ipconfig || identifier == identifiers->ifconfig) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
    DEBUG_STR("plugin->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
@@ -191,6 +198,14 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    if (identifier == identifiers->nmap) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(nmap->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_IPCONFIG
+   if (identifier == identifiers->ipconfig || identifier == identifiers->ifconfig) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ipconfig->class)), *result);
       return true;
    }
 #endif

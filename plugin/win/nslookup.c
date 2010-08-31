@@ -28,14 +28,11 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       DEBUG_STR("plugin->nslookup->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 
-      if (argc < 1)
-         return false;
-
-      ptr = argv; /* position in command string we are creating */
-
       /* Just the URL argument can be passed from JavaScript */
       if (argc != 1 || args[0].type != NPVariantType_String)
          return false;
+
+      ptr = argv; /* position in command string we are creating */
 
       strcpy(ptr, "nslookup ");
       ptr += strlen("nslookup ");

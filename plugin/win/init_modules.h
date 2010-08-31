@@ -29,4 +29,8 @@ bool init_module_nslookup();
 module *nmap;
 bool init_module_nmap();
 
+#define MODULE_IPCONFIG
+module *ipconfig;
+bool init_module_ipconfig();
+
 #endif /*_INIT_MODULES_H_*/
