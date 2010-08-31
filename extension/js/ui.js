@@ -110,7 +110,7 @@ Conetserv.Ui = {
 
       $('#local-url').keyup(function(e) {
          if(e.keyCode == 13) {
-            Conetserv.LocalServices.start();
+            Conetserv.LocalServices.startCommands();
             return false;
          }
       });
