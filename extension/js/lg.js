@@ -162,7 +162,6 @@ Conetserv.LookingGlass.service.push({
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
          //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
-         alert(result);
          return result;
       }
    }]
@@ -196,7 +195,6 @@ Conetserv.LookingGlass.service.push({
          return true;
       },
       parse: function(data) {
-         alert(data);
          var result = '';
          var pattern = /(<PRE>(?:\r?\n)*([^<]*))/i;
          arr = pattern.exec(data);
