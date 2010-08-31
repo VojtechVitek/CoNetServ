@@ -36,6 +36,8 @@ Conetserv.LocalServices = {
       this.start(this.Traceroute6);
       this.start(this.Nslookup);
       this.start(this.Whois);
+      this.start(this.Nmap);
+      this.start(this.Dig);
 
       return true;
    },
@@ -60,6 +62,8 @@ Conetserv.LocalServices = {
       this.stop(this.Traceroute6);
       this.stop(this.Nslookup);
       this.stop(this.Whois);
+      this.start(this.Nmap);
+      this.start(this.Dig);
 
       this.running = 0;
    },
@@ -165,6 +169,8 @@ Conetserv.LocalServices = {
       this.Traceroute6.console = new Conetserv.Console("local-tracert6-console");
       this.Nslookup.console = new Conetserv.Console("local-nslookup-console");
       this.Whois.console = new Conetserv.Console("local-whois-console");
+      this.Nmap.console = new Conetserv.Console("local-nmap-console");
+      this.Dig.console = new Conetserv.Console("local-dig-console");
    }
 }
 
@@ -293,7 +299,7 @@ Conetserv.LocalServices.Whois = {
    process: false,                         //running process to read data from
    class: '.whois',                        //class for icons
    object: 'Conetserv.LocalServices.Whois', //object name
-   identifier: 'nslookup',                 //name for calling npapi functions
+   identifier: 'whois',                 //name for calling npapi functions
    argument:'Conetserv.Url.domain',        //parameter to be passed to npapi functions
 
    before_begin: function() {              //extra commands to be executed before service is started
@@ -313,7 +319,7 @@ Conetserv.LocalServices.Nmap = {
    class: '.nmap',                        //class for icons
    object: 'Conetserv.LocalServices.Nmap', //object name
    identifier: 'nmap',                 //name for calling npapi functions
-   argument:'Conetserv.Url.domain',        //parameter to be passed to npapi functions
+   argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin: function() {              //extra commands to be executed before service is started
    },
@@ -331,7 +337,7 @@ Conetserv.LocalServices.Dig = {
    class: '.dig',                        //class for icons
    object: 'Conetserv.LocalServices.Dig', //object name
    identifier: 'dig',                 //name for calling npapi functions
-   argument:'Conetserv.Url.domain',        //parameter to be passed to npapi functions
+   argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin: function() {              //extra commands to be executed before service is started
    },
