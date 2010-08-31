@@ -108,6 +108,14 @@ Conetserv.Ui = {
          }
       });
 
+      $('#local-url').keyup(function(e) {
+         if(e.keyCode == 13) {
+            Conetserv.LocalServices.start();
+            return false;
+         }
+      });
+
+
       /**
        * when radiobutton on local-services page is selected
        */
