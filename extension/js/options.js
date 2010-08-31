@@ -419,7 +419,7 @@ Conetserv.Options = {
     */
    _getBoolean : function(id) {
    return Conetserv.Options.storage ?
-      Conetserv.Options.storage[id] :
+      this._toBool(Conetserv.Options.storage[id]) :
       false;
    },
 
