@@ -170,19 +170,15 @@ Conetserv.LocalServices.Ping = {
       Conetserv.Plot.localPingData.reset();
 
       /* set service parameters */
-      if(Conetserv.Options.LocalServices.ping_packet_count) {
-         Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count;
-      }
-      if(Conetserv.Options.LocalServices.ping_timeout) {
-         Conetserv.plugin.ping.timeout = Conetserv.Options.LocalServices.ping_timeout;
-      }
-      if(Conetserv.Options.LocalServices.ping_ttl) {
-         Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl;
-      }
-      if(Conetserv.Options.LocalServices.ping_packet_size) {
-         Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packet_size;
-      }
-
+      Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count ?
+         Conetserv.Options.LocalServices.ping_packet_count : 0;
+      Conetserv.plugin.ping.timeout = Conetserv.Options.LocalServices.ping_timeout ?
+         Conetserv.Options.LocalServices.ping_timeout : 0;
+      Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl ?
+         Conetserv.Options.LocalServices.ping_ttl : 0;
+      Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packet_size ?
+         Conetserv.Options.LocalServices.ping_packet_size : 0;
+   
    },
 
    after_read: function(received) {         //extra commands to be done in the end of read function
