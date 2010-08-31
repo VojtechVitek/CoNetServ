@@ -219,6 +219,14 @@ Conetserv.LocalServices.Traceroute = {
 
    before_begin: function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localTraceData.reset();
+
+      /* set service parameters */
+      Conetserv.plugin.tracert.maxhops = Conetserv.Options.LocalServices.tracert_max_hops() ?
+         Conetserv.Options.LocalServices.tracert_max_hops() : 0;
+      Conetserv.plugin.tracert.waittime = Conetserv.Options.LocalServices.tracert_wait_time() ?
+         Conetserv.Options.LocalServices.tracert_wait_time() : 0;
+      Conetserv.plugin.tracert.iptohostname = Conetserv.Options.LocalServices.tracert_ip_to_hostname();
+         
    },
 
    after_read: function(received) {
