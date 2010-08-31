@@ -202,6 +202,9 @@ Conetserv.Ui = {
        $('#external-info-header a').click(function(){
           Conetserv.ExternalInfo.start();
        });
+       $('#local-info-header a').click(function(){
+          Conetserv.LocalInfo.start();
+       });
 
       /**
        * style alert dialog

@@ -64,8 +64,8 @@ Conetserv.LocalServices = {
       this.stop(this.NslookupUp);
       this.stop(this.NslookupDown);
       this.stop(this.Whois);
-      this.start(this.Nmap);
-      this.start(this.Dig);
+      this.stop(this.Nmap);
+      this.stop(this.Dig);
 
       this.running = 0;
    },
@@ -81,11 +81,7 @@ Conetserv.LocalServices = {
             service.console.clear();
 
             service.console.inputTimerErr(service.object + ".console", 3, "<strong>Service has not returned any output yet.</strong> ");
-            /*
-            for( var i = 0; i < arguments.length; i++ ) {
-               alert(arguments[i]);
-            }
-            */
+
             // Create function from service details and evaluate it
             if (eval("service.process = Conetserv.plugin." + service.identifier + ".start(" + service.argument + ")")) {
                service.interval = window.setInterval(this.read, 500, service);
@@ -115,7 +111,7 @@ Conetserv.LocalServices = {
          service.after_read(received);
       } else {
          if (!service.process.running) {
-            if(service.console.rowCount <=1) {
+            if(service.console.rowCount <= 2) {
                var err = service.console.code;
                service.console.clear();
                service.console.setErr("<strong>Service has most probably encountered an error with following output: </strong> <br/></br>"
@@ -143,7 +139,7 @@ Conetserv.LocalServices = {
          service.console.touched = true;
          /* if service has been stopped manually, set error to console */
          if(!service.finished) {
-            service.console.setErr("<strong>Service has been terminated before it's finish.</strong>");
+            service.console.setErr("<strong>Service has been terminated before its finish.</strong>");
          }
 
          window.clearInterval(service.interval);
@@ -345,6 +341,7 @@ Conetserv.LocalServices.Nmap = {
    argument:'Conetserv.Url.hostname',        //parameter to be passed to npapi functions
 
    before_begin: function() {              //extra commands to be executed before service is started
+      Conetserv.plugin.nslookup.query = 0;
    },
 
    after_read: function(received) {
