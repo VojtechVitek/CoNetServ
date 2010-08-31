@@ -7,31 +7,27 @@ if(!Conetserv) var Conetserv = {};
 Conetserv.Options = {
    storage : false,
    toolbarButton : function() {
-      return this.storage ? this._toBool(this.storage['conetserv-settings-general-toolbox']) : false;
+      return this._getBoolean('conetserv-settings-general-toolbox');
    },
    autostart : function() {
-      return this.storage ? this._toBool(this.storage['conetserv-settings-general-autostart']) : false;
+      return this._getBoolean('conetserv-settings-general-autostart');
    },
    frontPageParent : function() {
-      return this.storage ? this.storage['conetserv-settings-general-frontpage'] : false;
+      return this._getString('conetserv-settings-general-frontpage', false);
    },
    frontPageChild : function() {
-      return this.storage ? this.storage['conetserv-settings-general-frontpage-child'] : false;
+      return this._getString('conetserv-settings-general-frontpage-child', false);
    },
    skin: function() {
-      return this.storage['conetserv-settings-general-skin'] ?
-         this.storage['conetserv-settings-general-skin'] :
-         $("#settings-general-skin input").val();
+      return this._getString('conetserv-settings-general-skin', $("#settings-general-skin input").val());
    },
    ext_services: function() {
-      return this.storage["conetserv-settings-external-services"] ?
-         this.storage["conetserv-settings-external-services"].toString().split(";") :
-         "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true".split(";");
+      return this._getArray("conetserv-settings-external-services",
+         "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true".split(";"));
    },
    ext_services_router: function() {
-      return this.storage["conetserv-settings-external-services_router"] ?
-         this.storage["conetserv-settings-external-services_router"].toString().split(";") :
-         "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp".split(";");
+      return this._getArray("conetserv-settings-external-services_router",
+         "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp".split(";"));
    },
    version: function() {
       return this.storage["conetserv-version"];
@@ -390,6 +386,30 @@ Conetserv.Options = {
    return Conetserv.Options.storage ?
       ((tmp = parseInt(Conetserv.Options.storage[id])) ? tmp : false) :
       false;
+   },
+
+   /**
+    * Private function for loading string data from localstorage
+    * @param id local storage id
+    * @param def value to be returned when no other is stored
+    * @return string or def on failure
+    */
+   _getString : function(id, def) {
+   return Conetserv.Options.storage ?
+      (Conetserv.Options.storage[id] ? Conetserv.Options.storage[id] : def) :
+      def;
+   },
+
+   /**
+    * Private function for loading array data from localstorage
+    * @param id local storage id
+    * @param def value to be returned when no other is stored
+    * @return array value or def on failure
+    */
+   _getArray : function(id, def) {
+   return Conetserv.Options.storage ?
+      (Conetserv.Options.storage[id] ? Conetserv.Options.storage[id].toString().split(";") : def) :
+      def;
    },
 
    /**
