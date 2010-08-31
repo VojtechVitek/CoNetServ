@@ -9,14 +9,23 @@ Operating systems [arch] support:
  * GNU/Linux [x86, x86_64]
 Plugin:
  * CMake - automatic recognition of NPAPI NPString members (CamelCase or lowercase)
+ * Added Dig and Nmap services
+ * Added Nslookup AAA record support
 Extension:
  * Ping and Traceroute from looking glass
  * Selectable looking glass providers and servers
  * User friendly messages, errors and dialogs
- * Message, when no service output is comming for long time
- * Local service's presence checking and eventual installation steps  
+ * Showing message if no service output has been received for a long time
+ * Local service's presence checking and eventual output of installation steps  
+ * Local and external services can be all stopped by one click
+ * Local and external services can be run by hitting enter in url-bar
  * Everything is now in Conetserv object (namespace)
- * Added local settings options
+ * Options: Added settings for ping - packet count, ttl, timeout, packet size
+ * Options: Added settings for traceroute - max hops, wait time, ip to hostname mapping
+ * Options: Ping console can be limited/unlimited
+ * Options: Setting number of values in ping plot
+ * Fixed lots of small bugs
+ 
 
 Version 1.3 (2010-06-12)
 ========================
