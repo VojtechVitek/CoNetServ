@@ -145,6 +145,7 @@ Conetserv.LocalServices = {
          if(--Conetserv.LocalServices.running == 0)
          {
             Conetserv.Ui.stopToStart("#local-url-start");
+            Conetserv.Ui.enableInput("#local-url");
          }
       }
    },
@@ -155,9 +156,11 @@ Conetserv.LocalServices = {
       
       /* console text-boxes */
       this.Ping.console = new Conetserv.Console("local-ping-console");
-      this.Ping.console.maxRows = 15;
+      if(!Conetserv.Options.LocalServices.ping_console_unlimited())
+         this.Ping.console.maxRows = 15;
       this.Ping6.console = new Conetserv.Console("local-ping6-console");
-      this.Ping6.console.maxRows = 15;
+      if(!Conetserv.Options.LocalServices.ping_console_unlimited())
+         this.Ping6.console.maxRows = 15;
       this.Traceroute.console = new Conetserv.Console("local-tracert-console");
       this.Traceroute6.console = new Conetserv.Console("local-tracert6-console");
       this.Nslookup.console = new Conetserv.Console("local-nslookup-console");

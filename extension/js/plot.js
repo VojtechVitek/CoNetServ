@@ -107,6 +107,12 @@ Conetserv.Plot = {
       this.colors["sunny"].avrgs = "rgba(250, 195, 11, 0.3)";
       this.colors["sunny"].min  = "rgba(250, 195, 11, 1)";
       this.colors["sunny"].rows  = "#878a87";
+
+      /* load maximal ping plot range from options */
+      if(Conetserv.Options.LocalServices.ping_plot_count()) {
+         this.localPingData.maxValues = Conetserv.Options.LocalServices.ping_plot_count();
+         this.localPing6Data.maxValues = Conetserv.Options.LocalServices.ping_plot_count();
+      }
    },
 
    /**
@@ -568,5 +574,4 @@ $(document).ready(function()
    });
 
    Conetserv.Plot.repaint();
-}
-);
+});

@@ -191,6 +191,14 @@ div.valueLabel {
 /**************************************************************************
  * settings tab
  **************************************************************************/
+span.hint {
+   display: block;
+   clear: left;
+   font-size: 9px;
+   color: gray;
+   margin-left: 10px;
+}
+
 #settings-general-frontpage {
    height: 150px;
    width: 200px;
@@ -233,11 +241,11 @@ div.valueLabel {
 
 #settings-local-services-div h4 {
    padding: 0px;
-   margin: 0 10px 10px 0;
+   margin: 0 10px 0 0;
 }
 
 #settings-local-services-div input {
-   margin: 0 10px 10px 0;
+   margin: 10px 10px 0 0;
 }
 
 #settings-local-services-div .ui-widget {

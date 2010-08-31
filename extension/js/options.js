@@ -46,6 +46,12 @@ Conetserv.Options = {
       ping_packet_size : function() {
          return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-packet-size");
       },
+      ping_plot_count : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-plot-count");
+      },
+      ping_console_unlimited : function() {
+         return Conetserv.Options._getBoolean("conetserv-settings-local-services-plot-console-unlimited");
+      },
 
       tracert_max_hops : function() {
          return Conetserv.Options._getNumeric("conetserv-settings-local-services-tracert-max-hops");
@@ -200,6 +206,10 @@ Conetserv.Options = {
       if(this.LocalServices.ping_packet_size()){
          $("#settings-local-services-ping-packet-size").val(this.LocalServices.ping_packet_size());
       }
+      if(this.LocalServices.ping_plot_count()){
+         $("#settings-local-services-ping-plot-count").val(this.LocalServices.ping_plot_count());
+      }
+      $("#settings-local-services-ping-console-unlimited").attr("checked", this.LocalServices.ping_console_unlimited());
 
       /* traceroute*/
       if(this.LocalServices.tracert_max_hops()){
@@ -308,27 +318,38 @@ Conetserv.Options = {
             });
             this.storage["conetserv-settings-external-services_router"] = ext_services_router.join(";");
             break;
+
          case this.enums.LOC_SERVICES_PING:
             if(!this._saveNumeric("conetserv-settings-local-services-ping-packet-count", $("#settings-local-services-ping-count").val())) {
                Conetserv.Ui.showDialog("Warning!", "Number of packets can only be set by a positive numeric value.");
                return false;
             }
-
             if(!this._saveNumeric("conetserv-settings-local-services-ping-timeout", $("#settings-local-services-ping-timeout").val())) {
                Conetserv.Ui.showDialog("Warning!", "Timeout can only be set by a positive numeric value.");
                return false;
             }
-
             if(!this._saveNumeric("conetserv-settings-local-services-ping-ttl", $("#settings-local-services-ping-ttl").val())) {
                Conetserv.Ui.showDialog("Warning!", "Packet's time to live can only be set by a positive numeric value.");
                return false;
             }
-
             if(!this._saveNumeric("conetserv-settings-local-services-ping-packet-size", $("#settings-local-services-ping-packet-size").val())) {
                Conetserv.Ui.showDialog("Warning!", "Packet size to live can only be set by a positive numeric value.");
                return false;
             }
+            if(!this._saveNumeric("conetserv-settings-local-services-ping-plot-count", $("#settings-local-services-ping-plot-count").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Number of values in plot can only be set by a positive numeric value.");
+               return false;
+            }
+            else {
+               if(this.LocalServices.ping_plot_count() < 10 || this.LocalServices.ping_plot_count() > 100) {
+                  this._saveNumeric("conetserv-settings-local-services-ping-plot-count", 30)
+                  $("#settings-local-services-ping-plot-count").val(30);
+                  Conetserv.Ui.showDialog("Warning!", "Number of values to be shown in ping plot must be between 10 and 100.");
+               }
+            }
+            this._saveBoolean("conetserv-settings-local-services-plot-console-unlimited", $("#settings-local-services-ping-console-unlimited").is(":checked"));
             break;
+
          case this.enums.LOC_SERVICES_TRACERT:
             if(!this._saveNumeric("conetserv-settings-local-services-tracert-max-hops", $("#settings-local-services-tracert-max-hops").val())) {
                Conetserv.Ui.showDialog("Warning!", "Maximum number of hops can only be set by a positive numeric value.");
