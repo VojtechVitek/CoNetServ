@@ -69,12 +69,13 @@ Conetserv.onLoad = function() {
          setTimeout("Conetserv.LocalServices.startCommands()", 250);
       }
       else if(this.Options.frontPageParent() == "external-services") {
-         setTimeout("Conetserv.ExternalServices.start()",250);
+         setTimeout("Conetserv.ExternalServices.start()", 250);
       }
    }
    if(this.Options.frontPageParent() == "external-info") {
-      setTimeout("Conetserv.ExternalInfo.start()",250);
+      setTimeout("Conetserv.ExternalInfo.start()", 250);
    }
    if(this.Options.frontPageParent() == "local-info") {
+      setTimeout("Conetserv.LocalInfo.start()", 250)
    }
 }

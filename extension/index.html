@@ -141,18 +141,17 @@
          <div id="local-info" class="tab">
             <form action="">
                <div id="local-info-form">
-                  <input type="radio" id="local-neighbours-input" class="radio-tab neighbours" name="local-info-form" value="local-neighbours-div" checked="checked" />
+                  <input type="radio" id="local-ipconfig-input" class="radio-tab ipconfig" name="local-info-form" value="local-ipconfig-div" checked="checked" />
+                  <label id="local-ipconfig-label" for="local-ipconfig-input">IP config</label>
+                  <input type="radio" id="local-neighbours-input" class="radio-tab neighbours" name="local-info-form" value="local-neighbours-div" />
                   <label id="local-neighbours-label" for="local-neighbours-input">Neighbours</label>
-                  <input type="radio" id="local-ip-input" class="radio-tab ip" name="local-info-form" value="local-ip-div" checked="checked" />
-                  <label id="local-ip-label" for="local-ip-input">IP settings</label>
                </div>
             </form>
+            <div id="local-ipconfig-div" class="content ipconfig">
+               <div id="local-ipconfig-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
+            </div>
             <div id="local-neighbours-div" class="content neighbours">
                <div id="local-neighbours-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
-            </div>
-            <div id="local-ip-div" class="content ip">
-               <div id="local-ip-console" class="ui-widget ui-widget-content console ui-corner-all"></div>
-               <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
             </div>
          </div>
          <div id="external-info" class="tab">
