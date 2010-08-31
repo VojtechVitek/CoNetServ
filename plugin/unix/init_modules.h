@@ -25,4 +25,8 @@ bool init_module_traceroute6();
 module *nslookup;
 bool init_module_nslookup();
 
+#define MODULE_WHOIS
+module *whois;
+bool init_module_whois();
+
 #endif /*_INIT_MODULES_H_*/

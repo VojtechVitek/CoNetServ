@@ -3,7 +3,7 @@ module *nslookup = NULL;
 
 /**
  * Object NSLOOKUP
- * Used for distinguish NSLOOKUP object passed from JavaScript
+ * Used to distinguish NSLOOKUP object passed from JavaScript
  */
 typedef struct _object_nslookup {
    object       obj;
@@ -11,7 +11,6 @@ typedef struct _object_nslookup {
 
 /**
  * NSLOOKUP settings
- * The same settings for both NSLOOKUP and NSLOOKUP6
  */
 static struct {
    int query;
