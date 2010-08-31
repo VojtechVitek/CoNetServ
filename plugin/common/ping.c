@@ -1,4 +1,4 @@
-/* Internal PING and PING6 modules */
+/* PING and PING6 modules */
 module *ping = NULL;
 module *ping6 = NULL;
 

@@ -1,4 +1,4 @@
-/* Internal TRACEROUTE and TRACEROUTE6 modules */
+/* TRACEROUTE and TRACEROUTE6 modules */
 module *traceroute = NULL;
 module *traceroute6 = NULL;
 
