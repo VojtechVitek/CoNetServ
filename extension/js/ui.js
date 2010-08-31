@@ -497,6 +497,22 @@ Conetserv.Ui = {
    },
 
    /**
+    * Disables html input
+    */
+   disableInput : function(selector) {
+      $(selector).attr("disabled", true);
+      $(selector).css("background", "lightgrey");
+   },
+
+   /**
+    * Enables html input
+    */
+   enableInput : function(selector) {
+      $(selector).attr("disabled", false);
+      $(selector).css("background", "white");
+   },
+
+   /**
    * Redraws options in case they were changed programly
    */
    redrawOptions : function () {

@@ -25,6 +25,11 @@ Conetserv.LocalServices = {
        */
       Conetserv.Ui.startToStop("#local-url-start");
 
+      /*
+       * disable input
+       */
+      Conetserv.Ui.disableInput("#local-url");
+
       this.start(this.Ping);
       this.start(this.Ping6);
       this.start(this.Traceroute);
@@ -43,6 +48,11 @@ Conetserv.LocalServices = {
        * change button icon and text
        */
       Conetserv.Ui.stopToStart("#local-url-start");
+
+      /*
+       * enable input
+       */
+      Conetserv.Ui.enableInput("#local-url");
 
       this.stop(this.Ping);
       this.stop(this.Ping6);
