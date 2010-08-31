@@ -47,6 +47,7 @@ typedef struct _identifier {
 
 #ifdef MODULE_NSLOOKUP
    NPIdentifier   nslookup;
+   NPIdentifier   query;
 #endif
 
 #ifdef MODULE_WHOIS
