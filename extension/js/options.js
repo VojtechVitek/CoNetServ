@@ -6,20 +6,50 @@ if(!Conetserv) var Conetserv = {};
  */
 Conetserv.Options = {
    storage : false,
-   toolbarButton : false,
-   autostart : false,
-   frontPageParent : false,
-   frontPageChild : false,
-   skin: false,
-   ext_services: false,
-   ext_services_router: false,
-   version: false,
+   toolbarButton : function() {
+      return this.storage ? this._toBool(this.storage['conetserv-settings-general-toolbox']) : false;
+   },
+   autostart : function() {
+      return this.storage ? this._toBool(this.storage['conetserv-settings-general-autostart']) : false;
+   },
+   frontPageParent : function() {
+      return this.storage ? this.storage['conetserv-settings-general-frontpage'] : false;
+   },
+   frontPageChild : function() {
+      return this.storage ? this.storage['conetserv-settings-general-frontpage-child'] : false;
+   },
+   skin: function() {
+      return this.storage['conetserv-settings-general-skin'] ?
+         this.storage['conetserv-settings-general-skin'] :
+         $("#settings-general-skin input").val();
+   },
+   ext_services: function() {
+      return this.storage["conetserv-settings-external-services"] ?
+         this.storage["conetserv-settings-external-services"].toString().split(";") :
+         "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true".split(";");
+   },
+   ext_services_router: function() {
+      return this.storage["conetserv-settings-external-services_router"] ?
+         this.storage["conetserv-settings-external-services_router"].toString().split(";") :
+         "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp".split(";");
+   },
+   version: function() {
+      return this.storage["conetserv-version"];
+   },
 
    LocalServices: {
-      ping_packet_count : false,
-      ping_timeout : false,
-      ping_ttl : false,
-      ping_packet_size : false,
+      ping_packet_count : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-packet-count");
+      },
+      ping_timeout : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-timeout");
+      },
+      ping_ttl : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-ttl");
+      },
+      ping_packet_size : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-packet-size");
+      },
    },
 
    //enums for easier argument passing to functions
@@ -32,6 +62,7 @@ Conetserv.Options = {
       EXT_SERVICES :          5,
       EXT_SERVICES_ROUTER :   6,
       LOC_SERVICES_PING :     7,
+      LOC_SERVICES_TRACERT :  8,
    },
 
    /**
@@ -54,30 +85,25 @@ Conetserv.Options = {
       }
 
       if(!this.storage) {
-         this.skin = $("#settings-general-skin input").val();
-         ext_services: "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true";
-         ext_services_router: "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
-
          Conetserv.Ui.divError("#settings", "<strong>Local storage initialization has failed.\
             </strong> <br /><br />\
             Please make sure you are using supported web browser.");
-         
          return;
       }
 
       var reinitialize = false;
 
       /* Conetserv is run for the first time */
-      if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString() == '') {
+      if(!this.version() || this.version().toString() == '') {
          reinitialize = true;
          if(Conetserv.LocalServices.enabled)
             Conetserv.LocalServices.Ping.console.setErr('<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.');
       }
       /* Conetserv has been updated */
-      else if(this.storage['conetserv-version'] != Conetserv.version){
+      else if(this.version() != Conetserv.version){
          setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 500);
          /* check, if mayor version change has occured */
-         if(this.storage['conetserv-version'].toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
+         if(this.version().toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
             reinitialize = true;
          }
          /* Otherwise just set new version */
@@ -88,7 +114,6 @@ Conetserv.Options = {
       
       if(reinitialize) {
          this.storage['conetserv-version'] = Conetserv.version;
-         this.storage["conetserv-settings-external-services_router"] = "";
 
          this.storage['conetserv-settings-general-toolbox'] = false;
          this.storage['conetserv-settings-general-autostart'] = false;
@@ -102,85 +127,71 @@ Conetserv.Options = {
          this.storage["conetserv-settings-external-services_router"] = "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
       }
       
-      this.toolbarButton = this._toBool(this.storage['conetserv-settings-general-toolbox']);
-      $("#settings-general-toolbox").attr("checked", this.toolbarButton);
+      
+      $("#settings-general-toolbox").attr("checked", this.toolbarButton());
 
-      this.autostart = this._toBool(this.storage['conetserv-settings-general-autostart']);
-      $("#settings-general-autostart").attr("checked", this.autostart);
+      $("#settings-general-autostart").attr("checked", this.autostart());
 
-      /* redraw options page */
-      this.frontPageParent = this.storage['conetserv-settings-general-frontpage'];
-
-      this.frontPageChild = this.storage['conetserv-settings-general-frontpage-child'];
-      $("#frontpage-" + this.frontPageParent).attr("checked", true);
+      $("#frontpage-" + this.frontPageParent()).attr("checked", true);
       Conetserv.Ui.redrawOptions();
-      $("#frontpage-" + this.frontPageChild).attr("checked", true);
+      $("#frontpage-" + this.frontPageChild()).attr("checked", true);
 
       /* depending on options page, set the active tab */
-      $("#tabs").tabs('select', "#" + this.frontPageParent);
-      $("#" + this.frontPageParent).ready(function() {
-         $("#" + Conetserv.Options.frontPageChild).attr("checked", true);
+      $("#tabs").tabs('select', "#" + this.frontPageParent());
+      $("#" + this.frontPageParent()).ready(function() {
+         $("#" + Conetserv.Options.frontPageChild()).attr("checked", true);
       });
 
       /* skin options */
-      this.skin = this.storage['conetserv-settings-general-skin'] ? this.storage['conetserv-settings-general-skin'] : $("#settings-general-skin input").val();
-      $("#settings-general-skin input[value="+this.skin+"]").attr("checked", true);
-
-      /* external services */
-      this.ext_services = this.storage["conetserv-settings-external-services"] ? 
-         this.storage["conetserv-settings-external-services"].toString().split(";") : [];
+      $("#settings-general-skin input[value="+this.skin()+"]").attr("checked", true);
 
       /* set buttons checked on external services page */
-      for(var key in this.ext_services) {
-         if(this.ext_services[key]) {
+      for(var key in this.ext_services()) {
+         if(this.ext_services()[key]) {
             $("#settings-external-services-form input[value="+key+"]").attr("checked", true);
          }
       }
       /* external services router */
-      this.ext_services_router = this.storage["conetserv-settings-external-services_router"] ? 
-         this.storage["conetserv-settings-external-services_router"].toString().split(";") : [];
-
-      for(key in this.ext_services_router) {
-         if(this.ext_services_router[key]) {
+      var ext_services_router = this.ext_services_router();
+      for(key in ext_services_router) {
+         if(ext_services_router[key]) {
             switch(parseInt(key)) {
                case Conetserv.LookingGlass.enums.CERN_PING_V4:
-                  $("#settings-external-services-cern-ipv4-router").attr("value", this.ext_services_router[key]);
+                  $("#settings-external-services-cern-ipv4-router").attr("value", ext_services_router[key]);
                   break;
                case Conetserv.LookingGlass.enums.SPARKLE_PING_V4:
-                  $("#settings-external-services-sparkle-ipv4-router").attr("value", this.ext_services_router[key]);
+                  $("#settings-external-services-sparkle-ipv4-router").attr("value", ext_services_router[key]);
                   break;
                case Conetserv.LookingGlass.enums.ATMAN_PING_V4:
-                  $("#settings-external-services-atman-ipv4-router").attr("value", this.ext_services_router[key]);
+                  $("#settings-external-services-atman-ipv4-router").attr("value", ext_services_router[key]);
                   break;
                case Conetserv.LookingGlass.enums.ILAN_PING_V4:
-                  $("#settings-external-services-ilan-ipv4-router").attr("value", this.ext_services_router[key]);
+                  $("#settings-external-services-ilan-ipv4-router").attr("value", ext_services_router[key]);
                   break;
               case Conetserv.LookingGlass.enums.CERN_PING_V6:
-                  $("#settings-external-services-cern-ipv6-router").attr("value", this.ext_services_router[key]);
+                  $("#settings-external-services-cern-ipv6-router").attr("value", ext_services_router[key]);
                   break;
               case Conetserv.LookingGlass.enums.ATMAN_PING_V4:
-                  $("#settings-external-services-atman-ipv6-router").attr("value", this.ext_services_router[key]);
+                  $("#settings-external-services-atman-ipv6-router").attr("value", ext_services_router[key]);
                   break;
             }
          }
       }
 
       /* local services */
-      if((this.LocalServices.ping_packet_count = parseInt(this.storage["conetserv-settings-local-services-ping-packet-count"]))){
-         $("#settings-local-services-ping-count").val(this.LocalServices.ping_packet_count);
+      if(this.LocalServices.ping_packet_count()){
+         $("#settings-local-services-ping-count").val(this.LocalServices.ping_packet_count());
       }
-      if((this.LocalServices.ping_timeout = parseInt(this.storage["conetserv-settings-local-services-ping-timeout"]))){
-         $("#settings-local-services-ping-timeout").val(this.LocalServices.ping_timeout);
+      if(this.LocalServices.ping_timeout()){
+         $("#settings-local-services-ping-timeout").val(this.LocalServices.ping_timeout());
       }
-      if((this.LocalServices.ping_ttl =parseInt(this.storage["conetserv-settings-local-services-ping-ttl"]))){
-         $("#settings-local-services-ping-ttl").val(this.LocalServices.ping_ttl);
+      if(this.LocalServices.ping_ttl()){
+         $("#settings-local-services-ping-ttl").val(this.LocalServices.ping_ttl());
       }
-      if((this.LocalServices.ping_packet_size = parseInt(this.storage["conetserv-settings-local-services-ping-packet-size"]))){
-         $("#settings-local-services-ping-packet-size").val(this.LocalServices.ping_packet_size);
+      if(this.LocalServices.ping_packet_size()){
+         $("#settings-local-services-ping-packet-size").val(this.LocalServices.ping_packet_size());
       }
-
-
-      this.version = this.storage["conetserv-version"];
+      
    },
 
    /**
@@ -191,29 +202,24 @@ Conetserv.Options = {
          return false;
       switch(option) {
          case this.enums.TOOLBAR_BUTTON:
-            this.toolbarButton = $("#settings-general-toolbox").is(":checked");
-            this.storage["conetserv-settings-general-toolbox"] = this.toolbarButton;
+            this.storage["conetserv-settings-general-toolbox"] = $("#settings-general-toolbox").is(":checked");
             break;
          case this.enums.AUTOSTART:
-            this.autostart = $("#settings-general-autostart").is(":checked");
-            this.storage["conetserv-settings-general-autostart"] = this.autostart;
+            this.storage["conetserv-settings-general-autostart"] = $("#settings-general-autostart").is(":checked");
             break;
          case this.enums.FRONTPAGE_PARENT:
-            this.frontPageParent = $("#settings-general-frontpage input:checked").val();
-            this.storage["conetserv-settings-general-frontpage"] = this.frontPageParent;
+            this.storage["conetserv-settings-general-frontpage"] = $("#settings-general-frontpage input:checked").val();
             break;
          case this.enums.FRONTPAGE_CHILD:
-            this.frontPageChild = $("#settings-general-frontpage-children input:checked").val();
-            this.storage["conetserv-settings-general-frontpage-child"] = this.frontPageChild;
+            this.storage["conetserv-settings-general-frontpage-child"] = $("#settings-general-frontpage-children input:checked").val();
             break;
          case this.enums.SKIN:
-            this.skin = $("#settings-general-skin input:checked").val();
-            this.storage["conetserv-settings-general-skin"] = this.skin;
+            this.storage["conetserv-settings-general-skin"] = $("#settings-general-skin input:checked").val();
             Conetserv.Ui.reloadSkin();
             break;
          case this.enums.EXT_SERVICES:
             /* clean ext_services and fill them depending on checked services */
-            this.ext_services = [];
+            var ext_services = [];
             
             /* variables for storing number of active services */
             var ping = 0;
@@ -237,7 +243,7 @@ Conetserv.Options = {
                      ++tracert6;
                      break;
                }
-               Conetserv.Options.ext_services[$(this).attr("value")] = true;
+               ext_services[$(this).attr("value")] = true;
             });
 
             /* if maximum alowed services has already been reached, return false */
@@ -247,105 +253,94 @@ Conetserv.Options = {
             }
 
             /* join array and save to storage */
-            this.storage["conetserv-settings-external-services"] = this.ext_services.join(";");
+            this.storage["conetserv-settings-external-services"] = ext_services.join(";");
             break;
          case this.enums.EXT_SERVICES_ROUTER:
+            var ext_services_router = this.ext_services_router();
+
             $("#settings-external-services-form select").each(function(){
                switch($(this).attr("id")) {
                   case "settings-external-services-cern-ipv4-router":
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V4] = $(this).attr("value");
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V4] = $(this).attr("value");
                      break;
                   case "settings-external-services-sparkle-ipv4-router":
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_PING_V4] = $(this).attr("value");
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_PING_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4] = $(this).attr("value");
                      break;
                   case "settings-external-services-atman-ipv4-router":
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4] = $(this).attr("value");
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4] = $(this).attr("value");
                      break;
                   case "settings-external-services-ilan-ipv4-router":
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4] = $(this).attr("value");
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4] = $(this).attr("value");
                      break;
                   case "settings-external-services-cern-ipv6-router":
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V6] = $(this).attr("value");
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V6] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V6] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V6] = $(this).attr("value");
                      break;
                   case "settings-external-services-atman-ipv6-router":
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V6] = $(this).attr("value");
-                     Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V6] = $(this).attr("value");
+                     ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6] = $(this).attr("value");
                      break;
                }
             });
-            this.storage["conetserv-settings-external-services_router"] = this.ext_services_router.join(";");
+            this.storage["conetserv-settings-external-services_router"] = ext_services_router.join(";");
             break;
          case this.enums.LOC_SERVICES_PING:
-            if((this.LocalServices.ping_packet_count = $("#settings-local-services-ping-count").val())) {
-               if(!(this.LocalServices.ping_packet_count = parseInt(this.LocalServices.ping_packet_count))) {
-                  Conetserv.Ui.showDialog("Warning!", "Number of packets can only be set by a numeric value.");
-                  this.storage.removeItem("conetserv-settings-local-services-ping-packet-count");
-                  return false;
-               }
-               else {
-                  this.storage["conetserv-settings-local-services-ping-packet-count"] = this.LocalServices.ping_packet_count;
-               }
-            }
-            else{
-               this.storage.removeItem("conetserv-settings-local-services-ping-packet-count");
-               this.LocalServices.ping_packet_count = false;
+            if(!this._saveNumeric("conetserv-settings-local-services-ping-packet-count", $("#settings-local-services-ping-count").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Number of packets can only be set by a numeric value.");
+               return false;
             }
 
-            if((this.LocalServices.ping_timeout = $("#settings-local-services-ping-timeout").val())) {
-               if(!(this.LocalServices.ping_timeout = parseInt(this.LocalServices.ping_timeout))) {
-                  Conetserv.Ui.showDialog("Warning!", "Ping timeout can only be set by a numeric value.");
-                  this.storage.removeItem("conetserv-settings-local-services-ping-timeout");
-                  return false;
-               }
-               else {
-                  this.storage["conetserv-settings-local-services-ping-timeout"] = this.LocalServices.ping_timeout;
-               }
-            }
-            else{
-               this.storage.removeItem("conetserv-settings-local-services-ping-timeout");
-               this.LocalServices.ping_timeout = false;
+            if(!this._saveNumeric("conetserv-settings-local-services-ping-timeout", $("#settings-local-services-ping-timeout").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Timeout can only be set by a numeric value.");
+               return false;
             }
 
-            if((this.LocalServices.ping_ttl = $("#settings-local-services-ping-ttl").val())) {
-               if(!(this.LocalServices.ping_ttl = parseInt(this.LocalServices.ping_ttl))) {
-                  Conetserv.Ui.showDialog("Warning!", "Ping packet's time to live can only be set by a numeric value.");
-                  this.storage.removeItem("conetserv-settings-local-services-ping-ttl");
-                  return false;
-               }
-               else {
-                  this.storage["conetserv-settings-local-services-ping-ttl"] = this.LocalServices.ping_ttl;
-               }
-            }
-            else{
-               this.storage.removeItem("conetserv-settings-local-services-ping-ttl");
-               this.LocalServices.ping_ttl = false;
+            if(!this._saveNumeric("conetserv-settings-local-services-ping-ttl", $("#settings-local-services-ping-ttl").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Packet's time to live can only be set by a numeric value.");
+               return false;
             }
 
-            if((this.LocalServices.ping_packet_size = $("#settings-local-services-ping-packet-size").val())) {
-               if(!(this.LocalServices.ping_packet_size = parseInt(this.LocalServices.ping_packet_size))) {
-                  Conetserv.Ui.showDialog("Warning!", "Ping packet size can only be set by a numeric value.");
-                  this.storage.removeItem("conetserv-settings-local-services-ping-packet-size");
-                  return false;
-               }
-               else {
-                  this.storage["conetserv-settings-local-services-ping-packet-size"] = this.LocalServices.ping_packet_size;
-               }
+            if(!this._saveNumeric("conetserv-settings-local-services-ping-packet-size", $("#settings-local-services-ping-packet-size").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Packet size to live can only be set by a numeric value.");
+               return false;
             }
-            else{
-               this.storage.removeItem("conetserv-settings-local-services-ping-packet-size");
-               this.LocalServices.ping_packet_size = false;
-            }
-            return true;
             break;
-
+         case this.enums.LOC_SERVICES_TRACERT:
       }
 
       return true;
+   },
+
+   /**
+    * Private function for saving numeric data to localstorage
+    * empty value is valid
+    * @param id local storage id
+    * @param val value to be stored
+    * @return true on success, false on failure
+    */
+   _saveNumeric : function(id, val) {
+      if(!parseInt(val) && val != "") {
+         this.storage[id] = false;
+         return false;
+      }
+      this.storage[id] = val;
+      return true;
+   },
+
+   /**
+    * Private function for loading numeric data from localstorage
+    * @param id local storage id
+    * @return numeric value or false on failure
+    */
+   _getNumeric : function(id) {
+   var tmp;
+   return Conetserv.Options.storage ?
+      ((tmp = parseInt(Conetserv.Options.storage[id])) ? tmp : false) :
+      false;
    },
 
    /**

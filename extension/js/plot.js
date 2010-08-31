@@ -321,7 +321,7 @@ Conetserv.Plot = {
     */
    _plotPing : function(placeholder, data) {
       data.changed = 0;
-      var color = this.colors[Conetserv.Options.skin];
+      var color = this.colors[Conetserv.Options.skin()];
 
       $.plot(placeholder,
          [ {
@@ -383,7 +383,7 @@ Conetserv.Plot = {
     */
 _plotTracert : function(placeholder, data) {
    var plotCont;
-   var color = this.colors[Conetserv.Options.skin];
+   var color = this.colors[Conetserv.Options.skin()];
 
    data.changed = 0;
 
