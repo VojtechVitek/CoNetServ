@@ -15,7 +15,7 @@ typedef struct _object_ping {
  * PING settings
  * The same settings for both PING and PING6
  */
-struct {
+static struct {
    int count;
    int timeout;
    int packetsize;

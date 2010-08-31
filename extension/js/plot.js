@@ -171,7 +171,7 @@ Conetserv.Plot = {
             // [EN] "Reply from 77.75.*.*: bytes=32 time=32ms TTL=127"\
             // [RU] "Ответ от 194.87.*.*: число байт=32 время=28мс TTL=56"
             // [CZ] "Odpověď od 213.46.*.*: bajty=32 čas=48ms TTL=247"
-            pingTime = /.*?=\d+.*?=(\d+).*=\d+.*?/i.exec(currentData);
+            pingTime = /.*?=\d+.*?[=<](\d+).*=\d+.*?/i.exec(currentData);
             if(pingTime && pingTime[1]) {
                data.add(pingTime[1]);
             } else {

@@ -190,9 +190,11 @@ if(UNIX)
 		WORKING_DIRECTORY ${RELEASE_DIR}/chrome
 		COMMAND rm -rf ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
 		COMMAND zip -q -r ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.zip *
-		COMMAND crxmake --extension-output=${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
-		                --pack-extension=${RELEASE_DIR}/chrome
-		                --pack-extension-key=${CMAKE_SOURCE_DIR}/conetserv.pem
+		#COMMAND crxmake --extension-output=${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
+		#                --pack-extension=${RELEASE_DIR}/chrome
+		#                --pack-extension-key=${CMAKE_SOURCE_DIR}/conetserv.pem
+		COMMAND cd ${RELEASE_DIR} && crxmake.py ${RELEASE_DIR}/chrome
+		COMMAND mv ${RELEASE_DIR}/chrome.crx ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}-Chrome.crx
 		COMMENT "Generating Chrome Exension into ${RELEASE_DIR}/${PROJECT_NAME}-${VERSION}.(crx|zip)"
 	)
 

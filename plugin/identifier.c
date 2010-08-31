@@ -43,6 +43,38 @@ init_identifiers()
    identifiers->ttl = browser->getstringidentifier("ttl");
 #endif
 
+#ifdef MODULE_TRACEROUTE
+   identifiers->tracert = browser->getstringidentifier("tracert");
+   identifiers->traceroute = browser->getstringidentifier("traceroute");
+#endif
+
+#ifdef MODULE_TRACEROUTE6
+   identifiers->tracert6 = browser->getstringidentifier("tracert6");
+   identifiers->traceroute6 = browser->getstringidentifier("traceroute6");
+#endif
+
+#if defined(MODULE_TRACEROUTE) || defined(MODULE_TRACEROUTE6)
+   identifiers->maxhops = browser->getstringidentifier("maxhops");
+   identifiers->waittime = browser->getstringidentifier("waittime");
+   identifiers->iptohostname = browser->getstringidentifier("iptohostname");
+#endif
+
+#ifdef MODULE_NSLOOKUP
+   identifiers->nslookup = browser->getstringidentifier("nslookup");
+#endif
+
+#ifdef MODULE_WHOIS
+   identifiers->whois = browser->getstringidentifier("whois");
+#endif
+
+#ifdef MODULE_DIG
+   identifiers->dig = browser->getstringidentifier("dig");
+#endif
+
+#ifdef MODULE_NMAP
+   identifiers->nmap = browser->getstringidentifier("nmap");
+#endif
+
    identifiers->destroy = destroy;
 
   return true;

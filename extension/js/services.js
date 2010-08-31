@@ -110,6 +110,83 @@ Conetserv.Services.service.push({
 
 Conetserv.Services.service.push({
 
+   name: 'MaxMind GeoIP',
+   link: 'http://www.maxmind.com/',
+   stable: '2010-08-31',
+
+   request: [{
+      type: 'GET',
+      url: 'http://www.maxmind.com/app/locate_demo_ip',
+      data: {},
+      dataType: 'text',
+      dataCharset: 'UTF-8',
+      prepare: function(result) {
+
+         if (!result.externIpv4)
+            return false;
+
+         this.data.ips = result.externIpv4;
+         return true;
+      },
+      parse: function(data) {
+
+         var i, result = {};
+
+         /* Find table with data */
+         if ((i = data.indexOf('<th>Hostname</th>')) == -1)
+            return result;
+         data = data.substr(i, data.length - i);
+         if ((i = data.indexOf('<tr>')) == -1)
+            return result;
+         data = data.substr(i, data.length - i);
+         if ((i = data.indexOf('</tr>')) == -1)
+            return result;
+         data = data.substr(0, i);
+
+         /* Split data to lines */
+         var lines = data.split(/\r?\n/);
+         /* Line pattern */
+         var pattern = /<td><font size="-1">([^<]*)<\/font><\/td>/;
+         /* For each line */
+         for (var i = 0; i < lines.length; ++i) {
+            arr = pattern.exec(lines[i]);
+            if (arr && arr[1]) {
+               switch(i) {
+               case 3:
+                  result.countryCode = arr[1];
+                  break;
+               case 4:
+                  result.country = arr[1];
+                  break;
+               case 5:
+                  result.region = arr[1];
+                  break;
+               case 6:
+                  result.city = arr[1];
+                  break;
+               case 8:
+                  result.latitude = arr[1];
+                  break;
+               case 9:
+                  result.longitude = arr[1];
+                  break;
+               case 10:
+                  result.provider = arr[1];
+                  break;
+               default:
+                  continue;
+               }
+            }
+         }
+
+         return result;
+      }
+   }]
+
+});
+
+Conetserv.Services.service.push({
+
    name: 'WIPmania.com - WorldIP API',
    link: 'http://www.wipmania.com/',
 
