@@ -40,10 +40,6 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       i = 0;
       argv[i++] = program->path;
 
-      /* Set default arguments */
-      argv[i++] = "-n"; /* Numeric output only */
-      argv[i++] = "-l3"; /* Preload - Send 3 packets without waiting for reply */
-
       /* Set user-defined arguments */
       if (settings.maxhops > 0) {
          if (snprintf(maxhops, 20, "-m %d", settings.maxhops))
