@@ -4,9 +4,6 @@
 .*.swo
 *.backup
 
-# Chrome private key for building extension
-*.pem
-
 # Default build directory
 build/
 
@@ -21,8 +18,4 @@ cmake_uninstall.cmake
 
 #backup
 backup/
-
-#windows visual studio files
-*.suo
-*.ncb
 
