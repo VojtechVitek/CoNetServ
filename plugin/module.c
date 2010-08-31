@@ -69,9 +69,24 @@ destroy()
 {
    DEBUG_STR("modules->destroy()");
 
-#ifdef MODULE_TRACEROUTE
-   if (traceroute)
-      traceroute->destroy();
+#ifdef MODULE_NMAP
+   if (nmap)
+      nmap->destroy();
+#endif
+
+#ifdef MODULE_DIG
+   if (dig)
+      dig->destroy();
+#endif
+
+#ifdef MODULE_WHOIS
+   if (whois)
+      whois->destroy();
+#endif
+
+#ifdef MODULE_NSLOOKUP
+   if (nslookup)
+      nslookup->destroy();
 #endif
 
 #ifdef MODULE_TRACEROUTE6
@@ -79,14 +94,19 @@ destroy()
       traceroute6->destroy();
 #endif
 
-#ifdef MODULE_PING
-   if (ping)
-      ping->destroy();
+#ifdef MODULE_TRACEROUTE
+   if (traceroute)
+      traceroute->destroy();
 #endif
 
 #ifdef MODULE_PING6
    if (ping6)
       ping6->destroy();
+#endif
+
+#ifdef MODULE_PING
+   if (ping)
+      ping->destroy();
 #endif
 
    if (modules)
@@ -128,6 +148,26 @@ init_modules()
 
 #ifdef MODULE_TRACEROUTE6
    if (!init_module_traceroute6())
+      return false;
+#endif
+
+#ifdef MODULE_NSLOOKUP
+   if (!init_module_nslookup())
+      return false;
+#endif
+
+#ifdef MODULE_WHOIS
+   if (!init_module_whois())
+      return false;
+#endif
+
+#ifdef MODULE_DIG
+   if (!init_module_dig())
+      return false;
+#endif
+
+#ifdef MODULE_NMAP
+   if (!init_module_nmap())
       return false;
 #endif
 
