@@ -165,16 +165,16 @@ Conetserv.Options = {
       }
 
       /* local services */
-      if((this.LocalServices.ping_packet_count = this.storage["conetserv-settings-local-services-ping-packet-count"])){
+      if((this.LocalServices.ping_packet_count = parseInt(this.storage["conetserv-settings-local-services-ping-packet-count"]))){
          $("#settings-local-services-ping-count").val(this.LocalServices.ping_packet_count);
       }
-      if((this.LocalServices.ping_timeout = this.storage["conetserv-settings-local-services-ping-timeout"])){
+      if((this.LocalServices.ping_timeout = parseInt(this.storage["conetserv-settings-local-services-ping-timeout"]))){
          $("#settings-local-services-ping-timeout").val(this.LocalServices.ping_timeout);
       }
-      if((this.LocalServices.ping_ttl = this.storage["conetserv-settings-local-services-ping-ttl"])){
+      if((this.LocalServices.ping_ttl =parseInt(this.storage["conetserv-settings-local-services-ping-ttl"]))){
          $("#settings-local-services-ping-ttl").val(this.LocalServices.ping_ttl);
       }
-      if((this.LocalServices.ping_packet_size = this.storage["conetserv-settings-local-services-ping-packet-size"])){
+      if((this.LocalServices.ping_packet_size = parseInt(this.storage["conetserv-settings-local-services-ping-packet-size"]))){
          $("#settings-local-services-ping-packet-size").val(this.LocalServices.ping_packet_size);
       }
 
@@ -290,6 +290,10 @@ Conetserv.Options = {
                   this.storage["conetserv-settings-local-services-ping-packet-count"] = this.LocalServices.ping_packet_count;
                }
             }
+            else{
+               this.storage.removeItem("conetserv-settings-local-services-ping-packet-count");
+               this.LocalServices.ping_packet_count = false;
+            }
 
             if((this.LocalServices.ping_timeout = $("#settings-local-services-ping-timeout").val())) {
                if(!(this.LocalServices.ping_timeout = parseInt(this.LocalServices.ping_timeout))) {
@@ -300,6 +304,10 @@ Conetserv.Options = {
                else {
                   this.storage["conetserv-settings-local-services-ping-timeout"] = this.LocalServices.ping_timeout;
                }
+            }
+            else{
+               this.storage.removeItem("conetserv-settings-local-services-ping-timeout");
+               this.LocalServices.ping_timeout = false;
             }
 
             if((this.LocalServices.ping_ttl = $("#settings-local-services-ping-ttl").val())) {
@@ -312,6 +320,10 @@ Conetserv.Options = {
                   this.storage["conetserv-settings-local-services-ping-ttl"] = this.LocalServices.ping_ttl;
                }
             }
+            else{
+               this.storage.removeItem("conetserv-settings-local-services-ping-ttl");
+               this.LocalServices.ping_ttl = false;
+            }
 
             if((this.LocalServices.ping_packet_size = $("#settings-local-services-ping-packet-size").val())) {
                if(!(this.LocalServices.ping_packet_size = parseInt(this.LocalServices.ping_packet_size))) {
@@ -322,6 +334,10 @@ Conetserv.Options = {
                else {
                   this.storage["conetserv-settings-local-services-ping-packet-size"] = this.LocalServices.ping_packet_size;
                }
+            }
+            else{
+               this.storage.removeItem("conetserv-settings-local-services-ping-packet-size");
+               this.LocalServices.ping_packet_size = false;
             }
             return true;
             break;

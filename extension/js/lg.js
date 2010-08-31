@@ -101,26 +101,26 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?',
+      url: '',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+         this.url = 'http://noc.ilan.net.il/cgi-bin/lg.sh?';
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4];
          this.url += "&query=ping&parameter=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE>([^<]*)<\/PRE>)/;
+         var pattern = /(<PRE>(?:\r?\n)*([^<]*)(?:\r?\n)*<\/PRE>)/;
          arr = pattern.exec(data);
 
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
 
          //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]/i;
-         
          return result;
       }
    }]
@@ -156,13 +156,13 @@ Conetserv.LookingGlass.service.push({
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE><CODE>([^<]*)<\/CODE><\/PRE>)/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*)(?:\r?\n)*<\/CODE><\/PRE>)/;
          arr = pattern.exec(data);
 
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
          //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
-
+         alert(result);
          return result;
       }
    }]
@@ -196,8 +196,9 @@ Conetserv.LookingGlass.service.push({
          return true;
       },
       parse: function(data) {
+         alert(data);
          var result = '';
-         var pattern = /(<PRE>([^<]*))/i;
+         var pattern = /(<PRE>(?:\r?\n)*([^<]*))/i;
          arr = pattern.exec(data);
          
          if (arr && arr[2])
@@ -222,24 +223,32 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=ping&protocol=IPv4&',
+      url: '',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+         this.url = 'http://lg.atman.pl/?query=ping&protocol=IPv4&';
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE><CODE>([^<]*)<\/CODE><\/PRE>)/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*)<\/CODE><\/PRE>)/;
+         var pattern2 = /(<PRE><CODE>[^]*<b>(?:\r?\n)*([^<]*)\n)/i
+         var arr;
+
          arr = pattern.exec(data);
 
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
-         //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
+         else {
+            arr = pattern2.exec(data);
+         }
+         if (arr && arr[2])
+            result = arr[2];//.replace(/\r\n/g,"<br />");
 
          return result;
       }
@@ -277,7 +286,7 @@ Conetserv.LookingGlass.service.push({
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE><CODE>([^<]*)<\/CODE><\/PRE>)/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*)<\/CODE><\/PRE>)/;
          arr = pattern.exec(data);
 
          if (arr && arr[2])
@@ -304,25 +313,33 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=ping&protocol=IPv6&',
+      url: '',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+         this.url = 'http://lg.atman.pl/?query=ping&protocol=IPv6&';
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V6];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE><CODE>([^<]*)<\/CODE><\/PRE>)/;
+         var pattern = /(<PRE><CODE>\n*([^<]*)\n<\/CODE><\/PRE>)/;
+         var pattern2 = /(<PRE><CODE>[^]*<b>\n*([^<]*))\n/i
+         var arr;
+
          arr = pattern.exec(data);
 
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
-         //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
-
+         else {
+            arr = pattern2.exec(data);
+         }
+         if (arr && arr[2])
+            result = arr[2];//.replace(/\r\n/g,"<br />");
+         
          return result;
       }
    }]
@@ -344,19 +361,20 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://noc.ilan.net.il/cgi-bin/lg.sh?',
+      url: '',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+         this.url = 'http://noc.ilan.net.il/cgi-bin/lg.sh?';
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4];
          this.url += "&query=trace&parameter=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE>([^<]*)<\/PRE>)/;
+         var pattern = /(<PRE>(?:\r?\n)*([^<]*)<\/PRE>)/;
          arr = pattern.exec(data);
 
          if (arr && arr[2])
@@ -384,24 +402,32 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=trace&protocol=IPv4&',
+      url: '',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+         this.url = 'http://lg.atman.pl/?query=trace&protocol=IPv4&';
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE><CODE>([^<]*)<\/CODE><\/PRE>)/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*)<\/CODE><\/PRE>)/;
+         var pattern2 = /(<PRE><CODE>[^]*<b>(?:\r?\n)*([^<]*)\n)/i
+         var arr;
+
          arr = pattern.exec(data);
 
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
-         //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
+         else {
+            arr = pattern2.exec(data);
+         }
+         if (arr && arr[2])
+            result = arr[2];//.replace(/\r\n/g,"<br />");
 
          return result;
       }
@@ -439,7 +465,7 @@ Conetserv.LookingGlass.service.push({
       parse: function(data) {
          var result = '';
          data = data.replace(/\[([^\]]*)\]\s*/g, '');
-         var pattern = /(<PRE><CODE>([^<]*))/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*))/;
          var arr = data.match(pattern);
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
@@ -479,7 +505,7 @@ Conetserv.LookingGlass.service.push({
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE>([^<]*))/i;
+         var pattern = /(<PRE>(?:\r?\n)*([^<]*))/i;
          arr = pattern.exec(data);
 
          if (arr && arr[2])
@@ -506,25 +532,35 @@ Conetserv.LookingGlass.service.push({
 
    request: [{
       type: 'GET',
-      url: 'http://lg.atman.pl/?query=trace&protocol=IPv6&',
+      url: '',
       data: {
       },
       dataType: 'text',
       dataCharset: 'UTF-8',
       prepare: function(result) {
+         this.url = 'http://lg.atman.pl/?query=trace&protocol=IPv6&';
          this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
       parse: function(data) {
          var result = '';
-         var pattern = /(<PRE><CODE>([^<]*)<\/CODE><\/PRE>)/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*)<\/CODE><\/PRE>)/i
+         var pattern2 = /(<PRE><CODE>[^]*<b>(?:\r?\n)*([^<]*)\n)/i
+         var arr;
+         
          arr = pattern.exec(data);
 
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
-         //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
+         else {
+            arr = pattern2.exec(data);
+         }
+         if (arr && arr[2])
+            result = arr[2];//.replace(/\r\n/g,"<br />");
+         
 
+         //pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
          return result;
       }
    }]
@@ -561,7 +597,7 @@ Conetserv.LookingGlass.service.push({
       parse: function(data) {
          var result = '';
          data = data.replace(/\[([^\]]*)\]\s*/g, '');
-         var pattern = /(<PRE><CODE>([^<]*))/;
+         var pattern = /(<PRE><CODE>(?:\r?\n)*([^<]*))/;
          var arr = data.match(pattern);
          if (arr && arr[2])
             result = arr[2];//.replace(/\r\n/g,"<br />");
@@ -584,6 +620,9 @@ Conetserv.LookingGlass.running = 0;
 
 /* XMLHttpRequest objects returned by ajax request */
 Conetserv.LookingGlass.runningServices = new Array();
+
+/* Bool defining, if the looking glass service has been stopped manually */
+Conetserv.LookingGlass.manuallyStopped = false;
 
 /* try to run services from the queue */
 Conetserv.LookingGlass.run = function() {
@@ -652,6 +691,7 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
    }
    
    this.runningServices = [];
+   this.manuallyStopped = false;
 
    /* callback functions init, throw started */
    this.result_callback = result_callback;
@@ -696,6 +736,8 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
 
 /* Stop all running services */
 Conetserv.LookingGlass.stop = function() {
+   this.manuallyStopped = true;
+   
    for(var key in this.runningServices) {
       this.runningServices[key].abort();
    }

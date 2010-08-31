@@ -136,11 +136,18 @@ Conetserv.ExternalServices = {
          },
          /* service results */
          function(service, result) {
-            var noDataErr = "<strong> Server has not returned any data. </strong> <br /><br /> This might have been caused by incompatibility with internet protocol version \
-               or internal server error.";
-            var err = "<strong> Server has encountered an error and returned following string: </strong> <br /> <br />";
+            var noDataErr = Conetserv.LookingGlass.manuallyStopped ?
+               "<strong>Request has been stopped before managing to return any data.</strong>"
+               : "<strong>Server has not returned any data. </strong> <br /><br /> Try choosing a different server in settings page.";
+            var err = "<strong>Server has most probably encountered an error with following output: </strong> <br /> <br />";
 
-            var errRegExp = /^%.*/i
+            var isErr = function(data) {
+               alert(data.split("\n").length);
+               if(data.split("\n").length < 4)
+                  return true;
+               else
+                  return false;
+            };
 
             switch(service.service) {
                case 'PING':
@@ -154,7 +161,7 @@ Conetserv.ExternalServices = {
                   if(result == "") {
                      Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].setErr(noDataErr);
                   }
-                  else if(errRegExp.exec(result)){
+                  else if(isErr(result)){
                      Conetserv.ExternalServices.Ping.console[Conetserv.ExternalServices.Ping.next++].setErr(err + result);
                   }
                   else {
@@ -172,7 +179,7 @@ Conetserv.ExternalServices = {
                   if(result == "") {
                      Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].setErr(noDataErr);
                   }
-                  else if(errRegExp.test(result)){
+                  else if(isErr(result)){
                      Conetserv.ExternalServices.Ping6.console[Conetserv.ExternalServices.Ping6.next++].setErr(err + result);
                   }
                   else {
@@ -190,6 +197,9 @@ Conetserv.ExternalServices = {
                   if(result == "") {
                      Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].setErr(noDataErr);
                   }
+                  else if(isErr(result)){
+                     Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].setErr(err + result);
+                  }
                   else {
                      Conetserv.ExternalServices.Tracert.console[Conetserv.ExternalServices.Tracert.next++].add(result + '\n');
                   }
@@ -204,6 +214,9 @@ Conetserv.ExternalServices = {
                   $("#external-tracert6-service-" + Conetserv.ExternalServices.Tracert6.next).html(service.name);
                   if(result == "" ) {
                      Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].setErr(noDataErr);
+                  }
+                  else if(isErr(result)){
+                     Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].setErr(err + result);
                   }
                   else {
                      Conetserv.ExternalServices.Tracert6.console[Conetserv.ExternalServices.Tracert6.next++].add(result + '\n');
