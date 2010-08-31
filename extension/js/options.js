@@ -310,33 +310,33 @@ Conetserv.Options = {
             break;
          case this.enums.LOC_SERVICES_PING:
             if(!this._saveNumeric("conetserv-settings-local-services-ping-packet-count", $("#settings-local-services-ping-count").val())) {
-               Conetserv.Ui.showDialog("Warning!", "Number of packets can only be set by a numeric value.");
+               Conetserv.Ui.showDialog("Warning!", "Number of packets can only be set by a positive numeric value.");
                return false;
             }
 
             if(!this._saveNumeric("conetserv-settings-local-services-ping-timeout", $("#settings-local-services-ping-timeout").val())) {
-               Conetserv.Ui.showDialog("Warning!", "Timeout can only be set by a numeric value.");
+               Conetserv.Ui.showDialog("Warning!", "Timeout can only be set by a positive numeric value.");
                return false;
             }
 
             if(!this._saveNumeric("conetserv-settings-local-services-ping-ttl", $("#settings-local-services-ping-ttl").val())) {
-               Conetserv.Ui.showDialog("Warning!", "Packet's time to live can only be set by a numeric value.");
+               Conetserv.Ui.showDialog("Warning!", "Packet's time to live can only be set by a positive numeric value.");
                return false;
             }
 
             if(!this._saveNumeric("conetserv-settings-local-services-ping-packet-size", $("#settings-local-services-ping-packet-size").val())) {
-               Conetserv.Ui.showDialog("Warning!", "Packet size to live can only be set by a numeric value.");
+               Conetserv.Ui.showDialog("Warning!", "Packet size to live can only be set by a positive numeric value.");
                return false;
             }
             break;
          case this.enums.LOC_SERVICES_TRACERT:
             if(!this._saveNumeric("conetserv-settings-local-services-tracert-max-hops", $("#settings-local-services-tracert-max-hops").val())) {
-               Conetserv.Ui.showDialog("Warning!", "Maximum number of hops can only be set by a numeric value.");
+               Conetserv.Ui.showDialog("Warning!", "Maximum number of hops can only be set by a positive numeric value.");
                return false;
             }
 
             if(!this._saveNumeric("conetserv-settings-local-services-tracert-wait-time", $("#settings-local-services-tracert-wait-time").val())) {
-               Conetserv.Ui.showDialog("Warning!", "Wait time can only be set by a numeric value.");
+               Conetserv.Ui.showDialog("Warning!", "Wait time can only be set by a positive numeric value.");
                return false;
             }
 
@@ -384,7 +384,7 @@ Conetserv.Options = {
    _getNumeric : function(id) {
    var tmp;
    return Conetserv.Options.storage ?
-      ((tmp = parseInt(Conetserv.Options.storage[id])) ? tmp : false) :
+      ((tmp = parseInt(Conetserv.Options.storage[id])) > 0 ? tmp : false) :
       false;
    },
 
