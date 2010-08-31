@@ -7,6 +7,7 @@ set(sources
 	${sources}
 	unix/shell.c
 	unix/ping.c
+	unix/traceroute.c
 )
 
 set(headers

@@ -29,6 +29,22 @@ typedef struct _identifier {
    NPIdentifier   ttl;
 #endif
 
+#ifdef MODULE_TRACEROUTE
+   NPIdentifier   tracert;
+   NPIdentifier   traceroute;
+#endif
+
+#ifdef MODULE_TRACEROUTE6
+   NPIdentifier   tracert6;
+   NPIdentifier   traceroute6;
+#endif
+
+#if defined(MODULE_TRACEROUTE) || defined(MODULE_TRACEROUTE6)
+   NPIdentifier   maxhops;
+   NPIdentifier   waittime;
+   NPIdentifier   iptohostname;
+#endif
+
    void           (*destroy)();
 } identifier;
 

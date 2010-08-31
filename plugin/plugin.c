@@ -42,7 +42,28 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 
    /* Plugin modules */
 #ifdef MODULE_PING
-   if (identifier == identifiers->ping || identifier == identifiers->ping6) {
+   if (identifier == identifiers->ping) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
+#ifdef MODULE_PING6
+   if (identifier == identifiers->ping6) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
+#ifdef MODULE_TRACEROUTE
+   if (identifier == identifiers->traceroute || identifier == identifiers->tracert) {
+      DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      return true;
+   }
+#endif
+
+#ifdef MODULE_TRACEROUTE6
+   if (identifier == identifiers->traceroute6 || identifier == identifiers->tracert6) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -88,9 +109,28 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping->class)), *result);
       return true;
    }
+#endif
+
+#ifdef MODULE_PING6
    if (identifier == identifiers->ping6) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping6->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_TRACEROUTE
+   if (identifier == identifiers->traceroute || identifier == identifiers->tracert) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(traceroute->class)), *result);
+      return true;
+   }
+#endif
+
+#ifdef MODULE_TRACEROUTE6
+   if (identifier == identifiers->traceroute6 || identifier == identifiers->tracert6) {
+      DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(traceroute6->class)), *result);
       return true;
    }
 #endif

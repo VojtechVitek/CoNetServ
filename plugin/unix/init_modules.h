@@ -6,9 +6,19 @@
 #include "shell.h"
 
 #define MODULE_PING
-#define MODULE_PING6
-module *ping, *ping6;
+module *ping;
 bool init_module_ping();
+
+#define MODULE_PING6
+module *ping6;
 bool init_module_ping6();
+
+#define MODULE_TRACEROUTE
+module *traceroute;
+bool init_module_traceroute();
+
+#define MODULE_TRACEROUTE6
+module *traceroute6;
+bool init_module_traceroute6();
 
 #endif /*_INIT_MODULES_H_*/

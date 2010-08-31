@@ -13,6 +13,7 @@ set(sources
 	${CMAKE_BINARY_DIR}/resource.rc
 	win/cmd_exe.c
 	win/ping.c
+	win/tracert.c
 )
 
 set(headers

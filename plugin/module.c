@@ -69,6 +69,16 @@ destroy()
 {
    DEBUG_STR("modules->destroy()");
 
+#ifdef MODULE_TRACEROUTE
+   if (traceroute)
+      traceroute->destroy();
+#endif
+
+#ifdef MODULE_TRACEROUTE6
+   if (traceroute6)
+      traceroute6->destroy();
+#endif
+
 #ifdef MODULE_PING
    if (ping)
       ping->destroy();
@@ -108,6 +118,16 @@ init_modules()
 
 #ifdef MODULE_PING6
    if (!init_module_ping6())
+      return false;
+#endif
+
+#ifdef MODULE_TRACEROUTE
+   if (!init_module_traceroute())
+      return false;
+#endif
+
+#ifdef MODULE_TRACEROUTE6
+   if (!init_module_traceroute6())
       return false;
 #endif
 
