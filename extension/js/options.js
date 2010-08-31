@@ -70,7 +70,8 @@ Conetserv.Options = {
       /* Conetserv is run for the first time */
       if(!this.storage['conetserv-version'] || this.storage['conetserv-version'].toString() == '') {
          reinitialize = true;
-         Conetserv.LocalServices.Ping.console.setErr('<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.');
+         if(Conetserv.LocalServices.enabled)
+            Conetserv.LocalServices.Ping.console.setErr('<strong>Welcome to CoNetServ extension.</strong><br />Settings has been set to default values.');
       }
       /* Conetserv has been updated */
       else if(this.storage['conetserv-version'] != Conetserv.version){

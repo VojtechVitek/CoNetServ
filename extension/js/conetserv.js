@@ -53,7 +53,7 @@ Conetserv.onReady = function() {
    Conetserv.LocalServices.initialize();
    Conetserv.ExternalServices.initialize();
    Conetserv.Plot.initialize();
-   this.Options.initialize();
+   Conetserv.Options.initialize();
 
 };
 

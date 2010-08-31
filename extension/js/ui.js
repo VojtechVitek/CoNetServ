@@ -99,6 +99,16 @@ Conetserv.Ui = {
       });
 
       /**
+       * When enter is pressed inside of external and local url inputs
+       */
+      $('#external-url').keyup(function(e) {
+         if(e.keyCode == 13) {
+            Conetserv.ExternalServices.start();
+            return false;
+         }
+      });
+
+      /**
        * when radiobutton on local-services page is selected
        */
       $("input[name=local-services-form]").change(function(){
@@ -282,7 +292,7 @@ Conetserv.Ui = {
       }
 
       /* Check plugin version */
-      var version = Conetserv.plugin.version ? Conetserv.plugin.version.split('.') : false;
+      var version = typeof(Conetserv.plugin.version) == "string" ? Conetserv.plugin.version.split('.') : false;
 
       if(!version || parseInt(version[0]) != 1 || parseInt(version[1]) != 9) {
          var errStr = "<strong>CoNetServ extension is incompatible with currently installed plugin.</strong><br/><br/>\
