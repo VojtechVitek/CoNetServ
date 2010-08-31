@@ -1,10 +1,10 @@
-/* Internal PING and PING6 modules */
+/* PING and PING6 modules */
 module *ping = NULL;
 module *ping6 = NULL;
 
 /**
  * Object PING - abstraction of PING and PING6
- * Used for distinguish PING and PING6 objects passed from JavaScript
+ * Used to distinguish PING and PING6 objects passed from JavaScript
  */
 typedef struct _object_ping {
    object       obj;

@@ -8,6 +8,9 @@ set(sources
 	unix/shell.c
 	unix/ping.c
 	unix/traceroute.c
+	unix/nslookup.c
+	unix/whois.c
+	unix/dig.c
 )
 
 set(headers

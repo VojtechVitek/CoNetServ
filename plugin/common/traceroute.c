@@ -1,10 +1,10 @@
-/* Internal TRACEROUTE and TRACEROUTE6 modules */
+/* TRACEROUTE and TRACEROUTE6 modules */
 module *traceroute = NULL;
 module *traceroute6 = NULL;
 
 /**
  * Object TRACEROUTE - abstraction of TRACEROUTE and TRACEROUTE6
- * Used for distinguish TRACEROUTE and TRACEROUTE6 objects passed from JavaScript
+ * Used to distinguish TRACEROUTE and TRACEROUTE6 objects passed from JavaScript
  */
 typedef struct _object_traceroute {
    object       obj;
@@ -29,15 +29,15 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
       return true;
    }
    if (identifier == identifiers->maxhops) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
    if (identifier == identifiers->waittime) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
    if (identifier == identifiers->iptohostname) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
    DEBUG_STR("plugin->traceroute->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
@@ -53,17 +53,17 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
       return true;
    }
    if (identifier == identifiers->maxhops) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.maxhops, *value);
       return true;
    }
    if (identifier == identifiers->waittime) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.waittime, *value);
       return true;
    }
    if (identifier == identifiers->iptohostname) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(settings.iptohostname, *value);
       return true;
    }
@@ -75,17 +75,17 @@ static bool
 setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
 {
    if (identifier == identifiers->maxhops) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.maxhops = NPVARIANT_TO_INT32(*value);
       return true;
    }
    if (identifier == identifiers->waittime) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.waittime = NPVARIANT_TO_INT32(*value);
       return true;
    }
    if (identifier == identifiers->iptohostname) {
-      DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.iptohostname = NPVARIANT_TO_BOOLEAN(*value);
       return true;
    }

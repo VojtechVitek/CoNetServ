@@ -61,6 +61,7 @@ init_identifiers()
 
 #ifdef MODULE_NSLOOKUP
    identifiers->nslookup = browser->getstringidentifier("nslookup");
+   identifiers->query = browser->getstringidentifier("query");
 #endif
 
 #ifdef MODULE_WHOIS
