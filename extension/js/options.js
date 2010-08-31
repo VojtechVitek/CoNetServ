@@ -53,8 +53,8 @@ Conetserv.Options = {
       tracert_wait_time : function() {
          return Conetserv.Options._getNumeric("conetserv-settings-local-services-tracert-wait-time");
       },
-      tracert_ip_to_domain : function() {
-         return Conetserv.Options._getBoolean("conetserv-settings-local-services-tracert-ip-to-domain");
+      tracert_ip_to_hostname : function() {
+         return Conetserv.Options._getBoolean("conetserv-settings-local-services-tracert-ip-to-hostname");
       }
    },
 
@@ -210,7 +210,7 @@ Conetserv.Options = {
          $("#settings-local-services-tracert-wait-time").val(this.LocalServices.tracert_wait_time());
       }
 
-      $("#settings-local-services-tracert-ip-to-domain").attr("checked", this.LocalServices.tracert_ip_to_domain());
+      $("#settings-local-services-tracert-ip-to-hostname").attr("checked", this.LocalServices.tracert_ip_to_hostname());
       
    },
 
@@ -340,7 +340,7 @@ Conetserv.Options = {
                return false;
             }
 
-            this._saveBoolean("conetserv-settings-local-services-tracert-ip-to-domain", $("#settings-local-services-tracert-ip-to-domain").is(":checked"));
+            this._saveBoolean("conetserv-settings-local-services-tracert-ip-to-hostname", $("#settings-local-services-tracert-ip-to-hostname").is(":checked"));
 
             break;
       }

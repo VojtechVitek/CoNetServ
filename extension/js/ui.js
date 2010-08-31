@@ -81,6 +81,11 @@ Conetserv.Ui = {
             $(this).val("");
       });
 
+      $("#settings-local-services-tracert-div input").change(function(){
+         if(!Conetserv.Options.save(Conetserv.Options.enums.LOC_SERVICES_TRACERT))
+            $(this).val("");
+      });
+
       /**
       * reimplement behaviour when different tab is selected
       */
