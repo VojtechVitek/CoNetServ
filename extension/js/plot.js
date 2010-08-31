@@ -167,7 +167,6 @@ Conetserv.Plot = {
          var currentData = data.prevData.substr(0, npos);
          if($.client.os == "Windows")
          {
-            data.rowId++;
             // Windows ping output:
             // [EN] "Reply from 77.75.*.*: bytes=32 time=32ms TTL=127"\
             // [RU] "Ответ от 194.87.*.*: число байт=32 время=28мс TTL=56"
@@ -177,8 +176,11 @@ Conetserv.Plot = {
                data.add(pingTime[1]);
             } else {
                /* ignore first 3 lines */
-               if(data.rowId > 3) {
-                  data.add(null);
+               if(data.count > 3) {
+		  if(currentData.length < 3)
+		     data.finished = true;
+		  if(!data.finished)
+		    data.add(null);
                }
             }
          }
@@ -438,6 +440,7 @@ function pData() {
    this.rows = [];		//array for storing data
    this.count = 0;		//amount of data in array
    this.prevId = 0;		//id of previous ping packet
+   this.finished = 0;		//means that service has finished already
 
    this.sum = 0;		//sum of all values in fields
    this.minVal = 0;		//initiate min value
