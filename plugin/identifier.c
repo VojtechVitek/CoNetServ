@@ -61,6 +61,9 @@ init_identifiers()
 
 #ifdef MODULE_NSLOOKUP
    identifiers->nslookup = browser->getstringidentifier("nslookup");
+#endif
+
+#if defined(MODULE_NSLOOKUP) || defined(MODULE_NMAP)
    identifiers->query = browser->getstringidentifier("query");
 #endif
 

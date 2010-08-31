@@ -11,6 +11,7 @@ set(sources
 	unix/nslookup.c
 	unix/whois.c
 	unix/dig.c
+	unix/nmap.c
 )
 
 set(headers
