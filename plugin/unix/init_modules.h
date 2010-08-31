@@ -33,4 +33,8 @@ bool init_module_whois();
 module *dig;
 bool init_module_dig();
 
+#define MODULE_NMAP
+module *nmap;
+bool init_module_nmap();
+
 #endif /*_INIT_MODULES_H_*/

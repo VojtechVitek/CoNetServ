@@ -15,6 +15,7 @@ set(sources
 	win/ping.c
 	win/tracert.c
 	win/nslookup.c
+	win/nmap.c
 )
 
 set(headers

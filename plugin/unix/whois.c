@@ -41,7 +41,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       if (argc != 1 || args[0].type != NPVariantType_String)
          return false;
 
-      /* First argument must be url */
+      /* First argument should be command path/name */
       i = 0;
       argv[i++] = ((shell_module *)whois)->path;
 

@@ -15,51 +15,38 @@ invokeMethod(NPObject *, NPIdentifier, const NPVariant *, uint32_t, NPVariant *)
  * Include common part for all systems.
  * !!!
  */
-#include "../common/ping.c"
+#include "../common/nmap.c"
 
 static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    char *argv[20];
-   char count[20], timeout[20], packetsize[20], ttl[20];
+   char query[20];
    int i;
    char *ptr;
-   shell_module *program;
 
    if (identifier == identifiers->start) {
 
-      DEBUG_STR("plugin->pingX->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->nmap->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 
       /* Just the URL argument can be passed from JavaScript */
       if (argc != 1 || args[0].type != NPVariantType_String)
          return false;
 
-      program = ((object_ping *)obj)->program;
-
       /* First argument should be command path/name */
       i = 0;
-      argv[i++] = program->path;
-
-      /* Set default arguments */
-      argv[i++] = "-n"; /* Numeric output only */
-      argv[i++] = "-l3"; /* Preload - Send 3 packets without waiting for reply */
+      argv[i++] = ((shell_module *)nmap)->path;
 
       /* Set user-defined arguments */
-      if (settings.count > 0) {
-         if (snprintf(count, 20, "-c %d", settings.count))
-            argv[i++] = count;
-      }
-      if (settings.packetsize > 0) {
-         if (snprintf(packetsize, 20, "-s %d", settings.packetsize))
-            argv[i++] = packetsize;
-      }
-      if (settings.timeout > 0) {
-         if (snprintf(timeout, 20, "-W %d", settings.timeout))
-            argv[i++] = timeout;
-      }
-      if (settings.ttl > 0) {
-         if (snprintf(ttl, 20, "-t %d", settings.ttl))
-            argv[i++] = ttl;
+      switch (settings.query) {
+      case 1: /* scan local neighboars */
+         if (snprintf(query, 20, "-sT"))
+            argv[i++] = query;
+         break;
+      case 0: /* scan ports of a host */
+      default:
+         /* nothing .. default for nmap command */
+         break;
       }
 
       /* Set the URL as the last argument */
@@ -70,12 +57,12 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
 
-      if (shell->run((process *)result->value.objectValue, program->path, argv))
+      if (shell->run((process *)result->value.objectValue, ((shell_module *)nmap)->path, argv))
          return true;
       else
          return false;
    }
 
-   DEBUG_STR("plugin->pingX->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->nmap->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }

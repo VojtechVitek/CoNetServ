@@ -25,4 +25,8 @@ bool init_module_traceroute6();
 module *nslookup;
 bool init_module_nslookup();
 
+#define MODULE_NMAP
+module *nmap;
+bool init_module_nmap();
+
 #endif /*_INIT_MODULES_H_*/
