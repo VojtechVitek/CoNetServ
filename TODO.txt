@@ -29,8 +29,8 @@ Extension:
 [x] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [x] Network tools: check availability and print additional info (installation, ..)
-[x] Firefox: automatic icon in toolbar
-[x] PING: rewrite packet lost analyser using regexp - implemented, not tested yet
+[ ] Firefox: automatic icon in toolbar
+[x] PING: rewrite packet lost analyser using regexp
 [ ] TRACEROUTE: improve plotting
 [x] WHOIS: use only first and second domain names
 [x] WHOIS: bug when TLD constists of two parts, eg. *.com.uk
@@ -39,7 +39,7 @@ Extension:
 [x] External services: ping and traceroute info from public Looking glass servers
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
 [ ] Possibility to save ping and traceroute plot to a jpg file
-[ ] Hide url bar while services are running
+[x] Hide url bar while services are running - disabled, not hid
 [x] Autorun service on start
 [x] OPTIONS: select default page
 [x] On tab select, focus on url bar
