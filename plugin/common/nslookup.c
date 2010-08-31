@@ -61,7 +61,7 @@ setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
 }
 
 static void
-destroy_nslookup()
+destroy()
 {
    DEBUG_STR("nslookup->destroy()");
    if (nslookup)
@@ -86,7 +86,7 @@ init_module_nslookup()
 {
    DEBUG_STR("nslookup->init()");
    nslookup = (module *)shell->init_module("nslookup");
-   nslookup->destroy = destroy_nslookup;
+   nslookup->destroy = destroy;
    nslookup->class = modules->class;
    nslookup->class.allocate = allocate;
    nslookup->class.invoke = invokeMethod;
