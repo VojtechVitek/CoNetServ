@@ -50,6 +50,16 @@ Conetserv.Options = {
       ping_packet_size : function() {
          return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-packet-size");
       },
+
+      tracert_max_hops : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-tracert-max-hops");
+      },
+      tracert_wait_time : function() {
+         return Conetserv.Options._getNumeric("conetserv-settings-local-services-tracert-wait-time");
+      },
+      tracert_ip_to_domain : function() {
+         return Conetserv.Options._getBoolean("conetserv-settings-local-services-tracert-ip-to-domain");
+      }
    },
 
    //enums for easier argument passing to functions
@@ -178,7 +188,10 @@ Conetserv.Options = {
          }
       }
 
-      /* local services */
+      /*************************************************************************
+       *                             LOCAL SERVICES                            *
+       ************************************************************************/
+      /* ping */
       if(this.LocalServices.ping_packet_count()){
          $("#settings-local-services-ping-count").val(this.LocalServices.ping_packet_count());
       }
@@ -191,6 +204,17 @@ Conetserv.Options = {
       if(this.LocalServices.ping_packet_size()){
          $("#settings-local-services-ping-packet-size").val(this.LocalServices.ping_packet_size());
       }
+
+      /* traceroute*/
+      if(this.LocalServices.tracert_max_hops()){
+         $("#settings-local-services-tracert-max-hops").val(this.LocalServices.tracert_max_hops());
+      }
+
+      if(this.LocalServices.tracert_wait_time()){
+         $("#settings-local-services-tracert-wait-time").val(this.LocalServices.tracert_wait_time());
+      }
+
+      $("#settings-local-services-tracert-ip-to-domain").attr("checked", this.LocalServices.tracert_ip_to_domain());
       
    },
 
@@ -310,6 +334,19 @@ Conetserv.Options = {
             }
             break;
          case this.enums.LOC_SERVICES_TRACERT:
+            if(!this._saveNumeric("conetserv-settings-local-services-tracert-max-hops", $("#settings-local-services-tracert-max-hops").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Maximum number of hops can only be set by a numeric value.");
+               return false;
+            }
+
+            if(!this._saveNumeric("conetserv-settings-local-services-tracert-wait-time", $("#settings-local-services-tracert-wait-time").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Wait time can only be set by a numeric value.");
+               return false;
+            }
+
+            this._saveBoolean("conetserv-settings-local-services-tracert-ip-to-domain", $("#settings-local-services-tracert-ip-to-domain").is(":checked"));
+
+            break;
       }
 
       return true;
@@ -317,7 +354,7 @@ Conetserv.Options = {
 
    /**
     * Private function for saving numeric data to localstorage
-    * empty value is valid
+    * empty value is valid and returns true
     * @param id local storage id
     * @param val value to be stored
     * @return true on success, false on failure
@@ -332,6 +369,18 @@ Conetserv.Options = {
    },
 
    /**
+    * Private function for saving boolean data to localstorage
+    * empty value is valid and returns true
+    * @param id local storage id
+    * @param val value to be stored
+    * @return true on success, false on failure
+    */
+   _saveBoolean : function(id, val) {
+      this.storage[id] = val;
+      return true;
+   },
+
+   /**
     * Private function for loading numeric data from localstorage
     * @param id local storage id
     * @return numeric value or false on failure
@@ -340,6 +389,17 @@ Conetserv.Options = {
    var tmp;
    return Conetserv.Options.storage ?
       ((tmp = parseInt(Conetserv.Options.storage[id])) ? tmp : false) :
+      false;
+   },
+
+   /**
+    * Private function for loading boolean data from localstorage
+    * @param id local storage id
+    * @return boolean value or false on failure
+    */
+   _getBoolean : function(id) {
+   return Conetserv.Options.storage ?
+      Conetserv.Options.storage[id] :
       false;
    },
 

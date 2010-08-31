@@ -241,8 +241,10 @@ div.valueLabel {
 }
 
 #settings-local-services-div .ui-widget {
-   width: 200px;
+   width: 250px;
+   float: left;
    padding: 0px 10px 10px 10px;
+   margin: 0px 15px 15px 0px;
 }
 
 #settings-external-services-div .ui-widget {
