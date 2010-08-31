@@ -80,9 +80,15 @@ body {
    height: 120px;
 }
 
+.nslookup .console.half,
 .tracert .console.half,
 .tracert6 .console.half {
   height: 190px;
+}
+
+.nslookup h4 {
+   margin: 0px;
+   padding: 0px;
 }
 
 .plot-placeholder {

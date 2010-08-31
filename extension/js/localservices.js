@@ -34,7 +34,8 @@ Conetserv.LocalServices = {
       this.start(this.Ping6);
       this.start(this.Traceroute);
       this.start(this.Traceroute6);
-      this.start(this.Nslookup);
+      this.start(this.NslookupUp);
+      this.start(this.NslookupDown);
       this.start(this.Whois);
       this.start(this.Nmap);
       this.start(this.Dig);
@@ -60,7 +61,8 @@ Conetserv.LocalServices = {
       this.stop(this.Ping6);
       this.stop(this.Traceroute);
       this.stop(this.Traceroute6);
-      this.stop(this.Nslookup);
+      this.stop(this.NslookupUp);
+      this.stop(this.NslookupDown);
       this.stop(this.Whois);
       this.start(this.Nmap);
       this.start(this.Dig);
@@ -167,7 +169,8 @@ Conetserv.LocalServices = {
          this.Ping6.console.maxRows = 15;
       this.Traceroute.console = new Conetserv.Console("local-tracert-console");
       this.Traceroute6.console = new Conetserv.Console("local-tracert6-console");
-      this.Nslookup.console = new Conetserv.Console("local-nslookup-console");
+      this.NslookupUp.console = new Conetserv.Console("local-nslookup-console-up");
+      this.NslookupDown.console = new Conetserv.Console("local-nslookup-console-down");
       this.Whois.console = new Conetserv.Console("local-whois-console");
       this.Nmap.console = new Conetserv.Console("local-nmap-console");
       this.Dig.console = new Conetserv.Console("local-dig-console");
@@ -273,18 +276,38 @@ Conetserv.LocalServices.Traceroute6 = {
    }
 }
 
-Conetserv.LocalServices.Nslookup = {
+Conetserv.LocalServices.NslookupUp = {
    enabled: true,                              //defines, if service will be started
    interval: -1,                           //reading loop interval
    finished: false,                         //saying, if service has finished its run
    console: false,                         //text console
    process: false,                         //running process to read data from
    class: '.nslookup',                     //class for icons
-   object: 'Conetserv.LocalServices.Nslookup', //object name
+   object: 'Conetserv.LocalServices.NslookupUp', //object name
    identifier: 'nslookup',                 //name for calling npapi functions
    argument: 'Conetserv.Url.hostname',     //parameters to be passed to npapi functions
 
    before_begin: function() {              //extra commands to be executed before service is started
+      Conetserv.plugin.nslookup.query = 0;
+   },
+
+   after_read: function(received) {
+   }
+}
+
+Conetserv.LocalServices.NslookupDown = {
+   enabled: true,                              //defines, if service will be started
+   interval: -1,                           //reading loop interval
+   finished: false,                         //saying, if service has finished its run
+   console: false,                         //text console
+   process: false,                         //running process to read data from
+   class: '.nslookup',                     //class for icons
+   object: 'Conetserv.LocalServices.NslookupDown', //object name
+   identifier: 'nslookup',                 //name for calling npapi functions
+   argument: 'Conetserv.Url.hostname',     //parameters to be passed to npapi functions
+
+   before_begin: function() {              //extra commands to be executed before service is started
+      Conetserv.plugin.nslookup.query = 1;
    },
 
    after_read: function(received) {
