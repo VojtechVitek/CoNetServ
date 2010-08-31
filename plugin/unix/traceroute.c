@@ -36,7 +36,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       program = ((object_traceroute *)obj)->program;
 
-      /* First argument must be url */
+      /* First argument should be command path/name */
       i = 0;
       argv[i++] = program->path;
 
