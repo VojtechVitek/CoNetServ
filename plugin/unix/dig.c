@@ -7,19 +7,19 @@
 #include "npapi.h"
 #include "shell.h"
 
-/* WHOIS module */
-module *whois = NULL;
+/* DIG module */
+module *dig = NULL;
 
 /**
- * Object WHOIS
- * Used for distinguish WHOIS object passed from JavaScript
+ * Object DIG
+ * Used for distinguish DIG object passed from JavaScript
  */
-typedef struct _object_whois {
+typedef struct _object_dig {
    object       obj;
-} object_whois;
+} object_dig;
 
 /**
- * WHOIS settings
+ * DIG settings
  */
 /*
 static struct {
@@ -35,7 +35,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
    if (identifier == identifiers->start) {
 
-      DEBUG_STR("plugin->whois->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->dig->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 
       /* Just the URL argument can be passed from JavaScript */
       if (argc != 1 || args[0].type != NPVariantType_String)
@@ -43,7 +43,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       /* First argument must be url */
       i = 0;
-      argv[i++] = ((shell_module *)whois)->path;
+      argv[i++] = ((shell_module *)dig)->path;
 
       /* Set the URL as the last argument */
       argv[i++] = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
@@ -53,13 +53,13 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &processClass), *result);
 
-      if (shell->run((process *)result->value.objectValue, ((shell_module *)whois)->path, argv))
+      if (shell->run((process *)result->value.objectValue, ((shell_module *)dig)->path, argv))
          return true;
       else
          return false;
    }
 
-   DEBUG_STR("plugin->whois->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->dig->invokeMethod(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
@@ -67,10 +67,10 @@ static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
    if (identifier == identifiers->found) {
-      DEBUG_STR("plugin->whois->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      DEBUG_STR("plugin->dig->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   DEBUG_STR("plugin->whois->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->dig->hasProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
@@ -78,35 +78,35 @@ static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 {
    if (identifier == identifiers->found) {
-      DEBUG_STR("plugin->whois->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
-      BOOLEAN_TO_NPVARIANT(((shell_module *)whois)->found, *value);
+      DEBUG_STR("plugin->dig->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
+      BOOLEAN_TO_NPVARIANT(((shell_module *)dig)->found, *value);
       return true;
    }
-   DEBUG_STR("plugin->whois->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->dig->getProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 static bool
 setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
 {
-   DEBUG_STR("plugin->whois->setProperty(%s): false", DEBUG_IDENTIFIER(identifier));
+   DEBUG_STR("plugin->dig->setProperty(%s): false", DEBUG_IDENTIFIER(identifier));
    return false;
 }
 
 static void
 destroy()
 {
-   DEBUG_STR("whois->destroy()");
-   if (whois)
-      shell->destroy_module((shell_module *)whois);
+   DEBUG_STR("dig->destroy()");
+   if (dig)
+      shell->destroy_module((shell_module *)dig);
 }
 
 static NPObject *
 allocate(NPP instance, NPClass *class)
 {
-   object_whois *obj;
+   object_dig *obj;
 
-   DEBUG_STR("plugin->whois->allocate()");
+   DEBUG_STR("plugin->dig->allocate()");
 
    obj = browser->memalloc(sizeof(*obj));
    ((object *)obj)->instance = instance;
@@ -115,17 +115,17 @@ allocate(NPP instance, NPClass *class)
 }
 
 bool
-init_module_whois()
+init_module_dig()
 {
-   DEBUG_STR("whois->init()");
-   whois = (module *)shell->init_module("whois");
-   whois->destroy = destroy;
-   whois->class = modules->class;
-   whois->class.allocate = allocate;
-   whois->class.invoke = invokeMethod;
-   whois->class.hasProperty = hasProperty;
-   whois->class.getProperty = getProperty;
-   whois->class.setProperty = setProperty;
+   DEBUG_STR("dig->init()");
+   dig = (module *)shell->init_module("dig");
+   dig->destroy = destroy;
+   dig->class = modules->class;
+   dig->class.allocate = allocate;
+   dig->class.invoke = invokeMethod;
+   dig->class.hasProperty = hasProperty;
+   dig->class.getProperty = getProperty;
+   dig->class.setProperty = setProperty;
 
    return true;
 }

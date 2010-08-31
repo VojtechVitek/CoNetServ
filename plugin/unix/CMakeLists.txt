@@ -10,6 +10,7 @@ set(sources
 	unix/traceroute.c
 	unix/nslookup.c
 	unix/whois.c
+	unix/dig.c
 )
 
 set(headers

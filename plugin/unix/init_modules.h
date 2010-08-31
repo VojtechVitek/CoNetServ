@@ -29,4 +29,8 @@ bool init_module_nslookup();
 module *whois;
 bool init_module_whois();
 
+#define MODULE_DIG
+module *dig;
+bool init_module_dig();
+
 #endif /*_INIT_MODULES_H_*/
