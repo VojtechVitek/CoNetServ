@@ -3,7 +3,10 @@ include(CheckCSourceCompiles)
 set(CMAKE_REQUIRED_INCLUDES ${NPAPI_INCLUDE_DIR})
 
 CHECK_C_SOURCE_COMPILES("
+#if defined(_WINDOWS)
+#define _X86_
 #define bool int
+#endif
 #include <npapi.h>
 #include <nptypes.h>
 #include <npruntime.h>
@@ -17,7 +20,10 @@ int main()
 " HAVE_NPAPI_NPSTRING_CAMEL_CASE_MEMBERS)
 
 CHECK_C_SOURCE_COMPILES("
+#if defined(_WINDOWS)
+#define _X86_
 #define bool int
+#endif
 #include <npapi.h>
 #include <nptypes.h>
 #include <npruntime.h>

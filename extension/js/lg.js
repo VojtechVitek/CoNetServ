@@ -108,7 +108,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url = 'http://noc.ilan.net.il/cgi-bin/lg.sh?';
-         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_PING_V4];
+         this.url += "router=" + Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.ILAN_PING_V4];
          this.url += "&query=ping&parameter=" + Conetserv.Url.hostname;
          return true;
       },
@@ -151,7 +151,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
-         this.data["router"] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V4];
+         this.data["router"] = Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.CERN_PING_V4];
          return true;
       },
       parse: function(data) {
@@ -191,7 +191,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
-         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_PING_V4];
+         this.data['router'] = Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.SPARKLE_PING_V4];
          return true;
       },
       parse: function(data) {
@@ -228,7 +228,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url = 'http://lg.atman.pl/?query=ping&protocol=IPv4&';
-         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V4];
+         this.url += "router=" + Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.ATMAN_PING_V4];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
@@ -279,7 +279,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
-         this.data["router"] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_PING_V6];
+         this.data["router"] = Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.CERN_PING_V6];
          return true;
       },
       parse: function(data) {
@@ -318,7 +318,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url = 'http://lg.atman.pl/?query=ping&protocol=IPv6&';
-         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_PING_V6];
+         this.url += "router=" + Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.ATMAN_PING_V6];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
@@ -366,7 +366,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url = 'http://noc.ilan.net.il/cgi-bin/lg.sh?';
-         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4];
+         this.url += "router=" + Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.ILAN_TRACERT_V4];
          this.url += "&query=trace&parameter=" + Conetserv.Url.hostname;
          return true;
       },
@@ -407,7 +407,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url = 'http://lg.atman.pl/?query=trace&protocol=IPv4&';
-         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4];
+         this.url += "router=" + Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V4];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
@@ -457,7 +457,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
-         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V4];
+         this.data['router'] = Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.CERN_TRACERT_V4];
          return true;
       },
       parse: function(data) {
@@ -498,7 +498,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
-         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4];
+         this.data['router'] = Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.SPARKLE_TRACERT_V4];
          return true;
       },
       parse: function(data) {
@@ -537,7 +537,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.url = 'http://lg.atman.pl/?query=trace&protocol=IPv6&';
-         this.url += "router=" + Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6];
+         this.url += "router=" + Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.ATMAN_TRACERT_V6];
          this.url += "&addr=" + Conetserv.Url.hostname;
          return true;
       },
@@ -589,7 +589,7 @@ Conetserv.LookingGlass.service.push({
       dataCharset: 'UTF-8',
       prepare: function(result) {
          this.data['addr'] = Conetserv.Url.hostname;
-         this.data['router'] = Conetserv.Options.ext_services_router[Conetserv.LookingGlass.enums.CERN_TRACERT_V6];
+         this.data['router'] = Conetserv.Options.ext_services_router()[Conetserv.LookingGlass.enums.CERN_TRACERT_V6];
          return true;
       },
       parse: function(data) {
@@ -701,7 +701,7 @@ Conetserv.LookingGlass.start = function(started_callback, result_callback, stopp
    /* foreach services and it's requests */
    for (var i = 0; i < this.service.length; ++i) {
       /* check, if service is allowed in options */
-      if(Conetserv.Options.ext_services && Conetserv.Options.ext_services[this.service[i].id_enum]) {
+      if(Conetserv.Options.ext_services() && Conetserv.Options.ext_services()[this.service[i].id_enum]) {
          /* increase number of running services in externalservices object */
          switch(this.service[i].service) {
             case 'PING':

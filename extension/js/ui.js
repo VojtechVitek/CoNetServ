@@ -81,6 +81,11 @@ Conetserv.Ui = {
             $(this).val("");
       });
 
+      $("#settings-local-services-tracert-div input").change(function(){
+         if(!Conetserv.Options.save(Conetserv.Options.enums.LOC_SERVICES_TRACERT))
+            $(this).val("");
+      });
+
       /**
       * reimplement behaviour when different tab is selected
       */
@@ -219,8 +224,8 @@ Conetserv.Ui = {
     * reloads skin depending on current option
     */
    reloadSkin : function() {
-      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Conetserv.Options.skin + "/jquery-ui-1.8.2.custom.css")
-      $("#conetserv-ui-stylesheet").attr("href", "css/" + Conetserv.Options.skin + ".css")
+      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Conetserv.Options.skin() + "/jquery-ui-1.8.2.custom.css")
+      $("#conetserv-ui-stylesheet").attr("href", "css/" + Conetserv.Options.skin() + ".css")
    },
 
    /**
@@ -489,6 +494,22 @@ Conetserv.Ui = {
         primary: 'ui-icon-play'
       });
       $(selector + " span").html("Start");
+   },
+
+   /**
+    * Disables html input
+    */
+   disableInput : function(selector) {
+      $(selector).attr("disabled", true);
+      $(selector).css("background", "lightgrey");
+   },
+
+   /**
+    * Enables html input
+    */
+   enableInput : function(selector) {
+      $(selector).attr("disabled", false);
+      $(selector).css("background", "white");
    },
 
    /**

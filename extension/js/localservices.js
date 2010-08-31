@@ -25,6 +25,11 @@ Conetserv.LocalServices = {
        */
       Conetserv.Ui.startToStop("#local-url-start");
 
+      /*
+       * disable input
+       */
+      Conetserv.Ui.disableInput("#local-url");
+
       this.start(this.Ping);
       this.start(this.Ping6);
       this.start(this.Traceroute);
@@ -43,6 +48,11 @@ Conetserv.LocalServices = {
        * change button icon and text
        */
       Conetserv.Ui.stopToStart("#local-url-start");
+
+      /*
+       * enable input
+       */
+      Conetserv.Ui.enableInput("#local-url");
 
       this.stop(this.Ping);
       this.stop(this.Ping6);
@@ -135,6 +145,7 @@ Conetserv.LocalServices = {
          if(--Conetserv.LocalServices.running == 0)
          {
             Conetserv.Ui.stopToStart("#local-url-start");
+            Conetserv.Ui.enableInput("#local-url");
          }
       }
    },
@@ -145,9 +156,11 @@ Conetserv.LocalServices = {
       
       /* console text-boxes */
       this.Ping.console = new Conetserv.Console("local-ping-console");
-      this.Ping.console.maxRows = 15;
+      if(!Conetserv.Options.LocalServices.ping_console_unlimited())
+         this.Ping.console.maxRows = 15;
       this.Ping6.console = new Conetserv.Console("local-ping6-console");
-      this.Ping6.console.maxRows = 15;
+      if(!Conetserv.Options.LocalServices.ping_console_unlimited())
+         this.Ping6.console.maxRows = 15;
       this.Traceroute.console = new Conetserv.Console("local-tracert-console");
       this.Traceroute6.console = new Conetserv.Console("local-tracert6-console");
       this.Nslookup.console = new Conetserv.Console("local-nslookup-console");
@@ -170,14 +183,14 @@ Conetserv.LocalServices.Ping = {
       Conetserv.Plot.localPingData.reset();
 
       /* set service parameters */
-      Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count ?
-         Conetserv.Options.LocalServices.ping_packet_count : 0;
-      Conetserv.plugin.ping.timeout = Conetserv.Options.LocalServices.ping_timeout ?
-         Conetserv.Options.LocalServices.ping_timeout : 0;
-      Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl ?
-         Conetserv.Options.LocalServices.ping_ttl : 0;
-      Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packet_size ?
-         Conetserv.Options.LocalServices.ping_packet_size : 0;
+      Conetserv.plugin.ping.count = Conetserv.Options.LocalServices.ping_packet_count() ?
+         Conetserv.Options.LocalServices.ping_packet_count() : 0;
+      Conetserv.plugin.ping.timeout = Conetserv.Options.LocalServices.ping_timeout() ?
+         Conetserv.Options.LocalServices.ping_timeout() : 0;
+      Conetserv.plugin.ping.ttl = Conetserv.Options.LocalServices.ping_ttl() ?
+         Conetserv.Options.LocalServices.ping_ttl() : 0;
+      Conetserv.plugin.ping.packetsize = Conetserv.Options.LocalServices.ping_packet_size() ?
+         Conetserv.Options.LocalServices.ping_packet_size() : 0;
    
    },
 
@@ -219,6 +232,14 @@ Conetserv.LocalServices.Traceroute = {
 
    before_begin: function() {               //extra commands to be executed before service is started
       Conetserv.Plot.localTraceData.reset();
+
+      /* set service parameters */
+      Conetserv.plugin.tracert.maxhops = Conetserv.Options.LocalServices.tracert_max_hops() ?
+         Conetserv.Options.LocalServices.tracert_max_hops() : 0;
+      Conetserv.plugin.tracert.waittime = Conetserv.Options.LocalServices.tracert_wait_time() ?
+         Conetserv.Options.LocalServices.tracert_wait_time() : 0;
+      Conetserv.plugin.tracert.iptohostname = Conetserv.Options.LocalServices.tracert_ip_to_hostname();
+         
    },
 
    after_read: function(received) {

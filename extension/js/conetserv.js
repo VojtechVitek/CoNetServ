@@ -50,31 +50,31 @@ Conetserv.onReady = function() {
    this.Ui.checkAvailability();
    this.Ui.redraw();
 
+   Conetserv.Options.initialize();
+   
    Conetserv.LocalServices.initialize();
    Conetserv.ExternalServices.initialize();
-   Conetserv.Plot.initialize();
-   Conetserv.Options.initialize();
-
+   Conetserv.Plot.initialize();   
 };
 
 Conetserv.onLoad = function() {
    /*
     * Check autostart - on true start services
     */
-   if(this.Options.autostart) {
+   if(this.Options.autostart()) {
       /*
        * Start services on main page
        */
-      if(this.Options.frontPageParent == "local-services") {
+      if(this.Options.frontPageParent() == "local-services") {
          setTimeout("Conetserv.LocalServices.startCommands()", 250);
       }
-      else if(this.Options.frontPageParent == "external-services") {
+      else if(this.Options.frontPageParent() == "external-services") {
          setTimeout("Conetserv.ExternalServices.start()",250);
       }
    }
-   if(this.Options.frontPageParent == "external-info") {
+   if(this.Options.frontPageParent() == "external-info") {
       setTimeout("Conetserv.ExternalInfo.start()",250);
    }
-   if(this.Options.frontPageParent == "local-info") {
+   if(this.Options.frontPageParent() == "local-info") {
    }
 }

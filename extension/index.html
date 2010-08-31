@@ -383,18 +383,50 @@
                      <div>
                         <input id="settings-local-services-ping-count" class="single-line ui-corner-all" type="text" size="5"/>
                         <label class="single-line" for="settings-local-services-ping-count">Number of packets</label>
+                        <span class="hint">0 or empty for unlimited</span>
                      </div>
                      <div>
                         <input id="settings-local-services-ping-timeout" class="single-line ui-corner-all" type="text" size="5"/>
                         <label class="single-line" for="settings-local-services-ping-timeout">Timeout</label>
+                        <span class="hint">number of ms, 0 or empty for default value</span>
                      </div>
                      <div>
                         <input id="settings-local-services-ping-ttl" class="single-line ui-corner-all" type="text" size="5"/>
                         <label class="single-line" for="settings-local-services-ping-ttl">Time to live</label>
+                        <span class="hint">number of hops, 0 or empty for default value</span>
                      </div>
                      <div>
                         <input id="settings-local-services-ping-packet-size" class="single-line ui-corner-all" type="text" size="5"/>
                         <label class="single-line" for="settings-local-services-ping-packet_size">Packet size</label>
+                        <span class="hint">number of Bytes, 0 or empty for default value</span>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-ping-plot-count" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-ping-plot-count">Number of values in plot</label>
+                        <span class="hint">between 10 and 100, requires restart of extension</span>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-ping-console-unlimited" class="single-line ui-corner-all" type="checkbox"/>
+                        <label class="single-line" for="settings-local-services-ping-console-unlimited">Unlimited console</label>
+                        <span class="hint">requires restart of extension</span>
+                     </div>
+                  </div>
+
+                  <div id="settings-local-services-tracert-div" class="ui-widget ui-widget-content ui-corner-all">
+                     <h4>Traceroute</h4>
+                     <div>
+                        <input id="settings-local-services-tracert-max-hops" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-tracert-max-hops">Maximum number of hops</label>
+                        <span class="hint">0 or empty for default value</span>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-tracert-wait-time" class="single-line ui-corner-all" type="text" size="5"/>
+                        <label class="single-line" for="settings-local-services-tracert-wait-time">Time before sending another packet</label>
+                        <span class="hint">number of ms, 0 or empty for default value</span>
+                     </div>
+                     <div>
+                        <input id="settings-local-services-tracert-ip-to-hostname" class="single-line ui-corner-all" type="checkbox"/>
+                        <label class="single-line" for="settings-local-services-tracert-ip-to-hostname">Don't map ip address to hostname?</label>
                      </div>
                   </div>
                   

@@ -79,6 +79,9 @@ Conetserv.ExternalServices = {
       /* Change button icon */
       Conetserv.Ui.startToStop("#external-url-start");
 
+      /* disable input */
+      Conetserv.Ui.disableInput("#external-url");
+
       /* Reset service values */
       this.Ping.next = this.Ping6.next = this.Tracert.next = this.Tracert6.next = 1;
       this.Ping.max = this.Ping6.max = this.Tracert.max = this.Tracert6.max = 0;
@@ -258,6 +261,11 @@ Conetserv.ExternalServices = {
        * change button icon
        */
       Conetserv.Ui.stopToStart("#external-url-start");
+
+      /*
+       * enable input
+       */
+      Conetserv.Ui.enableInput("#external-url");
       
       this.isRunning = 0;
 

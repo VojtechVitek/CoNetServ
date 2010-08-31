@@ -107,6 +107,12 @@ Conetserv.Plot = {
       this.colors["sunny"].avrgs = "rgba(250, 195, 11, 0.3)";
       this.colors["sunny"].min  = "rgba(250, 195, 11, 1)";
       this.colors["sunny"].rows  = "#878a87";
+
+      /* load maximal ping plot range from options */
+      if(Conetserv.Options.LocalServices.ping_plot_count()) {
+         this.localPingData.maxValues = Conetserv.Options.LocalServices.ping_plot_count();
+         this.localPing6Data.maxValues = Conetserv.Options.LocalServices.ping_plot_count();
+      }
    },
 
    /**
@@ -167,7 +173,6 @@ Conetserv.Plot = {
          var currentData = data.prevData.substr(0, npos);
          if($.client.os == "Windows")
          {
-            data.rowId++;
             // Windows ping output:
             // [EN] "Reply from 77.75.*.*: bytes=32 time=32ms TTL=127"\
             // [RU] "Ответ от 194.87.*.*: число байт=32 время=28мс TTL=56"
@@ -177,8 +182,11 @@ Conetserv.Plot = {
                data.add(pingTime[1]);
             } else {
                /* ignore first 3 lines */
-               if(data.rowId > 3) {
-                  data.add(null);
+               if(data.count > 3) {
+		  if(currentData.length < 3)
+		     data.finished = true;
+		  if(!data.finished)
+		    data.add(null);
                }
             }
          }
@@ -321,7 +329,7 @@ Conetserv.Plot = {
     */
    _plotPing : function(placeholder, data) {
       data.changed = 0;
-      var color = this.colors[Conetserv.Options.skin];
+      var color = this.colors[Conetserv.Options.skin()];
 
       $.plot(placeholder,
          [ {
@@ -383,7 +391,7 @@ Conetserv.Plot = {
     */
 _plotTracert : function(placeholder, data) {
    var plotCont;
-   var color = this.colors[Conetserv.Options.skin];
+   var color = this.colors[Conetserv.Options.skin()];
 
    data.changed = 0;
 
@@ -438,6 +446,7 @@ function pData() {
    this.rows = [];		//array for storing data
    this.count = 0;		//amount of data in array
    this.prevId = 0;		//id of previous ping packet
+   this.finished = 0;		//means that service has finished already
 
    this.sum = 0;		//sum of all values in fields
    this.minVal = 0;		//initiate min value
@@ -565,5 +574,4 @@ $(document).ready(function()
    });
 
    Conetserv.Plot.repaint();
-}
-);
+});
