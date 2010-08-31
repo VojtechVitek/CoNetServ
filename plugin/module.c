@@ -69,6 +69,11 @@ destroy()
 {
    DEBUG_STR("modules->destroy()");
 
+#ifdef MODULE_IPCONFIG
+   if (ipconfig)
+      ipconfig->destroy();
+#endif
+
 #ifdef MODULE_NMAP
    if (nmap)
       nmap->destroy();
@@ -168,6 +173,11 @@ init_modules()
 
 #ifdef MODULE_NMAP
    if (!init_module_nmap())
+      return false;
+#endif
+
+#ifdef MODULE_IPCONFIG
+   if (!init_module_ipconfig())
       return false;
 #endif
 

@@ -79,6 +79,11 @@ init_identifiers()
    identifiers->nmap = browser->getstringidentifier("nmap");
 #endif
 
+#ifdef MODULE_IPCONFIG
+   identifiers->ipconfig = browser->getstringidentifier("ipconfig");
+   identifiers->ifconfig = browser->getstringidentifier("ifconfig");
+#endif
+
    identifiers->destroy = destroy;
 
   return true;

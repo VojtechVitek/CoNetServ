@@ -65,6 +65,11 @@ typedef struct _identifier {
    NPIdentifier   nmap;
 #endif
 
+#ifdef MODULE_IPCONFIG
+   NPIdentifier   ipconfig;
+   NPIdentifier   ifconfig;
+#endif
+
    void           (*destroy)();
 } identifier;
 
