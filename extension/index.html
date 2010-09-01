@@ -1,9 +1,11 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
    <head>
       <title>CoNetServ (Complex Network Services)</title>
-      <link type="text/css" href="css/ui.css" rel="stylesheet" />
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+      <link type="text/css" href="css/ui.css" rel="stylesheet" />
       <script type="text/javascript" src="js/jquery/jquery-1.4.2.min.js"></script>
       <script type="text/javascript" src="js/jquery/jquery-ui-1.8.2.custom.min.js"></script>
       <script type="text/javascript" src="js/jquery/jquery.flot.js"></script>
@@ -37,9 +39,10 @@
          </ul>
          <div id="local-services" class="tab local">
             <form action="" onsubmit="return false;">
-               <input id="local-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('local-url').style.color='black'" />
-               <button id="local-url-start" class="url-start">Start</button>
-
+               <div>
+                  <input id="local-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('local-url').style.color='black'" />
+                  <button id="local-url-start" class="url-start">Start</button>
+               </div>
                <div id="local-services-form">
                   <input type="radio" id="local-ping-input" class="radio-tab ping" name="local-services-form" checked="checked" value ="local-ping-div" />
                   <label id="local-ping-label" class= "radio-tab-label ping" for="local-ping-input">Ping</label>
@@ -95,18 +98,19 @@
          </div>
          <div id="external-services" class="tab external">
             <form action="">
-               <input id="external-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
-               <button id="external-url-start" class="url-start">Start</button>
-
+               <div>
+                  <input id="external-url" type="text" value="" size="70" class="url-input ui-widget ui-widget-content ui-corner-left" onkeydown="document.getElementById('url').style.color='black'" />
+                  <button id="external-url-start" class="url-start">Start</button>
+               </div>
                <div id="external-services-form">
                   <input type="radio" id="external-ping-input" class="radio-tab ping" name="external-services-form" value="external-ping-div" checked="checked" />
-                  <label id="external-nslookup-label" class= "radio-tab-label ping" for="external-ping-input">Ping</label>
-                  <input type="radio" id="external-ping6-input" class="radio-tab ping6"  name="external-services-form" value="external-ping6-div"/>
-                  <label id="external-nslookup-label" class= "radio-tab-label ping6" for="external-ping6-input">Ping6</label>
+                  <label id="external-ping-label" class= "radio-tab-label ping" for="external-ping-input">Ping</label>
+                  <input type="radio" id="external-ping6-input" class="radio-tab ping6"  name="external-services-form" value="external-ping6-div" />
+                  <label id="external-ping6-label" class= "radio-tab-label ping6" for="external-ping6-input">Ping6</label>
                   <input type="radio" id="external-tracert-input" class="radio-tab tracert" name="external-services-form" value="external-tracert-div"/>
-                  <label id="external-nslookup-label" class= "radio-tab-label tracert" for="external-tracert-input">Traceroute</label>
+                  <label id="external-tracert-label" class= "radio-tab-label tracert" for="external-tracert-input">Traceroute</label>
                   <input type="radio" id="external-tracert6-input" class="radio-tab tracert6" name="external-services-form" value="external-tracert6-div"/>
-                  <label id="external-nslookup-label" class= "radio-tab-label tracert6"for="external-tracert6-input">Traceroute6</label>
+                  <label id="external-tracert6-label" class= "radio-tab-label tracert6" for="external-tracert6-input">Traceroute6</label>
                </div>
             </form>
             <div id="external-ping-div" class="content ping">
@@ -166,27 +170,27 @@
             <div id="external-provider-div" class="content provider">
                <div class="ui-corner-all ui-widget ui-widget-content">
                   <h4>Location</h4>
-                  <ul id="location"></ul>
+                  <ul id="location"><li style="display:none;" /></ul>
                </div>
                <div class="ui-corner-all ui-widget ui-widget-content">
                   <h4>Hostname</h4>
-                  <ul id="hostname"></ul>
+                  <ul id="hostname"><li style="display:none;" /></ul>
                </div>
                <div class="ui-corner-all ui-widget ui-widget-content">
                   <h4>Provider</h4>
-                  <ul id="provider"></ul>
+                  <ul id="provider"><li style="display:none;" /></ul>
                </div>
                <div class="ui-corner-all ui-widget ui-widget-content">
                   <h4>Route</h4>
-                  <ul id="route"></ul>
+                  <ul id="route"><li style="display:none;" /></ul>
                </div>
                <div class="ui-corner-all ui-widget ui-widget-content">
                   <h4>External IPv4</h4>
-                  <ul id="externIpv4"></ul>
+                  <ul id="externIpv4"><li style="display:none;" /></ul>
                </div>
                <div class="ui-corner-all ui-widget ui-widget-content">
                   <h4>External IPv6</h4>
-                  <ul id="externIpv6"></ul>
+                  <ul id="externIpv6"><li style="display:none;" /></ul>
                </div>
             </div>
             <div id="external-map-div" class="content map">
@@ -269,7 +273,7 @@
             <div id="settings-external-services-div" class="content external-services">
                <form id="settings-external-services-form" action="">
                   <h2>Choose looking glass providers and routers</h2>
-                  <span>Choose maximum of three servers for ping and two servers for traceroute in both IPv4 and IPv6</span>
+                  <div>Choose three servers for ping and two servers for traceroute at maximum in both IPv4 and IPv6 versions</div>
                   <h3>IPv4</h3>
 
                   <table id="settings-external-services-ipv4-table" class="ui-corner-all ui-widget-content ui-widget">
@@ -330,8 +334,8 @@
                         <td class="center"><input type="checkbox" id="settings-external-services-atman-ipv4-ping" class="ping" value="1"/></td>
                         <td><label>ATMAN Looking Glass</label></td>
                         <td><select id="settings-external-services-atman-ipv4-router">
-                           <OPTION VALUE="bgp-isp">Business.Internet [AS 15694]
-                           <OPTION VALUE="open-peering">OpenPeering.PL [AS 24748]
+                           <option value="bgp-isp">Business.Internet [AS 15694]</option>
+                           <option value="open-peering">OpenPeering.PL [AS 24748]</option>
                         </select></td>
                      </tr>
 
@@ -340,7 +344,7 @@
                         <td class="center"><input type="checkbox" id="settings-external-services-ilan-ipv4-ping" class="ping" value="2"/></td>
                         <td><label>ILAN Looking Glass</label></td>
                         <td><select id="settings-external-services-ilan-ipv4-router">
-                           <option value="GP1">tel</option>-aviv-gp.ilan.net.il
+                           <option value="GP1">tel-aviv-gp.ilan.net.il</option>
                            <option value="GP0">gp0.ilan.net.il</option>
                            <option value="SH">mcast.ilan.net.il</option>
                         </select></td>
@@ -348,7 +352,7 @@
                   </table>
 
                   <h3>IPv6</h3>
-                  <table id="settings-external-services-ipv4-table" class="ui-corner-all ui-widget-content ui-widget">
+                  <table id="settings-external-services-ipv6-table" class="ui-corner-all ui-widget-content ui-widget">
                      <tr>
                         <th>Tracert</th><th>Ping</th><th>Server</th><th>Router</th>
                      </tr>
@@ -356,7 +360,7 @@
                      <tr>
                         <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-tracert" class="tracert6" value="30"/></td>
                         <td class="center"><input type="checkbox" id="settings-external-services-cern-ipv6-ping" class="ping6" value="10"/></td>
-                        <td><label>CERN looking glass</label>
+                        <td><label>CERN looking glass</label></td>
                         <td><select id="settings-external-services-cern-ipv6-router">
                            <option value="r01ext">r01ext</option>
                            <option value="r02ext">r02ext</option>
@@ -399,7 +403,7 @@
                      </div>
                      <div>
                         <input id="settings-local-services-ping-packet-size" class="single-line ui-corner-all" type="text" size="5"/>
-                        <label class="single-line" for="settings-local-services-ping-packet_size">Packet size</label>
+                        <label class="single-line" for="settings-local-services-ping-packet-size">Packet size</label>
                         <span class="hint">number of Bytes, 0 or empty for default value</span>
                      </div>
                      <div>
