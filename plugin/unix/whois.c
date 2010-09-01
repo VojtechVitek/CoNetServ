@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "debug.h"
-#include "identifier.h"
 #include "init_modules.h"
 #include "module.h"
 #include "npapi.h"
@@ -33,7 +32,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    int i;
    char *ptr;
 
-   if (identifier == identifiers->start) {
+   if (identifier == browser->getstringidentifier("start")) {
 
       DEBUG_STR("plugin->whois->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 
@@ -66,7 +65,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->whois->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -77,7 +76,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->whois->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(((shell_module *)whois)->found, *value);
       return true;

@@ -7,7 +7,6 @@
 #include "npapi.h"
 #include "plugin.h"
 #include "module.h"
-#include "identifier.h"
 #include "init_modules.h"
 
 /*! NPAPI variables */
@@ -119,9 +118,6 @@ NP_Initialize(NPNetscapeFuncs *npnf
    NP_GetEntryPoints(nppfuncs);
 #endif
 
-   if (!init_identifiers())
-      return NPERR_MODULE_LOAD_FAILED_ERROR;
-
    if (!init_modules())
       return NPERR_MODULE_LOAD_FAILED_ERROR;
 
@@ -135,9 +131,6 @@ NP_Shutdown()
 
    if (modules)
       modules->destroy();
-
-   if (identifiers)
-      identifiers->destroy();
 
    return NPERR_NO_ERROR;
 }

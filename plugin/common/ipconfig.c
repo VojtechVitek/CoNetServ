@@ -20,7 +20,7 @@ static struct {
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->ipconfig->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -31,7 +31,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->ipconfig->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(((shell_module *)ipconfig)->found, *value);
       return true;

@@ -2,7 +2,6 @@
 
 #include "debug.h"
 #include "npapi.h"
-#include "identifier.h"
 #include "init_modules.h"
 #include "shell.h"
 
@@ -11,7 +10,7 @@ module *modules = NULL;
 static bool
 hasMethod(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->start) {
+   if (identifier == browser->getstringidentifier("start")) {
       DEBUG_STR("plugin->module->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }

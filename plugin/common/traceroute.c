@@ -24,19 +24,19 @@ static struct {
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->maxhops) {
+   if (identifier == browser->getstringidentifier("maxhops")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->waittime) {
+   if (identifier == browser->getstringidentifier("waittime")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->iptohostname) {
+   if (identifier == browser->getstringidentifier("iptohostname")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -47,22 +47,22 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->traceroute->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(((object_traceroute *)obj)->program->found, *value);
       return true;
    }
-   if (identifier == identifiers->maxhops) {
+   if (identifier == browser->getstringidentifier("maxhops")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.maxhops, *value);
       return true;
    }
-   if (identifier == identifiers->waittime) {
+   if (identifier == browser->getstringidentifier("waittime")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.waittime, *value);
       return true;
    }
-   if (identifier == identifiers->iptohostname) {
+   if (identifier == browser->getstringidentifier("iptohostname")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(settings.iptohostname, *value);
       return true;
@@ -74,17 +74,17 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 static bool
 setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
 {
-   if (identifier == identifiers->maxhops) {
+   if (identifier == browser->getstringidentifier("maxhops")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.maxhops = NPVARIANT_TO_INT32(*value);
       return true;
    }
-   if (identifier == identifiers->waittime) {
+   if (identifier == browser->getstringidentifier("waittime")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.waittime = NPVARIANT_TO_INT32(*value);
       return true;
    }
-   if (identifier == identifiers->iptohostname) {
+   if (identifier == browser->getstringidentifier("iptohostname")) {
       DEBUG_STR("plugin->traceroute->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.iptohostname = NPVARIANT_TO_BOOLEAN(*value);
       return true;

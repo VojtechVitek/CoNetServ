@@ -2,7 +2,6 @@
 
 #include "debug.h"
 #include "cmd_exe.h"
-#include "identifier.h"
 #include "init_modules.h"
 #include "module.h"
 #include "npapi.h"
@@ -24,7 +23,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    char argv[200];
    char *ptr;
 
-   if (identifier == identifiers->start) {
+   if (identifier == browser->getstringidentifier("start")) {
 
       DEBUG_STR("plugin->nslookup->invokeMethod(%s): true", DEBUG_IDENTIFIER(identifier));
 

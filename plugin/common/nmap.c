@@ -19,11 +19,11 @@ static struct {
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->nmap->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->query) {
+   if (identifier == browser->getstringidentifier("query")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -34,12 +34,12 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->nmap->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(((shell_module *)nmap)->found, *value);
       return true;
    }
-   if (identifier == identifiers->query) {
+   if (identifier == browser->getstringidentifier("query")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.query, *value);
       return true;
@@ -51,7 +51,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 static bool
 setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
 {
-   if (identifier == identifiers->query) {
+   if (identifier == browser->getstringidentifier("query")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.query = NPVARIANT_TO_INT32(*value);
       return true;
