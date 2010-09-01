@@ -268,17 +268,23 @@ Conetserv.Ui = {
          '';
       }
       else if($.client.os == "Linux") {
-         output += '<strong>For installation please run following command depending on your linux distribution:</strong><br/><br/> \
-            Use your package manager to find out in which package ' + service + ' is located and then execute following\\n\
-            command: <br/><br/> \
-            Ubuntu/Debian: # apt-get install [package]<br/> \
-            SUSE/OpenSUSE: # zypper install [package]<br/> \
-            Fedora/Yellow Dog Linux: $ yum install [package]<br/> \
-            RedHat/CentOS: # up2date [package]<br/> \
-            Gentoo: # emerge [package]<br/> \
-            Mandriva: # urpmi [package]<br/> \
-            <br/>\
-            If your distribution is not listed, use your package installation program instead of listed ones.';
+         output += '<strong>Install ' + service + ' with your package manager:</strong><br/>';
+	 output += '<br />';
+	 output += 'Search for a package which contains ' + service + ' program ';
+	 output += 'and install it afterwards.<br />';
+	 output += '<br />';
+         output += '<strong>Ubuntu, Debian:</strong>';
+	 output += '<pre># apt-get search ' + service + '\n# apt-get install [package]</pre>';
+         output += '<strong>SUSE, OpenSUSE:</strong>';
+	 output += '<pre># zypper search ' + service + '\n# zypper install [package]</pre>';
+         output += '<strong>Fedora, RHEL, CentOS, Yellow Dog Linux:</strong>';
+	 output += '<pre># yum search ' + service + '\n# yum install [package]</pre>';
+         output += '<strong>Gentoo:</strong>';
+	 output += '<pre># emerge [package]</pre>';
+         output += '<strong>Mandriva:</strong>';
+	 output += '<pre># urpmi [package]</pre>';
+         output += '<br />';
+         output += '<i>Please, send us a feedback, if your distribution is not listed above.</i>';
       }
       else if($.client.os == "Mac") {
 
