@@ -6,7 +6,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(sources
 	debug.c
-	identifier.c
 	npapi.c
 	plugin.c
 	module.c
@@ -16,7 +15,6 @@ set(sources
 set(headers
 	${CMAKE_BINARY_DIR}/config.h
 	debug.h
-	identifier.h
 	npapi.h
 	plugin.h
 	module.h

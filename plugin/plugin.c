@@ -4,7 +4,6 @@
 
 #include "config.h"
 #include "debug.h"
-#include "identifier.h"
 #include "init_modules.h"
 #include "npapi.h"
 #include "plugin.h"
@@ -35,70 +34,70 @@ static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
    /* Plugin version */
-   if (identifier == identifiers->version) {
+   if (identifier == browser->getstringidentifier("version")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 
    /* Plugin modules */
 #ifdef MODULE_PING
-   if (identifier == identifiers->ping) {
+   if (identifier == browser->getstringidentifier("ping")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_PING6
-   if (identifier == identifiers->ping6) {
+   if (identifier == browser->getstringidentifier("ping6")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_TRACEROUTE
-   if (identifier == identifiers->traceroute || identifier == identifiers->tracert) {
+   if (identifier == browser->getstringidentifier("traceroute") || identifier == browser->getstringidentifier("tracert")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_TRACEROUTE6
-   if (identifier == identifiers->traceroute6 || identifier == identifiers->tracert6) {
+   if (identifier == browser->getstringidentifier("traceroute6") || identifier == browser->getstringidentifier("tracert6")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_NSLOOKUP
-   if (identifier == identifiers->nslookup) {
+   if (identifier == browser->getstringidentifier("nslookup")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_WHOIS
-   if (identifier == identifiers->whois) {
+   if (identifier == browser->getstringidentifier("whois")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_DIG
-   if (identifier == identifiers->dig) {
+   if (identifier == browser->getstringidentifier("dig")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_NMAP
-   if (identifier == identifiers->nmap) {
+   if (identifier == browser->getstringidentifier("nmap")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 #endif
 
 #ifdef MODULE_IPCONFIG
-   if (identifier == identifiers->ipconfig || identifier == identifiers->ifconfig) {
+   if (identifier == browser->getstringidentifier("ipconfig") || identifier == browser->getstringidentifier("ifconfig")) {
       DEBUG_STR("plugin->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -116,7 +115,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
    NPUTF8 *version;
 
    /* Plugin version */
-   if (identifier == identifiers->version) {
+   if (identifier == browser->getstringidentifier("version")) {
 
       len = strlen(VERSION);
       version = browser->memalloc((len + 1) * sizeof(*version));
@@ -139,7 +138,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 
    /* Plugin modules */
 #ifdef MODULE_PING
-   if (identifier == identifiers->ping) {
+   if (identifier == browser->getstringidentifier("ping")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping->class)), *result);
       return true;
@@ -147,7 +146,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_PING6
-   if (identifier == identifiers->ping6) {
+   if (identifier == browser->getstringidentifier("ping6")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ping6->class)), *result);
       return true;
@@ -155,7 +154,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_TRACEROUTE
-   if (identifier == identifiers->traceroute || identifier == identifiers->tracert) {
+   if (identifier == browser->getstringidentifier("traceroute") || identifier == browser->getstringidentifier("tracert")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(traceroute->class)), *result);
       return true;
@@ -163,7 +162,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_TRACEROUTE6
-   if (identifier == identifiers->traceroute6 || identifier == identifiers->tracert6) {
+   if (identifier == browser->getstringidentifier("traceroute6") || identifier == browser->getstringidentifier("tracert6")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(traceroute6->class)), *result);
       return true;
@@ -171,7 +170,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_NSLOOKUP
-   if (identifier == identifiers->nslookup) {
+   if (identifier == browser->getstringidentifier("nslookup")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(nslookup->class)), *result);
       return true;
@@ -179,7 +178,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_WHOIS
-   if (identifier == identifiers->whois) {
+   if (identifier == browser->getstringidentifier("whois")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(whois->class)), *result);
       return true;
@@ -187,7 +186,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_DIG
-   if (identifier == identifiers->dig) {
+   if (identifier == browser->getstringidentifier("dig")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(dig->class)), *result);
       return true;
@@ -195,7 +194,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_NMAP
-   if (identifier == identifiers->nmap) {
+   if (identifier == browser->getstringidentifier("nmap")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(nmap->class)), *result);
       return true;
@@ -203,7 +202,7 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 #endif
 
 #ifdef MODULE_IPCONFIG
-   if (identifier == identifiers->ipconfig || identifier == identifiers->ifconfig) {
+   if (identifier == browser->getstringidentifier("ipconfig") || identifier == browser->getstringidentifier("ifconfig")) {
       DEBUG_STR("plugin->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       OBJECT_TO_NPVARIANT(browser->createobject(((object *)obj)->instance, &(ipconfig->class)), *result);
       return true;

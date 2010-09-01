@@ -25,23 +25,23 @@ static struct {
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->count) {
+   if (identifier == browser->getstringidentifier("count")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->timeout) {
+   if (identifier == browser->getstringidentifier("timeout")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->packetsize) {
+   if (identifier == browser->getstringidentifier("packetsize")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
-   if (identifier == identifiers->ttl) {
+   if (identifier == browser->getstringidentifier("ttl")) {
       DEBUG_STR("plugin->ping->hasProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -52,27 +52,27 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 {
-   if (identifier == identifiers->found) {
+   if (identifier == browser->getstringidentifier("found")) {
       DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       BOOLEAN_TO_NPVARIANT(((object_ping *)obj)->program->found, *value);
       return true;
    }
-   if (identifier == identifiers->count) {
+   if (identifier == browser->getstringidentifier("count")) {
       DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.count, *value);
       return true;
    }
-   if (identifier == identifiers->timeout) {
+   if (identifier == browser->getstringidentifier("timeout")) {
       DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.timeout, *value);
       return true;
    }
-   if (identifier == identifiers->packetsize) {
+   if (identifier == browser->getstringidentifier("packetsize")) {
       DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.packetsize, *value);
       return true;
    }
-   if (identifier == identifiers->ttl) {
+   if (identifier == browser->getstringidentifier("ttl")) {
       DEBUG_STR("plugin->ping->getProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       INT32_TO_NPVARIANT(settings.ttl, *value);
       return true;
@@ -84,22 +84,22 @@ getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *value)
 static bool
 setProperty(NPObject *obj, NPIdentifier identifier, const NPVariant *value)
 {
-   if (identifier == identifiers->count) {
+   if (identifier == browser->getstringidentifier("count")) {
       DEBUG_STR("plugin->ping->setProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.count = NPVARIANT_TO_INT32(*value);
       return true;
    }
-   if (identifier == identifiers->timeout) {
+   if (identifier == browser->getstringidentifier("timeout")) {
       DEBUG_STR("plugin->ping->setProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.timeout = NPVARIANT_TO_INT32(*value);
       return true;
    }
-   if (identifier == identifiers->packetsize) {
+   if (identifier == browser->getstringidentifier("packetsize")) {
       DEBUG_STR("plugin->ping->setProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.packetsize = NPVARIANT_TO_INT32(*value);
       return true;
    }
-   if (identifier == identifiers->ttl) {
+   if (identifier == browser->getstringidentifier("ttl")) {
       DEBUG_STR("plugin->ping->setProperty(%s): true", DEBUG_IDENTIFIER(identifier));
       settings.ttl = NPVARIANT_TO_INT32(*value);
       return true;

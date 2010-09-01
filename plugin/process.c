@@ -4,7 +4,6 @@
 
 #include "config.h"
 #include "debug.h"
-#include "identifier.h"
 #include "npapi.h"
 #include "plugin.h"
 #include "process.h"
@@ -14,12 +13,12 @@
 static bool
 hasMethod(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->read) {
+   if (identifier == browser->getstringidentifier("read")) {
       DEBUG_STR("process->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
 
-   if (identifier == identifiers->stop) {
+   if (identifier == browser->getstringidentifier("stop")) {
       DEBUG_STR("process->hasMethod(%s): true", DEBUG_IDENTIFIER(identifier));
       return true;
    }
@@ -32,7 +31,7 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    /* Read data from process */
-   if (identifier == identifiers->read) {
+   if (identifier == browser->getstringidentifier("read")) {
 
       DEBUG_STR("process->invokeMethod(read)");
 
@@ -45,7 +44,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    }
 
    /* Stop/kill the process */
-   if (identifier == identifiers->stop) {
+   if (identifier == browser->getstringidentifier("stop")) {
 
       DEBUG_STR("process->invokeMethod(stop)");
 
@@ -73,7 +72,7 @@ invokeDefault(NPObject *obj, const NPVariant *args, const uint32_t argCount, NPV
 static bool
 hasProperty(NPObject *obj, NPIdentifier identifier)
 {
-   if (identifier == identifiers->running) {
+   if (identifier == browser->getstringidentifier("running")) {
       DEBUG_STR("process->hasProperty(running): %s", ((process *)obj)->running ? "true" : "false");
       return true;
    }
@@ -85,7 +84,7 @@ hasProperty(NPObject *obj, NPIdentifier identifier)
 static bool
 getProperty(NPObject *obj, NPIdentifier identifier, NPVariant *result)
 {
-   if (identifier == identifiers->running) {
+   if (identifier == browser->getstringidentifier("running")) {
       DEBUG_STR("process->getProperty(running): %s", ((process *)obj)->running ? "true" : "false");
       BOOLEAN_TO_NPVARIANT(((process *)obj)->running, *result);
       return true;
