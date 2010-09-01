@@ -158,19 +158,19 @@ Conetserv.Services.service.push({
                case 4:
                   result.country = arr[1];
                   break;
-               case 5:
+               case 6:
                   result.region = arr[1];
                   break;
-               case 6:
+               case 7:
                   result.city = arr[1];
                   break;
-               case 8:
+               case 9:
                   result.latitude = arr[1];
                   break;
-               case 9:
+               case 10:
                   result.longitude = arr[1];
                   break;
-               case 10:
+               case 11:
                   result.provider = arr[1];
                   break;
                default:
