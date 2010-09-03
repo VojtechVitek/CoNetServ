@@ -48,6 +48,7 @@ b) Release mode
   $ mkdir -p build/$(uname)/ && cd build/$(uname)
   $ cmake -DCMAKE_BUILD_TYPE=Release ../../
   $ make
+  $ make Packages
 
   NOTE: (building 32bit plugin on 64bit system)
   $ cmake -DCMAKE_C_FLAGS=-m32 -DARCH=x86 -DCMAKE_BUILD_TYPE=Release ../../
