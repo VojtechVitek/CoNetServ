@@ -50,11 +50,12 @@ Conetserv.onReady = function() {
    this.Ui.checkAvailability();
    this.Ui.redraw();
 
-   Conetserv.Options.initialize();
-
    Conetserv.LocalServices.initialize();
    Conetserv.ExternalServices.initialize();
    Conetserv.LocalInfo.initialize();
+
+   Conetserv.Options.initialize();
+
    Conetserv.Plot.initialize();
 };
 
