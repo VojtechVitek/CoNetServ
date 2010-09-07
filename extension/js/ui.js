@@ -227,7 +227,7 @@ Conetserv.Ui = {
     * reloads skin depending on current option
     */
    reloadSkin : function() {
-      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Conetserv.Options.skin() + "/jquery-ui-1.8.2.custom.css")
+      $("#jquery-ui-stylesheet").attr("href", "css/jquery/" + Conetserv.Options.skin() + "/jquery-ui-1.8.4.custom.css")
       $("#conetserv-ui-stylesheet").attr("href", "css/" + Conetserv.Options.skin() + ".css")
    },
 
