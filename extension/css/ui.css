@@ -47,9 +47,14 @@ body {
 
 
 .ui-icon-clock,
-.ui-icon-circle-close {
+.ui-icon-circle-close,
+.ui-icon-close {
    position: absolute;
    right: 3px;
+}
+
+.ui-icon:hover {
+   background-image: url(images/ui-icons_red_256x240.png);
 }
 
 .console {
