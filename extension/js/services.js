@@ -187,6 +187,63 @@ Conetserv.Services.service.push({
 
 Conetserv.Services.service.push({
 
+   name: 'IP Info DB',
+   link: 'http://ipinfodb.com/',
+
+   stable: '2010-09-08',
+
+   request: [{
+      type: 'GET',
+      url: 'http://ipinfodb.com/ip_query.php',
+      data: {
+         ip: false,
+         output: 'json',
+         timezone: 'false'
+      },
+      dataType: 'json',
+      dataCharset: 'UTF-8',
+      prepare: function(result) {
+
+         if (!result.externIpv4)
+            return false;
+
+         this.data.ip = result.externIpv4;
+         return true;
+      },
+      parse: function(data) {
+
+         var result = {};
+
+         if (!data)
+            return result;
+
+         if (data.CountryCode)
+            result.countryCode = data.CountryCode;
+
+         if (data.CountryName)
+            result.country = data.CountryName;
+
+         if (data.City)
+            result.city = data.City;
+
+         if (data.RegionName)
+            result.region = data.RegionName;
+
+         if (data.Latitude)
+            result.latitude = data.Latitude;
+
+         if (data.Longitude)
+            result.longitude = data.Longitude;
+
+         return result;
+      }
+   }]
+
+});
+
+
+Conetserv.Services.service.push({
+
    name: 'Free IP geolocation webservice by Alexandre Fiori',
    link: 'http://freegeoip.appspot.com/',
 
@@ -229,7 +286,7 @@ Conetserv.Services.service.push({
          if (data.latitude)
             result.latitude = data.latitude;
 
-         if (data.latitude)
+         if (data.longitude)
             result.longitude = data.longitude;
 
          return result;
@@ -295,7 +352,7 @@ Conetserv.Services.service.push({
          if (data.latitude)
             result.latitude = data.latitude;
 
-         if (data.latitude)
+         if (data.longitude)
             result.longitude = data.longitude;
 
          if (data.zoom)
