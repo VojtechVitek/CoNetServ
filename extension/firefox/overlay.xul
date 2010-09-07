@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://conetserv/content/firefox/overlay.css" type="text/css"?>
 <overlay id="conetservOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script type="application/x-javascript" src="chrome://conetserv/content/js/firefox.js" />
-  <script type="application/x-javascript" src="chrome://conetserv/content/firefox/overlay.js" />
-
   <script>
     window.addEventListener("load", conetserv_install, false);
   </script>
@@ -21,4 +18,29 @@
     <menuitem id="conetservMenuitem" label="CoNetServ" insertbefore="sanitizeSeparator"
        image="chrome://conetserv/content/images/icon16.png" command="conetservStart"/>
   </menupopup>
+
+  <script>
+     try {
+         var firefoxnav = document.getElementById("nav-bar");
+         var curSet = firefoxnav.currentSet;
+         if (curSet.indexOf(""conetservToolButton"") == -1)
+         {
+           var set;
+           // Place the button before the urlbar
+           if (curSet.indexOf("urlbar-container") != -1)
+             set = curSet.replace(/urlbar-container/, "conetservToolButton,urlbar-container");
+           else  // at the end
+             set = curSet + ","conetservToolButton"";
+           firefoxnav.setAttribute("currentset", set);
+           firefoxnav.currentSet = set;
+           document.persist("nav-bar", "currentset");
+           // If you don't do the following call, funny things happen
+           try {
+             BrowserToolboxCustomizeDone(true);
+           }
+           catch (e) { }
+         }
+      }
+      catch(e) { }
+   </script>
 </overlay>
