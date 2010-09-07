@@ -113,7 +113,7 @@ Conetserv.Options = {
       }
       /* Conetserv has been updated */
       else if(this.version() != Conetserv.version){
-         setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 500);
+         setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 100);
          /* check, if mayor version change has occured */
          if(this.version().toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
             reinitialize = true;
@@ -123,7 +123,7 @@ Conetserv.Options = {
             this.storage['conetserv-version'] = Conetserv.version;
          }
       }
-      
+
       if(reinitialize) {
          this.storage['conetserv-version'] = Conetserv.version;
 
@@ -138,8 +138,8 @@ Conetserv.Options = {
          this.storage["conetserv-settings-external-services"] = "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true";
          this.storage["conetserv-settings-external-services_router"] = "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
       }
-      
-      
+
+
       $("#settings-general-toolbox").attr("checked", this.toolbarButton());
 
       $("#settings-general-autostart").attr("checked", this.autostart());
@@ -221,7 +221,7 @@ Conetserv.Options = {
       }
 
       $("#settings-local-services-tracert-ip-to-hostname").attr("checked", this.LocalServices.tracert_ip_to_hostname());
-      
+
    },
 
    /**
@@ -250,7 +250,7 @@ Conetserv.Options = {
          case this.enums.EXT_SERVICES:
             /* clean ext_services and fill them depending on checked services */
             var ext_services = [];
-            
+
             /* variables for storing number of active services */
             var ping = 0;
             var ping6 = 0;

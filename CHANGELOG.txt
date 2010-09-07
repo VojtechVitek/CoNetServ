@@ -3,27 +3,34 @@ Version 2.0 (2010-08-31)
 Browser support:
  * Mozilla Firefox 3.0+ add-on
  * Google Chrome 4.0+ extension
- * Opera 10.5+ widget
+ * Opera 10.5+ widget (testing)
 Operating systems [arch] support:
  * Microsoft Windows [x86, x86_64]
  * GNU/Linux [x86, x86_64]
+ * MacOS (testing)
 Plugin:
  * CMake - automatic recognition of NPAPI NPString members (CamelCase or lowercase)
  * Added Dig and Nmap services
  * Added Nslookup AAA record support
+ * Commands now accepts options passed from JavaScript
+ * Ping(6) - packet count, timeout, packet size and TTL options
+ * Tracert(6)/Traceroute(6) - max. of hops, wait time, IP-to-hostname translation options
+ * Nslookup - query option (A, AAAA records)
+ * Nmap - query option (scan ports of a host, scan neighboars in local network)
 Extension:
- * Ping and Traceroute from looking glass
- * Selectable looking glass providers and servers
+ * Ping and Traceroute from looking glass servers
  * User friendly messages, errors and dialogs
- * Showing message if no service output has been received for a long time
- * Local service's presence checking and eventual output of installation steps  
+ * Showing message if no service output has been received for few seconds
+ * Checking presence of local services, eventually showing the message with installation steps  
  * Local and external services can be all stopped by one click
  * Local and external services can be run by hitting enter in url-bar
- * Everything is now in Conetserv object (namespace)
- * Options: Added settings for ping - packet count, ttl, timeout, packet size
- * Options: Added settings for traceroute - max hops, wait time, ip to hostname mapping
+ * JavaScript objects are now encapsulated in Conetserv object (namespace)
+ * Options: Selectable looking glass servers/providers
+ * Options: Added settings for ping - packet count, wait time, packet size, TTL
+ * Options: Added settings for traceroute - max hops, wait time, IP-to-hostname translation
  * Options: Ping console can be limited/unlimited
  * Options: Setting number of values in ping plot
+ * Service parser for MaxMind GeoIP, another source for interactive location map
  * Fixed lots of small bugs
  
 

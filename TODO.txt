@@ -18,10 +18,10 @@ Plugin:
 [x] Windows: reimplement locale support
 [x] Extension API: rewrite NPAPI invokes into OOP (objects with properties and methods)
 [x] Plugin API: third-party availability, version system
-[ ] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
-[ ] Local Network Info: nmap to show neighboaring computers
+[x] Local Network Info: local ip address, interfaces, MAC addresses, ... (ipconfig/ifconfig)
+[x] Local Network Info: nmap to show neighboaring computers
 [x] Fix IPv6 colons as valid address
-[ ] Services: Add DIG service
+[x] Services: Add DIG service
 
 Extension:
 [x] Plotting: rewrite into OOP
@@ -29,7 +29,7 @@ Extension:
 [x] Settings: implement for different web-browsers (using native API)
 [x] Network tools: allow long output
 [x] Network tools: check availability and print additional info (installation, ..)
-[ ] Firefox: automatic icon in toolbar
+[x] Firefox: automatic icon in toolbar
 [x] PING: rewrite packet lost analyser using regexp
 [ ] TRACEROUTE: improve plotting
 [x] WHOIS: use only first and second domain names
@@ -45,10 +45,11 @@ Extension:
 [x] On tab select, focus on url bar
 [x] Repair long output in console
 [x] OPTIONS: Multiple skins implementation
-[ ] OPTIONS: Ping console - unlimited/ limited
+[x] OPTIONS: Ping console - unlimited/ limited
 [ ] OPTIONS: Quick buttons to settings/options from Chrome and Firefox
 [ ] Service parser for http://www.hostip.info
 [ ] Service parser for http://www.robtex.com/ipinfo.js
+[x] Service parser for MaxMind GeoIP
 [ ] Country flags images from http://flags.redpixart.com/czech_republic/
 [ ] Country map charts http://code.google.com/apis/chart/docs/gallery/map_charts.html#introduction
 
@@ -56,17 +57,8 @@ Extension:
 FUTURE PLANS
 ============
 
-CoNetServ v2.0+
-* Object-oriented API to JS (availability for 3rd party)
-* Independent objects to run programs and commands with options
-* External services (Ping, Traceroute, Whois etc. from public servers)
-* Installation guides for missing programs (OS, platform, distro)
-* User-friendly error messages
-
 CoNetServ v3.0+
-* Nmap (list computers in local network)
 * Translations (JavaScript based, option in settings)
-* Local info (list local interfaces and it's MAC address, IPv4/IPv6 adress, mask, default route, gateway, ..)
 * Ping/Traceroute through specified interface (ethernet, wifi, ..)
 
 CoNetServ v4.0+
