@@ -47,9 +47,14 @@ body {
 
 
 .ui-icon-clock,
-.ui-icon-circle-close {
+.ui-icon-circle-close,
+.ui-icon-close {
    position: absolute;
    right: 3px;
+}
+
+.ui-icon:hover {
+   background-image: url(images/ui-icons_red_256x240.png);
 }
 
 .console {
@@ -191,9 +196,17 @@ div.valueLabel {
 }
 
 .console .ui-state-highlight {
+   font-family: 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
    margin: 5px;
 }
 
+.console .ui-state-highlight p {
+   margin-top: 0px;
+}
+
+pre.console {
+   font-family: "Courier New", "Monospace", monospace;
+}
 /**************************************************************************
  * settings tab
  **************************************************************************/
