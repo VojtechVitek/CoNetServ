@@ -513,6 +513,42 @@ Conetserv.Services.service.push({
 
 });
 
+Conetserv.Services.service.push({
+
+   name: '2 Privacy.com',
+   link: 'http://www.2privacy.com/',
+
+   stable: '2010-09-09',
+
+   request: [{
+      type: 'GET',
+      url: 'http://www.2privacy.com/www/what-is-my-ip.html',
+      data: {},
+      dataType: 'text',
+      dataCharset: 'UTF-8',
+      parse: function(data) {
+         var result = {};
+         var pattern;
+         var arr;
+
+         pattern = /Your IP: <font[^>]*><b>([0-9.]+)<\/b><\/font>, your Host: <font[^>]*><b>([a-z0-9.-]+)<\/b><\/font>, your Country: <font[^>]*><b>([A-Z]{2,3})/;
+         arr = pattern.exec(data);
+
+         if (arr && arr[1])
+            result.externIpv4 = arr[1];
+
+         if (arr && arr[2])
+            result.hostname = arr[2];
+
+         if (arr && arr[3])
+            result.countryCode = arr[3];
+
+         return result;
+      }
+   }]
+
+});
+
 /* queue of services to be run */
 Conetserv.Services.queue = new Array();
 
