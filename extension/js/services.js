@@ -112,72 +112,49 @@ Conetserv.Services.service.push({
 
    name: 'MaxMind GeoIP',
    link: 'http://www.maxmind.com/',
-   stable: '2010-08-31',
+   stable: '2010-09-08',
 
    request: [{
       type: 'GET',
-      url: 'http://www.maxmind.com/app/locate_demo_ip',
+      url: 'http://j.maxmind.com/app/geoip.js',
       data: {},
       dataType: 'text',
       dataCharset: 'UTF-8',
-      prepare: function(result) {
-
-         if (!result.externIpv4)
-            return false;
-
-         this.data.ips = result.externIpv4;
-         return true;
-      },
       parse: function(data) {
 
-         var i, result = {};
+         var result = {};
+         var pattern;
+         var arr;
 
-         /* Find table with data */
-         if ((i = data.indexOf('<th>Hostname</th>')) == -1)
-            return result;
-         data = data.substr(i, data.length - i);
-         if ((i = data.indexOf('<tr>')) == -1)
-            return result;
-         data = data.substr(i, data.length - i);
-         if ((i = data.indexOf('</tr>')) == -1)
-            return result;
-         data = data.substr(0, i);
+         pattern = /.*country_code.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.countryCode = arr[1];
 
-         /* Split data to lines */
-         var lines = data.split(/\r?\n/);
-         /* Line pattern */
-         var pattern = /<td><font size="-1">([^<]*)<\/font><\/td>/;
-         /* For each line */
-         for (var i = 0; i < lines.length; ++i) {
-            arr = pattern.exec(lines[i]);
-            if (arr && arr[1]) {
-               switch(i) {
-               case 3:
-                  result.countryCode = arr[1];
-                  break;
-               case 4:
-                  result.country = arr[1];
-                  break;
-               case 6:
-                  result.region = arr[1];
-                  break;
-               case 7:
-                  result.city = arr[1];
-                  break;
-               case 9:
-                  result.latitude = arr[1];
-                  break;
-               case 10:
-                  result.longitude = arr[1];
-                  break;
-               case 11:
-                  result.provider = arr[1];
-                  break;
-               default:
-                  continue;
-               }
-            }
-         }
+         pattern = /.*country_name.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.country = arr[1];
+
+         pattern = /.*city.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.city = arr[1];
+
+         pattern = /.*region_name.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.region = arr[1];
+
+         pattern = /.*latitude.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.latitude = arr[1];
+
+         pattern = /.*longitude.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.longitude = arr[1];
 
          return result;
       }
