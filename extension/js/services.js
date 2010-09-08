@@ -400,7 +400,7 @@ Conetserv.Services.service.push({
    name: 'MojeIP.cz',
    link: 'http://www.mojeip.cz/',
 
-   stable: '2010-09-03',
+   stable: '2010-09-08',
 
    request: [{
       type: 'GET',
@@ -411,21 +411,21 @@ Conetserv.Services.service.push({
       parse: function(data) {
 
          var result = {};
-         var pattern = /<p class="date"><span> IPv4 <\/span><\/p>\s*<p class="mojeip">\s*([0-9.:]+)\s*<\/p>/;
-         var arr = pattern.exec(data);
+         var pattern;
+         var arr;
 
+         pattern = /<p class="date"><span> IPv4 <\/span><\/p>\s*<p class="mojeip">\s*([0-9.:]+)\s*<\/p>/;
+         arr = pattern.exec(data);
          if (arr && arr[1])
             result.externIpv4 = arr[1];
 
-         pattern = /<p class="date"><span>host<\/span><\/p>\s*<p class="mojeip">\s*([a-z0-9.]+)\s*<\/p>/;
+         pattern = /<p class="date"><span>host<\/span><\/p>\s*<p class="mojeip">\s*(?:[&]nbsp[;])?([a-z0-9.-]+)\s*<\/p>/;
          arr = pattern.exec(data);
-
          if (arr && arr[1])
             result.hostname = arr[1];
 
-         pattern = /<p class="date"><span> IPv6<\/span><\/p>\s*<p class="aside-padding smaller box">\s*([a-z0-9.]+)\s*<\/p>/;
+         pattern = /<p class="date"><span> IPv6<\/span><\/p>\s*<p class="aside-padding smaller box">\s*.*?<b>([0-9:]+)<\/b>.*?IPv6<br \/>/;
          arr = pattern.exec(data);
-
          if (arr && arr[1])
             result.externIpv6 = arr[1];
 
