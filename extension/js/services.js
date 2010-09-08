@@ -440,27 +440,27 @@ Conetserv.Services.service.push({
    name: 'IPinfo Security Portal',
    link: 'http://ipinfo.info/',
 
-   stable: '2010-03-24',
+   stable: '2010-09-08',
 
    request: [{
       type: 'GET',
-      url: 'http://ipinfo.info/html/privacy-check.php',
+      url: 'http://ipinfo.info/ipn/',
       data: {},
       dataType: 'text',
       dataCharset: 'UTF-8',
       parse: function(data) {
          var result = {};
-         var pattern = /<p class="nomargins"><span style=".*?"><B>[\s]*((?:\d{1,3}\.){3}\d{1,3})<\/B><\/span>&nbsp;<\/p>/;
-         var arr = pattern.exec(data);
+         var pattern;
+         var arr;
+
+         pattern = /<h4>([0-9.]+)<br>([a-z0-9-.]*)<\/h4>/;
+         arr = pattern.exec(data);
 
          if (arr && arr[1])
             result.externIpv4 = arr[1];
 
-         pattern = /<p class="nomargins"><span style=".*?">[\s]*([a-z0-9.]*)[\s]*<\/span>&nbsp;<\/p>/;
-         arr = pattern.exec(data);
-
-         if (arr && arr[1])
-            result.hostname = arr[1];
+         if (arr && arr[2])
+            result.hostname = arr[2];
 
          return result;
       }
@@ -495,13 +495,13 @@ Conetserv.Services.service.push({
       parse: function(data) {
 
          var result = {};
-         var pattern = /route:[\s]*((?:\d{1,3}\.){3}\d{1,3}\/[0-9]{1,2})/;
+         var pattern = /route:\s*((?:\d{1,3}\.){3}\d{1,3}\/[0-9]{1,2})/;
          arr = pattern.exec(data);
 
          if (arr && arr[1])
             result.route = arr[1];
 
-         pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
+         pattern = /descr:\s*([a-zA-Z-]*)\s*/i;
          arr = pattern.exec(data);
 
          if (arr && arr[1])
