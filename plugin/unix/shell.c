@@ -33,11 +33,11 @@ execv("/usr/sbin/traceroute", args);
 */
 
 cmd_shell  *shell = NULL;                                            /**< Shell abstraction */
-char       *buffer = NULL;                                           /**< Buffer for pipe I/O */
-char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL }; /**< Arguments for which command */
-char       *which_env[] = { NULL/*variables*/, NULL };               /**< Environment for which command */
-char       *user_paths = NULL;                                       /**< User paths */
-const char *root_paths = ":/usr/sbin:/sbin/";                        /**< Super-user binary paths */
+static char       *buffer = NULL;                                           /**< Buffer for pipe I/O */
+static char       *which_argv[] = { "/usr/bin/which", NULL/*path*/, NULL }; /**< Arguments for which command */
+static char       *which_env[] = { NULL/*variables*/, NULL };               /**< Environment for which command */
+static char       *user_paths = NULL;                                       /**< User paths */
+static const char *root_paths = ":/usr/sbin:/sbin/";                        /**< Super-user binary paths */
 
 /**
  * Find Unix program path

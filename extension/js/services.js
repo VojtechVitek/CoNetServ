@@ -112,72 +112,159 @@ Conetserv.Services.service.push({
 
    name: 'MaxMind GeoIP',
    link: 'http://www.maxmind.com/',
-   stable: '2010-08-31',
+   stable: '2010-09-08',
 
    request: [{
       type: 'GET',
-      url: 'http://www.maxmind.com/app/locate_demo_ip',
+      url: 'http://j.maxmind.com/app/geoip.js',
       data: {},
       dataType: 'text',
+      dataCharset: 'UTF-8',
+      parse: function(data) {
+
+         var result = {};
+         var pattern;
+         var arr;
+
+         pattern = /.*country_code.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.countryCode = arr[1];
+
+         pattern = /.*country_name.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.country = arr[1];
+
+         pattern = /.*city.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.city = arr[1];
+
+         pattern = /.*region_name.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.region = arr[1];
+
+         pattern = /.*latitude.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.latitude = arr[1];
+
+         pattern = /.*longitude.*?[']([^']+).*/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.longitude = arr[1];
+
+         return result;
+      }
+   }]
+
+});
+
+Conetserv.Services.service.push({
+
+   name: 'IP Info DB',
+   link: 'http://ipinfodb.com/',
+
+   stable: '2010-09-08',
+
+   request: [{
+      type: 'GET',
+      url: 'http://ipinfodb.com/ip_query.php',
+      data: {
+         ip: false,
+         output: 'json',
+         timezone: 'false'
+      },
+      dataType: 'json',
       dataCharset: 'UTF-8',
       prepare: function(result) {
 
          if (!result.externIpv4)
             return false;
 
-         this.data.ips = result.externIpv4;
+         this.data.ip = result.externIpv4;
          return true;
       },
       parse: function(data) {
 
-         var i, result = {};
+         var result = {};
 
-         /* Find table with data */
-         if ((i = data.indexOf('<th>Hostname</th>')) == -1)
+         if (!data)
             return result;
-         data = data.substr(i, data.length - i);
-         if ((i = data.indexOf('<tr>')) == -1)
-            return result;
-         data = data.substr(i, data.length - i);
-         if ((i = data.indexOf('</tr>')) == -1)
-            return result;
-         data = data.substr(0, i);
 
-         /* Split data to lines */
-         var lines = data.split(/\r?\n/);
-         /* Line pattern */
-         var pattern = /<td><font size="-1">([^<]*)<\/font><\/td>/;
-         /* For each line */
-         for (var i = 0; i < lines.length; ++i) {
-            arr = pattern.exec(lines[i]);
-            if (arr && arr[1]) {
-               switch(i) {
-               case 3:
-                  result.countryCode = arr[1];
-                  break;
-               case 4:
-                  result.country = arr[1];
-                  break;
-               case 6:
-                  result.region = arr[1];
-                  break;
-               case 7:
-                  result.city = arr[1];
-                  break;
-               case 9:
-                  result.latitude = arr[1];
-                  break;
-               case 10:
-                  result.longitude = arr[1];
-                  break;
-               case 11:
-                  result.provider = arr[1];
-                  break;
-               default:
-                  continue;
-               }
-            }
-         }
+         if (data.CountryCode)
+            result.countryCode = data.CountryCode;
+
+         if (data.CountryName)
+            result.country = data.CountryName;
+
+         if (data.City)
+            result.city = data.City;
+
+         if (data.RegionName)
+            result.region = data.RegionName;
+
+         if (data.Latitude)
+            result.latitude = data.Latitude;
+
+         if (data.Longitude)
+            result.longitude = data.Longitude;
+
+         return result;
+      }
+   }]
+
+});
+
+
+Conetserv.Services.service.push({
+
+   name: 'Free IP geolocation webservice by Alexandre Fiori',
+   link: 'http://freegeoip.appspot.com/',
+
+   stable: '2010-09-08',
+
+   request: [{
+      type: 'GET',
+      _url: 'http://freegeoip.appspot.com/json/',
+      url: false /* prepare */,
+      data: {},
+      dataType: 'json',
+      dataCharset: 'UTF-8',
+      prepare: function(result) {
+
+         if (!result.externIpv4)
+            return false;
+
+         this.url = this._url + result.externIpv4;
+         return true;
+      },
+      parse: function(data) {
+
+         var result = {};
+
+         if (!data)
+            return result;
+
+         if (data.countrycode)
+            result.countryCode = data.countrycode;
+
+         if (data.countryname)
+            result.country = data.countryname;
+
+         if (data.city)
+            result.city = data.city;
+
+         if (data.regionname)
+            result.region = data.regionname;
+
+         if (data.latitude)
+            result.latitude = data.latitude;
+
+         if (data.longitude)
+            result.longitude = data.longitude;
 
          return result;
       }
@@ -222,9 +309,8 @@ Conetserv.Services.service.push({
 
          var result = {};
 
-         if(!data) {
+         if (!data)
             return result;
-         }
 
          if (data.address) {
             if (data.address.country_code && data.address.country_code != '-' && data.address.country_code != 'NaN')
@@ -243,7 +329,7 @@ Conetserv.Services.service.push({
          if (data.latitude)
             result.latitude = data.latitude;
 
-         if (data.latitude)
+         if (data.longitude)
             result.longitude = data.longitude;
 
          if (data.zoom)
@@ -314,39 +400,34 @@ Conetserv.Services.service.push({
    name: 'MojeIP.cz',
    link: 'http://www.mojeip.cz/',
 
-   stable: '2010-03-24',
+   stable: '2010-09-08',
 
    request: [{
       type: 'GET',
-      url: 'http://www.mojeip.cz/index.php',
+      url: 'http://www.mojeip.cz',
       data: {},
       dataType: 'text',
       dataCharset: 'UTF-8',
       parse: function(data) {
 
          var result = {};
-         var pattern = /<font class=textip2>[\s]*((?:\d{1,3}\.){3}\d{1,3})[\s]*<\/font>/;
-         var arr = pattern.exec(data);
+         var pattern;
+         var arr;
 
+         pattern = /<p class="date"><span> IPv4 <\/span><\/p>\s*<p class="mojeip">\s*([0-9.:]+)\s*<\/p>/;
+         arr = pattern.exec(data);
          if (arr && arr[1])
             result.externIpv4 = arr[1];
 
-         return result;
-      }
-   }, {
-      type: 'GET',
-      url: 'http://www.mojeip.cz/mojeip.php',
-      data: {},
-      dataType: 'text',
-      dataCharset: 'UTF-8',
-      parse: function(data) {
-
-         var result = {};
-         var pattern = /hostname je[\s]*:[\s]*<BR><\/font>&nbsp;([a-z0-9.]+)<BR>/;
-         var arr = pattern.exec(data);
-
+         pattern = /<p class="date"><span>host<\/span><\/p>\s*<p class="mojeip">\s*(?:[&]nbsp[;])?([a-z0-9.-]+)\s*<\/p>/;
+         arr = pattern.exec(data);
          if (arr && arr[1])
             result.hostname = arr[1];
+
+         pattern = /<p class="date"><span> IPv6<\/span><\/p>\s*<p class="aside-padding smaller box">\s*.*?<b>([0-9:]+)<\/b>.*?IPv6<br \/>/;
+         arr = pattern.exec(data);
+         if (arr && arr[1])
+            result.externIpv6 = arr[1];
 
          return result;
       }
@@ -359,27 +440,27 @@ Conetserv.Services.service.push({
    name: 'IPinfo Security Portal',
    link: 'http://ipinfo.info/',
 
-   stable: '2010-03-24',
+   stable: '2010-09-08',
 
    request: [{
       type: 'GET',
-      url: 'http://ipinfo.info/html/privacy-check.php',
+      url: 'http://ipinfo.info/ipn/',
       data: {},
       dataType: 'text',
       dataCharset: 'UTF-8',
       parse: function(data) {
          var result = {};
-         var pattern = /<p class="nomargins"><span style=".*?"><B>[\s]*((?:\d{1,3}\.){3}\d{1,3})<\/B><\/span>&nbsp;<\/p>/;
-         var arr = pattern.exec(data);
+         var pattern;
+         var arr;
+
+         pattern = /<h4>([0-9.]+)<br>([a-z0-9-.]*)<\/h4>/;
+         arr = pattern.exec(data);
 
          if (arr && arr[1])
             result.externIpv4 = arr[1];
 
-         pattern = /<p class="nomargins"><span style=".*?">[\s]*([a-z0-9.]*)[\s]*<\/span>&nbsp;<\/p>/;
-         arr = pattern.exec(data);
-
-         if (arr && arr[1])
-            result.hostname = arr[1];
+         if (arr && arr[2])
+            result.hostname = arr[2];
 
          return result;
       }
@@ -414,17 +495,53 @@ Conetserv.Services.service.push({
       parse: function(data) {
 
          var result = {};
-         var pattern = /route:[\s]*((?:\d{1,3}\.){3}\d{1,3}\/[0-9]{1,2})/;
+         var pattern = /route:\s*((?:\d{1,3}\.){3}\d{1,3}\/[0-9]{1,2})/;
          arr = pattern.exec(data);
 
          if (arr && arr[1])
             result.route = arr[1];
 
-         pattern = /descr:[\s]*([a-zA-Z-]*)[\s]*/i;
+         pattern = /descr:\s*([a-zA-Z-]*)\s*/i;
          arr = pattern.exec(data);
 
          if (arr && arr[1])
             result.provider = arr[1];
+
+         return result;
+      }
+   }]
+
+});
+
+Conetserv.Services.service.push({
+
+   name: '2 Privacy.com',
+   link: 'http://www.2privacy.com/',
+
+   stable: '2010-09-09',
+
+   request: [{
+      type: 'GET',
+      url: 'http://www.2privacy.com/www/what-is-my-ip.html',
+      data: {},
+      dataType: 'text',
+      dataCharset: 'UTF-8',
+      parse: function(data) {
+         var result = {};
+         var pattern;
+         var arr;
+
+         pattern = /Your IP: <font[^>]*><b>([0-9.]+)<\/b><\/font>, your Host: <font[^>]*><b>([a-z0-9.-]+)<\/b><\/font>, your Country: <font[^>]*><b>([A-Z]{2,3})/;
+         arr = pattern.exec(data);
+
+         if (arr && arr[1])
+            result.externIpv4 = arr[1];
+
+         if (arr && arr[2])
+            result.hostname = arr[2];
+
+         if (arr && arr[3])
+            result.countryCode = arr[3];
 
          return result;
       }

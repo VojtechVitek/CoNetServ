@@ -11,7 +11,7 @@ Operating systems [arch] support:
 Plugin:
  * CMake - automatic recognition of NPAPI NPString members (CamelCase or lowercase)
  * Added Dig and Nmap services
- * Added Nslookup AAA record support
+ * Added Nslookup AAAA record support
  * Commands now accepts options passed from JavaScript
  * Ping(6) - packet count, timeout, packet size and TTL options
  * Tracert(6)/Traceroute(6) - max. of hops, wait time, IP-to-hostname translation options

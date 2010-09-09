@@ -196,9 +196,17 @@ div.valueLabel {
 }
 
 .console .ui-state-highlight {
+   font-family: 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
    margin: 5px;
 }
 
+.console .ui-state-highlight p {
+   margin-top: 0px;
+}
+
+pre.console {
+   font-family: "Courier New", "Monospace", monospace;
+}
 /**************************************************************************
  * settings tab
  **************************************************************************/
