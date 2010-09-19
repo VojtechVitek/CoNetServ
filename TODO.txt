@@ -38,7 +38,6 @@ Extension:
 [x] Console: Implement console.error() method for try-catch blocks instead of console.add().
 [x] External services: ping and traceroute info from public Looking glass servers
 [x] URL Parser: Bugfix for IPv6 addr inside the http protocol, eg. http://[2001::0000]/index.html
-[ ] Possibility to save ping and traceroute plot to a jpg file
 [x] Hide url bar while services are running - disabled, not hid
 [x] Autorun service on start
 [x] OPTIONS: select default page
@@ -47,11 +46,11 @@ Extension:
 [x] OPTIONS: Multiple skins implementation
 [x] OPTIONS: Ping console - unlimited/ limited
 [ ] OPTIONS: Quick buttons to settings/options from Chrome and Firefox
-[ ] Service parser for http://www.hostip.info
-[ ] Service parser for http://www.robtex.com/ipinfo.js
+[x] Service parser for http://www.hostip.info
+[x] Service parser for http://www.robtex.com/ipinfo.js
 [x] Service parser for MaxMind GeoIP
-[ ] Country flags images from http://flags.redpixart.com/czech_republic/
-[ ] Country map charts http://code.google.com/apis/chart/docs/gallery/map_charts.html#introduction
+[?] Country flags images from http://flags.redpixart.com/czech_republic/
+[?] Country map charts http://code.google.com/apis/chart/docs/gallery/map_charts.html#introduction
 
 
 FUTURE PLANS
