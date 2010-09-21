@@ -92,10 +92,17 @@ Conetserv.Ui = {
       $('#tabs').tabs({
          show: function(event, ui) {
             // set focus to url-bar
-            if(ui.panel.id == "local-services") {
+            if(ui.panel.id == "local-services") {               
+               if($("#local-url").val() == "") {
+                  $("#local-url").val($("#external-url").val());
+               }
                $("#local-url").focus();
+
             }
             if(ui.panel.id == "external-services") {
+               if($("#external-url").val() == "") {
+                  $("#external-url").val($("#local-url").val());
+               }
                $("#external-url").focus();
             }
             Conetserv.Ui.redraw();
