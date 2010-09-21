@@ -25,6 +25,9 @@ set(headers
 # Platform-specific sources and header files
 if(UNIX)
 	include(unix/CMakeLists.txt)
+	if(APPLE)
+		include(apple/CMakeLists.txt)
+	endif()
 elseif(WIN32)
 	include(win/CMakeLists.txt)
 else()
@@ -57,10 +60,6 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
 
 	# Create Mozilla-like platform path in release directory
 	file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH}/)
-
-	if(APPLE)
-		include(apple/CMakeLists.txt)
-	endif()
 
 	add_custom_command(
 		OUTPUT  ${RELEASE_DIR}/${MOZILLA_PATH}/${PLATFORM_PATH}${CoNetServLibFileName}

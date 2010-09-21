@@ -2,7 +2,6 @@
 # https://developer.mozilla.org/en/Bundles#Platform-specific_Subdirectories
 
 if(APPLE)
-	message(STATUS "${CMAKE_SYSTEM_NAME} == Darwin")
 	set(MOZILLA_PLATFORM Darwin)
 	set(MOZILLA_COMPILER gcc3)
 elseif(WIN32)
