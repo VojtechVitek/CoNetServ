@@ -33,6 +33,14 @@ Conetserv.Options = {
       return this.storage["conetserv-version"];
    },
 
+   neighbours_network_address : function() {
+      return this._getString('conetserv-settings-local-info-neighbours-network-address');
+   },
+
+   neighbours_network_mask : function() {
+      return this._getString('conetserv-settings-local-info-neighbours-network-mask');
+   },
+
    LocalServices: {
       ping_packet_count : function() {
          return Conetserv.Options._getNumeric("conetserv-settings-local-services-ping-packet-count");
@@ -75,6 +83,7 @@ Conetserv.Options = {
       EXT_SERVICES_ROUTER :   6,
       LOC_SERVICES_PING :     7,
       LOC_SERVICES_TRACERT :  8,
+      LOC_INFO :              9,
    },
 
    /**
@@ -137,6 +146,9 @@ Conetserv.Options = {
 
          this.storage["conetserv-settings-external-services"] = "true;true;;true;;;;;;;true;true;;;;;;;;;true;;;true;;;;;;;true;true";
          this.storage["conetserv-settings-external-services_router"] = "r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp;;;;;;;;;r01ext;bgp-isp;GP0;Amsterdam;;;;;;;r01ext;bgp-isp";
+
+         this.storage['conetserv-settings-local-info-neighbours-network-address'] = "192.168.1.1";
+         this.storage['conetserv-settings-local-info-neighbours-network-mask'] = "24";
       }
 
 
@@ -188,6 +200,17 @@ Conetserv.Options = {
                   break;
             }
          }
+      }
+
+      /*************************************************************************
+       *                             LOCAL INFO                                *
+       ************************************************************************/
+      if(this.neighbours_network_address()){
+         $("#settings-local-info-network-address").val(this.neighbours_network_address());
+      }
+
+      if(this.neighbours_network_mask()){
+         $("#settings-local-info-network-mask").val(this.neighbours_network_mask());
       }
 
       /*************************************************************************
@@ -363,6 +386,16 @@ Conetserv.Options = {
 
             this._saveBoolean("conetserv-settings-local-services-tracert-ip-to-hostname", $("#settings-local-services-tracert-ip-to-hostname").is(":checked"));
 
+            break;
+         case this.enums.LOCAL_INFO:
+            var ipv4 = /^((?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3})$/i
+
+            if(!ipv4.test($("#settings-local-info-network-address").val())) {
+               Conetserv.Ui.showDialog("Warning!", "Please insert correct network address.");
+               return false
+            }
+            this.storage['conetserv-settings-local-info-neighbours-network-address'] = $("#settings-local-info-network-address").val();
+            this.storage['conetserv-settings-local-info-neighbours-network-mask'] = $("#settings-local-info-network-mask").val();
             break;
       }
 

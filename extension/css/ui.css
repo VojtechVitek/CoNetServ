@@ -197,6 +197,7 @@ div.valueLabel {
 
 .console .ui-state-highlight {
    font-family: 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+   padding-left: 10px;
    margin: 5px;
 }
 
@@ -274,10 +275,12 @@ span.hint {
    margin: 0px 15px 15px 0px;
 }
 
+#settings-local-info-div .ui-widget,
 #settings-external-services-div .ui-widget {
    padding: 0px 10px 10px 10px;
 }
 
+#settings-local-info-div .center
 #settings-external-services-div .center {
    text-align: center;
 }
@@ -292,7 +295,7 @@ settings-general-toolbox-div {
 #external-provider-div div {
    height: 130px;
    width: 290px;
-   margin: 0 10px 10px 0;
+   margin: 5px 10px 5px 0;
    padding: 5px;
    float: left;
 }
@@ -308,6 +311,10 @@ settings-general-toolbox-div {
 
 #external-provider-div ul li {
    margin-left: 5px;
+}
+
+#external-provider-div div#external-provider-location-div{
+   height: 280px;
 }
 
 /**************************************************************************

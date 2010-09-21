@@ -86,6 +86,16 @@ Conetserv.Ui = {
             $(this).val("");
       });
 
+      $("#settings-local-info-div input").change(function(){
+         if(!Conetserv.Options.save(Conetserv.Options.enums.LOCAL_INFO))
+            $(this).val("");
+      })
+
+      $("#settings-local-info-div select").change(function(){
+         if(!Conetserv.Options.save(Conetserv.Options.enums.LOCAL_INFO))
+            $(this).val("24");
+      })
+
       /**
       * reimplement behaviour when different tab is selected
       */
