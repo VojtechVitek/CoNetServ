@@ -1,8 +1,7 @@
-# Temporary and backup files
+# Temporary, backup and hidden files
 *~
-.*.swp
-.*.swo
 *.backup
+.*
 
 # Default build directory
 build/
