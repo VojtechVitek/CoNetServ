@@ -39,6 +39,11 @@ set_target_properties(CoNetServ PROPERTIES SOVERSION ${MAJOR_VERSION})
 get_target_property(CoNetServLibFile CoNetServ LOCATION)
 get_filename_component(CoNetServLibFileName ${CoNetServLibFile} NAME)
 
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
+	link_directories("/usr/local/lib")
+	link_directories("/lib")
+endif()
+
 include(${CMAKE_MODULE_PATH}/MozillaTargetPlatform.cmake)
 
 # Export release shared library (force simple packaging)
