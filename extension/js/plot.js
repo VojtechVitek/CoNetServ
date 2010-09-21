@@ -190,12 +190,13 @@ Conetserv.Plot = {
                }
             }
          }
-         else // UNIX
+         else /* UNIX-like */
          {
             // Unix ping output:
             // "64 bytes from 74.125.*.*: icmp_seq=1 ttl=54 time=32.8 ms"
             // "64 bytes from 74.125.*.*: icmp_req=3 ttl=127 time=24.7 ms"
-            pingTime = /.*?icmp_[sr]eq=(\d+)\sttl=\d+\stime=(\d+(?:\.\d+)?)\sms/i.exec(currentData);
+            // "16 bytes from 2001:20::2, icmp_seq=0 hlim=58 time=4.427 ms"
+            pingTime = /.*?icmp_[sr]eq=(\d+)\s(?:ttl|hlim)=\d+\stime=(\d+(?:\.\d+)?)\sms/i.exec(currentData);
             if(pingTime && pingTime[1] && pingTime[2])
             {
                /* check for lost packets */
@@ -238,7 +239,7 @@ Conetserv.Plot = {
             data.prevData = (data.prevData.substr(npos+1));
          }
       }
-      else if($.client.os == "Linux")
+      else /* Unix-like */
       {
          var npos;
          /* divide input data into lines and add them as data */
@@ -247,9 +248,6 @@ Conetserv.Plot = {
             this._addTPlotDataLin(data.prevData.substr(0, npos), type);
             data.prevData = (data.prevData.substr(npos+1));
          }
-      }
-      else
-      {
       }
 
       this.repaint();

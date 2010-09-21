@@ -7,7 +7,7 @@ General:
 [ ] Release Widget for Opera official repository.
 [x] Project: Switch to CMake build system
 [x] Multi-platform support: guarantee run on Windows, Linux and MacOS on both 32bit and 64bit systems
-[ ] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
+[x] CMake(APPLE): Find WebKIT Darwin SDK / XULRunner SDK.
 [ ] CMake(ANDROID): Implement building on Android (inspiration: npsimple Makefile)
 [x] CMake: Automatic generation of extension packages for Firefox, Chrome and Opera browser
 [ ] CMake: Regenerate manifest files after target PluginCopy

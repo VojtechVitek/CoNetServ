@@ -73,7 +73,7 @@ NPError OSCALL NP_GetEntryPoints(NPPluginFuncs *nppfuncs);
 NPError OSCALL NP_Initialize(NPNetscapeFuncs *npnf
 #if defined(ANDROID)
          , NPPluginFuncs *nppfuncs, JNIEnv *env, jobject plugin_object
-#elif !defined(_WINDOWS) && !defined(WEBKIT_DARWIN_SDK)
+#elif !defined(_WINDOWS) && !defined(__APPLE__)
          , NPPluginFuncs *nppfuncs
 #endif
          );

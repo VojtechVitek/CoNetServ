@@ -32,12 +32,12 @@ function start()
 
    if (plugin1.ping) {
       try {
-         ping1 = plugin1.ping.start("www.seznam.cz");
+         ping1 = plugin1.ping.start("nic.cz");
       } catch (e) {
          document.getElementById("data1").value = e + "\n";
       }
       try {
-         ping2 = plugin1.ping.start("www.gmail.com");
+         ping2 = plugin1.ping.start("www.gmail.com ");
       } catch (e) {
          document.getElementById("data2").value = e + "\n";
       }

@@ -42,7 +42,9 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
 
       /* Set default arguments */
       argv[i++] = "-n"; /* Numeric output only */
+#if !defined(__APPLE__) /* Must be super-user on MacOSX */
       argv[i++] = "-l3"; /* Preload - Send 3 packets without waiting for reply */
+#endif
 
       /* Set user-defined arguments */
       if (settings.count > 0) {
@@ -53,13 +55,20 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
          if (snprintf(packetsize, 20, "-s %d", settings.packetsize))
             argv[i++] = packetsize;
       }
+#if !defined(__APPLE__)
       if (settings.timeout > 0) {
          if (snprintf(timeout, 20, "-W %d", settings.timeout))
             argv[i++] = timeout;
       }
+#endif
       if (settings.ttl > 0) {
+#if defined(__APPLE__)
+         if (snprintf(ttl, 20, "-m %d", settings.ttl))
+            argv[i++] = ttl;
+#else
          if (snprintf(ttl, 20, "-t %d", settings.ttl))
             argv[i++] = ttl;
+#endif
       }
 
       /* Set the URL as the last argument */

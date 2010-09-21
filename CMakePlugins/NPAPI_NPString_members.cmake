@@ -8,7 +8,9 @@ CHECK_C_SOURCE_COMPILES("
 #define bool int
 #endif
 #include <npapi.h>
+#if !defined(__APPLE__)
 #include <nptypes.h>
+#endif
 #include <npruntime.h>
 int main()
 {
@@ -25,7 +27,9 @@ CHECK_C_SOURCE_COMPILES("
 #define bool int
 #endif
 #include <npapi.h>
+#if !defined(__APPLE__)
 #include <nptypes.h>
+#endif
 #include <npruntime.h>
 int main()
 {

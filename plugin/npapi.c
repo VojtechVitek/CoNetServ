@@ -76,12 +76,12 @@ NP_GetEntryPoints(NPPluginFuncs *nppfuncs)
 {
    DEBUG_STR("NP_GetEntryPoints()");
    nppfuncs->version       = (NP_VERSION_MAJOR << 8) | NP_VERSION_MINOR;
-   nppfuncs->size          = sizeof(*nppfuncs);
+   //nppfuncs->size          = sizeof(*nppfuncs);
    nppfuncs->newp          = init;
    nppfuncs->destroy       = destroy;
    nppfuncs->getvalue      = getValue;
-   //nppfuncs->event         = handleEvent;
-   //nppfuncs->setwindow     = setWindow;
+   nppfuncs->event         = handleEvent;
+   nppfuncs->setwindow     = setWindow;
    //pluginFuncs->newstream  = NewNPP_NewStreamProc(Private_NewStream);
    //pluginFuncs->destroystream = NewNPP_DestroyStreamProc(Private_DestroyStream);
    //pluginFuncs->asfile     = NewNPP_StreamAsFileProc(Private_StreamAsFile);
@@ -90,7 +90,6 @@ NP_GetEntryPoints(NPPluginFuncs *nppfuncs)
    //pluginFuncs->print      = NewNPP_PrintProc(Private_Print);
    //pluginFuncs->urlnotify  = NewNPP_URLNotifyProc(Private_URLNotify);
    //pluginFuncs->getvalue   = NewNPP_GetValueProc(Private_GetValue);
-   //pluginFuncs->event      = NewNPP_HandleEventProc(Private_HandleEvent);
 #ifdef OJI
    //pluginFuncs->javaClass  = Private_GetJavaClass();
 #endif
@@ -101,7 +100,7 @@ NPError OSCALL
 NP_Initialize(NPNetscapeFuncs *npnf
 #if defined(ANDROID)
          , NPPluginFuncs *nppfuncs, JNIEnv *env, jobject plugin_object
-#elif !defined(_WINDOWS) && !defined(WEBKIT_DARWIN_SDK)
+#elif !defined(_WINDOWS) && !defined(__APPLE__)
          , NPPluginFuncs *nppfuncs
 #endif
          )
@@ -115,7 +114,7 @@ NP_Initialize(NPNetscapeFuncs *npnf
       return NPERR_INCOMPATIBLE_VERSION_ERROR;
 
    browser = npnf;
-#if !defined(_WINDOWS) && !defined(WEBKIT_DARWIN_SDK)
+#if !defined(_WINDOWS) && !defined(__APPLE__)
    NP_GetEntryPoints(nppfuncs);
 #endif
 

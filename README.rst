@@ -53,6 +53,14 @@ b) Release mode
   NOTE: (building 32bit plugin on 64bit system)
   $ cmake -DCMAKE_C_FLAGS=-m32 -DARCH=x86 -DCMAKE_BUILD_TYPE=Release ../../
 
+  NOTE 2: You will need crxmake.py script for generating debug
+          Chrome extension .crx.
+          You will probably need to run:
+          $ chmod +x ./crxmake.py
+          $ PATH="$PATH:$(pwd)"
+            # or edit your .bashrc file to add the path during shell init
+          Download crxmake.py from http://github.com/Constellation/crxmake.
+
 Building on Windows
 -------------------
 1. Run CMake (download `CMake <http://www.cmake.org/cmake/resources/software.html>`_)
