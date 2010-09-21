@@ -195,7 +195,8 @@ Conetserv.Plot = {
             // Unix ping output:
             // "64 bytes from 74.125.*.*: icmp_seq=1 ttl=54 time=32.8 ms"
             // "64 bytes from 74.125.*.*: icmp_req=3 ttl=127 time=24.7 ms"
-            pingTime = /.*?icmp_[sr]eq=(\d+)\sttl=\d+\stime=(\d+(?:\.\d+)?)\sms/i.exec(currentData);
+            // "16 bytes from 2001:20::2, icmp_seq=0 hlim=58 time=4.427 ms"
+            pingTime = /.*?icmp_[sr]eq=(\d+)\s(?:ttl|hlim)=\d+\stime=(\d+(?:\.\d+)?)\sms/i.exec(currentData);
             if(pingTime && pingTime[1] && pingTime[2])
             {
                /* check for lost packets */
