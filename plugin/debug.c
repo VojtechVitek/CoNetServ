@@ -7,7 +7,7 @@
 
 #if defined(DEBUG)
 
-#if defined(_WINDOWS) || defined(ANDROID)
+#if defined(_WINDOWS) || defined(__APPLE__) || defined(ANDROID)
 FILE *debug_stderr_file;
 #endif
 

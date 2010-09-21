@@ -9,7 +9,7 @@
 
 #if defined(DEBUG)
 
-#if defined(_WINDOWS) || defined(ANDROID)
+#if defined(_WINDOWS) || defined(__APPLE__) || defined(ANDROID)
 
 #if defined(_WINDOWS)
 #define DEBUG_STDERR_FILEPATH "\\conetserv.log"
@@ -19,7 +19,7 @@
 
 extern FILE *debug_stderr_file;
 
-/* Print debug messages to file on Windows and on Android */
+/* Print debug messages to file on Windows/MacOSX/Android */
 #define DEBUG_STR_PLATFORM(fmt, ...) \
    do { \
       debug_stderr_file = fopen(DEBUG_STDERR_FILEPATH, "a"); \
