@@ -4,10 +4,10 @@
 # File is included -> current path is ../
 
 # Make MacOS bundle plugin directory
-set(PLATFORM_PATH np${PROJECT_NAME}.plugin/Contents/MacOS)
+set(PLATFORM_PATH np${PROJECT_NAME}.plugin/Contents/MacOS/)
 file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/Resources/English.lproj)
 file(MAKE_DIRECTORY ${RELEASE_DIR}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/MacOS)
-configure_file("apple/Info.plist.in" "${RELEASE_DIR}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/Info.plist")
+configure_file("apple/Info.plist.in" "${RELEASE_DIR}/${MOZILLA_PATH}np${PROJECT_NAME}.plugin/Contents/MacOS/Info.plist")
 configure_file("apple/Localized.r.in" "${CMAKE_BINARY_DIR}/Localized.r")
 find_program(APPLE_RESOURCE Rez /Developer/Tools)
 if(APPLE_RESOURCE)
