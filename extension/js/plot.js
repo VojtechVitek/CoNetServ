@@ -190,7 +190,7 @@ Conetserv.Plot = {
                }
             }
          }
-         else // UNIX
+         else /* UNIX-like */
          {
             // Unix ping output:
             // "64 bytes from 74.125.*.*: icmp_seq=1 ttl=54 time=32.8 ms"
@@ -238,7 +238,7 @@ Conetserv.Plot = {
             data.prevData = (data.prevData.substr(npos+1));
          }
       }
-      else if($.client.os == "Linux")
+      else /* Unix-like */
       {
          var npos;
          /* divide input data into lines and add them as data */
@@ -247,9 +247,6 @@ Conetserv.Plot = {
             this._addTPlotDataLin(data.prevData.substr(0, npos), type);
             data.prevData = (data.prevData.substr(npos+1));
          }
-      }
-      else
-      {
       }
 
       this.repaint();
