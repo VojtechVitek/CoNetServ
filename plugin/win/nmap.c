@@ -48,6 +48,17 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
          break;
       }
 
+      /* FIXME: */
+      /* Test if there is ':' char -> IPv6 */
+      tmp = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
+      while (*tmp++ != '\0') {
+         if (*tmp == ':') {
+            memcpy(ptr, "-6", 3);
+            ptr += 3;
+            break;
+         }
+      }
+
       /* Set the URL as the last argument */
       if (STRING_UTF8LENGTH(args[0].value.stringValue) > 100)
          return false;
