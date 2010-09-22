@@ -432,13 +432,18 @@ Conetserv.Ui = {
       if(!Conetserv.plugin.nmap) {
          $(".local .nmap").remove();
          Conetserv.LocalServices.Nmap.enabled = false;
+         Conetserv.LocalInfo.Nmap.enabled = false;
       }
       else {
          if(!Conetserv.plugin.nmap.found) {
             Conetserv.LocalServices.Nmap.enabled = false;
+            Conetserv.LocalInfo.Nmap.enabled = false;
             this.divError("#local-nmap-div", "Nmap service has not been found in your system. \n\
             If you want to install it, please follow these steps.");
             this.divInstallationSteps("#local-nmap-div", "nmap");
+            this.divError("#local-neighbours-div", "Nmap service has not been found in your system. \n\
+            If you want to install it, please follow these steps.");
+            this.divInstallationSteps("#local-neighbours-div", "nmap");
          }
       }
 

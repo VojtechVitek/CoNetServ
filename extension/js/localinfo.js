@@ -111,7 +111,7 @@ Conetserv.LocalInfo = {
             service.console.setErr(e);
          }
 
-         //Conetserv.Ui.removeIcons(".local", service.cls);
+         Conetserv.Ui.removeIcons(".local", service.cls);
 
          service.console.touched = true;
          /* if service has been stopped manually, set error to console */
