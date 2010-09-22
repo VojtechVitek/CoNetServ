@@ -11,7 +11,7 @@ Conetserv.LocalInfo = {
          return;
 
       this.Ipconfig.console = new Conetserv.Console("local-ipconfig-console");
-      this.Nmap.console = new Conetserv.Console("local-nmap-console");
+      this.Nmap.console = new Conetserv.Console("local-neighbours-console");
       this.Route.console = new Conetserv.Console("local-route-console");
    },
 
@@ -20,7 +20,7 @@ Conetserv.LocalInfo = {
          return false;
 
       this.startService(this.Ipconfig);
-      //this.startService(this.Nmap);
+      this.startService(this.Nmap);
       this.startService(this.Route)
 
       return true;
@@ -31,7 +31,7 @@ Conetserv.LocalInfo = {
          return false;
 
       this.stopService(this.Ipconfig);
-      //this.stopService(this.Nmap);
+      this.stopService(this.Nmap);
       this.stopService(this.Route);
 
       return true
@@ -111,7 +111,7 @@ Conetserv.LocalInfo = {
             service.console.setErr(e);
          }
 
-         Conetserv.Ui.removeIcons(".local", service.cls);
+         //Conetserv.Ui.removeIcons(".local", service.cls);
 
          service.console.touched = true;
          /* if service has been stopped manually, set error to console */
@@ -157,13 +157,13 @@ Conetserv.LocalInfo.Nmap = {
    finished: false,                         //saying, if service has finished its run
    console: false,                          //text console
    process: false,                          //running process to read data from
-   cls: '.nmap',                         //class for icons
+   cls: '.neighbours',                         //class for icons
    object: 'Conetserv.LocalInfo.Nmap', //object name
    identifier: 'nmap',                     //name for calling npapi functions
-   argument:'',       //parameter to be passed to npapi functions
+   argument:'192.168.1.0-255',       //parameter to be passed to npapi functions
 
    before_begin: function() {               //extra commands to be executed before service is started
-      Conetserv.plugin.nslookup.query = 1;
+      Conetserv.plugin.nmap.query = 1;
    },
 
    after_read: function(received) {
