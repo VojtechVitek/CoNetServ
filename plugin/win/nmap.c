@@ -22,7 +22,7 @@ static bool
 invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint32_t argc, NPVariant *result)
 {
    char argv[200];
-   char *ptr;
+   char *ptr, *tmp;
 
    if (identifier == identifiers->start) {
 
