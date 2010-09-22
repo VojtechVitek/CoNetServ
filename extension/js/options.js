@@ -113,7 +113,7 @@ Conetserv.Options = {
       }
 
       var reinitialize = false;
-
+     
       /* Conetserv is run for the first time */
       if(!this.version() || this.version().toString() == '') {
          reinitialize = true;
@@ -122,7 +122,9 @@ Conetserv.Options = {
       }
       /* Conetserv has been updated */
       else if(this.version() != Conetserv.version){
-         setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 100);
+         $(document).ready(function(){
+            setTimeout('Conetserv.Ui.showDialog("CoNetServ has been updated to version " + Conetserv.version, "Release notes: <br/>" + Conetserv.changelog)', 1000);
+         })
          /* check, if mayor version change has occured */
          if(this.version().toString().substr(0, 1) != Conetserv.version.substr(0,1)) {
             reinitialize = true;
