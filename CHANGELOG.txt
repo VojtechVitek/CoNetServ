@@ -14,6 +14,7 @@ Project:
  * README: crxmake.py install how-to
 Plugin:
  * Add ROUTE command (Unix)
+ * Fix NMAP for IPv6
  * Fix build issues on Darwin with XUL Runner SDK
  * Fix plugin initialization on MacOSX platform
  * Fix plugin initialization in Opera
@@ -24,12 +25,13 @@ Extension:
  * Add hover closing red icon
  * Fix PING plotting parser for ping6 on MacOSX
  * Fix plot parsers for all Unix platforms
+ * Tune MaxMind GeoIP parser (parse geoip.js)
+ * Add Free IP geolocation webservice parser
+ * Add IP Info DB parser
  * Add 2 Privacy.com parser
  * Fix & simplify IPinfo Security Portal parser
  * Fix MojeIP.cz parser (hostname, IPv6) 
- * Tune MaxMind GeoIP parser (parse geoip.js)
- * Add IP Info DB parser
- * Add Free IP geolocation webservice parser
+
 
 Version 2.0 (2010-08-31)
 ========================
