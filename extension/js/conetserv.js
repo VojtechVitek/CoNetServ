@@ -2,7 +2,7 @@
 if(!Conetserv) var Conetserv = {};
 
 Conetserv.plugin = false;
-Conetserv.version = "2.0.0";
+Conetserv.version = "2.1.0";
 Conetserv.changelog = "* Object-oriented API to JS (availability for 3rd party) <br/>\
 * Independent objects to run programs and commands with options <br/>\
 * User-friendly error messages <br/>\

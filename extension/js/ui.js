@@ -333,7 +333,7 @@ Conetserv.Ui = {
       /* Check plugin version */
       var version = typeof(Conetserv.plugin.version) == "string" ? Conetserv.plugin.version.split('.') : false;
 
-      if(!version || parseInt(version[0]) != 2 || parseInt(version[1]) != 0) {
+      if(!version || parseInt(version[0]) != 2 || parseInt(version[1]) != 1) {
          var errStr = "<strong>CoNetServ extension is incompatible with currently installed plugin.</strong><br/><br/>\
             There might be severe problems with functionality - please reinstall your CoNetServ extension."
 
