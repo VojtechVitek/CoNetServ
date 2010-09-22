@@ -13,6 +13,7 @@ Project:
  * CMake support for MacOSX (Darwin platform)
  * README: crxmake.py install how-to
 Plugin:
+ * Add ROUTE command (Unix)
  * Fix build issues on Darwin with XUL Runner SDK
  * Fix plugin initialization on MacOSX platform
  * Fix plugin initialization in Opera
