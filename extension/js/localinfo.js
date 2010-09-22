@@ -12,6 +12,7 @@ Conetserv.LocalInfo = {
 
       this.Ipconfig.console = new Conetserv.Console("local-ipconfig-console");
       this.Nmap.console = new Conetserv.Console("local-nmap-console");
+      this.Route.console = new Conetserv.Console("local-route-console");
    },
 
    start : function() {
@@ -20,6 +21,7 @@ Conetserv.LocalInfo = {
 
       this.startService(this.Ipconfig);
       //this.startService(this.Nmap);
+      this.startService(this.Route)
 
       return true;
    },
@@ -30,6 +32,7 @@ Conetserv.LocalInfo = {
 
       this.stopService(this.Ipconfig);
       //this.stopService(this.Nmap);
+      this.stopService(this.Route);
 
       return true
    },
@@ -165,6 +168,25 @@ Conetserv.LocalInfo.Nmap = {
 
    after_read: function(received) {
       
+   }
+}
+
+Conetserv.LocalInfo.Route = {
+   enabled: true,                              //defines, if service will be started
+   interval: -1,                            //reading loop interval
+   finished: false,                         //saying, if service has finished its run
+   console: false,                          //text console
+   process: false,                          //running process to read data from
+   cls: '.route',                         //class for icons
+   object: 'Conetserv.LocalInfo.Route', //object name
+   identifier: 'route',                     //name for calling npapi functions
+   argument:'',       //parameter to be passed to npapi functions
+
+   before_begin: function() {               //extra commands to be executed before service is started
+   },
+
+   after_read: function(received) {
+
    }
 }
 

@@ -149,6 +149,8 @@
                   <label id="local-ipconfig-label" class="radio-tab-label ipconfig" for="local-ipconfig-input">IP config</label>
                   <input type="radio" id="local-neighbours-input" class="radio-tab neighbours" name="local-info-form" value="local-neighbours-div" />
                   <label id="local-neighbours-label" class="radio-tab-label neighbours" for="local-neighbours-input">Neighbours IPv4</label>
+                  <input type="radio" id="local-route-input" class="radio-tab route" name="local-info-form" value="local-route-div" />
+                  <label id="local-route-label" class="radio-tab-label route" for="local-route-input">Route</label>
                </div>
             </form>
             <div id="local-ipconfig-div" class="content ipconfig">
@@ -156,6 +158,9 @@
             </div>
             <div id="local-neighbours-div" class="content neighbours">
                <pre id="local-neighbours-console" class="ui-widget ui-widget-content console ui-corner-all"></pre> 
+            </div>
+            <div id="local-route-div" class="content route">
+               <pre id="local-route-console" class="ui-widget ui-widget-content console ui-corner-all"></pre>
             </div>
          </div>
          <div id="external-info" class="tab">
