@@ -285,13 +285,15 @@ Conetserv.Ui = {
          '';
       }
       else if($.client.os == "Linux") {
+         if (service == "tracert")
+	    service = "traceroute";
          output += '<strong>Install ' + service + ' with your package manager:</strong><br/>';
 	 output += '<br />';
 	 output += 'Search for a package which contains ' + service + ' program ';
 	 output += 'and install it afterwards.<br />';
 	 output += '<br />';
          output += '<strong>Ubuntu, Debian:</strong>';
-	 output += '<pre># apt-get search ' + service + '\n# apt-get install [package]</pre>';
+	 output += '<pre># apt-file search ' + service + '\n# apt-get install [package]</pre>';
          output += '<strong>SUSE, OpenSUSE:</strong>';
 	 output += '<pre># zypper search ' + service + '\n# zypper install [package]</pre>';
          output += '<strong>Fedora, RHEL, CentOS, Yellow Dog Linux:</strong>';
