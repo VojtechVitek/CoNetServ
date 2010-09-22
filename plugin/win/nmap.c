@@ -53,8 +53,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       tmp = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
       while (*tmp++ != '\0') {
          if (*tmp == ':') {
-            memcpy(ptr, "-6", 3);
-            ptr += 3;
+            ptr += _snprintf(ptr, 20, "-6 ");
             break;
          }
       }
