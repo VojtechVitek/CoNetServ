@@ -1,4 +1,4 @@
-Version 2.1 (2010-09-??)
+Version 2.1 (2010-09-21)
 ========================
 Browser support:
  * Mozilla Firefox 3.0+ add-on
