@@ -23,7 +23,7 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
    char *argv[20];
    char query[20];
    int i;
-   char *ptr;
+   char *ptr, *tmp;
 
    if (identifier == identifiers->start) {
 
@@ -47,6 +47,16 @@ invokeMethod(NPObject *obj, NPIdentifier identifier, const NPVariant *args, uint
       default:
          /* nothing .. default for nmap command */
          break;
+      }
+
+      /* FIXME: */
+      /* Test if there is ':' char -> IPv6 */
+      tmp = (char *)STRING_UTF8CHARACTERS(args[0].value.stringValue);
+      while (*tmp++ != '\0') {
+         if (*tmp == ':') {
+            argv[i++] = "-6";
+            break;
+         }
       }
 
       /* Set the URL as the last argument */
